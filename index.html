@@ -876,5 +876,72 @@ document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render(
 document.querySelector('#books').addEventListener('click',e=>{let f=e.target.closest('[data-fav]');if(f){let a=favs(),id=+f.dataset.fav;localStorage.setItem('ai-library-favs',JSON.stringify(a.includes(id)?a.filter(x=>x!==id):[...a,id]));render();return}let r=e.target.closest('[data-read]');if(r)openBook(+r.dataset.read)});
 function openBook(id){current=books.find(b=>b.id===id);part=0;document.querySelector('#modal').classList.add('open');showPart()}
 function showPart(){document.querySelector('#modalGenre').textContent=current.genre+' · ДЕМО-ФРАГМЕНТ';document.querySelector('#modalTitle').textContent=current.title;document.querySelector('#modalAuthor').textContent='AI Library · авторский проект';document.querySelector('#reader').textContent=current.chapters[part];document.querySelector('#chapterLabel').textContent=`Часть ${part+1} из ${current.chapters.length}`;document.querySelector('#prevChapter').disabled=part===0;document.querySelector('#nextChapter').textContent=part===current.chapters.length-1?'Закрыть чтение':'Следующая часть →'}
-document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);render();
+document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
+document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
+
+/* AI Library 0.7 — жестовое управление чтением */
+const readerArea = document.querySelector('#reader');
+
+let swipeStartX = 0;
+let swipeStartY = 0;
+let swipeStartTime = 0;
+
+readerArea.style.touchAction = 'pan-y';
+
+readerArea.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1) {
+    swipeStartX = 0;
+    return;
+  }
+
+  const touch = e.touches[0];
+
+  swipeStartX = touch.clientX;
+  swipeStartY = touch.clientY;
+  swipeStartTime = Date.now();
+}, { passive: true });
+
+readerArea.addEventListener('touchend', e => {
+  if (!swipeStartX || !e.changedTouches.length) return;
+
+  const touch = e.changedTouches[0];
+  const dx = touch.clientX - swipeStartX;
+  const dy = touch.clientY - swipeStartY;
+  const duration = Date.now() - swipeStartTime;
+
+  swipeStartX = 0;
+
+  // Игнорируем медленные движения и обычную вертикальную прокрутку
+  if (duration > 700 || Math.abs(dx) < 65) return;
+  if (Math.abs(dx) < Math.abs(dy) * 1.3) return;
+
+  // Не переключаем части, если пользователь выделяет текст
+  if (window.getSelection()?.toString()) return;
+
+  // Жесты работают только в открытой книге
+  if (!current || !document.querySelector('#modal').classList.contains('open')) {
+    return;
+  }
+
+  if (dx < 0) {
+    // Свайп влево — следующая часть
+    if (part < current.chapters.length - 1) {
+      part++;
+      showPart();
+    }
+  } else {
+    // Свайп вправо — предыдущая часть
+    if (part > 0) {
+      part--;
+      showPart();
+    }
+  }
+}, { passive: true });
+
+readerArea.addEventListener('touchcancel', () => {
+  swipeStartX = 0;
+});
+
+render();
+
 </script></body></html>
