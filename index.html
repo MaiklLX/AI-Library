@@ -1263,4 +1263,255 @@ readerArea.addEventListener('touchcancel', () => {
 render();
 updateContinueReadingButton();
 
-</script></body></html>
+</script>
+<!-- AI Library: окно создания книги -->
+<div id="ai-book-modal" hidden>
+  <div class="ai-book-panel">
+    <button type="button" id="ai-book-close" aria-label="Закрыть">✕</button>
+    <h2>Создать книгу с ИИ</h2>
+    <p>Опиши идею — ИИ подготовит первую главу.</p>
+
+    <form id="ai-book-form">
+      <label for="ai-book-topic">Тема книги</label>
+      <input id="ai-book-topic" name="topic" maxlength="500"
+        placeholder="Например, история искусственного интеллекта" required>
+
+      <label for="ai-book-genre">Жанр</label>
+      <input id="ai-book-genre" name="genre" maxlength="100"
+        placeholder="Научно-популярная литература" value="научно-популярная литература">
+
+      <label for="ai-book-audience">Для кого книга</label>
+      <input id="ai-book-audience" name="audience" maxlength="100"
+        placeholder="Для начинающих читателей" value="широкая аудитория">
+
+      <label for="ai-book-length">Объём первой главы</label>
+      <select id="ai-book-length" name="length">
+        <option value="short">Короткая</option>
+        <option value="medium" selected>Средняя</option>
+        <option value="long">Большая</option>
+      </select>
+
+      <button type="submit" id="ai-book-generate">Создать первую главу</button>
+      <p id="ai-book-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <article id="ai-book-result" hidden>
+      <h3 id="ai-book-result-title"></h3>
+      <div id="ai-book-result-text"></div>
+    </article>
+  </div>
+</div>
+
+<style>
+  #ai-book-modal[hidden],
+  #ai-book-result[hidden] {
+    display: none !important;
+  }
+
+  #ai-book-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    overflow-y: auto;
+    padding: 24px 14px;
+    background: rgba(8, 10, 14, .88);
+    backdrop-filter: blur(8px);
+  }
+
+  .ai-book-panel {
+    position: relative;
+    box-sizing: border-box;
+    width: min(100%, 680px);
+    margin: 24px auto;
+    padding: 28px;
+    border: 1px solid rgba(221, 180, 91, .5);
+    border-radius: 18px;
+    background: #17191e;
+    color: #f4f0e7;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, .45);
+  }
+
+  .ai-book-panel h2 {
+    margin-top: 8px;
+    color: #e4bd68;
+  }
+
+  #ai-book-close {
+    float: right;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  #ai-book-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  #ai-book-form label {
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  #ai-book-form input,
+  #ai-book-form select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #55504a;
+    border-radius: 9px;
+    background: #22252b;
+    color: #fff;
+    font: inherit;
+  }
+
+  #ai-book-generate {
+    margin-top: 12px;
+    padding: 13px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: #d8b15e;
+    color: #171717;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  #ai-book-generate:disabled {
+    opacity: .6;
+    cursor: wait;
+  }
+
+  #ai-book-status {
+    overflow-wrap: anywhere;
+    color: #e4bd68;
+  }
+
+  #ai-book-result {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #45413a;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  #ai-book-result-text {
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 480px) {
+    .ai-book-panel {
+      margin: 8px auto;
+      padding: 20px 16px;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const API_URL = "https://ai-library-generator.bymaikl.workers.dev/generate";
+
+  const modal = document.getElementById("ai-book-modal");
+  const form = document.getElementById("ai-book-form");
+  const closeButton = document.getElementById("ai-book-close");
+  const generateButton = document.getElementById("ai-book-generate");
+  const status = document.getElementById("ai-book-status");
+  const result = document.getElementById("ai-book-result");
+  const resultTitle = document.getElementById("ai-book-result-title");
+  const resultText = document.getElementById("ai-book-result-text");
+
+  if (!modal || !form) {
+    console.error("AI Library: окно генерации не найдено");
+    return;
+  }
+
+  const openButton = document.createElement("button");
+  openButton.type = "button";
+  openButton.id = "ai-book-open";
+  openButton.textContent = "✦ Создать книгу с ИИ";
+  openButton.style.cssText =
+    "padding:12px 18px;border:1px solid #d8b15e;border-radius:10px;" +
+    "background:#d8b15e;color:#171717;font-weight:700;cursor:pointer;";
+
+  openButton.addEventListener("click", () => {
+    modal.hidden = false;
+    document.getElementById("ai-book-topic").focus();
+  });
+
+  const actions = document.querySelector(".hero .actions");
+  if (actions) {
+    actions.appendChild(openButton);
+  } else {
+    document.body.appendChild(openButton);
+  }
+
+  closeButton.addEventListener("click", () => {
+    modal.hidden = true;
+  });
+
+  modal.addEventListener("click", event => {
+    if (event.target === modal) modal.hidden = true;
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") modal.hidden = true;
+  });
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const topic = document.getElementById("ai-book-topic").value.trim();
+    const genre = document.getElementById("ai-book-genre").value.trim();
+    const audience = document.getElementById("ai-book-audience").value.trim();
+    const length = document.getElementById("ai-book-length").value;
+
+    if (!topic) {
+      status.textContent = "Сначала укажи тему книги.";
+      return;
+    }
+
+    generateButton.disabled = true;
+    generateButton.textContent = "Создаём главу…";
+    status.textContent = "ИИ пишет первую главу. Это может занять некоторое время.";
+    result.hidden = true;
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic, genre, audience, length })
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("Сервер вернул ответ в неизвестном формате.");
+      }
+
+      if (!response.ok || !data.ok || typeof data.text !== "string") {
+        throw new Error(data.error || `Ошибка сервера: ${response.status}`);
+      }
+
+      resultTitle.textContent = data.title || topic;
+      resultText.textContent = data.text;
+      result.hidden = false;
+      status.textContent = "Глава создана. Пока она отображается в этом окне.";
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (error) {
+      console.error("AI Library generation error:", error);
+      status.textContent =
+        "Не удалось создать главу: " + error.message +
+        " Проверь адрес Worker и попробуй ещё раз.";
+    } finally {
+      generateButton.disabled = false;
+      generateButton.textContent = "Создать первую главу";
+    }
+  });
+})();
+</script>
+</body></html>
