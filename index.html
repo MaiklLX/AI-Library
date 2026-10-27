@@ -219,6 +219,204 @@ textarea {
     text-align: center;
   }
 }
+
+/* AI Library 0.4 — визуальное улучшение главного экрана */
+
+/* Более выразительная композиция */
+.hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero > div:first-child {
+  min-width: 0;
+  animation: heroReveal .7s ease both;
+}
+
+.hero h1 {
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.hero h1 em {
+  text-shadow: 0 0 36px #d9b66d20;
+}
+
+.hero p {
+  line-height: 1.85;
+}
+
+/* Золотое свечение и глубина иллюстрации */
+.art {
+  isolation: isolate;
+  min-width: 0;
+  box-shadow:
+    inset 0 0 70px #d9b66d0a,
+    0 22px 60px #0005;
+  background:
+    radial-gradient(ellipse at 50% 45%, #6a502c55, transparent 48%),
+    linear-gradient(145deg, #302719, #171717 65%);
+  transition: border-color .3s, box-shadow .3s;
+}
+
+.art:hover {
+  border-color: #d9b66d99;
+  box-shadow:
+    inset 0 0 70px #d9b66d12,
+    0 22px 65px #0007,
+    0 0 28px #d9b66d0b;
+}
+
+.art:before {
+  box-shadow: 0 0 55px #d9b66d0a;
+  transition: transform .7s ease;
+}
+
+.art:hover:before {
+  transform: rotate(38deg) scale(1.04);
+}
+
+.spark {
+  animation: sparkFloat 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 22px #d9b66d30);
+}
+
+.art label {
+  z-index: 2;
+}
+
+/* Кнопки: понятная реакция на действия */
+.btn,
+.pill,
+.genre {
+  transition:
+    background-color .2s,
+    color .2s,
+    border-color .2s,
+    transform .2s,
+    box-shadow .2s;
+}
+
+.btn:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.btn.primary:hover {
+  background: #ead09a;
+  box-shadow: 0 7px 24px #d9b66d20;
+}
+
+.btn:focus-visible,
+.pill:focus-visible,
+.genre:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Статистика */
+.stats {
+  flex-wrap: wrap;
+}
+
+.stats > div {
+  min-width: 72px;
+}
+
+.stats strong {
+  letter-spacing: -.03em;
+}
+
+/* Плавное появление первого экрана */
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sparkFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* На телефонах — компактнее, без потери читаемости */
+@media (max-width: 820px) {
+  .hero {
+    gap: 26px;
+  }
+
+  .art {
+    min-height: 230px;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero h1 {
+    font-size: clamp(40px, 11vw, 47px);
+    line-height: 1.08;
+  }
+
+  .hero p {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .actions {
+    gap: 9px;
+  }
+
+  .actions .btn {
+    max-width: 100%;
+  }
+
+  .art {
+    min-height: 190px;
+    border-radius: 14px;
+  }
+
+  .spark {
+    font-size: 84px;
+  }
+
+  .stats {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .stats strong {
+    font-size: 20px;
+  }
+}
+
+/* Учитываем настройки уменьшения анимации */
+@media (prefers-reduced-motion: reduce) {
+  .hero > div:first-child,
+  .spark {
+    animation: none;
+  }
+
+  .art,
+  .art:before,
+  .btn,
+  .pill,
+  .genre {
+    transition: none;
+  }
+
+  .btn:hover,
+  .art:hover:before {
+    transform: none;
+  }
+}
 </style>
 </head>
 <body>
