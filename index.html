@@ -874,8 +874,83 @@ document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.cl
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
 document.querySelector('#books').addEventListener('click',e=>{let f=e.target.closest('[data-fav]');if(f){let a=favs(),id=+f.dataset.fav;localStorage.setItem('ai-library-favs',JSON.stringify(a.includes(id)?a.filter(x=>x!==id):[...a,id]));render();return}let r=e.target.closest('[data-read]');if(r)openBook(+r.dataset.read)});
-function openBook(id){current=books.find(b=>b.id===id);part=0;document.querySelector('#modal').classList.add('open');showPart()}
-function showPart(){document.querySelector('#modalGenre').textContent=current.genre+' · ДЕМО-ФРАГМЕНТ';document.querySelector('#modalTitle').textContent=current.title;document.querySelector('#modalAuthor').textContent='AI Library · авторский проект';document.querySelector('#reader').textContent=current.chapters[part];document.querySelector('#chapterLabel').textContent=`Часть ${part+1} из ${current.chapters.length}`;document.querySelector('#prevChapter').disabled=part===0;document.querySelector('#nextChapter').textContent=part===current.chapters.length-1?'Закрыть чтение':'Следующая часть →'}
+
+/* AI Library 0.8 — сохранение прогресса чтения */
+
+function getReadingProgress() {
+  try {
+    return JSON.parse(
+      localStorage.getItem('ai-library-progress') || '{}'
+    );
+  } catch {
+    return {};
+  }
+}
+
+function saveReadingProgress() {
+  if (!current) return;
+
+  try {
+    const progress = getReadingProgress();
+
+    progress[current.id] = {
+      part: part,
+      updatedAt: Date.now()
+    };
+
+    localStorage.setItem(
+      'ai-library-progress',
+      JSON.stringify(progress)
+    );
+  } catch (error) {
+    console.warn('Не удалось сохранить прогресс чтения.', error);
+  }
+}
+
+function openBook(id) {
+  current = books.find(b => b.id === id);
+
+  if (!current) return;
+
+  const progress = getReadingProgress();
+  const saved = progress[current.id];
+
+  part = saved && Number.isInteger(saved.part)
+    ? Math.max(0, Math.min(saved.part, current.chapters.length - 1))
+    : 0;
+
+  document.querySelector('#modal').classList.add('open');
+  showPart();
+}
+
+function showPart() {
+  if (!current) return;
+
+  document.querySelector('#modalGenre').textContent =
+    current.genre + ' · ДЕМО-ФРАГМЕНТ';
+
+  document.querySelector('#modalTitle').textContent =
+    current.title;
+
+  document.querySelector('#modalAuthor').textContent =
+    'AI Library · авторский проект';
+
+  document.querySelector('#reader').textContent =
+    current.chapters[part];
+
+  document.querySelector('#chapterLabel').textContent =
+    `Часть ${part + 1} из ${current.chapters.length}`;
+
+  document.querySelector('#prevChapter').disabled =
+    part === 0;
+
+  document.querySelector('#nextChapter').textContent =
+    part === current.chapters.length - 1
+      ? 'Закрыть чтение'
+      : 'Следующая часть →';
+
+  saveReadingProgress();
+}
 document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
 document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
 
