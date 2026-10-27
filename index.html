@@ -1032,6 +1032,7 @@ const books=[
 
 const PERSONAL_BOOKS_KEY = 'ai-library-personal-books';
 const SHARED_BOOKS_KEY = 'ai-library-shared-books-cache';
+const SHARED_BOOKS_URL = 'https://ai-library-generator.bymaikl.workers.dev/books';
 
 let sharedBooks = [];
 let personalBooks = [];
@@ -1039,6 +1040,44 @@ let personalBooks = [];
 function getAllBooks() {
   return [...books, ...sharedBooks, ...personalBooks];
 }
+
+async function loadSharedBooks() {
+  try {
+    const response = await fetch(SHARED_BOOKS_URL);
+    if (!response.ok) throw new Error('Не удалось загрузить общие книги');
+
+    const data = await response.json();
+    if (!data.ok || !Array.isArray(data.books)) {
+      throw new Error('Неверный формат списка книг');
+    }
+
+    sharedBooks = data.books.map(book => ({
+      ...book,
+      id: 'shared-' + book.id,
+      desc: book.description || '',
+      cls: 'shared-cover',
+      tag: 'ОБЩАЯ КНИГА',
+      symbol: '✦',
+      length: 15,
+      chapters: []
+    }));
+
+    localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks));
+  } catch (error) {
+    console.error('Ошибка загрузки общих книг:', error);
+
+    try {
+      sharedBooks = JSON.parse(
+        localStorage.getItem(SHARED_BOOKS_KEY) || '[]'
+      );
+    } catch {
+      sharedBooks = [];
+    }
+  }
+
+  render();
+}
+
 
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>JSON.parse(localStorage.getItem('ai-library-favs')||'[]');
