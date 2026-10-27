@@ -675,6 +675,178 @@ textarea {
     transform: none;
   }
 }
+
+/* AI Library 0.6 — комфортное чтение */
+
+.modal {
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.dialog {
+  width: min(820px, 100%);
+  padding: 34px clamp(20px, 5vw, 48px);
+  border-color: #78603a;
+  background:
+    radial-gradient(ellipse at 90% 0%, #392c1a30, transparent 42%),
+    #181818;
+  box-shadow: 0 24px 90px #0009;
+  scrollbar-color: #665333 #181818;
+  scrollbar-width: thin;
+}
+
+.dialog h2 {
+  max-width: 22ch;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+.detail {
+  line-height: 1.7;
+}
+
+#modalGenre {
+  letter-spacing: .16em;
+  font-size: 11px;
+}
+
+#modalAuthor {
+  color: #b8ad98;
+  font-size: 13px;
+}
+
+/* Основной текст книги */
+.reader {
+  max-width: 68ch;
+  margin: 30px auto;
+  width: 100%;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  line-height: 1.95;
+  letter-spacing: .005em;
+  color: #e8e0d1;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  text-wrap: pretty;
+  user-select: text;
+}
+
+.reader::selection {
+  background: #8e713b;
+  color: #fffaf0;
+}
+
+/* Панель перехода между частями */
+.controls {
+  position: sticky;
+  bottom: -1px;
+  z-index: 2;
+  align-items: center;
+  margin-top: 24px;
+  padding: 18px 0 4px;
+  background: linear-gradient(
+    to bottom,
+    #18181800,
+    #181818 22%
+  );
+  border-top: 1px solid #d9b66d25;
+}
+
+.controls button {
+  min-height: 44px;
+}
+
+.controls button:disabled {
+  cursor: not-allowed;
+  opacity: .38;
+  transform: none;
+}
+
+#chapterLabel {
+  text-align: center;
+  font-size: 12px;
+  color: #d9b66d;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice {
+  max-width: 68ch;
+  margin: 22px auto 0;
+  line-height: 1.7;
+  color: #918a7e;
+}
+
+/* Кнопка закрытия */
+.close {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: background .2s, border-color .2s;
+}
+
+.close:hover {
+  background: #d9b66d15;
+  border-color: #d9b66d66;
+}
+
+.close:focus-visible,
+.controls button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Телефоны */
+@media (max-width: 540px) {
+  .dialog {
+    padding: 58px 20px 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .dialog h2 {
+    font-size: 28px;
+    line-height: 1.22;
+    margin-right: 24px;
+  }
+
+  .reader {
+    font-size: 18px;
+    line-height: 1.9;
+    margin: 24px auto;
+  }
+
+  .controls {
+    gap: 8px;
+    padding-top: 14px;
+  }
+
+  .controls button {
+    flex: 1 1 40%;
+    min-width: 0;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  #chapterLabel {
+    flex-basis: 100%;
+    order: -1;
+    padding-bottom: 3px;
+  }
+
+  .notice {
+    font-size: 11px;
+  }
+}
+
+/* Уважение к системным настройкам анимации */
+@media (prefers-reduced-motion: reduce) {
+  .close {
+    transition: none;
+  }
+}
 </style>
 </head>
 <body>
