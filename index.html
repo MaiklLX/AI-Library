@@ -1082,7 +1082,7 @@ async function loadSharedBooks() {
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>JSON.parse(localStorage.getItem('ai-library-favs')||'[]');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function render(){let q=document.querySelector('#search').value.toLowerCase().trim();let list=books.filter(b=>(genre==='Все'||b.genre===genre)&&(!onlyFav||favs().includes(b.id))&&[b.title,b.desc,b.genre].some(v=>v.toLowerCase().includes(q)));
+function render(){let q=document.querySelector('#search').value.toLowerCase().trim();let list=getAllBooks().filter(b=>(genre==='Все'||b.genre===genre)&&(!onlyFav||favs().includes(b.id))&&[b.title,b.desc,b.genre].some(v=>v.toLowerCase().includes(q)));
 let s=document.querySelector('#sort').value;
 const progress=getReadingProgress();
 
@@ -1123,7 +1123,42 @@ document.querySelector('#books').innerHTML=list.length?list.map(b=>`<article cla
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
-document.querySelector('#books').addEventListener('click',e=>{let f=e.target.closest('[data-fav]');if(f){let a=favs(),id=+f.dataset.fav;localStorage.setItem('ai-library-favs',JSON.stringify(a.includes(id)?a.filter(x=>x!==id):[...a,id]));render();return}let r=e.target.closest('[data-read]');if(r)openBook(+r.dataset.read)});
+document.querySelector('#books').addEventListener('click',e=>{let f=e.target.closest('[data-fav]');if(f){let a=favs(),id=+f.dataset.fav;localStorage.setItem('ai-library-favs',JSON.stringify(a.includes(id)?a.filter(x=>x!==id):[...a,id]));render();return}
+let r = e.target.closest('[data-read]');
+if (r) {
+  const id = r.dataset.read;
+  const book = getAllBooks().find(b => String(b.id) === String(id));
+  if (!book) return;
+
+  if (String(id).startsWith('shared-')) {
+    const serverId = String(id).slice(7);
+    fetch(`${SHARED_BOOKS_URL}/${encodeURIComponent(serverId)}`)
+      .then(response => {
+        if (!response.ok) throw new Error('Не удалось загрузить книгу');
+        return response.json();
+      })
+      .then(data => {
+        if (!data.ok || !Array.isArray(data.chapters)) {
+          throw new Error('Неверный формат глав');
+        }
+
+        book.chapters = data.chapters.map(chapter =>
+          typeof chapter === 'string'
+            ? chapter
+            : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
+        );
+
+        openBook(book.id);
+      })
+      .catch(error => {
+        console.error(error);
+        alert('Не удалось загрузить книгу. Попробуйте ещё раз.');
+      });
+  } else {
+    openBook(book.id);
+  }
+}
+});
 
 /* AI Library 0.8 — сохранение прогресса чтения */
 
@@ -1311,6 +1346,7 @@ readerArea.addEventListener('touchcancel', () => {
 });
 
 render();
+loadSharedBooks();
 updateContinueReadingButton();
 
 </script>
