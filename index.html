@@ -1195,7 +1195,7 @@ function saveReadingProgress() {
 }
 
 function openBook(id) {
-  current = books.find(b => b.id === id);
+current = getAllBooks().find(b => String(b.id) === String(id));
 
   if (!current) return;
 
