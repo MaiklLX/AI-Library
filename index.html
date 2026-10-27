@@ -902,6 +902,8 @@ function saveReadingProgress() {
       'ai-library-progress',
       JSON.stringify(progress)
     );
+
+    updateContinueReadingButton();
   } catch (error) {
     console.warn('Не удалось сохранить прогресс чтения.', error);
   }
@@ -951,6 +953,47 @@ function showPart() {
 
   saveReadingProgress();
 }
+
+/* AI Library 0.9 — продолжение чтения */
+
+function updateContinueReadingButton() {
+  const actions = document.querySelector('.hero .actions');
+  if (!actions) return;
+
+  let btn = document.querySelector('#continueReadingBtn');
+  const progress = getReadingProgress();
+
+  const entries = Object.entries(progress)
+    .filter(([id, saved]) =>
+      books.some(b => b.id === Number(id)) &&
+      saved &&
+      Number.isInteger(saved.part)
+    )
+    .sort((a, b) =>
+      (b[1].updatedAt || 0) - (a[1].updatedAt || 0)
+    );
+
+  if (entries.length === 0) {
+    if (btn) btn.remove();
+    return;
+  }
+
+  const [id, saved] = entries[0];
+  const book = books.find(b => b.id === Number(id));
+
+  if (!book) return;
+
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'continueReadingBtn';
+    btn.className = 'btn';
+    actions.appendChild(btn);
+  }
+
+  btn.textContent = '↻ Продолжить чтение · ' + book.title;
+  btn.onclick = () => openBook(book.id);
+}
+
 document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
 document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
 
@@ -1018,5 +1061,6 @@ readerArea.addEventListener('touchcancel', () => {
 });
 
 render();
+updateContinueReadingButton();
 
 </script></body></html>
