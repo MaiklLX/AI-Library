@@ -1314,6 +1314,71 @@ body.reader-open #chapterLabel {
 }
 </style>
 
+
+<style id="ios-reader-layout-and-page-turn-fix">
+/* iOS standalone: make the paper a real flex column so the text uses its full height. */
+body.reader-open .modal.open .book-page {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+body.reader-open .modal.open .book-running-head { flex: 0 0 auto; }
+body.reader-open .modal.open .reader {
+  display: block;
+  flex: 1 1 0 !important;
+  width: 100%;
+  min-width: 0;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+  overflow: hidden !important;
+}
+body.reader-open .modal.open .book-page-number {
+  position: absolute;
+  z-index: 2;
+}
+/* The turn sheet must overlay the paper, not become a normal flex child. */
+body.reader-open .modal.open .book-flip-sheet {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 5;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 5px 24px rgba(0,0,0,.28);
+}
+body.reader-open .modal.open .book-flip-sheet.flip-forward {
+  transform-origin: left center;
+  animation: aiLibraryPageFlipForward .62s ease-in both;
+}
+body.reader-open .modal.open .book-flip-sheet.flip-back {
+  transform-origin: right center;
+  animation: aiLibraryPageFlipBack .62s ease-in both;
+}
+@keyframes aiLibraryPageFlipForward {
+  0% { transform: perspective(1200px) rotateY(0deg); filter: brightness(1); }
+  45% { filter: brightness(.78); }
+  100% { transform: perspective(1200px) rotateY(-88deg); filter: brightness(.65); }
+}
+@keyframes aiLibraryPageFlipBack {
+  0% { transform: perspective(1200px) rotateY(0deg); filter: brightness(1); }
+  45% { filter: brightness(.78); }
+  100% { transform: perspective(1200px) rotateY(88deg); filter: brightness(.65); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.reader-open .modal.open .book-flip-sheet.flip-forward,
+  body.reader-open .modal.open .book-flip-sheet.flip-back { animation-duration: .01ms; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button></div></nav></div></header>
@@ -2255,6 +2320,33 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.visualViewport?.addEventListener('resize', syncReaderViewport, { passive: true });
   window.visualViewport?.addEventListener('scroll', syncReaderViewport, { passive: true });
   syncReaderViewport();
+})();
+</script>
+
+
+<script>
+/* Recalculate pagination after iOS has committed the standalone viewport layout. */
+(() => {
+  let pending = false;
+  const modal = document.getElementById('modal');
+  if (!modal) return;
+  const repaginate = () => {
+    if (pending || !modal.classList.contains('open') || !document.body.classList.contains('reader-open')) return;
+    pending = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      pending = false;
+      if (!modal.classList.contains('open') || !document.body.classList.contains('reader-open')) return;
+      if (typeof paginateCurrentChapter === 'function' && typeof current !== 'undefined' && current) {
+        const oldIndex = typeof readingPageIndex === 'number' ? readingPageIndex : 0;
+        paginateCurrentChapter();
+        readingPageIndex = Math.max(0, Math.min(oldIndex, readingPages.length - 1));
+        if (typeof renderReadingPage === 'function') renderReadingPage(false);
+      }
+    }));
+  };
+  window.addEventListener('load', repaginate, { once: true });
+  window.visualViewport?.addEventListener('resize', repaginate, { passive: true });
+  window.addEventListener('orientationchange', repaginate, { passive: true });
 })();
 </script>
 
