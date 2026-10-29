@@ -1321,7 +1321,7 @@ function paginateCurrentChapter() {
 
   // Сначала используем весь доступный размер страницы, затем делим текст по словам.
   const availableHeight = Math.max(140, reader.clientHeight || 300);
-  const words = text.split(/(\\s+)/).filter(token => token.length > 0);
+  const words = text.split(/(\s+)/).filter(token => token.length > 0);
   const probe = reader.cloneNode(false);
   probe.id = 'readerMeasure';
   probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:${reader.clientWidth || 300}px;height:auto;max-height:none;overflow:visible;display:block;flex:none;white-space:pre-wrap;`;
@@ -1352,12 +1352,12 @@ function paginateCurrentChapter() {
     // Если возможно, заканчиваем страницу на границе абзаца.
     if (end < words.length) {
       for (let k = end - 1; k > cursor + Math.max(1, Math.floor((end - cursor) * .65)); k--) {
-        if (/\\n\\s*\\n/.test(words[k])) { end = k + 1; break; }
+        if (/\n\s*\n/.test(words[k])) { end = k + 1; break; }
       }
     }
     readingPages.push(words.slice(cursor, end).join('').trim());
     cursor = end;
-    while (cursor < words.length && /^\\s+$/.test(words[cursor]) && !/\\n/.test(words[cursor])) cursor++;
+    while (cursor < words.length && /^\s+$/.test(words[cursor]) && !/\n/.test(words[cursor])) cursor++;
   }
   probe.remove();
   if (!readingPages.length) readingPages = [''];
