@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v8';
+const CACHE_NAME = CACHE_PREFIX + 'v9';
 const APP_SHELL = ['./', './index.html', './premiere.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {
