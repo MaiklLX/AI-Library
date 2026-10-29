@@ -60,6 +60,51 @@ body[data-genre="scifi"] .cover .symbol{color:#8bc8ff;text-shadow:0 0 34px #3d8f
 @keyframes rotate{to{transform:rotate(360deg)}}@keyframes breath{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}@keyframes twinkle{from{opacity:.2;transform:translateY(3px)}to{opacity:.6;transform:translateY(-3px)}}@keyframes coverIn{from{opacity:0;transform:perspective(1000px) rotateY(-16deg) translateY(18px) scale(.97)}to{opacity:1;transform:perspective(1000px) rotateY(-9deg) translateY(0) scale(1)}}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:760px){header{height:66px;padding:0 16px}.wrap{width:calc(100% - 30px)}.layout{grid-template-columns:1fr;gap:18px}.visual{min-height:350px;order:0}.content{order:1}.cover{width:190px}.halo{width:min(330px,90vw)}.seal{left:calc(50% + 44px);top:8%;width:76px;height:76px;font-size:9px}.title{font-size:clamp(39px,11vw,56px)}.synopsis{font-size:15px}.release-date{font-size:23px}.countdown{grid-template-columns:repeat(4,minmax(0,1fr))}.num{font-size:24px}}
 @media(max-width:760px){.visual:before{width:100%}.visual:after{inset:3% 0;opacity:.32}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Editorial polish — stronger hierarchy, layered light and tactile cover treatment. */
+:root{--rose:#d58a9c;--gold-soft:#f0d89d;--panel-glass:#181715c9}
+body{background-attachment:fixed}
+header{box-shadow:0 12px 36px #0002}
+.brand .logo{box-shadow:0 0 26px #d9b66d18,inset 0 0 18px #d9b66d0b}
+.back{background:#ffffff04}
+.layout{padding-block:8px}
+.visual{min-height:560px}
+.visual:before{width:min(560px,112%);background:radial-gradient(circle,#d9b66d20 0,#a9783018 30%,transparent 70%)}
+.halo{width:min(460px,94vw);border-color:#d9b66d42;box-shadow:0 0 0 22px #d9b66d06,0 0 0 58px #d9b66d04,inset 0 0 90px #d9b66d0b}
+.cover{box-shadow:26px 32px 80px #000d,-5px 0 0 #d9b66d22,0 0 60px #d9b66d0a;transition:box-shadow .45s,transform .45s}
+.visual:hover .cover{transform:perspective(1000px) rotateY(-5deg) translateY(-4px);box-shadow:32px 40px 90px #000e,-5px 0 0 #d9b66d28,0 0 70px #d9b66d14}
+.cover:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(110deg,#fff1 0%,transparent 18%,transparent 72%,#0003 100%),linear-gradient(0deg,#07080a25,transparent 42%);mix-blend-mode:screen}
+.cover img{position:relative}
+.seal{backdrop-filter:blur(12px);border-color:#e3c77aab;box-shadow:0 14px 36px #0009,0 0 24px #d9b66d13}
+.eyebrow{display:flex;align-items:center;gap:10px}
+.eyebrow:after{content:"";display:inline-block;width:34px;height:1px;background:linear-gradient(90deg,#d9b66d99,transparent)}
+.title{max-width:760px;text-shadow:0 8px 34px #0007;letter-spacing:-.045em}
+.tagline{max-width:590px;text-wrap:pretty}
+.synopsis{max-width:610px}
+.facts{gap:8px;margin:23px 0 17px}
+.fact{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#d9b66d0d,#ffffff03);box-shadow:inset 0 1px #ffffff08}
+.story-beats{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:17px 0 27px;color:#c4b79c;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.story-beats span{display:inline-flex;align-items:center;gap:9px}
+.story-beats span+span:before{content:"";width:3px;height:3px;border-radius:50%;background:var(--rose);box-shadow:0 0 9px #d58a9c88;margin-right:1px}
+.release{margin-top:29px;padding-top:26px}
+.release-label{font-weight:700}
+.release-date{letter-spacing:-.025em}
+.unit{background:linear-gradient(160deg,#d9b66d0e,#ffffff02);box-shadow:inset 0 1px #ffffff09}
+.num{font-variant-numeric:tabular-nums;text-shadow:0 0 20px #d9b66d22}
+.locked{box-shadow:inset 0 1px #ffffff08;backdrop-filter:blur(8px)}
+.lock{color:var(--gold-soft)}
+.btn{box-shadow:0 6px 18px #0002}
+.btn.primary{box-shadow:0 8px 24px #d9b66d18}
+footer{background:linear-gradient(90deg,#ffffff03,transparent)}
+@media(max-width:760px){
+ .visual{min-height:370px}
+ .halo{width:min(340px,94vw)}
+ .story-beats{margin:14px 0 22px;font-size:9px;gap:7px}
+ .release{margin-top:24px}
+ .cover{box-shadow:18px 22px 55px #000c,-4px 0 0 #d9b66d20}
+}
+@media(hover:none){.visual:hover .cover{transform:perspective(1000px) rotateY(-9deg)}}
+
 </style>
 </head>
 <body>
@@ -69,7 +114,7 @@ body[data-genre="scifi"] .cover .symbol{color:#8bc8ff;text-shadow:0 0 34px #3d8f
 <section id="missing" class="state hidden"><div><div class="eyebrow">ЗАКРЫТАЯ ПРЕМЬЕРА</div><h1>История пока не найдена</h1><p>Возможно, ссылка устарела или эта премьера ещё не опубликована.</p><a class="btn primary" href="./index.html#premieres">Вернуться в библиотеку</a></div></section>
 <section id="show" class="layout hidden" aria-live="polite">
 <div class="visual"><div class="halo" aria-hidden="true"></div><div class="cover" id="cover"><span class="symbol" id="symbol">✦</span></div><div class="seal">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
-<div class="content"><div class="eyebrow">✦ ЗАКРЫТАЯ ПРЕМЬЕРА · FIRST LOOK</div><h1 class="title" id="title"></h1><p class="tagline hidden" id="tagline"></p><div class="byline" id="byline"></div><p class="synopsis" id="synopsis"></p><blockquote class="editor-note hidden" id="editorNote"></blockquote><div class="facts" id="facts"></div><div class="release"><div class="release-label">Официальный выход</div><div class="release-date" id="releaseDate">Дата выхода будет объявлена</div><div id="countdownWrap" class="hidden"><div class="release-label">До открытия книги осталось</div><div class="countdown" id="countdown"></div></div></div><div class="locked"><span class="lock">⌑</span><span>Полный текст пока закрыт. Книга появится в каталоге только после официального релиза.</span></div><div class="actions"><a class="btn primary" href="./index.html#premieres">← К премьерам</a><a class="btn" href="./index.html#catalog">Открыть библиотеку</a></div></div>
+<div class="content"><div class="eyebrow">✦ ЗАКРЫТАЯ ПРЕМЬЕРА · FIRST LOOK</div><h1 class="title" id="title"></h1><p class="tagline hidden" id="tagline"></p><div class="byline" id="byline"></div><p class="synopsis" id="synopsis"></p><blockquote class="editor-note hidden" id="editorNote"></blockquote><div class="facts" id="facts"></div><div class="story-beats" aria-label="Ключевые темы истории"><span>Чувства</span><span>Тайна</span><span>Выбор</span></div><div class="release"><div class="release-label">Официальный выход</div><div class="release-date" id="releaseDate">Дата выхода будет объявлена</div><div id="countdownWrap" class="hidden"><div class="release-label">До открытия книги осталось</div><div class="countdown" id="countdown"></div></div></div><div class="locked"><span class="lock">⌑</span><span>Полный текст пока закрыт. Книга появится в каталоге только после официального релиза.</span></div><div class="actions"><a class="btn primary" href="./index.html#premieres">← К премьерам</a><a class="btn" href="./index.html#catalog">Открыть библиотеку</a></div></div>
 </section>
 </main><footer><div class="wrap">✦ AI LIBRARY — каждая книга открывает новый мир.</div></footer>
 <script>
