@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200" viewBox="0 0 800 1200">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090b12"/><stop offset=".48" stop-color="#172535"/><stop offset="1" stop-color="#08090e"/></linearGradient>
+ <radialGradient id="city"><stop stop-color="#2b5a70" stop-opacity=".75"/><stop offset="1" stop-color="#08090e" stop-opacity="0"/></radialGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b0"/><stop offset=".45" stop-color="#c89a46"/><stop offset="1" stop-color="#f5d78a"/></linearGradient>
+ <linearGradient id="rose" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8d1d35"/><stop offset="1" stop-color="#180b12"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="14"/></filter>
+ <pattern id="windows" width="26" height="34" patternUnits="userSpaceOnUse"><rect x="5" y="6" width="5" height="13" fill="#69b8d8" opacity=".65"/><rect x="16" y="6" width="4" height="13" fill="#e3b36a" opacity=".45"/></pattern>
+</defs>
+<rect width="800" height="1200" fill="url(#bg)"/>
+<circle cx="590" cy="355" r="300" fill="url(#city)"/>
+<g opacity=".8">
+ <path d="M490 650V390h55V330h20v-65h22v65h20v125h35v-65h28v-55h20v55h22v260z" fill="#080b12"/>
+ <path d="M490 650V390h55V330h20v-65h22v65h20v125h35v-65h28v-55h20v55h22v260z" fill="url(#windows)" opacity=".75"/>
+ <path d="M0 730L0 515 60 470 110 555 170 440 225 505 280 450 340 540 405 500 480 610 560 545 650 640 800 550V1200H0z" fill="#08090d" opacity=".85"/>
+</g>
+<g stroke="#d7b66d" opacity=".38" fill="none"><path d="M0 780Q260 690 420 820T800 780"/><path d="M0 825Q260 735 420 865T800 825"/></g>
+<g opacity=".5" stroke="#b8c9d4" stroke-width="2" fill="none"><path d="M45 235h210v155H45z"/><path d="M65 255h70v85H65zM150 255h85v85h-85zM65 350h170v20H65z"/><path d="M35 215L270 410M270 215L35 410"/></g>
+<g fill="#d6bd87" opacity=".5"><circle cx="105" cy="270" r="4"/><circle cx="212" cy="302" r="4"/><circle cx="158" cy="367" r="4"/><circle cx="240" cy="243" r="4"/></g>
+<ellipse cx="397" cy="572" rx="215" ry="270" fill="#c68d53" opacity=".11" filter="url(#glow)"/>
+<!-- abstract intertwined silhouettes -->
+<path d="M160 680Q150 535 224 430Q271 362 335 380Q399 394 422 471L465 710Z" fill="#080a0f" stroke="#b77d4c" stroke-opacity=".45" stroke-width="3"/>
+<path d="M320 710Q335 540 420 433Q476 365 542 404Q610 450 615 566L652 730Z" fill="#0a0b11" stroke="#4c90a6" stroke-opacity=".55" stroke-width="3"/>
+<path d="M262 445Q293 389 338 407Q372 421 381 461" fill="none" stroke="#d69a64" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+<path d="M450 444Q496 389 535 430" fill="none" stroke="#7bb4c7" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+<g fill="none" stroke="url(#gold)" stroke-width="2" opacity=".85"><circle cx="400" cy="510" r="286"/><circle cx="400" cy="510" r="270" stroke-dasharray="3 12"/></g>
+<g font-family="Georgia,serif" text-anchor="middle">
+ <text x="400" y="92" fill="url(#gold)" font-size="29" letter-spacing="8">AI LIBRARY</text>
+ <path d="M260 112H540" stroke="#cba45b" opacity=".8"/>
+ <text x="400" y="155" fill="#e4d4b0" font-size="15" letter-spacing="5">ЗАКРЫТАЯ ПРЕМЬЕРА</text>
+ <text x="400" y="218" fill="#f0d99c" font-size="17" letter-spacing="8">18+</text>
+ <text x="400" y="805" fill="#fff0c0" font-size="70" letter-spacing="1">ТЫ В МОИХ</text>
+ <text x="400" y="888" fill="url(#gold)" font-size="86" letter-spacing="2">ПЛАНАХ</text>
+ <path d="M215 914Q400 930 585 914" stroke="#cba45b" fill="none"/>
+ <text x="400" y="960" fill="#e9dfca" font-size="19" letter-spacing="2">ОДНА ВСТРЕЧА. ДВА МИРА.</text>
+ <text x="400" y="990" fill="#e9dfca" font-size="19" letter-spacing="1">И ТАЙНА, КОТОРАЯ ИЗМЕНИТ ВСЁ.</text>
+ <text x="400" y="1114" fill="#b8b0a1" font-size="17" letter-spacing="6">СОВРЕМЕННЫЙ РОМАН</text>
+ <text x="400" y="1147" fill="#cda95f" font-size="15" letter-spacing="4">ЛЮБОВЬ · ДЕТЕКТИВ · 18+</text>
+</g>
+<!-- rose and ring accents -->
+<g transform="translate(108 1015)">
+ <path d="M0 44Q-28 2 8 -18Q48 -37 52 7Q78 -10 92 17Q106 52 58 64Q25 74 0 44Z" fill="url(#rose)" stroke="#9f354b" stroke-width="2"/>
+ <path d="M22 42Q4 15 30 3Q52 6 43 26Q65 20 62 41Q51 59 22 42Z" fill="#4d1022" stroke="#b44a5c"/>
+ <path d="M48 60Q55 90 79 97" stroke="#526b4d" stroke-width="5" fill="none"/>
+</g>
+<ellipse cx="647" cy="1035" rx="31" ry="13" fill="none" stroke="url(#gold)" stroke-width="6" transform="rotate(-18 647 1035)"/>
+<circle cx="671" cy="1023" r="8" fill="#e5c779"/>
+<rect x="18" y="18" width="764" height="1164" rx="5" fill="none" stroke="#d7b66d" stroke-opacity=".48"/>
+</svg>
