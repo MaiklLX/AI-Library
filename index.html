@@ -1591,7 +1591,7 @@ document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibrar
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
 });
-document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
+document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks();if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
 
 /* AI Library 0.7 — жестовое управление чтением */
 const readerArea = document.querySelector('#reader');
