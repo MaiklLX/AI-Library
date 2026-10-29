@@ -41,7 +41,7 @@ assert.match(html, /id="exportLibraryData"/, "Personal data export control is mi
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
-assert.match(html, /function safeClass\(/, "Dynamic cover classes must be sanitized");
+assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
 try {
   new Function(serviceWorker);
 } catch (error) {
