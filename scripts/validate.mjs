@@ -48,6 +48,7 @@ assert.match(html, /id="importLibraryData"/, "Personal data import control is mi
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
+assert.match(html, /data-read="\$\{esc\(b\.id\)\}"/, "Book IDs from imported data must be escaped in HTML attributes");
 try {
   new Function(serviceWorker);
 } catch (error) {
