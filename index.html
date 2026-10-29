@@ -3,6 +3,16 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
+<meta name="description" content="AI Library — бесплатная цифровая библиотека историй. Открывай фантастику, фэнтези, детективы и другие миры, сохраняй прогресс и создавай собственные книги с помощью ИИ.">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Library — библиотека новых миров">
+<meta property="og:description" content="Открывай новые истории, читай в книжном режиме и создавай собственные книги с помощью ИИ.">
+<meta property="og:url" content="https://maikllx.github.io/AI-Library/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://maikllx.github.io/AI-Library/">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>AI Library — библиотека новых миров</title>
 <style>
 :root{--bg:#101010;--panel:#191919;--gold:#d9b66d;--text:#f4f0e7;--muted:#aaa59a;--line:#34312a}
@@ -1006,8 +1016,8 @@ textarea {
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button></div></nav></div></header>
 <main class="wrap">
-<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions"><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Исследовать библиотеку　↘</button><button class="btn" id="randomBtn">✧ Удиви меня</button></div><div class="stats"><div><strong>06</strong><span>историй в каталоге</span></div><div><strong>∞</strong><span>миров для открытия</span></div><div><strong>0 ₽</strong><span>доступ к чтению</span></div></div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
-<section id="catalog"><div class="sectionhead"><div class="eyebrow">ТВОЯ СЛЕДУЮЩАЯ ИСТОРИЯ</div><h2>Каталог библиотеки</h2><p>Выбери книгу — и пусть реальность подождёт.</p></div><div class="toolbar"><input id="search" class="search" placeholder="⌕  Поиск по названию, автору или описанию…" aria-label="Поиск книг">
+<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions"><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Исследовать библиотеку　↘</button><button class="btn" id="randomBtn">✧ Удиви меня</button></div><div class="stats"><div><strong id="catalogCount">6</strong><span>историй в каталоге</span></div><div><strong>∞</strong><span>миров для открытия</span></div><div><strong>0 ₽</strong><span>доступ к чтению</span></div></div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
+<section id="catalog" aria-labelledby="catalogTitle"><div class="sectionhead"><div class="eyebrow">ТВОЯ СЛЕДУЮЩАЯ ИСТОРИЯ</div><h2 id="catalogTitle">Каталог библиотеки</h2><p id="catalogSummary" aria-live="polite">Выбери книгу — и пусть реальность подождёт.</p></div><div class="toolbar"><input id="search" class="search" type="search" autocomplete="off" placeholder="⌕  Поиск по названию, жанру или описанию…" aria-label="Поиск книг">
 <select id="sort" aria-label="Сортировка">
   <option value="featured">Рекомендуем</option>
   <option value="continue">Продолжить чтение</option>
@@ -1016,9 +1026,9 @@ textarea {
   <option value="title">По названию</option>
   <option value="short">Сначала короткие</option>
 </select>
-</div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books"></div></section>
-<section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Это первая версия. Следующий этап — полноценные романы и автоматические публикации.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
-</main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатно для всех · Прототип 0.1</span></div></footer>
+</div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
+<section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и создавай собственные истории с помощью ИИ.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
+</main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатное чтение · AI Library</span></div></footer>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="reader-settings" aria-label="Настройки чтения"><span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button><span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
 <script>
 const books=[
@@ -1127,6 +1137,7 @@ async function loadSharedBooks() {
     }
   }
 
+  syncGenreFilters();
   render();
   updateContinueReadingButton();
 }
@@ -1173,7 +1184,19 @@ async function openBookById(id) {
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function render(){let q=document.querySelector('#search').value.toLowerCase().trim();let list=getAllBooks().filter(b=>(genre==='Все'||b.genre===genre)&&(!onlyFav||favs().includes(b.id))&&[b.title,b.desc,b.genre].some(v=>v.toLowerCase().includes(q)));
+function syncGenreFilters(){
+  const root=document.querySelector("#genres");
+  if(!root)return;
+  const known=new Set([...root.querySelectorAll("[data-genre]")].map(button=>button.dataset.genre));
+  [...new Set(getAllBooks().map(book=>String(book.genre||"Без жанра").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")).forEach(name=>{
+    if(known.has(name))return;
+    const button=document.createElement("button");
+    button.type="button";button.className="genre";button.dataset.genre=name;button.textContent=name;
+    root.appendChild(button);
+  });
+  root.querySelectorAll("[data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre===genre));
+}
+function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks();let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
 let s=document.querySelector('#sort').value;
 const progress=getReadingProgress();
 
@@ -1206,16 +1229,23 @@ if(s==='unread'){
 if(s==='completed'){
   list.sort((a,b)=>readCount(b)-readCount(a));
 }
-document.querySelector('#books').innerHTML=list.length?list.map(b=>`<article class="book">
+document.querySelector("#catalogCount").textContent=String(all.length);
+document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
+document.querySelector("#books").innerHTML=list.length?list.map(b=>`<article class="book">
 <div class="cover ${b.cls}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part)||!b.chapters.length)return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}<span class="symbol">${b.symbol}</span>
 <button class="fav ${favs().includes(b.id)?'saved':''}" data-fav="${b.id}" aria-label="В избранное">${favs().includes(b.id)?'♥':'♡'}</button></div><div class="body"><h3>${esc(b.title)}</h3><div class="author">${esc(b.genre)} · AI Library</div><p class="desc">${esc(b.desc)}</p>
 <div class="meta"><span>◷ ${b.length} мин чтения</span><span>Фрагмент · бесплатно</span></div>${(()=>{const saved=getReadingProgress()[b.id];const total=b.chapters.length;if(!total)return '';const read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0;const percent=Math.round(read/total*100);return read>0?`<div class="reading-progress"><div class="reading-progress-label"><span>Прогресс чтения</span><span>${percent}%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:${percent}%"></div></div></div>`:''})()}<button class="btn read" data-read="${b.id}">Открыть книгу　→</button>
-</div></article>`).join(''):'<div class="empty">Книги не найдены. Попробуйте другой запрос или жанр.</div>';document.querySelector('#favoritesToggle').classList.toggle('active',onlyFav)}
+</div></article>`).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav)}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
-document.querySelector('#books').addEventListener('click',e=>{
-  const favoriteButton = e.target.closest('[data-fav]');
+document.querySelector("#books").addEventListener("click",e=>{
+  if(e.target.closest("[data-reset-catalog]")){
+    document.querySelector("#search").value="";document.querySelector("#sort").value="featured";genre="Все";onlyFav=false;
+    document.querySelectorAll("#genres [data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre==="Все"));
+    render();return;
+  }
+  const favoriteButton = e.target.closest("[data-fav]");
   if (favoriteButton) {
     const id = favoriteButton.dataset.fav;
     const currentFavs = favs();
@@ -1546,7 +1576,14 @@ function updateContinueReadingButton() {
   btn.onclick = () => openBookById(book.id);
 }
 
-document.querySelector('#prevChapter').onclick=()=>{if(part>0){window.__aiLibraryTurnDirection='back';part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection='forward';part++;showPart()}else closeReadingSpace()};document.querySelector('#closeModal').onclick=closeReadingSpace;document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeReadingSpace()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReadingSpace()});
+document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
+  const modal=document.querySelector("#modal");
+  if(e.key==="Escape"){if(modal.classList.contains("open"))closeReadingSpace();return;}
+  if(!modal.classList.contains("open")||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+  if(e.target.closest("input,textarea,select,button,[contenteditable=true]"))return;
+  if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
+  else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
+});
 document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
 
 /* AI Library 0.7 — жестовое управление чтением */
@@ -1664,6 +1701,7 @@ window.addEventListener('resize', () => {
 });
 
 loadPersonalBooks();
+syncGenreFilters();
 render();
 loadSharedBooks();
 updateContinueReadingButton();
@@ -2253,6 +2291,28 @@ body.reader-open .book-page {
   .book-flip-sheet.flip-forward::before,
   .book-flip-sheet.flip-back::before {
     animation-duration: .01ms !important;
+  }
+}
+
+
+/* Release polish: responsive controls, focus visibility and status clarity */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+button:disabled { cursor: not-allowed; opacity: .58; }
+.search::-webkit-search-cancel-button { cursor: pointer; }
+.empty p { margin: 0 0 14px; }
+#catalogSummary { min-height: 1.5em; }
+@media (hover: none) {
+  .book:hover { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
   }
 }
 
