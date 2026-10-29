@@ -49,6 +49,29 @@ assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is mis
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
 assert.match(html, /data-read="\$\{esc\(b\.id\)\}"/, "Book IDs from imported data must be escaped in HTML attributes");
+const publishedCatalogPath = resolve(root, "content/catalog.json");
+assert.ok(existsSync(publishedCatalogPath), "Published books catalog is missing");
+const publishedCatalog = JSON.parse(readFileSync(publishedCatalogPath, "utf8"));
+assert.equal(publishedCatalog.version, 1, "Published books catalog version must be 1");
+assert.ok(Array.isArray(publishedCatalog.books), "Published books catalog must contain a books array");
+const publishedIds = new Set();
+for (const entry of publishedCatalog.books) {
+  assert.ok(entry && typeof entry.id === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(entry.id), "Published book ID must be a slug");
+  assert.ok(!publishedIds.has(entry.id), `Duplicate published book ID: ${entry.id}`);
+  publishedIds.add(entry.id);
+  assert.ok(typeof entry.path === "string" && entry.path === `./content/books/${entry.id}.json`, `Published book path must match its ID: ${entry.id}`);
+  const bookPath = resolve(root, entry.path);
+  assert.ok(existsSync(bookPath), `Published book file is missing: ${entry.path}`);
+  const book = JSON.parse(readFileSync(bookPath, "utf8"));
+  assert.equal(book.id, entry.id, `Book ID does not match catalog entry: ${entry.id}`);
+  assert.ok(typeof book.title === "string" && book.title.trim(), `Book title is missing: ${entry.id}`);
+  assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
+  assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
+}
+assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
+assert.match(html, /async function loadPublishedBooks\(/, "Published book loader is missing");
+assert.match(html, /PUBLISHED_BOOKS_KEY/, "Published book offline cache is missing");
+
 try {
   new Function(serviceWorker);
 } catch (error) {
