@@ -1041,6 +1041,59 @@ function getAllBooks() {
   return [...books, ...sharedBooks, ...personalBooks];
 }
 
+function normalizeSharedBook(book) {
+  return {
+    ...book,
+    id: 'shared-' + String(book.id),
+    desc: book.description || 'Общая книга AI Library.',
+    genre: book.genre || 'Научно-популярная литература',
+    cls: 'shared-cover',
+    tag: 'ОБЩАЯ КНИГА',
+    symbol: '✦',
+    length: 15,
+    chapters: Array.isArray(book.chapters) ? book.chapters : []
+  };
+}
+
+function loadPersonalBooks() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PERSONAL_BOOKS_KEY) || '[]');
+    personalBooks = Array.isArray(saved) ? saved.filter(book =>
+      book && typeof book.id === 'string' &&
+      typeof book.title === 'string' &&
+      Array.isArray(book.chapters)
+    ).map(book => ({
+      ...book,
+      desc: book.desc || '',
+      genre: book.genre || 'Без жанра',
+      cls: book.cls || 'adventure',
+      tag: book.tag || 'ЛИЧНАЯ КНИГА',
+      symbol: book.symbol || '✦',
+      length: Number(book.length) || 5,
+      chapters: book.chapters.map(chapter => String(chapter))
+    })) : [];
+  } catch (error) {
+    console.warn('Не удалось загрузить личные книги:', error);
+    personalBooks = [];
+  }
+}
+
+function savePersonalBook(book) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(PERSONAL_BOOKS_KEY) || '[]');
+    const stored = Array.isArray(existing) ? existing : [];
+    const next = [...stored.filter(item => item.id !== book.id), book];
+    localStorage.setItem(PERSONAL_BOOKS_KEY, JSON.stringify(next));
+    personalBooks = next;
+    render();
+    updateContinueReadingButton();
+    return true;
+  } catch (error) {
+    console.error('Не удалось сохранить личную книгу:', error);
+    return false;
+  }
+}
+
 async function loadSharedBooks() {
   try {
     const response = await fetch(SHARED_BOOKS_URL);
@@ -1051,36 +1104,74 @@ async function loadSharedBooks() {
       throw new Error('Неверный формат списка книг');
     }
 
-    sharedBooks = data.books.map(book => ({
-      ...book,
-      id: 'shared-' + book.id,
-      desc: book.description || '',
-      cls: 'shared-cover',
-      tag: 'ОБЩАЯ КНИГА',
-      symbol: '✦',
-      length: 15,
-      chapters: []
-    }));
-
+    sharedBooks = data.books.map(normalizeSharedBook);
     localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks));
   } catch (error) {
     console.error('Ошибка загрузки общих книг:', error);
 
     try {
-      sharedBooks = JSON.parse(
-        localStorage.getItem(SHARED_BOOKS_KEY) || '[]'
-      );
+      const cached = JSON.parse(localStorage.getItem(SHARED_BOOKS_KEY) || '[]');
+      sharedBooks = Array.isArray(cached) ? cached.map(book => ({
+        ...book,
+        id: String(book.id).startsWith('shared-') ? String(book.id) : 'shared-' + String(book.id),
+        desc: book.desc || book.description || '',
+        genre: book.genre || 'Научно-популярная литература',
+        cls: book.cls || 'shared-cover',
+        tag: book.tag || 'ОБЩАЯ КНИГА',
+        symbol: book.symbol || '✦',
+        length: Number(book.length) || 15,
+        chapters: Array.isArray(book.chapters) ? book.chapters : []
+      })) : [];
     } catch {
       sharedBooks = [];
     }
   }
 
   render();
+  updateContinueReadingButton();
+}
+
+async function openBookById(id) {
+  const book = getAllBooks().find(item => String(item.id) === String(id));
+  if (!book) return;
+
+  if (String(book.id).startsWith('shared-')) {
+    try {
+      const serverId = String(book.id).slice(7);
+      const response = await fetch(
+        `${SHARED_BOOKS_URL}/${encodeURIComponent(serverId)}`
+      );
+      if (!response.ok) throw new Error('Не удалось загрузить книгу');
+
+      const data = await response.json();
+      if (!data.ok || !Array.isArray(data.chapters) || !data.chapters.length) {
+        throw new Error('У этой книги пока нет доступных глав');
+      }
+
+      book.chapters = data.chapters.map(chapter =>
+        typeof chapter === 'string'
+          ? chapter
+          : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
+      );
+      openBook(book.id);
+    } catch (error) {
+      console.error('Ошибка открытия общей книги:', error);
+      alert('Не удалось загрузить общую книгу. Попробуйте ещё раз позже.');
+    }
+    return;
+  }
+
+  if (!Array.isArray(book.chapters) || !book.chapters.length) {
+    alert('В этой книге пока нет доступных глав.');
+    return;
+  }
+
+  openBook(book.id);
 }
 
 
 let genre='Все',onlyFav=false,current=null,part=0;
-const favs=()=>JSON.parse(localStorage.getItem('ai-library-favs')||'[]');
+const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function render(){let q=document.querySelector('#search').value.toLowerCase().trim();let list=getAllBooks().filter(b=>(genre==='Все'||b.genre===genre)&&(!onlyFav||favs().includes(b.id))&&[b.title,b.desc,b.genre].some(v=>v.toLowerCase().includes(q)));
 let s=document.querySelector('#sort').value;
@@ -1088,7 +1179,7 @@ const progress=getReadingProgress();
 
 function readCount(book){
   const saved=progress[book.id];
-  if(!saved||!Number.isInteger(saved.part))return 0;
+  if(!saved||!Number.isInteger(saved.part)||!book.chapters.length)return 0;
   return Math.max(0,Math.min(book.chapters.length,saved.part+1));
 }
 
@@ -1116,48 +1207,31 @@ if(s==='completed'){
   list.sort((a,b)=>readCount(b)-readCount(a));
 }
 document.querySelector('#books').innerHTML=list.length?list.map(b=>`<article class="book">
-<div class="cover ${b.cls}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part))return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}<span class="symbol">${b.symbol}</span>
+<div class="cover ${b.cls}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part)||!b.chapters.length)return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}<span class="symbol">${b.symbol}</span>
 <button class="fav ${favs().includes(b.id)?'saved':''}" data-fav="${b.id}" aria-label="В избранное">${favs().includes(b.id)?'♥':'♡'}</button></div><div class="body"><h3>${esc(b.title)}</h3><div class="author">${esc(b.genre)} · AI Library</div><p class="desc">${esc(b.desc)}</p>
-<div class="meta"><span>◷ ${b.length} мин чтения</span><span>Фрагмент · бесплатно</span></div>${(()=>{const saved=getReadingProgress()[b.id];const total=b.chapters.length;const read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0;const percent=Math.round(read/total*100);return read>0?`<div class="reading-progress"><div class="reading-progress-label"><span>Прогресс чтения</span><span>${percent}%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:${percent}%"></div></div></div>`:''})()}<button class="btn read" data-read="${b.id}">Открыть книгу　→</button>
+<div class="meta"><span>◷ ${b.length} мин чтения</span><span>Фрагмент · бесплатно</span></div>${(()=>{const saved=getReadingProgress()[b.id];const total=b.chapters.length;if(!total)return '';const read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0;const percent=Math.round(read/total*100);return read>0?`<div class="reading-progress"><div class="reading-progress-label"><span>Прогресс чтения</span><span>${percent}%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:${percent}%"></div></div></div>`:''})()}<button class="btn read" data-read="${b.id}">Открыть книгу　→</button>
 </div></article>`).join(''):'<div class="empty">Книги не найдены. Попробуйте другой запрос или жанр.</div>';document.querySelector('#favoritesToggle').classList.toggle('active',onlyFav)}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
-document.querySelector('#books').addEventListener('click',e=>{let f=e.target.closest('[data-fav]');if(f){let a=favs(),id=+f.dataset.fav;localStorage.setItem('ai-library-favs',JSON.stringify(a.includes(id)?a.filter(x=>x!==id):[...a,id]));render();return}
-let r = e.target.closest('[data-read]');
-if (r) {
-  const id = r.dataset.read;
-  const book = getAllBooks().find(b => String(b.id) === String(id));
-  if (!book) return;
-
-  if (String(id).startsWith('shared-')) {
-    const serverId = String(id).slice(7);
-    fetch(`${SHARED_BOOKS_URL}/${encodeURIComponent(serverId)}`)
-      .then(response => {
-        if (!response.ok) throw new Error('Не удалось загрузить книгу');
-        return response.json();
-      })
-      .then(data => {
-        if (!data.ok || !Array.isArray(data.chapters)) {
-          throw new Error('Неверный формат глав');
-        }
-
-        book.chapters = data.chapters.map(chapter =>
-          typeof chapter === 'string'
-            ? chapter
-            : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
-        );
-
-        openBook(book.id);
-      })
-      .catch(error => {
-        console.error(error);
-        alert('Не удалось загрузить книгу. Попробуйте ещё раз.');
-      });
-  } else {
-    openBook(book.id);
+document.querySelector('#books').addEventListener('click',e=>{
+  const favoriteButton = e.target.closest('[data-fav]');
+  if (favoriteButton) {
+    const id = favoriteButton.dataset.fav;
+    const currentFavs = favs();
+    const exists = currentFavs.some(value => String(value) === id);
+    const isLegacyNumericId = books.some(book => String(book.id) === id);
+    const normalizedId = isLegacyNumericId ? Number(id) : id;
+    const nextFavs = exists
+      ? currentFavs.filter(value => String(value) !== id)
+      : [...currentFavs, normalizedId];
+    localStorage.setItem('ai-library-favs', JSON.stringify(nextFavs));
+    render();
+    return;
   }
-}
+
+  const readButton = e.target.closest('[data-read]');
+  if (readButton) openBookById(readButton.dataset.read);
 });
 
 /* AI Library 0.8 — сохранение прогресса чтения */
@@ -1248,9 +1322,10 @@ function updateContinueReadingButton() {
   let btn = document.querySelector('#continueReadingBtn');
   const progress = getReadingProgress();
 
+  const allBooks = getAllBooks();
   const entries = Object.entries(progress)
     .filter(([id, saved]) =>
-      books.some(b => b.id === Number(id)) &&
+      allBooks.some(book => String(book.id) === String(id)) &&
       saved &&
       Number.isInteger(saved.part)
     )
@@ -1264,7 +1339,7 @@ function updateContinueReadingButton() {
   }
 
   const [id, saved] = entries[0];
-  const book = books.find(b => b.id === Number(id));
+  const book = getAllBooks().find(item => String(item.id) === String(id));
 
   if (!book) return;
 
@@ -1276,7 +1351,7 @@ function updateContinueReadingButton() {
   }
 
   btn.textContent = '↻ Продолжить чтение · ' + book.title;
-  btn.onclick = () => openBook(book.id);
+  btn.onclick = () => openBookById(book.id);
 }
 
 document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
@@ -1345,6 +1420,7 @@ readerArea.addEventListener('touchcancel', () => {
   swipeStartX = 0;
 });
 
+loadPersonalBooks();
 render();
 loadSharedBooks();
 updateContinueReadingButton();
@@ -1583,10 +1659,51 @@ updateContinueReadingButton();
         throw new Error(data.error || `Ошибка сервера: ${response.status}`);
       }
 
-      resultTitle.textContent = data.title || topic;
+      const bookTitle = data.title || topic;
+      resultTitle.textContent = bookTitle;
       resultText.textContent = data.text;
       result.hidden = false;
-      status.textContent = "Глава создана. Пока она отображается в этом окне.";
+
+      let saveButton = document.getElementById("ai-book-save");
+      if (!saveButton) {
+        saveButton = document.createElement("button");
+        saveButton.type = "button";
+        saveButton.id = "ai-book-save";
+        saveButton.textContent = "Сохранить в мою библиотеку";
+        saveButton.style.cssText =
+          "margin-top:16px;padding:12px 16px;border:1px solid #d8b15e;" +
+          "border-radius:9px;background:#29251c;color:#f4f0e7;font:inherit;" +
+          "font-weight:700;cursor:pointer;";
+        result.appendChild(saveButton);
+      }
+
+      const personalBook = {
+        id: "personal-" + (window.crypto && crypto.randomUUID
+          ? crypto.randomUUID()
+          : Date.now().toString(36) + Math.random().toString(36).slice(2)),
+        title: bookTitle,
+        genre: genre || "Без жанра",
+        desc: "Личная книга по теме: " + topic,
+        cls: "adventure",
+        tag: "ЛИЧНАЯ КНИГА",
+        symbol: "✦",
+        length: length === "long" ? 12 : length === "medium" ? 7 : 4,
+        chapters: [data.text]
+      };
+
+      saveButton.disabled = false;
+      saveButton.textContent = "Сохранить в мою библиотеку";
+      saveButton.onclick = () => {
+        if (typeof savePersonalBook !== "function" || !savePersonalBook(personalBook)) {
+          status.textContent = "Не удалось сохранить книгу. Возможно, в браузере недостаточно места.";
+          return;
+        }
+        saveButton.disabled = true;
+        saveButton.textContent = "✓ Сохранено на этом устройстве";
+        status.textContent = "Книга сохранена только в этом браузере и не публикуется в общей библиотеке.";
+      };
+
+      status.textContent = "Глава создана. Нажми «Сохранить в мою библиотеку», чтобы сохранить её на этом устройстве.";
       result.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
       console.error("AI Library generation error:", error);
