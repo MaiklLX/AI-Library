@@ -2201,6 +2201,61 @@ body.reader-open .book-page {
 
 /* AI Library 1.5 — настройки чтения */
 .reader-settings{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px 0 16px;padding:10px 12px;border:1px solid rgba(217,184,108,.22);border-radius:12px;background:rgba(217,184,108,.045);color:var(--muted,#aaa397);font-size:12px}.reader-settings button{min-width:38px;min-height:36px;padding:5px 9px;border:1px solid rgba(217,184,108,.35);border-radius:8px;background:#24211b;color:#ead5a0;font:inherit;font-weight:700;cursor:pointer}.reader-settings button:active{transform:scale(.96)}.reader-settings-label{font-size:10px;font-weight:800;letter-spacing:1px}#fontSizeLabel{min-width:38px;text-align:center;font-variant-numeric:tabular-nums}.reader-settings-divider{height:22px;width:1px;background:rgba(217,184,108,.25)}.reader-settings select{max-width:130px;min-height:36px;padding:5px 8px;border:1px solid rgba(217,184,108,.28);border-radius:8px;background:#171613;color:#e8dfca;font:inherit}@media(max-width:420px){.reader-settings{gap:7px;padding:9px 7px}.reader-settings-label{display:none}.reader-settings select{max-width:112px}}
+
+/* AI Library reader polish — доступные состояния и мягкие переходы */
+.book-page {
+  transition: box-shadow .28s ease, border-color .28s ease;
+}
+.book-running-head {
+  text-shadow: 0 .4px 0 rgba(255,255,255,.22);
+}
+.reader {
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.reader-settings button,
+.reader-settings select,
+.controls .btn,
+.close {
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.reader-settings button:hover {
+  background: #30291d;
+  border-color: rgba(217,184,108,.62);
+}
+.reader-settings select:hover {
+  border-color: rgba(217,184,108,.55);
+}
+.reader-settings button:focus-visible,
+.reader-settings select:focus-visible,
+.controls .btn:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #d9b66d;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(217,182,109,.13);
+}
+.reader-settings button:active,
+.controls .btn:active {
+  transform: translateY(1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-page,
+  .reader-settings button,
+  .reader-settings select,
+  .controls .btn,
+  .close {
+    transition: none !important;
+  }
+  .book-flip-sheet.flip-forward,
+  .book-flip-sheet.flip-back,
+  .book-flip-sheet.flip-forward::before,
+  .book-flip-sheet.flip-back::before {
+    animation-duration: .01ms !important;
+  }
+}
+
 </style>
 
 <script>
