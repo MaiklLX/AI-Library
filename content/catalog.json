@@ -4,6 +4,10 @@
     {
       "id": "avtomaticheskaya-polnoch",
       "path": "./content/books/avtomaticheskaya-polnoch.json"
+    },
+    {
+      "id": "ty-v-moih-planah",
+      "path": "./content/books/ty-v-moih-planah.json"
     }
   ]
 }
