@@ -2,7 +2,7 @@
   "id": "./",
   "name": "AI Library — библиотека новых миров",
   "short_name": "AI Library",
-  "description": "Бесплатная библиотека историй с удобным книжным режимом чтения.",
+  "description": "Бесплатная цифровая библиотека историй с книжным режимом чтения, личными книгами и офлайн-доступом к сохранённым материалам.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
@@ -14,7 +14,12 @@
       "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
+  ],
+  "categories": [
+    "books",
+    "education",
+    "entertainment"
   ]
 }
