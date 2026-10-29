@@ -1019,7 +1019,7 @@ textarea {
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Это первая версия. Следующий этап — полноценные романы и автоматические публикации.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатно для всех · Прототип 0.1</span></div></footer>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="reader-settings" aria-label="Настройки чтения"><span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button><span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
 <script>
 const books=[
 {id:1,title:'Город за пределом сна',genre:'Фантастика',tag:'Новый мир',cls:'',symbol:'⌁',length:12,desc:'В городе, где сны продают на чёрном рынке, архивариус обнаруживает воспоминание о завтрашнем дне.',chapters:[`Глава I. Чужое утро\n\nВ семь часов утра город просыпался не от света, а от звука. Миллионы будильников звенели одновременно, и над крышами поднимался невидимый гул — привычная музыка тех, кто боялся проспать собственную жизнь.\n\nИлья работал в Архиве сновидений, где чужие ночи раскладывали по стеклянным ячейкам, маркировали и отправляли заказчикам. Его собственные сны давно исчезли. По крайней мере, так говорила медицинская карта.\n\nВ тот вторник на столе лежала коробка без номера. Внутри — тонкая пластина тёмного стекла и записка: «Не смотри до заката». Илья, разумеется, посмотрел сразу.\n\nНа стекле возникло изображение улицы, которой не существовало. По ней шла женщина в красном пальто. Она подняла голову и посмотрела прямо на него.\n\n— Илья, — произнесла она из глубины стекла. — Завтра город забудет, как просыпаться.`,`Глава II. Человек из стекла\n\nИлья спрятал пластину в карман и впервые за долгое время почувствовал настоящий страх. На улице люди торопились к станциям сна. Над входами мерцали рекламные лозунги: «Восемь часов идеальной жизни. Без последствий».\n\nТеперь он знал: где-то существует завтра, которое можно увидеть заранее. И кто-то очень не хотел, чтобы он до него добрался.`]},
@@ -1254,6 +1254,7 @@ function saveReadingProgress() {
 
     progress[current.id] = {
       part: part,
+      page: readingPageIndex || 0,
       updatedAt: Date.now()
     };
 
@@ -1281,7 +1282,13 @@ current = getAllBooks().find(b => String(b.id) === String(id));
     : 0;
 
   openReadingSpace();
+  applyReaderSettings();
   showPart();
+  if (saved && Number.isInteger(saved.page)) {
+    readingPageIndex = Math.max(0, Math.min(saved.page, readingPages.length - 1));
+    renderReadingPage(false);
+    saveReadingProgress();
+  }
 }
 
 
@@ -1289,6 +1296,12 @@ let readingPages = [];
 let readingPageIndex = 0;
 let readerScrollRestore = 0;
 let readerBodyTop = 0;
+
+
+function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing}}catch{return defaults}}
+function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing}
+function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}applyReaderSettings();if(current){const savedPage=readingPageIndex;paginateCurrentChapter();readingPageIndex=Math.max(0,Math.min(savedPage,readingPages.length-1));renderReadingPage(false)}}
+document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));
 
 function openReadingSpace() {
   const modal = document.querySelector('#modal');
@@ -1395,6 +1408,7 @@ function renderReadingPage(animate = true) {
     page.classList.remove('turn-forward', 'turn-back');
   }
   reader.scrollTop = 0;
+  saveReadingProgress();
 }
 
 function animateBookPageTurn(direction, afterTurn) {
@@ -2176,6 +2190,9 @@ body.reader-open .book-page {
   .page-turn-sheet.turning-back { animation-duration: .01ms; }
 }
 
+
+/* AI Library 1.5 — настройки чтения */
+.reader-settings{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px 0 16px;padding:10px 12px;border:1px solid rgba(217,184,108,.22);border-radius:12px;background:rgba(217,184,108,.045);color:var(--muted,#aaa397);font-size:12px}.reader-settings button{min-width:38px;min-height:36px;padding:5px 9px;border:1px solid rgba(217,184,108,.35);border-radius:8px;background:#24211b;color:#ead5a0;font:inherit;font-weight:700;cursor:pointer}.reader-settings button:active{transform:scale(.96)}.reader-settings-label{font-size:10px;font-weight:800;letter-spacing:1px}#fontSizeLabel{min-width:38px;text-align:center;font-variant-numeric:tabular-nums}.reader-settings-divider{height:22px;width:1px;background:rgba(217,184,108,.25)}.reader-settings select{max-width:130px;min-height:36px;padding:5px 8px;border:1px solid rgba(217,184,108,.28);border-radius:8px;background:#171613;color:#e8dfca;font:inherit}@media(max-width:420px){.reader-settings{gap:7px;padding:9px 7px}.reader-settings-label{display:none}.reader-settings select{max-width:112px}}
 </style>
 
 <script>
