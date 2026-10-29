@@ -1715,10 +1715,10 @@ updateContinueReadingButton();
 
 </script>
 <!-- AI Library: окно создания книги -->
-<div id="ai-book-modal" hidden>
+<div id="ai-book-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ai-book-modal-title">
   <div class="ai-book-panel">
     <button type="button" id="ai-book-close" aria-label="Закрыть">✕</button>
-    <h2>Создать книгу с ИИ</h2>
+    <h2 id="ai-book-modal-title">Создать книгу с ИИ</h2>
     <p>Опиши идею — ИИ подготовит первую главу.</p>
 
     <form id="ai-book-form">
@@ -1774,6 +1774,9 @@ updateContinueReadingButton();
     width: min(100%, 680px);
     margin: 24px auto;
     padding: 28px;
+    max-height: calc(100dvh - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     border: 1px solid rgba(221, 180, 91, .5);
     border-radius: 18px;
     background: #17191e;
@@ -1788,6 +1791,9 @@ updateContinueReadingButton();
 
   #ai-book-close {
     float: right;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 9px;
     border: 0;
     background: transparent;
     color: inherit;
@@ -2323,6 +2329,13 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   }
 }
 
+
+#ai-book-close:focus-visible,
+#ai-book-generate:focus-visible,
+#ai-book-open:focus-visible {
+  outline: 2px solid #d9b66d;
+  outline-offset: 3px;
+}
 </style>
 
 <script>
@@ -2337,6 +2350,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   const result = document.getElementById("ai-book-result");
   const resultTitle = document.getElementById("ai-book-result-title");
   const resultText = document.getElementById("ai-book-result-text");
+  let previousFocus = null;
 
   if (!modal || !form) {
     console.error("AI Library: окно генерации не найдено");
@@ -2347,11 +2361,17 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   openButton.type = "button";
   openButton.id = "ai-book-open";
   openButton.textContent = "✦ Создать книгу с ИИ";
-  openButton.style.cssText =
-    "padding:12px 18px;border:1px solid #d8b15e;border-radius:10px;" +
-    "background:#d8b15e;color:#171717;font-weight:700;cursor:pointer;";
+  openButton.className = "btn primary";
+  openButton.setAttribute("aria-haspopup", "dialog");
+  openButton.setAttribute("aria-controls", "ai-book-modal");
+
+  function closeGeneratorModal() {
+    modal.hidden = true;
+    if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+  }
 
   openButton.addEventListener("click", () => {
+    previousFocus = document.activeElement;
     modal.hidden = false;
     document.getElementById("ai-book-topic").focus();
   });
@@ -2363,16 +2383,29 @@ button:disabled { cursor: not-allowed; opacity: .58; }
     document.body.appendChild(openButton);
   }
 
-  closeButton.addEventListener("click", () => {
-    modal.hidden = true;
-  });
+  closeButton.addEventListener("click", closeGeneratorModal);
 
   modal.addEventListener("click", event => {
-    if (event.target === modal) modal.hidden = true;
+    if (event.target === modal) closeGeneratorModal();
   });
 
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape") modal.hidden = true;
+    if (modal.hidden) return;
+    if (event.key === "Escape") {
+      closeGeneratorModal();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = [...modal.querySelectorAll("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex=\"-1\"])")]
+      .filter(element => !element.hidden && element.getClientRects().length);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault(); first.focus();
+    }
   });
 
   form.addEventListener("submit", async event => {
