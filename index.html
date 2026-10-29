@@ -1019,7 +1019,7 @@ textarea {
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Это первая версия. Следующий этап — полноценные романы и автоматические публикации.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатно для всех · Прототип 0.1</span></div></footer>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="reader" id="reader"></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
 <script>
 const books=[
 {id:1,title:'Город за пределом сна',genre:'Фантастика',tag:'Новый мир',cls:'',symbol:'⌁',length:12,desc:'В городе, где сны продают на чёрном рынке, архивариус обнаруживает воспоминание о завтрашнем дне.',chapters:[`Глава I. Чужое утро\n\nВ семь часов утра город просыпался не от света, а от звука. Миллионы будильников звенели одновременно, и над крышами поднимался невидимый гул — привычная музыка тех, кто боялся проспать собственную жизнь.\n\nИлья работал в Архиве сновидений, где чужие ночи раскладывали по стеклянным ячейкам, маркировали и отправляли заказчикам. Его собственные сны давно исчезли. По крайней мере, так говорила медицинская карта.\n\nВ тот вторник на столе лежала коробка без номера. Внутри — тонкая пластина тёмного стекла и записка: «Не смотри до заката». Илья, разумеется, посмотрел сразу.\n\nНа стекле возникло изображение улицы, которой не существовало. По ней шла женщина в красном пальто. Она подняла голову и посмотрела прямо на него.\n\n— Илья, — произнесла она из глубины стекла. — Завтра город забудет, как просыпаться.`,`Глава II. Человек из стекла\n\nИлья спрятал пластину в карман и впервые за долгое время почувствовал настоящий страх. На улице люди торопились к станциям сна. Над входами мерцали рекламные лозунги: «Восемь часов идеальной жизни. Без последствий».\n\nТеперь он знал: где-то существует завтра, которое можно увидеть заранее. И кто-то очень не хотел, чтобы он до него добрался.`]},
@@ -1299,6 +1299,18 @@ function showPart() {
   document.querySelector('#reader').textContent =
     current.chapters[part];
 
+  const page = document.querySelector('#bookPage');
+  const pageLabel = document.querySelector('#bookPageLabel');
+  const pageNumber = document.querySelector('#bookPageNumber');
+  if (pageLabel) pageLabel.textContent = `ЧАСТЬ ${part + 1}`;
+  if (pageNumber) pageNumber.textContent = String(part + 1);
+  if (page) {
+    page.classList.remove('turn-forward', 'turn-back');
+    void page.offsetWidth;
+    page.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turn-back' : 'turn-forward');
+  }
+  window.__aiLibraryTurnDirection = 'forward';
+
   document.querySelector('#chapterLabel').textContent =
     `Часть ${part + 1} из ${current.chapters.length}`;
 
@@ -1354,7 +1366,7 @@ function updateContinueReadingButton() {
   btn.onclick = () => openBookById(book.id);
 }
 
-document.querySelector('#prevChapter').onclick=()=>{if(part>0){part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
+document.querySelector('#prevChapter').onclick=()=>{if(part>0){window.__aiLibraryTurnDirection='back';part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection='forward';part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
 document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
 
 /* AI Library 0.7 — жестовое управление чтением */
@@ -1571,6 +1583,131 @@ updateContinueReadingButton();
       padding: 20px 16px;
     }
   }
+
+/* AI Library 1.0 — чтение как в настоящей бумажной книге */
+.modal {
+  perspective: 1800px;
+  backdrop-filter: blur(7px);
+  background: rgba(5, 5, 7, .82);
+}
+.dialog {
+  width: min(900px, 100%);
+  max-height: min(92vh, 1000px);
+  padding: clamp(18px, 3vw, 34px);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(191, 151, 78, .09), transparent 55%),
+    #171614;
+  border-color: rgba(190, 155, 91, .32);
+  box-shadow: 0 28px 90px #000a, 0 0 0 1px #ffffff05;
+}
+#modalGenre { letter-spacing: .16em; }
+#modalTitle {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(27px, 4vw, 39px);
+  line-height: 1.16;
+  color: #f2e5c9;
+}
+#modalAuthor { margin-top: 8px; }
+.book-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 26px 0 22px;
+  min-height: min(54vh, 570px);
+  padding: clamp(22px, 4vw, 48px) clamp(20px, 5.4vw, 68px) 42px;
+  color: #34291d;
+  background:
+    linear-gradient(90deg, rgba(91, 62, 31, .12), transparent 4.5%, transparent 95%, rgba(91, 62, 31, .09)),
+    repeating-linear-gradient(0deg, rgba(112, 81, 44, .018) 0px, rgba(112, 81, 44, .018) 1px, transparent 1px, transparent 4px),
+    linear-gradient(105deg, #f4ead5 0%, #fbf3e3 46%, #f0e2c8 100%);
+  border: 1px solid #d3bd94;
+  border-radius: 3px 9px 9px 3px;
+  box-shadow: 0 10px 25px #0005, inset 7px 0 12px rgba(79, 48, 18, .08), inset 0 0 0 5px rgba(255,255,255,.19);
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+.book-page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: linear-gradient(90deg, rgba(95, 66, 37, .15), rgba(255,255,255,.22), transparent);
+  pointer-events: none;
+}
+.book-page::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, transparent 49%, rgba(112, 82, 46, .18) 50%, #e5d2af 54%, #fbf0d9 74%);
+  opacity: .7;
+  pointer-events: none;
+}
+.book-running-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(105, 76, 42, .25);
+  color: #806745;
+  font: 600 10px/1.4 Arial, sans-serif;
+  letter-spacing: .16em;
+}
+.reader {
+  position: relative;
+  z-index: 1;
+  margin: 22px 0 28px;
+  color: #382c20;
+  font: clamp(16px, 1.7vw, 19px)/1.95 Georgia, "Times New Roman", serif;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  text-align: left;
+  text-wrap: pretty;
+}
+.book-page-number {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #9b805b;
+  font: 12px/1 Georgia, serif;
+  font-variant-numeric: tabular-nums;
+}
+.book-page.turn-forward { animation: bookPageForward .58s cubic-bezier(.2,.72,.25,1); }
+.book-page.turn-back { animation: bookPageBack .58s cubic-bezier(.2,.72,.25,1); }
+@keyframes bookPageForward {
+  0% { opacity: .45; transform: rotateY(-11deg) translateX(12px); filter: brightness(.82); }
+  55% { opacity: .82; transform: rotateY(3deg) translateX(-3px); filter: brightness(1.04); }
+  100% { opacity: 1; transform: rotateY(0) translateX(0); filter: brightness(1); }
+}
+@keyframes bookPageBack {
+  0% { opacity: .45; transform: rotateY(11deg) translateX(-12px); filter: brightness(.82); }
+  55% { opacity: .82; transform: rotateY(-3deg) translateX(3px); filter: brightness(1.04); }
+  100% { opacity: 1; transform: rotateY(0) translateX(0); filter: brightness(1); }
+}
+#chapterLabel {
+  align-self: center;
+  text-align: center;
+  font-size: 12px;
+}
+.controls .btn { min-height: 42px; }
+@media (max-width: 540px) {
+  .dialog { max-height: 94vh; padding: 18px 13px; }
+  .book-page { margin: 20px 0 18px; min-height: 48vh; padding: 22px 20px 38px; }
+  .reader { font-size: 16px; line-height: 1.85; margin: 18px 0 24px; }
+  .book-running-head { font-size: 9px; }
+  .controls { align-items: stretch; flex-wrap: wrap; }
+  .controls .btn { flex: 1 1 40%; padding: 10px 8px; font-size: 12px; }
+  #chapterLabel { order: -1; flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-page.turn-forward, .book-page.turn-back { animation: none; }
+}
+
 </style>
 
 <script>
