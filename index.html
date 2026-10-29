@@ -1340,7 +1340,9 @@ function paginateCurrentChapter() {
   const words = text.split(/(\s+)/).filter(token => token.length > 0);
   const probe = reader.cloneNode(false);
   probe.id = 'readerMeasure';
-  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:${reader.clientWidth || 300}px;height:auto;max-height:none;overflow:visible;display:block;flex:none;white-space:pre-wrap;`;
+  // Сохраняем скопированные с reader настройки шрифта и интервала:
+  // иначе измерение идёт старым шрифтом и страница переполняется.
+  probe.style.cssText += `;position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:${reader.clientWidth || 300}px;height:auto;max-height:none;overflow:visible;display:block;flex:none;white-space:pre-wrap;`;
   probe.textContent = '';
   page.appendChild(probe);
 
