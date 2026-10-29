@@ -1017,6 +1017,127 @@ textarea {
   }
 }
 </style>
+
+<style id="reader-page-layout-v14">
+/* AI Library 1.4 — spacious e-reader page */
+body.reader-open .modal.open .dialog {
+  padding: max(7px, env(safe-area-inset-top)) clamp(8px, 1.5vw, 20px) max(7px, env(safe-area-inset-bottom));
+}
+body.reader-open #modalTitle {
+  flex: 0 0 auto;
+  font-size: clamp(19px, 2.6vh, 25px);
+  line-height: 1.1;
+  margin: 2px 38px 1px 0;
+}
+body.reader-open #modalGenre,
+body.reader-open #modalAuthor,
+body.reader-open .notice { display: none !important; }
+body.reader-open .book-page {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 3px 0 5px !important;
+  padding: clamp(14px, 2.2vh, 25px) clamp(16px, 3vw, 38px) 30px !important;
+  border: 1px solid rgba(202, 177, 125, .58);
+  border-radius: 5px;
+  background: linear-gradient(135deg, #fbf7ed 0%, #f4ecd9 100%);
+  color: #302a20;
+  box-shadow: 0 3px 16px rgba(0,0,0,.22), inset 0 0 0 4px rgba(255,255,255,.32);
+}
+body.reader-open .book-running-head {
+  flex: 0 0 auto;
+  color: #82745c;
+  border-bottom: 1px solid rgba(130,116,92,.25);
+  padding-bottom: 7px;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+body.reader-open .reader {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 12px 0 5px !important;
+  padding: 0 1px !important;
+  color: #302a20 !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(17px, 1.9vh, 20px);
+  line-height: 1.78;
+  overflow: hidden !important;
+  overflow-wrap: break-word;
+}
+body.reader-open .book-page-number {
+  color: #82745c;
+  bottom: 9px;
+}
+body.reader-open .reader-settings {
+  flex: 0 0 auto;
+  margin: 0 0 5px !important;
+  padding: 4px 7px !important;
+  gap: 6px;
+}
+body.reader-open .reader-settings button,
+body.reader-open .reader-settings select {
+  min-height: 29px !important;
+  padding: 3px 7px !important;
+}
+body.reader-open .controls {
+  flex: 0 0 auto;
+  gap: 8px;
+  padding-top: 5px !important;
+}
+body.reader-open .controls .btn {
+  min-height: 36px !important;
+  padding: 7px 10px !important;
+}
+body.reader-open #chapterLabel { font-size: 11px; }
+@media (max-width: 540px) {
+  body.reader-open .dialog {
+    padding: max(5px, env(safe-area-inset-top)) 6px max(5px, env(safe-area-inset-bottom)) !important;
+  }
+  body.reader-open #modalTitle {
+    font-size: clamp(18px, 4.8vw, 22px);
+    margin: 1px 32px 0 0;
+  }
+  body.reader-open .book-page {
+    margin: 2px 0 4px !important;
+    padding: 13px 13px 27px !important;
+    border-radius: 4px;
+  }
+  body.reader-open .book-running-head { padding-bottom: 5px; font-size: 9px; }
+  body.reader-open .reader {
+    margin: 8px 0 3px !important;
+    font-size: 17px;
+    line-height: 1.68;
+  }
+  body.reader-open .reader-settings {
+    margin-bottom: 4px !important;
+    padding: 3px 4px !important;
+    gap: 5px;
+    font-size: 11px;
+  }
+  body.reader-open .reader-settings button,
+  body.reader-open .reader-settings select {
+    min-height: 27px !important;
+    padding: 2px 5px !important;
+  }
+  body.reader-open .reader-settings select { max-width: 100px; }
+  body.reader-open .controls { gap: 5px; padding-top: 4px !important; }
+  body.reader-open .controls .btn {
+    min-height: 34px !important;
+    padding: 6px 7px !important;
+    font-size: 11px;
+  }
+  body.reader-open #chapterLabel { font-size: 10px; }
+}
+@media (max-height: 650px) {
+  body.reader-open .book-page { padding-top: 9px !important; padding-bottom: 24px !important; }
+  body.reader-open .reader { margin-top: 6px !important; line-height: 1.55; }
+  body.reader-open .reader-settings { padding-top: 2px !important; padding-bottom: 2px !important; }
+  body.reader-open .controls .btn { min-height: 30px !important; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button></div></nav></div></header>
