@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600" role="img" aria-labelledby="title desc">
+<title id="title">Автоматическая полночь — обложка романа</title>
+<desc id="desc">Кинематографическая научно-фантастическая обложка: ночной город под огромным затменным диском, золотые линии временной сетки и одинокая фигура на крыше.</desc>
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#050914"/><stop offset=".52" stop-color="#17273d"/><stop offset="1" stop-color="#090c15"/></linearGradient>
+ <radialGradient id="halo"><stop stop-color="#e8c987" stop-opacity=".7"/><stop offset=".48" stop-color="#d9ae68" stop-opacity=".18"/><stop offset="1" stop-color="#d9ae68" stop-opacity="0"/></radialGradient>
+ <linearGradient id="moon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5e5bd"/><stop offset="1" stop-color="#a67c49"/></linearGradient>
+ <linearGradient id="city" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#24374b"/><stop offset="1" stop-color="#080b12"/></linearGradient>
+ <pattern id="grid" width="84" height="84" patternUnits="userSpaceOnUse"><path d="M84 0H0V84" fill="none" stroke="#d8b675" stroke-opacity=".14" stroke-width="1"/></pattern>
+ <filter id="glow"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>
+<rect width="1200" height="1600" fill="url(#sky)"/>
+<circle cx="780" cy="490" r="410" fill="url(#halo)"/>
+<circle cx="780" cy="490" r="230" fill="url(#moon)" opacity=".92"/>
+<circle cx="845" cy="440" r="224" fill="#0a1322"/>
+<circle cx="845" cy="440" r="232" fill="none" stroke="#e7c27f" stroke-opacity=".65" stroke-width="2"/>
+<g fill="#f5e4bd" opacity=".75"><circle cx="148" cy="190" r="2"/><circle cx="310" cy="312" r="2"/><circle cx="1010" cy="185" r="3"/><circle cx="1070" cy="360" r="2"/><circle cx="220" cy="510" r="2"/><circle cx="930" cy="700" r="2"/><circle cx="110" cy="730" r="2"/></g>
+<rect y="670" width="1200" height="660" fill="url(#grid)"/>
+<path d="M0 1020L90 960 150 985 220 865 278 930 335 820 398 900 450 785 515 875 570 835 650 900 700 810 760 880 830 760 890 855 950 800 1005 870 1065 785 1130 900 1200 840V1400H0Z" fill="url(#city)"/>
+<g fill="#111b2a" stroke="#c6a66c" stroke-opacity=".28" stroke-width="2">
+<path d="M0 1090V900H105V1090Z"/><path d="M118 1090V830H208V1090Z"/><path d="M225 1090V945H310V1090Z"/><path d="M326 1090V790H410V1090Z"/><path d="M425 1090V880H520V1090Z"/><path d="M540 1090V925H610V1090Z"/><path d="M630 1090V835H730V1090Z"/><path d="M745 1090V910H835V1090Z"/><path d="M850 1090V800H950V1090Z"/><path d="M965 1090V890H1050V1090Z"/><path d="M1065 1090V845H1200V1090Z"/>
+</g>
+<g fill="#e5c17d" opacity=".6">
+<path d="M140 860h9v16h-9zM171 860h9v16h-9zM140 902h9v16h-9zM348 825h9v17h-9zM380 825h9v17h-9zM348 870h9v17h-9zM660 870h9v17h-9zM696 870h9v17h-9zM880 838h9v17h-9zM916 838h9v17h-9zM1095 880h9v17h-9zM1135 880h9v17h-9z"/>
+</g>
+<path d="M0 1110H1200V1600H0Z" fill="#060910"/>
+<path d="M0 1230L270 1160 490 1205 710 1135 920 1190 1200 1110V1600H0Z" fill="#0b111b"/>
+<path d="M140 1600L600 1170 1060 1600" fill="none" stroke="#d5b575" stroke-opacity=".35" stroke-width="3"/>
+<path d="M600 1190V1600M350 1350H850M235 1460H965" fill="none" stroke="#d5b575" stroke-opacity=".18" stroke-width="2"/>
+<g transform="translate(600 1165)">
+ <ellipse cy="18" rx="38" ry="10" fill="#e5c27f" opacity=".3" filter="url(#glow)"/>
+ <circle cy="-24" r="15" fill="#05070c" stroke="#e5c27f" stroke-width="2"/>
+ <path d="M-19 -5L-27 62 0 80 27 62 19 -5Z" fill="#080c14" stroke="#d7b675" stroke-width="2"/>
+ <path d="M-12 10L-44 46M12 10L44 46M-10 72L-23 120M10 72L23 120" stroke="#d7b675" stroke-width="7" stroke-linecap="round"/>
+</g>
+<rect x="70" y="70" width="1060" height="1460" rx="2" fill="none" stroke="#e3c27f" stroke-opacity=".52" stroke-width="2"/>
+<text x="600" y="160" text-anchor="middle" fill="#e6c98d" font-family="Georgia,serif" font-size="26" letter-spacing="9">AI LIBRARY · ORIGINAL NOVEL</text>
+<text x="600" y="1320" text-anchor="middle" fill="#f2e6ca" font-family="Georgia,serif" font-size="83" letter-spacing="4">АВТОМАТИЧЕСКАЯ</text>
+<text x="600" y="1420" text-anchor="middle" fill="#f2e6ca" font-family="Georgia,serif" font-size="112" letter-spacing="12">ПОЛНОЧЬ</text>
+<path d="M390 1465H810" stroke="#d6b575" stroke-width="2"/>
+<text x="600" y="1505" text-anchor="middle" fill="#c5b89b" font-family="Arial,sans-serif" font-size="22" letter-spacing="6">ПАМЯТЬ · ВРЕМЯ · ЧЕЛОВЕЧНОСТЬ</text>
+</svg>
