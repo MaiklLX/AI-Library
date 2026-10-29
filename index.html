@@ -1848,12 +1848,15 @@ updateContinueReadingButton();
   padding: clamp(22px, 4vw, 48px) clamp(20px, 5.4vw, 68px) 42px;
   color: #34291d;
   background:
-    linear-gradient(90deg, rgba(91, 62, 31, .12), transparent 4.5%, transparent 95%, rgba(91, 62, 31, .09)),
-    repeating-linear-gradient(0deg, rgba(112, 81, 44, .018) 0px, rgba(112, 81, 44, .018) 1px, transparent 1px, transparent 4px),
-    linear-gradient(105deg, #f4ead5 0%, #fbf3e3 46%, #f0e2c8 100%);
+    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.42), transparent 42%),
+    radial-gradient(ellipse at 84% 78%, rgba(151,111,61,.075), transparent 52%),
+    repeating-linear-gradient(0deg, rgba(112,81,44,.025) 0px, rgba(112,81,44,.025) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(128,94,53,.012) 0px, rgba(128,94,53,.012) 1px, transparent 1px, transparent 5px),
+    linear-gradient(90deg, rgba(91, 62, 31, .13), transparent 4.5%, transparent 95%, rgba(91, 62, 31, .1)),
+    linear-gradient(105deg, #f3e7d0 0%, #fbf3e3 46%, #efe0c4 100%);
   border: 1px solid #d3bd94;
   border-radius: 3px 9px 9px 3px;
-  box-shadow: 0 10px 25px #0005, inset 7px 0 12px rgba(79, 48, 18, .08), inset 0 0 0 5px rgba(255,255,255,.19);
+  box-shadow: 0 16px 34px rgba(0,0,0,.32), 0 3px 8px rgba(0,0,0,.18), inset 8px 0 14px rgba(79,48,18,.09), inset 0 0 0 5px rgba(255,255,255,.22), inset 0 -1px 0 rgba(113,78,37,.12);
   transform-origin: left center;
   backface-visibility: hidden;
 }
@@ -2060,10 +2063,13 @@ body.reader-open {
   border-radius: inherit;
   color: #382c20;
   background:
-    linear-gradient(90deg, rgba(91,62,31,.12), transparent 4.5%, transparent 95%, rgba(91,62,31,.09)),
-    repeating-linear-gradient(0deg, rgba(112,81,44,.018) 0px, rgba(112,81,44,.018) 1px, transparent 1px, transparent 4px),
-    linear-gradient(105deg, #f4ead5 0%, #fbf3e3 46%, #f0e2c8 100%);
-  box-shadow: 0 4px 18px rgba(0,0,0,.22);
+    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.42), transparent 42%),
+    radial-gradient(ellipse at 84% 78%, rgba(151,111,61,.075), transparent 52%),
+    repeating-linear-gradient(0deg, rgba(112,81,44,.025) 0px, rgba(112,81,44,.025) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(128,94,53,.012) 0px, rgba(128,94,53,.012) 1px, transparent 1px, transparent 5px),
+    linear-gradient(90deg, rgba(91,62,31,.13), transparent 4.5%, transparent 95%, rgba(91,62,31,.1)),
+    linear-gradient(105deg, #f3e7d0 0%, #fbf3e3 46%, #efe0c4 100%);
+  box-shadow: 0 14px 34px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.2);
   transform-style: preserve-3d;
   backface-visibility: hidden;
   pointer-events: none;
