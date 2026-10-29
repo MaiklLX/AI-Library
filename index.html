@@ -1111,7 +1111,10 @@ async function loadPublishedBooks() {
     try {
       const cached = JSON.parse(localStorage.getItem(PUBLISHED_BOOKS_KEY) || '[]');
       publishedBooks = Array.isArray(cached)
-        ? cached.map(normalizePublishedBook).filter(Boolean)
+        ? cached.map(book => normalizePublishedBook({
+            ...book,
+            id: String(book && book.id || '').replace(/^published-/, '')
+          })).filter(Boolean)
         : [];
     } catch { publishedBooks = []; }
   }
