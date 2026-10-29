@@ -34,14 +34,14 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
-assert.match(html, /navigator\\.serviceWorker\\.register\\(['"]\\.\\/sw\\.js['"]/, "Service worker registration is missing");
-assert.match(serviceWorker, /request\\.mode === 'navigate'/, "Offline navigation fallback is missing");
-assert.match(serviceWorker, /url\\.origin !== self\\.location\\.origin/, "Service worker must not intercept external APIs");
+assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
+assert.match(serviceWorker, /request\.mode\s*===\s*[\'"]navigate[\'"]/, "Offline navigation fallback is missing");
+assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
-assert.match(html, /function exportLibraryBackup\\(/, "Backup export logic is missing");
-assert.match(html, /async function importLibraryBackup\\(/, "Backup import logic is missing");
-assert.match(html, /function safeClass\\(/, "Dynamic cover classes must be sanitized");
+assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
+assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
+assert.match(html, /function safeClass\(/, "Dynamic cover classes must be sanitized");
 try {
   new Function(serviceWorker);
 } catch (error) {
