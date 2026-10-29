@@ -1302,6 +1302,7 @@ function openReadingSpace() {
 
 function closeReadingSpace() {
   const modal = document.querySelector('#modal');
+  if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
   document.body.classList.remove('reader-open');
   document.body.style.top = '';
