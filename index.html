@@ -1043,12 +1043,81 @@ const books=[
 const PERSONAL_BOOKS_KEY = 'ai-library-personal-books';
 const SHARED_BOOKS_KEY = 'ai-library-shared-books-cache';
 const SHARED_BOOKS_URL = 'https://ai-library-generator.bymaikl.workers.dev/books';
+const PUBLISHED_BOOKS_KEY = 'ai-library-published-books-cache';
+const PUBLISHED_CATALOG_URL = './content/catalog.json';
 
 let sharedBooks = [];
 let personalBooks = [];
+let publishedBooks = [];
 
 function getAllBooks() {
-  return [...books, ...sharedBooks, ...personalBooks];
+  return [...books, ...publishedBooks, ...sharedBooks, ...personalBooks];
+}
+
+function normalizePublishedBook(book) {
+  if (!book || typeof book !== 'object' || typeof book.id !== 'string' ||
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(book.id) ||
+      typeof book.title !== 'string' || !book.title.trim() ||
+      !Array.isArray(book.chapters) || !book.chapters.length) return null;
+  const chapters = book.chapters.map(chapter => {
+    if (typeof chapter === 'string') return chapter;
+    if (chapter && typeof chapter === 'object') {
+      return (chapter.title ? chapter.title + '\n\n' : '') + (chapter.content || '');
+    }
+    return '';
+  }).filter(chapter => chapter.trim());
+  if (!chapters.length) return null;
+  return {
+    ...book,
+    id: 'published-' + book.id,
+    title: book.title.trim(),
+    author: typeof book.author === 'string' && book.author.trim() ? book.author.trim() : 'AI Library',
+    desc: typeof book.description === 'string' ? book.description : (book.desc || ''),
+    genre: typeof book.genre === 'string' && book.genre.trim() ? book.genre.trim() : 'Без жанра',
+    cls: ['fantasy','detective','romance','horror','adventure'].includes(book.cls) ? book.cls : 'adventure',
+    tag: typeof book.tag === 'string' && book.tag.trim() ? book.tag.trim() : 'НОВАЯ КНИГА',
+    symbol: typeof book.symbol === 'string' ? book.symbol : '✦',
+    length: Number.isFinite(Number(book.length)) && Number(book.length) > 0 ? Number(book.length) : chapters.length,
+    chapters
+  };
+}
+
+async function loadPublishedBooks() {
+  try {
+    const response = await fetch(PUBLISHED_CATALOG_URL, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('Не удалось загрузить каталог опубликованных книг');
+    const catalog = await response.json();
+    if (!catalog || catalog.version !== 1 || !Array.isArray(catalog.books)) {
+      throw new Error('Неверный формат каталога опубликованных книг');
+    }
+    const loaded = await Promise.all(catalog.books.map(async entry => {
+      if (!entry || typeof entry.path !== 'string' ||
+          !entry.path.startsWith('./content/books/') || !entry.path.endsWith('.json') ||
+          entry.path.includes('..') || typeof entry.id !== 'string') return null;
+      try {
+        const result = await fetch(entry.path, { cache: 'no-cache' });
+        if (!result.ok) return null;
+        const book = normalizePublishedBook(await result.json());
+        return book && book.id === 'published-' + entry.id ? book : null;
+      } catch (error) {
+        console.warn('Не удалось загрузить опубликованную книгу:', entry.path, error);
+        return null;
+      }
+    }));
+    publishedBooks = loaded.filter(Boolean);
+    try { localStorage.setItem(PUBLISHED_BOOKS_KEY, JSON.stringify(publishedBooks)); } catch {}
+  } catch (error) {
+    console.warn('Каталог опубликованных книг временно недоступен:', error);
+    try {
+      const cached = JSON.parse(localStorage.getItem(PUBLISHED_BOOKS_KEY) || '[]');
+      publishedBooks = Array.isArray(cached)
+        ? cached.map(normalizePublishedBook).filter(Boolean)
+        : [];
+    } catch { publishedBooks = []; }
+  }
+  syncGenreFilters();
+  render();
+  updateContinueReadingButton();
 }
 
 function normalizeSharedBook(book) {
@@ -1842,6 +1911,7 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
 loadPersonalBooks();
 syncGenreFilters();
 render();
+loadPublishedBooks();
 loadSharedBooks();
 updateContinueReadingButton();
 
