@@ -35,7 +35,13 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
-assert.match(serviceWorker, /request\.mode\s*===\s*[\'"]navigate[\'"]/, "Offline navigation fallback is missing");
+assert.match(html, /new AbortController\(\)/, "AI generation cancellation/timeout controller is missing");
+assert.match(html, /signal:\s*controller\.signal/, "AI generation request must be abortable");
+assert.match(html, /controller\.abort\(\)/, "AI generation timeout must abort the request");
+assert.match(html, /form\.setAttribute\(["']aria-busy["']/, "AI generation busy state is missing");
+assert.match(html, /body\.classList\.add\(["']ai-generator-open["']/, "Generator modal should lock background scrolling");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v2['"]/, "Offline shell cache version should be bumped for this release");
+assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline navigation fallback is missing");
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
