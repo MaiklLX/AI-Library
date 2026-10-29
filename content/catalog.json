@@ -1,4 +1,9 @@
 {
   "version": 1,
-  "books": []
+  "books": [
+    {
+      "id": "avtomaticheskaya-polnoch",
+      "path": "./content/books/avtomaticheskaya-polnoch.json"
+    }
+  ]
 }
