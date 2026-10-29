@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v2';
+const CACHE_NAME = CACHE_PREFIX + 'v3';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', event => {
@@ -47,6 +47,24 @@ self.addEventListener('fetch', event => {
             status: 503,
             headers: { 'Content-Type': 'text/plain; charset=utf-8' }
           });
+      }
+    })());
+    return;
+  }
+
+  // Published catalog and book files use network-first so new commits appear promptly.
+  if (url.pathname.endsWith('/content/catalog.json') ||
+      url.pathname.includes('/content/books/')) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const response = await fetch(request, { cache: 'no-cache' });
+        if (response && response.ok && response.type === 'basic') {
+          await cache.put(request, response.clone());
+        }
+        return response;
+      } catch {
+        return (await cache.match(request)) || new Response('', { status: 503, statusText: 'Offline' });
       }
     })());
     return;
