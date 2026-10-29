@@ -1019,7 +1019,7 @@ textarea {
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Это первая версия. Следующий этап — полноценные романы и автоматические публикации.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатно для всех · Прототип 0.1</span></div></footer>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader"></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Позже подключим полные романы и сохранение прогресса чтения.</p></div></div>
 <script>
 const books=[
 {id:1,title:'Город за пределом сна',genre:'Фантастика',tag:'Новый мир',cls:'',symbol:'⌁',length:12,desc:'В городе, где сны продают на чёрном рынке, архивариус обнаруживает воспоминание о завтрашнем дне.',chapters:[`Глава I. Чужое утро\n\nВ семь часов утра город просыпался не от света, а от звука. Миллионы будильников звенели одновременно, и над крышами поднимался невидимый гул — привычная музыка тех, кто боялся проспать собственную жизнь.\n\nИлья работал в Архиве сновидений, где чужие ночи раскладывали по стеклянным ячейкам, маркировали и отправляли заказчикам. Его собственные сны давно исчезли. По крайней мере, так говорила медицинская карта.\n\nВ тот вторник на столе лежала коробка без номера. Внутри — тонкая пластина тёмного стекла и записка: «Не смотри до заката». Илья, разумеется, посмотрел сразу.\n\nНа стекле возникло изображение улицы, которой не существовало. По ней шла женщина в красном пальто. Она подняла голову и посмотрела прямо на него.\n\n— Илья, — произнесла она из глубины стекла. — Завтра город забудет, как просыпаться.`,`Глава II. Человек из стекла\n\nИлья спрятал пластину в карман и впервые за долгое время почувствовал настоящий страх. На улице люди торопились к станциям сна. Над входами мерцали рекламные лозунги: «Восемь часов идеальной жизни. Без последствий».\n\nТеперь он знал: где-то существует завтра, которое можно увидеть заранее. И кто-то очень не хотел, чтобы он до него добрался.`]},
@@ -1297,6 +1297,7 @@ function openReadingSpace() {
   document.body.style.top = `-${readerBodyTop}px`;
   document.body.classList.add('reader-open');
   modal.classList.add('open');
+  modal.style.touchAction = 'none';
   modal.scrollTop = 0;
 }
 
@@ -1304,6 +1305,7 @@ function closeReadingSpace() {
   const modal = document.querySelector('#modal');
   if (!modal || !modal.classList.contains('open')) return;
   modal.classList.remove('open');
+  modal.style.touchAction = '';
   document.body.classList.remove('reader-open');
   document.body.style.top = '';
   window.scrollTo(0, readerScrollRestore);
@@ -1376,9 +1378,21 @@ function renderReadingPage(animate = true) {
   if (pageLabel) pageLabel.textContent = `СТР. ${readingPageIndex + 1} / ${readingPages.length}`;
   if (pageNumber) pageNumber.textContent = String(readingPageIndex + 1);
   if (animate) {
+    const sheet = document.querySelector('#pageTurnSheet');
+    if (sheet) {
+      sheet.classList.remove('turning-forward', 'turning-back');
+      sheet.style.visibility = 'visible';
+      sheet.style.opacity = '1';
+      void sheet.offsetWidth;
+      sheet.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turning-back' : 'turning-forward');
+      window.clearTimeout(window.__aiLibraryTurnTimer);
+      window.__aiLibraryTurnTimer = window.setTimeout(() => {
+        sheet.classList.remove('turning-forward', 'turning-back');
+        sheet.style.visibility = 'hidden';
+        sheet.style.opacity = '0';
+      }, 720);
+    }
     page.classList.remove('turn-forward', 'turn-back');
-    void page.offsetWidth;
-    page.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turn-back' : 'turn-forward');
   }
   reader.scrollTop = 0;
 }
@@ -1554,6 +1568,9 @@ readingModal.addEventListener('touchcancel', () => {
 }, { passive: true });
 
 readerArea.addEventListener('touchstart', e => {
+  if (document.querySelector('#modal').classList.contains('open')) {
+    e.stopPropagation();
+  }
   if (e.touches.length !== 1) {
     swipeStartX = 0;
     return;
@@ -2085,6 +2102,78 @@ body.reader-open {
 @media (prefers-reduced-motion: reduce) {
   .book-flip-sheet.flip-forward,
   .book-flip-sheet.flip-back { animation-duration: .01ms; }
+}
+
+
+/* AI Library 1.2 — реалистичный лист и защита от pull-to-refresh */
+html:has(body.reader-open),
+body.reader-open,
+body.reader-open #modal {
+  overscroll-behavior: none !important;
+}
+body.reader-open {
+  touch-action: none;
+}
+body.reader-open #modal,
+body.reader-open .dialog {
+  overscroll-behavior: none !important;
+}
+body.reader-open .book-page {
+  touch-action: none;
+  overscroll-behavior: none;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+.page-turn-sheet {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  border-radius: inherit;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  background:
+    linear-gradient(90deg, rgba(83, 55, 28, .22), rgba(255,255,255,.12) 7%, transparent 20%, transparent 78%, rgba(74,49,25,.1)),
+    repeating-linear-gradient(0deg, rgba(112, 81, 44, .025) 0px, rgba(112, 81, 44, .025) 1px, transparent 1px, transparent 4px),
+    linear-gradient(105deg, #f0e1c5 0%, #fff6e4 48%, #e9d6b5 100%);
+  box-shadow: inset 0 0 24px rgba(70, 43, 18, .13);
+}
+.page-turn-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 35%, rgba(62,42,23,.17) 49%, rgba(255,255,255,.55) 51%, rgba(69,46,25,.12) 53%, transparent 68%);
+  opacity: .75;
+}
+.page-turn-sheet.turning-forward {
+  visibility: visible;
+  opacity: 1;
+  transform-origin: left center;
+  animation: realisticTurnForward .68s cubic-bezier(.42,0,.25,1) forwards;
+}
+.page-turn-sheet.turning-back {
+  visibility: visible;
+  opacity: 1;
+  transform-origin: right center;
+  animation: realisticTurnBack .68s cubic-bezier(.42,0,.25,1) forwards;
+}
+@keyframes realisticTurnForward {
+  0% { transform: rotateY(0deg); box-shadow: 0 0 0 rgba(48,31,15,0); filter: brightness(1); }
+  24% { box-shadow: -14px 3px 25px rgba(48,31,15,.22); filter: brightness(.96); }
+  52% { box-shadow: -24px 1px 35px rgba(48,31,15,.3); filter: brightness(.88); }
+  100% { transform: rotateY(-180deg); box-shadow: -4px 0 8px rgba(48,31,15,0); filter: brightness(1); }
+}
+@keyframes realisticTurnBack {
+  0% { transform: rotateY(0deg); box-shadow: 0 0 0 rgba(48,31,15,0); filter: brightness(1); }
+  24% { box-shadow: 14px 3px 25px rgba(48,31,15,.22); filter: brightness(.96); }
+  52% { box-shadow: 24px 1px 35px rgba(48,31,15,.3); filter: brightness(.88); }
+  100% { transform: rotateY(180deg); box-shadow: 4px 0 8px rgba(48,31,15,0); filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-turn-sheet.turning-forward,
+  .page-turn-sheet.turning-back { animation-duration: .01ms; }
 }
 
 </style>
