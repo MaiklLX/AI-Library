@@ -1028,7 +1028,7 @@ textarea {
 </select>
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и создавай собственные истории с помощью ИИ.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
-</main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><span>Бесплатное чтение · AI Library</span></div></footer>
+</main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader" tabindex="0" aria-label="Текст книги. Используйте стрелки или Page Up и Page Down для перелистывания."></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="reader-settings" aria-label="Настройки чтения"><span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button><span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Демонстрационный фрагмент. Прогресс и настройки чтения сохраняются в этом браузере.</p></div></div>
 <script>
 const books=[
@@ -1165,10 +1165,15 @@ async function openBookById(id) {
           ? chapter
           : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
       );
+      try { localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks)); } catch {}
       openBook(book.id);
     } catch (error) {
-      console.error('Ошибка открытия общей книги:', error);
-      alert('Не удалось загрузить общую книгу. Попробуйте ещё раз позже.');
+      console.warn('Не удалось обновить общую книгу из сети:', error);
+      if (Array.isArray(book.chapters) && book.chapters.length) {
+        openBook(book.id);
+      } else {
+        alert('Не удалось загрузить общую книгу. Проверьте подключение к интернету и попробуйте ещё раз.');
+      }
     }
     return;
   }
@@ -1185,6 +1190,7 @@ async function openBookById(id) {
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeClass=value=>String(value||'').split(/\\s+/).filter(token=>/^[a-zA-Z0-9_-]{1,40}$/.test(token)).slice(0,3).join(' ');
 function syncGenreFilters(){
   const root=document.querySelector("#genres");
   if(!root)return;
@@ -1233,8 +1239,8 @@ if(s==='completed'){
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
 document.querySelector("#books").innerHTML=list.length?list.map(b=>`<article class="book">
-<div class="cover ${b.cls}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part)||!b.chapters.length)return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}<span class="symbol">${b.symbol}</span>
-<button class="fav ${favs().includes(b.id)?'saved':''}" data-fav="${b.id}" aria-label="В избранное">${favs().includes(b.id)?'♥':'♡'}</button></div><div class="body"><h3>${esc(b.title)}</h3><div class="author">${esc(b.genre)} · AI Library</div><p class="desc">${esc(b.desc)}</p>
+<div class="cover ${safeClass(b.cls)}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part)||!b.chapters.length)return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}<span class="symbol">${esc(b.symbol)}</span>
+<button class="fav ${favs().some(id=>String(id)===String(b.id))?'saved':''}" data-fav="${esc(b.id)}" aria-label="${favs().some(id=>String(id)===String(b.id))?'Убрать из избранного':'В избранное'}">${favs().some(id=>String(id)===String(b.id))?'♥':'♡'}</button></div><div class="body"><h3>${esc(b.title)}</h3><div class="author">${esc(b.genre)} · AI Library</div><p class="desc">${esc(b.desc)}</p>
 <div class="meta"><span>◷ ${b.length} мин чтения</span><span>Фрагмент · бесплатно</span></div>${(()=>{const saved=getReadingProgress()[b.id];const total=b.chapters.length;if(!total)return '';const read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0;const percent=Math.round(read/total*100);return read>0?`<div class="reading-progress"><div class="reading-progress-label"><span>Прогресс чтения</span><span>${percent}%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:${percent}%"></div></div></div>`:''})()}<button class="btn read" data-read="${b.id}">Открыть книгу　→</button>
 </div></article>`).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav)}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
@@ -1710,6 +1716,127 @@ window.addEventListener('resize', () => {
   paginateCurrentChapter();
   readingPageIndex = Math.min(oldIndex, readingPages.length - 1);
   renderReadingPage(false);
+});
+
+
+/* AI Library Release — резервное копирование личных данных */
+const LIBRARY_DATA_VERSION = 1;
+const LIBRARY_STORAGE_KEYS = {
+  books: PERSONAL_BOOKS_KEY,
+  favorites: 'ai-library-favs',
+  progress: 'ai-library-progress',
+  readerSettings: 'ai-library-reader-settings'
+};
+
+function readStoredJson(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || 'null');
+    return value == null ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+
+function exportLibraryBackup() {
+  const backup = {
+    app: 'AI Library',
+    version: LIBRARY_DATA_VERSION,
+    exportedAt: new Date().toISOString(),
+    personalBooks: readStoredJson(LIBRARY_STORAGE_KEYS.books, []),
+    favorites: readStoredJson(LIBRARY_STORAGE_KEYS.favorites, []),
+    progress: readStoredJson(LIBRARY_STORAGE_KEYS.progress, {}),
+    readerSettings: readStoredJson(LIBRARY_STORAGE_KEYS.readerSettings, { fontSize: 17, lineSpacing: '1.7' })
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'ai-library-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  link.hidden = true;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function validateBackupBook(book) {
+  return !!book && typeof book === 'object' &&
+    typeof book.id === 'string' && book.id.length > 0 && book.id.length <= 120 &&
+    typeof book.title === 'string' && book.title.trim().length > 0 && book.title.length <= 300 &&
+    Array.isArray(book.chapters) && book.chapters.length <= 500 &&
+    book.chapters.every(chapter => typeof chapter === 'string' && chapter.length <= 500000);
+}
+
+async function importLibraryBackup(file) {
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) throw new Error('Файл больше 5 МБ. Выберите корректную резервную копию AI Library.');
+  const data = JSON.parse(await file.text());
+  if (!data || data.app !== 'AI Library' || data.version !== LIBRARY_DATA_VERSION) {
+    throw new Error('Это не поддерживаемая резервная копия AI Library.');
+  }
+  if (!Array.isArray(data.personalBooks) || data.personalBooks.length > 1000 ||
+      !data.personalBooks.every(validateBackupBook)) {
+    throw new Error('Файл содержит некорректный список личных книг.');
+  }
+  const currentBooks = readStoredJson(LIBRARY_STORAGE_KEYS.books, []);
+  const merged = new Map((Array.isArray(currentBooks) ? currentBooks : [])
+    .filter(validateBackupBook).map(book => [book.id, book]));
+  data.personalBooks.forEach(book => merged.set(book.id, book));
+
+  const currentFavorites = readStoredJson(LIBRARY_STORAGE_KEYS.favorites, []);
+  const importedFavorites = Array.isArray(data.favorites)
+    ? data.favorites.filter(value => ['string', 'number'].includes(typeof value)).slice(0, 10000)
+    : [];
+  const favorites = [...new Set([...(Array.isArray(currentFavorites) ? currentFavorites : []), ...importedFavorites].map(String))];
+
+  const currentProgress = readStoredJson(LIBRARY_STORAGE_KEYS.progress, {});
+  const progress = { ...(currentProgress && typeof currentProgress === 'object' && !Array.isArray(currentProgress) ? currentProgress : {}) };
+  if (data.progress && typeof data.progress === 'object' && !Array.isArray(data.progress)) {
+    for (const [id, item] of Object.entries(data.progress)) {
+      if (id.length <= 160 && item && Number.isInteger(item.part) && item.part >= 0 &&
+          Number.isInteger(item.page) && item.page >= 0) progress[id] = {
+        part: Math.min(item.part, 10000),
+        page: Math.min(item.page, 10000),
+        updatedAt: Number.isFinite(item.updatedAt) ? item.updatedAt : Date.now()
+      };
+    }
+  }
+
+  const settings = data.readerSettings && typeof data.readerSettings === 'object' ? data.readerSettings : {};
+  const readerSettings = {
+    fontSize: Number.isFinite(Number(settings.fontSize)) ? Math.max(14, Math.min(24, Number(settings.fontSize))) : 17,
+    lineSpacing: ['1.45', '1.7', '1.95'].includes(String(settings.lineSpacing)) ? String(settings.lineSpacing) : '1.7'
+  };
+
+  // Validate everything before writing so malformed files never partially replace data.
+  localStorage.setItem(LIBRARY_STORAGE_KEYS.books, JSON.stringify([...merged.values()]));
+  localStorage.setItem(LIBRARY_STORAGE_KEYS.favorites, JSON.stringify(favorites));
+  localStorage.setItem(LIBRARY_STORAGE_KEYS.progress, JSON.stringify(progress));
+  localStorage.setItem(LIBRARY_STORAGE_KEYS.readerSettings, JSON.stringify(readerSettings));
+  loadPersonalBooks();
+  syncGenreFilters();
+  render();
+  updateContinueReadingButton();
+  return data.personalBooks.length;
+}
+
+document.querySelector('#exportLibraryData')?.addEventListener('click', () => {
+  try { exportLibraryBackup(); }
+  catch (error) { alert('Не удалось создать резервную копию. Проверьте свободное место и разрешения браузера.'); }
+});
+document.querySelector('#importLibraryData')?.addEventListener('click', () => document.querySelector('#importLibraryFile')?.click());
+document.querySelector('#importLibraryFile')?.addEventListener('change', async event => {
+  const input = event.currentTarget;
+  const file = input.files?.[0];
+  if (!file) return;
+  try {
+    const count = await importLibraryBackup(file);
+    alert(`Резервная копия восстановлена. Импортировано книг: ${count}. Данные из файла объединены с существующими.`);
+  } catch (error) {
+    alert(error instanceof SyntaxError ? 'Не удалось прочитать JSON. Проверьте файл резервной копии.' : error.message || 'Не удалось восстановить данные.');
+  } finally {
+    input.value = '';
+  }
 });
 
 loadPersonalBooks();
@@ -2341,6 +2468,13 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   outline: 2px solid #d9b66d;
   outline-offset: 3px;
 }
+
+.data-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.footer-action{border:1px solid #51442c;border-radius:9px;padding:8px 11px;background:#1c1b18;color:#d9c18b;font-size:12px;cursor:pointer}
+.footer-action:hover{border-color:#d9b66d;background:#29251c}
+.footer-action:focus-visible{outline:2px solid #d9b66d;outline-offset:3px}
+@media(max-width:540px){.data-tools{width:100%}.footer-action{flex:1 1 auto;min-height:42px}}
+
 </style>
 
 <script>
@@ -2506,5 +2640,14 @@ button:disabled { cursor: not-allowed; opacity: .58; }
     }
   });
 })();
+</script>
+
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .catch(error => console.warn('AI Library: офлайн-режим недоступен.', error));
+  });
+}
 </script>
 </body></html>
