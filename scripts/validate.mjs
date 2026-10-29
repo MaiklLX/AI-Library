@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
+const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
@@ -32,4 +33,24 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 }
 
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
-console.log(`AI Library validation passed: ${scripts.length} inline scripts, ${ids.length} IDs, manifest and local assets checked.`);
+assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
+assert.match(html, /navigator\\.serviceWorker\\.register\\(['"]\\.\\/sw\\.js['"]/, "Service worker registration is missing");
+assert.match(serviceWorker, /request\\.mode === 'navigate'/, "Offline navigation fallback is missing");
+assert.match(serviceWorker, /url\\.origin !== self\\.location\\.origin/, "Service worker must not intercept external APIs");
+assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
+assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
+assert.match(html, /function exportLibraryBackup\\(/, "Backup export logic is missing");
+assert.match(html, /async function importLibraryBackup\\(/, "Backup import logic is missing");
+assert.match(html, /function safeClass\\(/, "Dynamic cover classes must be sanitized");
+try {
+  new Function(serviceWorker);
+} catch (error) {
+  throw new Error(`Service worker has a syntax error: ${error.message}`);
+}
+
+for (const icon of manifest.icons || []) {
+  if (icon.src.startsWith("./")) {
+    assert.ok(existsSync(resolve(root, icon.src)), `Manifest icon does not exist: ${icon.src}`);
+  }
+}
+console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
