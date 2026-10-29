@@ -1890,6 +1890,23 @@ updateContinueReadingButton();
     display: none !important;
   }
 
+  body.ai-generator-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  #ai-book-form[aria-busy="true"] #ai-book-topic,
+  #ai-book-form[aria-busy="true"] #ai-book-genre,
+  #ai-book-form[aria-busy="true"] #ai-book-audience,
+  #ai-book-form[aria-busy="true"] #ai-book-length {
+    opacity: .78;
+  }
+
+  #ai-book-status {
+    min-height: 1.5em;
+    line-height: 1.55;
+  }
+
   #ai-book-modal {
     position: fixed;
     inset: 0;
@@ -2490,6 +2507,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   const resultTitle = document.getElementById("ai-book-result-title");
   const resultText = document.getElementById("ai-book-result-text");
   let previousFocus = null;
+  let requestController = null;
 
   if (!modal || !form) {
     console.error("AI Library: окно генерации не найдено");
@@ -2505,13 +2523,19 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   openButton.setAttribute("aria-controls", "ai-book-modal");
 
   function closeGeneratorModal() {
+    if (requestController) {
+      requestController.abort();
+      requestController = null;
+    }
     modal.hidden = true;
-    if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+    document.body.classList.remove("ai-generator-open");
+    if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus({ preventScroll: true });
   }
 
   openButton.addEventListener("click", () => {
     previousFocus = document.activeElement;
     modal.hidden = false;
+    document.body.classList.add("ai-generator-open");
     document.getElementById("ai-book-topic").focus();
   });
 
@@ -2562,14 +2586,23 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 
     generateButton.disabled = true;
     generateButton.textContent = "Создаём главу…";
-    status.textContent = "ИИ пишет первую главу. Это может занять некоторое время.";
+    form.setAttribute("aria-busy", "true");
+    status.textContent = "ИИ пишет первую главу. Обычно это занимает меньше минуты.";
     result.hidden = true;
+    const controller = new AbortController();
+    let timedOut = false;
+    requestController = controller;
+    const timeoutId = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 90000);
 
     try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, genre, audience, length })
+        body: JSON.stringify({ topic, genre, audience, length }),
+        signal: controller.signal
       });
 
       let data;
@@ -2630,11 +2663,20 @@ button:disabled { cursor: not-allowed; opacity: .58; }
       status.textContent = "Глава создана. Нажми «Сохранить в мою библиотеку», чтобы сохранить её на этом устройстве.";
       result.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
-      console.error("AI Library generation error:", error);
-      status.textContent =
-        "Не удалось создать главу: " + error.message +
-        " Проверь адрес Worker и попробуй ещё раз.";
+      if (error.name === "AbortError") {
+        status.textContent = timedOut
+          ? "Сервер не ответил за 90 секунд. Попробуй ещё раз — книга не потеряется."
+          : "Создание остановлено.";
+      } else {
+        console.error("AI Library generation error:", error);
+        status.textContent =
+          "Не удалось создать главу: " + (error.message || "ошибка соединения") +
+          ". Проверь подключение к интернету и попробуй ещё раз.";
+      }
     } finally {
+      window.clearTimeout(timeoutId);
+      if (requestController === controller) requestController = null;
+      form.setAttribute("aria-busy", "false");
       generateButton.disabled = false;
       generateButton.textContent = "Создать первую главу";
     }
