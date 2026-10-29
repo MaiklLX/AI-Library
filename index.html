@@ -1280,8 +1280,134 @@ current = getAllBooks().find(b => String(b.id) === String(id));
     ? Math.max(0, Math.min(saved.part, current.chapters.length - 1))
     : 0;
 
-  document.querySelector('#modal').classList.add('open');
+  openReadingSpace();
   showPart();
+}
+
+
+let readingPages = [];
+let readingPageIndex = 0;
+let readerScrollRestore = 0;
+let readerBodyTop = 0;
+
+function openReadingSpace() {
+  const modal = document.querySelector('#modal');
+  readerScrollRestore = window.scrollY || window.pageYOffset || 0;
+  readerBodyTop = readerScrollRestore;
+  document.body.style.top = `-${readerBodyTop}px`;
+  document.body.classList.add('reader-open');
+  modal.classList.add('open');
+  modal.scrollTop = 0;
+}
+
+function closeReadingSpace() {
+  const modal = document.querySelector('#modal');
+  modal.classList.remove('open');
+  document.body.classList.remove('reader-open');
+  document.body.style.top = '';
+  window.scrollTo(0, readerScrollRestore);
+}
+
+function paginateCurrentChapter() {
+  const reader = document.querySelector('#reader');
+  const pageLabel = document.querySelector('#bookPageLabel');
+  const pageNumber = document.querySelector('#bookPageNumber');
+  const page = document.querySelector('#bookPage');
+  const text = String(current?.chapters?.[part] || '').trim();
+
+  if (!reader || !page) return;
+  readingPageIndex = 0;
+  readingPages = [];
+
+  // Сначала используем весь доступный размер страницы, затем делим текст по словам.
+  const availableHeight = Math.max(140, reader.clientHeight || 300);
+  const words = text.split(/(\\s+)/).filter(token => token.length > 0);
+  const probe = reader.cloneNode(false);
+  probe.id = 'readerMeasure';
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:${reader.clientWidth || 300}px;height:auto;max-height:none;overflow:visible;display:block;flex:none;white-space:pre-wrap;`;
+  probe.textContent = '';
+  page.appendChild(probe);
+
+  const fits = candidate => {
+    probe.textContent = candidate;
+    return probe.scrollHeight <= availableHeight + 2;
+  };
+
+  let cursor = 0;
+  while (cursor < words.length) {
+    let low = cursor + 1;
+    let high = words.length;
+    let best = cursor + 1;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const candidate = words.slice(cursor, mid).join('');
+      if (fits(candidate)) {
+        best = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    let end = Math.max(cursor + 1, best);
+    // Если возможно, заканчиваем страницу на границе абзаца.
+    if (end < words.length) {
+      for (let k = end - 1; k > cursor + Math.max(1, Math.floor((end - cursor) * .65)); k--) {
+        if (/\\n\\s*\\n/.test(words[k])) { end = k + 1; break; }
+      }
+    }
+    readingPages.push(words.slice(cursor, end).join('').trim());
+    cursor = end;
+    while (cursor < words.length && /^\\s+$/.test(words[cursor]) && !/\\n/.test(words[cursor])) cursor++;
+  }
+  probe.remove();
+  if (!readingPages.length) readingPages = [''];
+  renderReadingPage(false);
+}
+
+function renderReadingPage(animate = true) {
+  const reader = document.querySelector('#reader');
+  const page = document.querySelector('#bookPage');
+  const pageLabel = document.querySelector('#bookPageLabel');
+  const pageNumber = document.querySelector('#bookPageNumber');
+  if (!reader || !page) return;
+
+  reader.textContent = readingPages[readingPageIndex] || '';
+  if (pageLabel) pageLabel.textContent = `СТР. ${readingPageIndex + 1} / ${readingPages.length}`;
+  if (pageNumber) pageNumber.textContent = String(readingPageIndex + 1);
+  if (animate) {
+    page.classList.remove('turn-forward', 'turn-back');
+    void page.offsetWidth;
+    page.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turn-back' : 'turn-forward');
+  }
+  reader.scrollTop = 0;
+}
+
+function turnReadingPage(direction) {
+  if (!document.querySelector('#modal').classList.contains('open')) return false;
+  const target = readingPageIndex + direction;
+  if (target >= 0 && target < readingPages.length) {
+    readingPageIndex = target;
+    window.__aiLibraryTurnDirection = direction > 0 ? 'forward' : 'back';
+    renderReadingPage(true);
+    return true;
+  }
+  // На последней странице главы переход вперёд открывает следующую часть.
+  if (direction > 0 && part < (current?.chapters?.length || 0) - 1) {
+    window.__aiLibraryTurnDirection = 'forward';
+    part++;
+    showPart();
+    return true;
+  }
+  // На первой странице главы переход назад возвращает к предыдущей части.
+  if (direction < 0 && part > 0) {
+    window.__aiLibraryTurnDirection = 'back';
+    part--;
+    showPart();
+    readingPageIndex = Math.max(0, readingPages.length - 1);
+    renderReadingPage(true);
+    return true;
+  }
+  return false;
 }
 
 function showPart() {
@@ -1296,14 +1422,9 @@ function showPart() {
   document.querySelector('#modalAuthor').textContent =
     'AI Library · авторский проект';
 
-  document.querySelector('#reader').textContent =
-    current.chapters[part];
+  paginateCurrentChapter();
 
   const page = document.querySelector('#bookPage');
-  const pageLabel = document.querySelector('#bookPageLabel');
-  const pageNumber = document.querySelector('#bookPageNumber');
-  if (pageLabel) pageLabel.textContent = `ЧАСТЬ ${part + 1}`;
-  if (pageNumber) pageNumber.textContent = String(part + 1);
   if (page) {
     page.classList.remove('turn-forward', 'turn-back');
     void page.offsetWidth;
@@ -1366,7 +1487,7 @@ function updateContinueReadingButton() {
   btn.onclick = () => openBookById(book.id);
 }
 
-document.querySelector('#prevChapter').onclick=()=>{if(part>0){window.__aiLibraryTurnDirection='back';part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection='forward';part++;showPart()}else document.querySelector('#modal').classList.remove('open')};document.querySelector('#closeModal').onclick=()=>document.querySelector('#modal').classList.remove('open');document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelector('#modal').classList.remove('open')});
+document.querySelector('#prevChapter').onclick=()=>{if(part>0){window.__aiLibraryTurnDirection='back';part--;showPart()}};document.querySelector('#nextChapter').onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection='forward';part++;showPart()}else closeReadingSpace()};document.querySelector('#closeModal').onclick=closeReadingSpace;document.querySelector('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeReadingSpace()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReadingSpace()});
 document.querySelector('#randomBtn').onclick=()=>openBook(books[Math.floor(Math.random()*books.length)].id);
 
 /* AI Library 0.7 — жестовое управление чтением */
@@ -1401,35 +1522,58 @@ readerArea.addEventListener('touchend', e => {
 
   swipeStartX = 0;
 
-  // Игнорируем медленные движения и обычную вертикальную прокрутку
-  if (duration > 700 || Math.abs(dx) < 65) return;
-  if (Math.abs(dx) < Math.abs(dy) * 1.3) return;
-
-  // Не переключаем части, если пользователь выделяет текст
+  if (duration > 850) return;
+  if (!current || !document.querySelector('#modal').classList.contains('open')) return;
   if (window.getSelection()?.toString()) return;
 
-  // Жесты работают только в открытой книге
-  if (!current || !document.querySelector('#modal').classList.contains('open')) {
+  // Вертикальный свайп перелистывает страницы внутри главы.
+  if (Math.abs(dy) > 55 && Math.abs(dy) > Math.abs(dx) * 1.15) {
+    if (dy < 0) turnReadingPage(1);
+    else turnReadingPage(-1);
     return;
   }
 
+  // Горизонтальные свайпы остаются быстрым переходом между частями.
+  if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
   if (dx < 0) {
-    // Свайп влево — следующая часть
     if (part < current.chapters.length - 1) {
+      window.__aiLibraryTurnDirection = 'forward';
       part++;
       showPart();
     }
-  } else {
-    // Свайп вправо — предыдущая часть
-    if (part > 0) {
-      part--;
-      showPart();
-    }
+  } else if (part > 0) {
+    window.__aiLibraryTurnDirection = 'back';
+    part--;
+    showPart();
   }
 }, { passive: true });
 
 readerArea.addEventListener('touchcancel', () => {
   swipeStartX = 0;
+});
+
+let readerWheelDelta = 0;
+let readerWheelLock = false;
+document.querySelector('#bookPage').addEventListener('wheel', e => {
+  if (!document.querySelector('#modal').classList.contains('open') || readerWheelLock) return;
+  const reader = document.querySelector('#reader');
+  const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  readerWheelDelta += delta;
+  if (Math.abs(readerWheelDelta) > 70) {
+    const direction = readerWheelDelta > 0 ? 1 : -1;
+    readerWheelDelta = 0;
+    readerWheelLock = true;
+    turnReadingPage(direction);
+    setTimeout(() => { readerWheelLock = false; }, 420);
+  }
+}, { passive: true });
+
+window.addEventListener('resize', () => {
+  if (!current || !document.querySelector('#modal').classList.contains('open')) return;
+  const oldIndex = readingPageIndex;
+  paginateCurrentChapter();
+  readingPageIndex = Math.min(oldIndex, readingPages.length - 1);
+  renderReadingPage(false);
 });
 
 loadPersonalBooks();
@@ -1706,6 +1850,91 @@ updateContinueReadingButton();
 }
 @media (prefers-reduced-motion: reduce) {
   .book-page.turn-forward, .book-page.turn-back { animation: none; }
+}
+
+
+/* AI Library 1.1 — отдельное пространство чтения и настоящая постраничная прокрутка */
+body.reader-open {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+.modal.open {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.dialog {
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  padding: clamp(16px, 3vw, 30px) clamp(14px, 4vw, 46px) max(14px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+#modalTitle { flex: 0 0 auto; }
+#modalAuthor { flex: 0 0 auto; }
+.book-page {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  margin: 18px 0 14px;
+  padding: clamp(18px, 3.5vw, 38px) clamp(18px, 5vw, 60px) 34px;
+  overflow: hidden;
+}
+.book-running-head { flex: 0 0 auto; }
+.reader {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  max-height: none;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 18px 0 10px;
+  padding: 0 2px;
+  user-select: text;
+}
+.book-page-number { bottom: 12px; }
+.controls {
+  flex: 0 0 auto;
+  padding-top: 12px;
+}
+.notice { flex: 0 0 auto; margin: 10px 0 0; }
+#chapterLabel { white-space: nowrap; }
+@media (max-width: 540px) {
+  .dialog {
+    padding: max(14px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+  #modalTitle { font-size: clamp(23px, 6.4vw, 31px); margin-top: 8px; }
+  .book-page { margin: 14px 0 10px; padding: 18px 17px 32px; }
+  .reader { font-size: 16px; line-height: 1.75; margin: 15px 0 8px; }
+  .controls { gap: 8px; }
+  .controls .btn { min-height: 40px; }
+  .notice { font-size: 10px; }
+}
+@media (max-height: 650px) {
+  .dialog { padding-top: 12px; padding-bottom: 10px; }
+  #modalTitle { font-size: clamp(22px, 3.8vh, 30px); margin-top: 5px; }
+  .book-page { margin: 10px 0 8px; padding-top: 14px; }
+  .reader { margin-top: 10px; line-height: 1.65; }
+  .notice { display: none; }
 }
 
 </style>
