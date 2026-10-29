@@ -1290,6 +1290,30 @@ body.reader-open #chapterLabel {
 }
 </style>
 
+
+<style id="ios-standalone-reader-viewport-fix">
+/* Functional fix: keep the reader fitted to the live iOS standalone viewport. */
+@media (max-width: 540px) {
+  body.reader-open .modal.open {
+    height: var(--ai-library-reader-viewport-height, 100dvh);
+    min-height: 0;
+    max-height: var(--ai-library-reader-viewport-height, 100dvh);
+  }
+  body.reader-open .modal.open .dialog {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+  }
+  body.reader-open .modal.open .book-page {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button></div></nav></div></header>
@@ -2213,4 +2237,25 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   });
 }
 </script>
+
+<script>
+/* iOS home-screen apps can report a changing visible viewport after page turns. */
+(() => {
+  const modal = document.getElementById('modal');
+  if (!modal) return;
+  const syncReaderViewport = () => {
+    if (!modal.classList.contains('open') || !document.body.classList.contains('reader-open')) return;
+    const height = window.visualViewport?.height || window.innerHeight;
+    if (height > 0) document.documentElement.style.setProperty('--ai-library-reader-viewport-height', Math.round(height) + 'px');
+  };
+  const observer = new MutationObserver(syncReaderViewport);
+  observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('resize', syncReaderViewport, { passive: true });
+  window.visualViewport?.addEventListener('resize', syncReaderViewport, { passive: true });
+  window.visualViewport?.addEventListener('scroll', syncReaderViewport, { passive: true });
+  syncReaderViewport();
+})();
+</script>
+
 </body></html>
