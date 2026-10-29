@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<meta name="description" content="AI Library — бесплатная цифровая библиотека историй. Открывай фантастику, фэнтези, детективы и другие миры, сохраняй прогресс и создавай собственные книги с помощью ИИ.">
+<meta name="description" content="AI Library — бесплатная цифровая библиотека историй. Открывай фантастику, фэнтези и детективы, знакомься с закрытыми премьерами и следи за новыми релизами.">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AI Library — библиотека новых миров">
-<meta property="og:description" content="Открывай новые истории, читай в книжном режиме и создавай собственные книги с помощью ИИ.">
+<meta property="og:description" content="Открывай новые истории, знакомься с закрытыми премьерами и читай в удобном книжном режиме.">
 <meta property="og:url" content="https://maikllx.github.io/AI-Library/">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://maikllx.github.io/AI-Library/">
@@ -1561,7 +1561,7 @@ function renderPrereleaseShowcase(){
   }
   root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
     <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div><div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
-    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3><div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>✦ Ранний показ</span><span>◷ ${Number(book.length)||'—'} мин чтения</span><span>Текст пока закрыт</span></div><div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div></div>
+    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3><div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>✦ Ранний показ</span><span>◷ ${Number(book.length)||'—'} мин чтения</span><span>Текст пока закрыт</span></div><div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
   </article>`).join('');
 }
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
