@@ -40,7 +40,7 @@ assert.match(html, /signal:\s*controller\.signal/, "AI generation request must b
 assert.match(html, /controller\.abort\(\)/, "AI generation timeout must abort the request");
 assert.match(html, /form\.setAttribute\(["']aria-busy["']/, "AI generation busy state is missing");
 assert.match(html, /body\.classList\.add\(["']ai-generator-open["']/, "Generator modal should lock background scrolling");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v3['"]/, "Offline shell cache version should be bumped for this release");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v4['"]/, "Offline shell cache version should be bumped for this release");
 assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline navigation fallback is missing");
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
@@ -65,8 +65,12 @@ for (const entry of publishedCatalog.books) {
   const book = JSON.parse(readFileSync(bookPath, "utf8"));
   assert.equal(book.id, entry.id, `Book ID does not match catalog entry: ${entry.id}`);
   assert.ok(typeof book.title === "string" && book.title.trim(), `Book title is missing: ${entry.id}`);
-  assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
-  assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
+  if (book.status === "prerelease") {
+    assert.ok(!Array.isArray(book.chapters) || book.chapters.length === 0, `Prerelease book must not expose chapters: ${entry.id}`);
+  } else {
+    assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
+    assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
+  }
 }
 assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
 assert.match(html, /async function loadPublishedBooks\(/, "Published book loader is missing");
