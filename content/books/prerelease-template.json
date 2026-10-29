@@ -1,0 +1,20 @@
+{
+  "id": "primer-zakrytoy-premery",
+  "title": "Название книги",
+  "subtitle": "Закрытая премьера · AI Library",
+  "author": "Имя автора или AI Library",
+  "genre": "Жанр",
+  "tagline": "Одна сильная фраза, передающая конфликт или атмосферу истории.",
+  "description": "Короткая аннотация в 2–4 предложениях. Не раскрывайте ключевые повороты и финал.",
+  "editorialNote": "Небольшая заметка редакции: почему эта история заслуживает внимания и на какое чувство или вопрос она приглашает читателя.",
+  "releaseDate": "2026-12-01T18:00:00+03:00",
+  "tag": "ЗАКРЫТЫЙ ПРЕРЕЛИЗ",
+  "cls": "adventure",
+  "symbol": "✦",
+  "cover": "./content/books/primer-zakrytoy-premery.svg",
+  "length": 90,
+  "language": "ru",
+  "status": "prerelease",
+  "themes": ["тема 1", "тема 2"],
+  "chapters": []
+}
