@@ -165,6 +165,18 @@ Current observed visual foundation in `index.html`:
 - Service Worker cache `v50` and validator assertions are included in the deployed commit.
 - Next: verify CI and Pages deployment; then inspect screenshots/actual rendering at desktop, tablet and mobile widths before expanding the redesign. Do not proceed to the reader or broad CSS cleanup.
 
+
+## Book-card action usability fix (2026-10-30)
+
+- User reported that the primary "Читать" action had become too small and that "Скачать / Доступна офлайн" was awkward to use on book cards.
+- Source audit found explicit compact rules shrinking the read button to 34px height and 10px text at tablet/mobile widths, then to 9px text below 380px. The download action had no equivalent dedicated sizing.
+- Added a final isolated style layer in `index.html`: both actions now have balanced button dimensions, 48px desktop/very-small-screen minimum height and 46px at intermediate mobile widths, larger readable text, clear focus rings, and a prominent warm-gold primary "Читать" button. Download/offline remains secondary but readable and easy to tap.
+- No card flip logic, click handlers, download manager behavior, reader code, book data, or storage was changed.
+- Service Worker cache bumped from `v50` to `v51`; validator checks were added for the new layer and minimum touch target.
+- Implementation commits: `c373874979a26c2eb87c061c57f7cfa59b875a63`, `d449c0e2f23e054865b4a9e135ef2f4db111266c`, `3cc228f9b6b61d9ec56a3eebeedd1b3e0f11d210`.
+- CI/deploy for this fix: pending verification.
+- Next: verify CI and Pages deployment, then user should test card flip and both buttons on an actual phone; adjust further only from observed behavior.
+
 ---
 Last maintained: 2026-10-30.
 
