@@ -148,6 +148,20 @@ Current observed visual foundation in `index.html`:
 - `content/books/*.json` — published book content.
 - `scripts/validate.mjs` — repository validation and regression assertions.
 
+
+## Visual system milestone 1 — editorial tokens and catalog polish (2026-10-30)
+
+- Added a new isolated style layer at the end of the document head, marked `AI Library visual system: editorial tokens v1`.
+- Defined reusable design tokens for charcoal surfaces, warm gold accents, muted text, soft borders, focus rings and editorial shadows.
+- Applied the first restrained visual pass only to the home hero artwork and catalog controls: richer hero lighting, clearer catalog section separation, improved search/sort focus states, and keyboard-visible genre focus.
+- Added reduced-motion handling for the new transitions.
+- No reader selectors, reader pagination, page-turn gestures, IndexedDB, localStorage, book content or user data were changed.
+- Updated Service Worker app-shell cache from `v49` to `v50` because `index.html` changed.
+- Added release-validator assertions for the token layer, catalog focus treatments and cache version.
+- Commits: visual layer `f2a3ac29080dfebb92adcc7be3f47efc57b13e55`; SW cache `131f1c7caf2a21d9b34f6ed80f1dba1a83b10e87`; validator `3efc3caf861c04a2d6175ae301851dbd99dc9083`.
+- CI/deploy for this milestone: pending verification at the time this checkpoint was written.
+- Next: verify CI and Pages deployment; then inspect screenshots/actual rendering at desktop, tablet and mobile widths before expanding the redesign. Do not proceed to the reader or broad CSS cleanup.
+
 ---
 Last maintained: 2026-10-30.
 
