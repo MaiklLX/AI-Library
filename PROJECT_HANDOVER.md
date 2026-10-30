@@ -267,3 +267,9 @@ Last maintained: 2026-10-30.
 - No reader styles or scripts, touch/pagination behavior, book cards, storage, downloads or user data were changed.
 - Service Worker cache bumped from `v54` to `v55`; validator now checks both keyframes, the isolated layer and reduced-motion handling.
 - Source-level validation only; visual appearance still needs confirmation on desktop and mobile after deployment.
+
+### Validation follow-up
+
+- The first CI attempt correctly blocked deployment because the newly added reduced-motion assertion used an over-escaped regular expression. The animation CSS itself was not the failing check.
+- Replaced that assertion with two focused checks for the media query and the hero-star animation override. Validator fix commit: `83b6da2daae66bf047d3f93c6d0e05d6e0fe0361`.
+- Re-run CI and Pages deployment on this commit before treating the visual change as published.
