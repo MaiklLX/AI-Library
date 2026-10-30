@@ -2492,6 +2492,12 @@ body.reader-open #pageTurnSheet.flip-back {
   body.reader-open #pageTurnSheet.flip-back { -webkit-animation-duration:.01ms!important;animation-duration:.01ms!important; }
 }
 </style>
+<style id="audio-player-foundation-v1">
+.audio-dock{flex:0 0 auto;width:100%;margin:4px 0 0;padding:10px 12px;border:1px solid rgba(217,182,109,.32);border-radius:13px;background:linear-gradient(135deg,rgba(38,32,23,.98),rgba(24,24,23,.98));color:#f4f0e7;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.audio-dock[hidden]{display:none!important}.audio-dock-top,.audio-dock-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.audio-dock-kicker{color:#d9b66d;font-size:10px;font-weight:800;letter-spacing:.13em}.audio-dock-top #audioStatus,.audio-dock-bottom{font-size:11px;color:#aaa59a}.audio-dock-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:8px 0}.audio-dock-controls button,.audio-dock-controls select{min-height:35px;border:1px solid #51442c;border-radius:8px;background:#1c1b18;color:#f4f0e7;padding:5px 9px;font-size:12px}.audio-dock-controls button:focus-visible,.audio-dock-controls select:focus-visible{outline:2px solid #d9b66d;outline-offset:2px}.audio-dock-controls .audio-main-button{width:40px;height:40px;border-radius:50%;background:#d9b66d;color:#17130d;border:0;font-weight:800;font-size:16px}.audio-dock-controls label{font-size:11px;color:#c8bfae}.audio-engine-label{color:#d9b66d}.audio-dock-bottom{padding-top:6px;border-top:1px solid rgba(217,182,109,.14)}
+@media(max-width:620px){.audio-dock{padding:9px}.audio-dock-controls{gap:6px}.audio-dock-controls label{margin-left:3px}.audio-dock-controls select{flex:1 1 88px;min-width:0}.audio-engine-label{width:100%}}
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){body.reader-open .audio-dock{max-width:980px;align-self:center}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2546,6 +2552,21 @@ body.reader-open #pageTurnSheet.flip-back {
     <label for="readerTheme">Тема</label><select id="readerTheme" aria-label="Тема оформления"><option value="sepia">Сепия</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
   </div>
   <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
+  <section class="audio-dock" id="audioDock" aria-label="Аудиоплеер" hidden>
+    <div class="audio-dock-top"><span class="audio-dock-kicker">AI LIBRARY AUDIO</span><span id="audioStatus" role="status">Готово к прослушиванию</span></div>
+    <div class="audio-dock-controls">
+      <button type="button" id="audioPlay" class="audio-main-button" aria-label="Слушать">▶</button>
+      <button type="button" id="audioBack" aria-label="Назад на 15 секунд" title="Назад на 15 секунд">↶ 15</button>
+      <button type="button" id="audioForward" aria-label="Вперёд на 15 секунд" title="Вперёд на 15 секунд">15 ↷</button>
+      <label class="audio-speed-label" for="audioSpeed">Скорость</label>
+      <select id="audioSpeed" aria-label="Скорость озвучки"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select>
+      <label class="audio-voice-label" for="audioVoice">Голос</label>
+      <select id="audioVoice" aria-label="Голос озвучки"><option value="">Системный голос</option></select>
+      <label class="audio-sleep-label" for="audioSleep">Таймер</label>
+      <select id="audioSleep" aria-label="Таймер сна"><option value="0">Выкл.</option><option value="15">15 мин</option><option value="30">30 мин</option><option value="45">45 мин</option><option value="60">60 мин</option></select>
+    </div>
+    <div class="audio-dock-bottom"><span id="audioChapter">Часть 1</span><span id="audioProgress">Страница 1</span><span class="audio-engine-label">Озвучка устройства · Нейроголос — следующий этап</span></div>
+  </section>
   <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
 </div></div>
 <script>
@@ -2955,6 +2976,7 @@ function openBook(id) {
   openReadingSpace();
   applyReaderSettings();
   showPart();
+  audioOpen();
   if (saved && Number.isInteger(saved.page)) {
     readingPageIndex = Math.max(0, Math.min(saved.page, readingPages.length - 1)); if(isDesktopReaderSpread())readingPageIndex=Math.floor(readingPageIndex/2)*2;
     renderReadingPage(false);
@@ -3050,6 +3072,7 @@ function closeReadingSpace() {
   const modal = document.querySelector('#modal');
   if (!modal || !modal.classList.contains('open')) return;
   saveReadingProgress();
+  audioStop();
   if(readerChromeTimer)clearTimeout(readerChromeTimer);
   document.body.classList.remove('reader-chrome-hidden');
   modal.classList.remove('open');
@@ -3294,6 +3317,7 @@ function renderReadingPage(animate = true) {
   if(rightNumber){rightNumber.textContent=rightPageNumber?String(rightPageNumber):'';rightNumber.hidden=!hasRightPage;}
   if(rightPage){rightPage.dataset.theme=page.dataset.theme||'sepia';rightPage.classList.toggle('is-empty',!hasRightPage);rightPage.setAttribute('aria-hidden',String(!hasRightPage));}
 
+  audioUpdateProgress();
   const status=document.querySelector('#readerPageStatus');
   if(status)status.textContent=`СТР. ${leftPageNumber}${hasRightPage?'–'+rightPageNumber:''} / ${bookMetrics.total}`;
   reader.scrollTop=0;
@@ -3380,6 +3404,29 @@ function turnReadingPage(direction) {
   return false;
 }
 
+/* AI Library Audio v1 — device speech engine, page-aware playback */
+const audioPlayerState={playing:false,utterance:null,voice:null,sleepTimer:null,pausedAt:0};
+function audioElements(){return{dock:document.querySelector('#audioDock'),play:document.querySelector('#audioPlay'),status:document.querySelector('#audioStatus'),progress:document.querySelector('#audioProgress'),chapter:document.querySelector('#audioChapter'),voice:document.querySelector('#audioVoice'),speed:document.querySelector('#audioSpeed'),sleep:document.querySelector('#audioSleep')}}
+function audioCurrentText(){return String(readingPages[readingPageIndex]||'').trim()}
+function audioSetStatus(message){const el=audioElements().status;if(el)el.textContent=message}
+function audioUpdateProgress(){const e=audioElements();if(e.progress)e.progress.textContent='Страница '+(readingPageIndex+1)+' / '+Math.max(1,readingPages.length);if(e.chapter)e.chapter.textContent='Часть '+(part+1)+' из '+(current?.chapters?.length||1);if(e.play){e.play.textContent=audioPlayerState.playing?'Ⅱ':'▶';e.play.setAttribute('aria-label',audioPlayerState.playing?'Пауза':'Слушать')}}
+function audioStop(clearTimer=true){if('speechSynthesis'in window)window.speechSynthesis.cancel();audioPlayerState.playing=false;audioPlayerState.utterance=null;if(clearTimer&&audioPlayerState.sleepTimer){clearTimeout(audioPlayerState.sleepTimer);audioPlayerState.sleepTimer=null}audioUpdateProgress()}
+function audioLoadVoices(){const e=audioElements();if(!e.voice||!('speechSynthesis'in window))return;const previous=e.voice.value;const voices=window.speechSynthesis.getVoices();e.voice.replaceChildren(new Option('Системный голос',''));voices.filter(v=>/^ru([_-]|$)/i.test(v.lang)).forEach(v=>e.voice.add(new Option(v.name+' · '+v.lang,v.voiceURI)));if([...e.voice.options].some(o=>o.value===previous))e.voice.value=previous}
+function audioSpeakPage(){if(!current||!readingPages.length||!('speechSynthesis'in window)){audioSetStatus('Системная озвучка недоступна в этом браузере');audioPlayerState.playing=false;audioUpdateProgress();return}const text=audioCurrentText();if(!text){audioAdvancePage();return}const utterance=new SpeechSynthesisUtterance(text);const e=audioElements();const voices=window.speechSynthesis.getVoices();utterance.lang='ru-RU';utterance.rate=Number(e.speed?.value||1);const selected=voices.find(v=>v.voiceURI===e.voice?.value);if(selected)utterance.voice=selected;utterance.onstart=()=>{audioPlayerState.playing=true;audioSetStatus('Воспроизведение');audioUpdateProgress()};utterance.onend=()=>{if(audioPlayerState.utterance!==utterance)return;audioPlayerState.utterance=null;if(!audioPlayerState.playing)return;audioAdvancePage()};utterance.onerror=event=>{if(event.error==='canceled'||event.error==='interrupted')return;audioPlayerState.playing=false;audioSetStatus('Не удалось запустить озвучку');audioUpdateProgress()};audioPlayerState.utterance=utterance;window.speechSynthesis.speak(utterance)}
+function audioAdvancePage(){if(!audioPlayerState.playing)return;if(readingPageIndex+1<readingPages.length){readingPageIndex++;renderReadingPage(false);audioUpdateProgress();audioSpeakPage();return}if(part+1<(current?.chapters?.length||0)){part++;showPart();audioUpdateProgress();audioSpeakPage();return}audioStop();audioSetStatus('Книга закончена')}
+function audioPlay(){if(!('speechSynthesis'in window)){audioSetStatus('Этот браузер не поддерживает системную озвучку');return}if(audioPlayerState.playing){window.speechSynthesis.pause();audioPlayerState.playing=false;audioSetStatus('Пауза');audioUpdateProgress();return}if(window.speechSynthesis.paused&&audioPlayerState.utterance){window.speechSynthesis.resume();audioPlayerState.playing=true;audioSetStatus('Воспроизведение');audioUpdateProgress();return}audioPlayerState.playing=true;audioSetStatus('Подготовка голоса…');audioSpeakPage()}
+function audioSeekPage(seconds){if(!audioPlayerState.utterance)return;const step=seconds<0?-1:1;if(step<0&&readingPageIndex>0)readingPageIndex--;else if(step>0&&readingPageIndex+1<readingPages.length)readingPageIndex++;else if(step>0&&part+1<(current?.chapters?.length||0)){part++;showPart()}else if(step<0&&part>0){part--;showPart();readingPageIndex=Math.max(0,readingPages.length-1)}else return;const resume=audioPlayerState.playing;window.speechSynthesis.cancel();audioPlayerState.utterance=null;renderReadingPage(false);audioUpdateProgress();if(resume)audioSpeakPage()}
+function audioSetSleepTimer(minutes){if(audioPlayerState.sleepTimer)clearTimeout(audioPlayerState.sleepTimer);audioPlayerState.sleepTimer=null;if(minutes>0){audioPlayerState.sleepTimer=setTimeout(()=>{audioStop();audioSetStatus('Таймер сна остановил воспроизведение')},minutes*60000);audioSetStatus('Таймер: '+minutes+' мин')}}
+function audioOpen(){const e=audioElements();if(!e.dock)return;e.dock.hidden=false;audioLoadVoices();audioUpdateProgress();if(!('speechSynthesis'in window)){audioSetStatus('Системная озвучка недоступна');if(e.play)e.play.disabled=true}}
+function audioRefreshAfterChapterChange(){if(audioPlayerState.playing&&audioPlayerState.utterance){window.speechSynthesis.cancel();audioPlayerState.utterance=null;audioUpdateProgress();audioSpeakPage()}else audioUpdateProgress()}
+document.querySelector('#audioPlay')?.addEventListener('click',audioPlay);
+document.querySelector('#audioBack')?.addEventListener('click',()=>audioSeekPage(-15));
+document.querySelector('#audioForward')?.addEventListener('click',()=>audioSeekPage(15));
+document.querySelector('#audioVoice')?.addEventListener('change',()=>{if(audioPlayerState.playing){window.speechSynthesis.cancel();audioPlayerState.utterance=null;audioSpeakPage()}});
+document.querySelector('#audioSpeed')?.addEventListener('change',()=>{if(audioPlayerState.playing){window.speechSynthesis.cancel();audioPlayerState.utterance=null;audioSpeakPage()}});
+document.querySelector('#audioSleep')?.addEventListener('change',event=>audioSetSleepTimer(Number(event.target.value)));
+if('speechSynthesis'in window){audioLoadVoices();window.speechSynthesis.addEventListener?.('voiceschanged',audioLoadVoices)}
+
 function showPart() {
   if (!current) return;
 
@@ -3413,6 +3460,7 @@ function showPart() {
   document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? 'Закрыть чтение' : 'Следующая часть');
 
   saveReadingProgress();
+  audioRefreshAfterChapterChange();
 }
 
 /* AI Library 0.9 — продолжение чтения */
