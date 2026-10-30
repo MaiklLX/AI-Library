@@ -2322,6 +2322,52 @@ body.reader-open #bookPage.reader-turn-in-back::after {
   body.reader-open #bookPage::after{animation:none!important;opacity:0!important}
 }
 </style>
+
+<style id="reader-mobile-touch-recovery-v37">
+/* The v36 paper-light overlay is desktop-only. Keep the mobile page itself
+   crisp and restore a restrained 2D paper movement without a flashing band. */
+@media (max-width:1099px), (hover:none) and (pointer:coarse) {
+  body.reader-open #bookSpread>.book-page::after,
+  body.reader-open #bookPage::after {
+    display:none!important;
+    animation:none!important;
+    opacity:0!important;
+  }
+  body.reader-open #bookSpread>.book-page,
+  body.reader-open #bookPage {
+    transition:opacity .16s ease,transform .16s ease!important;
+    filter:none!important;
+  }
+  body.reader-open #bookSpread.reader-turn-out-forward>.book-page,
+  body.reader-open #bookPage.reader-turn-out-forward {
+    opacity:.88!important;transform:translate3d(-3px,0,0)!important;
+  }
+  body.reader-open #bookSpread.reader-turn-out-back>.book-page,
+  body.reader-open #bookPage.reader-turn-out-back {
+    opacity:.88!important;transform:translate3d(3px,0,0)!important;
+  }
+  body.reader-open #bookSpread.reader-turn-in-forward>.book-page,
+  body.reader-open #bookPage.reader-turn-in-forward {
+    animation:readerMobilePaperInForward .18s cubic-bezier(.2,.7,.25,1) both!important;
+  }
+  body.reader-open #bookSpread.reader-turn-in-back>.book-page,
+  body.reader-open #bookPage.reader-turn-in-back {
+    animation:readerMobilePaperInBack .18s cubic-bezier(.2,.7,.25,1) both!important;
+  }
+}
+@keyframes readerMobilePaperInForward {
+  from{opacity:.88;transform:translate3d(3px,0,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes readerMobilePaperInBack {
+  from{opacity:.88;transform:translate3d(-3px,0,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@media(prefers-reduced-motion:reduce) {
+  body.reader-open #bookSpread>.book-page,
+  body.reader-open #bookPage {transition:none!important;animation:none!important}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3283,29 +3329,32 @@ readerArea.addEventListener('lostpointercapture', resetReaderSwipe, { passive: t
 const bookPageArea = document.querySelector('#bookPage');
 const bookSpreadArea = document.querySelector('#bookSpread');
 let edgeTapStart = null;
-bookSpreadArea.addEventListener('pointerdown', e => {
+// Listen on the actual reader viewport. On phones #bookSpread uses
+// display:contents, so it has no useful bounding box of its own.
+readerArea.addEventListener('pointerdown', e => {
   if (!readingModal.classList.contains('open') || !e.isPrimary || (e.pointerType==='mouse'&&e.button!==0)) return;
   const page=e.target.closest?.('.book-page');
   if(!page||page.classList.contains('book-flip-sheet'))return;
-  const rect=bookSpreadArea.getBoundingClientRect();
-  if(!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
-  edgeTapStart={id:e.pointerId,x:e.clientX,y:e.clientY,time:Date.now(),pointerType:e.pointerType};
+  const surface=isDesktopReaderSpread()?bookSpreadArea:bookPageArea;
+  const rect=surface?.getBoundingClientRect();
+  if(!rect||!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
+  edgeTapStart={id:e.pointerId,x:e.clientX,y:e.clientY,time:Date.now(),pointerType:e.pointerType,surface};
 }, { passive:true });
-bookSpreadArea.addEventListener('pointerup', e => {
+readerArea.addEventListener('pointerup', e => {
   const start=edgeTapStart;
   edgeTapStart=null;
   if(!start||start.id!==e.pointerId||!readingModal.classList.contains('open')||!current)return;
   if(Date.now()-start.time>650||Math.abs(e.clientX-start.x)>12||Math.abs(e.clientY-start.y)>12)return;
   if(window.getSelection()?.toString())return;
-  const rect=bookSpreadArea.getBoundingClientRect();
-  if(!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
+  const rect=start.surface?.getBoundingClientRect();
+  if(!rect||!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
   const edgeWidth=Math.max(48,Math.min(92,rect.width*(isDesktopReaderSpread()?0.075:0.18)));
   if(e.clientX-rect.left<=edgeWidth){turnReadingPage(-1);return;}
   if(rect.right-e.clientX<=edgeWidth){turnReadingPage(1);return;}
   if(start.pointerType!=='mouse')toggleReaderChrome();
 }, { passive:true });
-bookSpreadArea.addEventListener('pointercancel',()=>{edgeTapStart=null;},{passive:true});
-bookSpreadArea.addEventListener('lostpointercapture',()=>{edgeTapStart=null;},{passive:true});
+readerArea.addEventListener('pointercancel',()=>{edgeTapStart=null;},{passive:true});
+readerArea.addEventListener('lostpointercapture',()=>{edgeTapStart=null;},{passive:true});
 
 // Two-finger pinch changes the reader font size without losing the reading position.
 const readerPinchPointers = new Map();
