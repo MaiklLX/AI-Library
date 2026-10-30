@@ -125,6 +125,7 @@ header{border-bottom:1px solid #ffffff18;background:#101010e8}.nav{min-height:68
 <input id="editBookGenre" maxlength="80" aria-label="Жанр" placeholder="Жанр">
 <input id="editBookDesc" maxlength="3000" aria-label="Описание книги" placeholder="Краткое описание">
 </div>
+<div class="editor-tools"><div class="toc-label">ОГЛАВЛЕНИЕ · НАВИГАЦИЯ ПО ГЛАВАМ</div><div class="editor-tool-row"><button class="btn" type="button" id="renumberChaptersBtn">↻ Перенумеровать главы</button><button class="btn" type="button" id="printBookBtn">▤ Печать / PDF</button></div><div class="editor-tool-row"><div class="field"><label for="findText">Найти в рукописи</label><input id="findText" maxlength="300" placeholder="Слово или фраза"></div><div class="field"><label for="replaceText">Заменить на</label><input id="replaceText" maxlength="300" placeholder="Новый текст"></div><button class="btn" type="button" id="replaceAllBtn">Заменить везде</button></div><div class="editor-stats" id="editorStats" aria-live="polite"></div></div>
 <div class="editor-grid">
 <div><div class="chapter-list" id="editorChapterList"></div><div class="actions"><button class="btn" type="button" id="addChapterBtn">＋ Добавить главу</button></div></div>
 <div class="editor-fields">
