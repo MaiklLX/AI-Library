@@ -2861,11 +2861,37 @@ function paginateCurrentChapter(preserveOffset = null) {
   // original manuscript and could hide omissions at page boundaries.
   const tokens = text.match(/\s+|[^\s]+/g) || [];
   let cursor = 0;
+  // Reuse the measured length of the previous page to narrow later searches.
+  let pageTokenEstimate = 0;
 
   while (cursor < tokens.length) {
     let low = cursor + 1;
     let high = tokens.length;
     let best = cursor;
+
+    if (pageTokenEstimate > 0) {
+      const lowerProbe = Math.min(tokens.length, cursor + Math.max(1, Math.floor(pageTokenEstimate * 0.72)));
+      const upperProbe = Math.min(tokens.length, cursor + Math.max(2, Math.ceil(pageTokenEstimate * 1.28)));
+      if (lowerProbe > cursor && fits(tokens.slice(cursor, lowerProbe).join(''))) {
+        best = lowerProbe;
+        low = lowerProbe + 1;
+      }
+      high = upperProbe;
+      if (upperProbe > best && fits(tokens.slice(cursor, upperProbe).join(''))) {
+        best = upperProbe;
+        low = upperProbe + 1;
+        while (high < tokens.length && best === high) {
+          const expanded = Math.min(tokens.length, cursor + Math.max((high - cursor) * 2, pageTokenEstimate * 2));
+          if (expanded <= high || !fits(tokens.slice(cursor, expanded).join(''))) {
+            high = expanded - 1;
+            break;
+          }
+          best = expanded;
+          low = expanded + 1;
+          high = expanded;
+        }
+      }
+    }
 
     while (low <= high) {
       const mid = Math.floor((low + high) / 2);
@@ -2876,6 +2902,7 @@ function paginateCurrentChapter(preserveOffset = null) {
         high = mid - 1;
       }
     }
+    if (best > cursor) pageTokenEstimate = best - cursor;
 
     // A single unusually long word/token may be taller than the page.
     // Split it by Unicode code points rather than allowing it to be clipped.
