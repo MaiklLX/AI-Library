@@ -14,7 +14,7 @@
 ## Current verified checkpoint
 
 - Checkpoint date: 2026-10-30
-- Last application feature commit: `102c77bb4531d10bb6ba0ad53beed9f5814d0eb2`
+- Last application feature commit before visual work: `102c77bb4531d10bb6ba0ad53beed9f5814d0eb2`
 - Commit message: `Add safe offline book update checks`
 - CI run #214: success — https://github.com/MaiklLX/AI-Library/actions/runs/41106373241
 - GitHub Pages deploy #197: success — https://github.com/MaiklLX/AI-Library/actions/runs/41106373175
@@ -159,7 +159,10 @@ Current observed visual foundation in `index.html`:
 - Updated Service Worker app-shell cache from `v49` to `v50` because `index.html` changed.
 - Added release-validator assertions for the token layer, catalog focus treatments and cache version.
 - Commits: visual layer `f2a3ac29080dfebb92adcc7be3f47efc57b13e55`; SW cache `131f1c7caf2a21d9b34f6ed80f1dba1a83b10e87`; validator `3efc3caf861c04a2d6175ae301851dbd99dc9083`.
-- CI/deploy for this milestone: pending verification at the time this checkpoint was written.
+- Final milestone commit: `5b3075c3e477c636afe1be90bbd3454c9d9a5155`.
+- CI run #217: success — https://github.com/MaiklLX/AI-Library/actions/runs/41109826316
+- GitHub Pages deploy #200: success — https://github.com/MaiklLX/AI-Library/actions/runs/41109826256
+- Service Worker cache `v50` and validator assertions are included in the deployed commit.
 - Next: verify CI and Pages deployment; then inspect screenshots/actual rendering at desktop, tablet and mobile widths before expanding the redesign. Do not proceed to the reader or broad CSS cleanup.
 
 ---
@@ -172,4 +175,4 @@ Last maintained: 2026-10-30.
 - Responsive rules already exist for desktop, tablet and mobile, including mobile navigation and a dedicated reader layout.
 - The main stylesheet has accumulated several appended CSS revisions. The reader also has multiple versioned layout overrides. This is a regression risk: broad CSS cleanup or global typography/layout changes could undo carefully tuned page geometry and touch behavior.
 - The first visual pass must therefore be scoped to the home/catalog and personal-library surfaces. Treat all `body.reader-open` rules and reader pagination/gesture code as protected until separately audited.
-- No visual code was changed in this checkpoint. Next: create a clear token layer and make the first isolated home/catalog improvement; then validate at desktop/tablet/mobile widths and ask the user to check the actual device rendering before expanding the redesign.
+- This initial audit preceded the first visual implementation. The isolated token layer and home/catalog polish are now committed and deployed in the milestone above. Next: capture/inspect desktop, tablet and mobile rendering, then adjust only the affected home/catalog selectors.
