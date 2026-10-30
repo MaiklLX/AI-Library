@@ -1765,6 +1765,115 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 }
 </style>
 
+<style id="book-flip-prerelease-mobile-v26">
+
+/* AI Library v26 — обложки с переворотом и компактная премьера */
+#books.grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:20px}
+#books .book{position:relative;display:block;min-width:0;aspect-ratio:2/3;height:auto;overflow:visible;border:0;border-radius:15px;background:transparent;box-shadow:none;perspective:1200px;transform:none!important}
+#books .book:hover{transform:none!important;border-color:transparent;box-shadow:none}
+#books .book-flip-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.2,.72,.2,1)}
+#books .book.is-flipped .book-flip-inner{transform:rotateY(180deg)}
+#books .book-face{position:absolute;inset:0;width:100%;height:100%;min-width:0;overflow:hidden;border-radius:15px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#books .book-front{display:block;padding:0;border:1px solid #ffffff20;background:#191919;box-shadow:0 10px 28px #0005;text-align:initial;cursor:pointer}
+#books .book-front:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+#books .book-front .cover{position:absolute;inset:0;width:100%;height:100%;min-height:0;aspect-ratio:auto;display:grid;place-items:center;overflow:hidden;border-radius:14px;background-color:#24221e}
+#books .book-front .cover:before,#books .book-front .cover:after{pointer-events:none}
+#books .book-front .cover-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:none!important;filter:none!important}
+#books .book-front .cover .symbol{font-size:clamp(58px,7vw,88px);z-index:1}
+#books .book-front .cover-progress{position:absolute;z-index:3;right:11px;bottom:11px;display:inline-flex;align-items:center;gap:5px;min-height:29px;padding:5px 9px;border:1px solid #e5c77988;border-radius:999px;background:#111d;color:#f5dfaa;font:700 10px/1 system-ui,sans-serif;box-shadow:0 4px 14px #0006;backdrop-filter:blur(8px)}
+#books .book-front .cover-progress.completed{background:#18251fe8;border-color:#8bb59a99;color:#c5e5ce}
+#books .book-back{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:17px;border:1px solid #9c7b43aa;background:radial-gradient(ellipse at 100% 0%,#d9b66d12,transparent 45%),linear-gradient(155deg,#24221e,#151515 78%);box-shadow:0 12px 32px #0007;transform:rotateY(180deg);text-align:left}
+#books .book-back-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+#books .book-back-label{color:#d9b66d;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#books .book-flip-back{flex:0 0 30px;width:30px;height:30px;min-height:30px;padding:0;border:1px solid #6d5935;border-radius:50%;background:#2a251c;color:#ead39d;font-size:19px;line-height:1}
+#books .book-back h3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;margin:0 0 6px;color:#f4f0e7;font:500 clamp(17px,1.7vw,22px)/1.2 Georgia,serif;overflow-wrap:anywhere}
+#books .book-back .author{min-height:0;margin:0 0 9px;color:#d9b66d;font-size:10px;line-height:1.4}
+#books .book-back .desc{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:auto;min-height:0;flex:1;margin:0 0 10px;color:#c6c0b4;font-size:11px;line-height:1.55}
+#books .book-back .meta{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;min-height:0;padding:8px 0 0;border-top:1px solid #ffffff16;font-size:9px}
+#books .book-back .meta span:last-child{text-align:left}
+#books .book-back .reading-progress{margin-top:8px}
+#books .book-back .reading-progress-label{font-size:9px}
+#books .book-back-actions{display:flex;align-items:center;gap:8px;margin-top:10px}
+#books .book-back-actions .fav{position:static;flex:0 0 38px;width:38px;height:38px;min-height:38px}
+#books .book-back-actions .read{min-width:0;flex:1;min-height:38px;margin:0;padding:7px 8px;font-size:11px}
+#books .book-back button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.premiere-section{margin:24px 0 54px;padding-top:18px}
+.premiere-section:before{width:min(760px,100vw);background:radial-gradient(ellipse at 50% 20%,rgba(169,126,53,.08),transparent 68%)}
+.premiere-heading{max-width:690px;margin-bottom:20px}
+.premiere-heading h2{font-size:clamp(28px,3.7vw,40px);margin:8px 0}
+.premiere-heading p{max-width:600px;font-size:14px;line-height:1.65}
+.premiere-card{grid-template-columns:minmax(140px,.42fr) minmax(0,1.58fr);gap:28px;padding:24px;border-radius:16px;box-shadow:0 14px 40px #0004;animation:none}
+.premiere-art{min-height:215px}
+.premiere-orbit,.premiere-orbit:before,.premiere-orbit:after{width:min(205px,100%);animation:none}
+.premiere-book-cover{width:min(150px,76%);transform:none;transition:none}
+.premiere-card:hover .premiere-book-cover{transform:none;box-shadow:14px 22px 38px #0009,-4px 0 0 #d9b66d22}
+.premiere-stamp{left:calc(50% + 35px);top:9%;width:62px;height:62px;font-size:8px}
+.premiere-copy h3{font-size:clamp(25px,3.2vw,36px);margin:10px 0 6px}
+.premiere-byline{margin-bottom:10px;font-size:12px}
+.premiere-tagline{font-size:16px;line-height:1.4;margin-bottom:10px}
+.premiere-description{font-size:13px;line-height:1.65;margin-bottom:12px}
+.premiere-meta{gap:6px;margin-bottom:12px}
+.premiere-meta span{padding:5px 8px;font-size:10px}
+.premiere-editor-note{margin-bottom:12px;padding:9px 12px;font-size:12px;line-height:1.55}
+.premiere-locked{min-height:40px;padding:8px 11px;font-size:11px}
+.premiere-open{min-height:40px;margin-top:10px}
+.premiere-empty{max-width:720px;min-height:130px;grid-template-columns:68px minmax(0,1fr);gap:16px;padding:20px 24px}
+.premiere-empty-icon{width:60px;font-size:25px;animation:none}
+.premiere-empty h3{font-size:23px}
+.premiere-empty p{font-size:12px;line-height:1.6}
+@media(max-width:900px){#books.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.premiere-card{grid-template-columns:minmax(120px,.38fr) minmax(0,1.62fr);gap:18px;padding:19px}.premiere-art{min-height:190px}.premiere-book-cover{width:min(130px,78%)}}
+@media(max-width:700px){
+ #books.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ #books .book-back{padding:12px}
+ #books .book-back h3{font-size:17px}
+ #books .book-back .desc{-webkit-line-clamp:4;font-size:10px}
+ #books .book-back .meta{font-size:8px}
+ #books .book-back-actions .fav{flex-basis:34px;width:34px;height:34px;min-height:34px}
+ #books .book-back-actions .read{min-height:34px;font-size:10px}
+ .premiere-section{margin:12px 0 38px;padding-top:8px}
+ .premiere-heading{margin:0 0 14px;text-align:left}
+ .premiere-heading .eyebrow{font-size:9px;letter-spacing:.13em}
+ .premiere-heading h2{font-size:clamp(25px,7vw,32px);line-height:1.12;margin:7px 0}
+ .premiere-heading p{font-size:12px;line-height:1.55}
+ .premiere-card{grid-template-columns:88px minmax(0,1fr);gap:14px;align-items:start;padding:14px;border-radius:14px}
+ .premiere-art{min-height:132px;align-self:start}
+ .premiere-orbit,.premiere-orbit:before,.premiere-orbit:after{display:none}
+ .premiere-book-cover{width:82px;border-radius:4px 8px 8px 4px;box-shadow:6px 9px 16px #0008}
+ .premiere-book-cover:before{inset:6px}
+ .premiere-book-cover .symbol{font-size:42px}
+ .premiere-stamp{left:auto;right:-3px;top:-5px;width:39px;height:39px;font-size:5px;letter-spacing:.05em}
+ .premiere-kicker{font-size:8px;letter-spacing:.1em;gap:5px}
+ .premiere-kicker:before{width:12px}
+ .premiere-copy h3{font-size:21px;line-height:1.12;margin:7px 0 4px}
+ .premiere-byline{font-size:9px;line-height:1.4;margin-bottom:7px}
+ .premiere-tagline{font-size:12px;line-height:1.35;margin:0 0 7px}
+ .premiere-description{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:10px;line-height:1.45;margin:0 0 8px}
+ .premiere-meta,.premiere-editor-note{display:none}
+ .premiere-locked{min-height:0;padding:6px 8px;gap:6px;border-radius:8px;font-size:9px;line-height:1.35}
+ .premiere-locked .lock{font-size:13px}
+ .premiere-open{width:100%;min-height:36px;margin-top:8px;padding:0 8px;font-size:10px}
+ .premiere-empty{grid-template-columns:42px minmax(0,1fr);gap:11px;min-height:0;padding:14px}
+ .premiere-empty-icon{width:40px;font-size:19px}
+ .premiere-empty h3{font-size:18px;margin-bottom:4px}
+ .premiere-empty p{font-size:10px;line-height:1.5}
+}
+@media(max-width:380px){
+ #books .book-back{padding:9px}
+ #books .book-back-top{margin-bottom:6px}
+ #books .book-back h3{font-size:15px}
+ #books .book-back .desc{-webkit-line-clamp:3;font-size:9px}
+ #books .book-back .meta{font-size:7px}
+ #books .book-back-actions{gap:5px;margin-top:7px}
+ #books .book-back-actions .read{font-size:9px;padding:5px}
+ .premiere-card{grid-template-columns:72px minmax(0,1fr);gap:10px;padding:11px}
+ .premiere-art{min-height:116px}
+ .premiere-book-cover{width:68px}
+ .premiere-copy h3{font-size:19px}
+ .premiere-description{-webkit-line-clamp:2}
+}
+@media(prefers-reduced-motion:reduce){#books .book-flip-inner{transition:none!important}.premiere-card,.premiere-orbit,.premiere-orbit:before,.premiere-orbit:after,.premiere-empty-icon{animation:none!important}.premiere-book-cover{transition:none!important}}
+
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2069,6 +2178,24 @@ function renderPrereleaseShowcase(){
     <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
   </article>`).join('');
 }
+
+function renderBookCard(book){
+ const progress=getReadingProgress()[book.id],total=Array.isArray(book.chapters)?book.chapters.length:0;
+ const read=progress&&Number.isInteger(progress.part)&&total?Math.min(total,Math.max(0,progress.part+1)):0;
+ const percent=total?Math.round(read/total*100):0,completed=total>0&&read>=total;
+ const coverImage=book.cover||(/^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(String(book.coverImage||''))&&String(book.coverImage).length<=2100000?book.coverImage:'');
+ const favorite=favs().some(id=>String(id)===String(book.id));
+ const coverMarkup=coverImage?'<img class="cover-art" src="'+esc(coverImage)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>';
+ const progressMarkup=read>0?'<span class="cover-progress '+(completed?'completed':'in-progress')+'" aria-label="'+(completed?'Книга прочитана':'Прочитано '+percent+' процентов')+'"><span aria-hidden="true">'+(completed?'✓':'↗')+'</span>'+(completed?'':'<span>'+percent+'%</span>')+'</span>':'';
+ return '<article class="book" data-book-card data-book-id="'+esc(book.id)+'"><div class="book-flip-inner">'+
+ '<button class="book-face book-front" type="button" data-flip aria-label="Показать сведения о книге: '+esc(book.title)+'"><span class="cover '+safeClass(book.cls)+' '+(coverImage?'has-cover':'')+'">'+coverMarkup+progressMarkup+'</span></button>'+
+ '<div class="book-face book-back"><div class="book-back-top"><span class="book-back-label">'+esc(book.genre||'Книга')+'</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<h3>'+esc(book.title)+'</h3><div class="author">'+esc(book.author||'AI Library')+'</div><p class="desc">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p>'+
+ '<div class="meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>Полное издание · бесплатно</span></div>'+
+ (read>0?'<div class="reading-progress"><div class="reading-progress-label"><span>'+(completed?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+
+ '<div class="book-back-actions"><button class="fav '+(favorite?'saved':'')+'" data-fav="'+esc(book.id)+'" type="button" aria-label="'+(favorite?'Убрать из избранного':'В избранное')+'">'+(favorite?'♥':'♡')+'</button><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button></div></div></div></article>';
+}
+
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
 let s=document.querySelector('#sort').value;
 const progress=getReadingProgress();
@@ -2104,11 +2231,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-document.querySelector("#books").innerHTML=list.length?list.map(b=>`<article class="book">
-<div class="cover ${safeClass(b.cls)} ${(b.cover||(/^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(String(b.coverImage||''))&&String(b.coverImage).length<=2100000)) ? 'has-cover' : ''}"><span class="tag">${esc(b.tag)}</span>${(()=>{const saved=getReadingProgress()[b.id];if(!saved||!Number.isInteger(saved.part)||!b.chapters.length)return '';const completed=saved.part>=b.chapters.length-1;return `<span class="reading-status ${completed?'completed':'in-progress'}">${completed?'✓ ФРАГМЕНТ ПРОЧИТАН':'↗ ЧИТАЮ'}</span>`})()}${b.cover ? `<img class="cover-art" src="${esc(b.cover)}" alt="" loading="lazy" decoding="async">` : (/^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(String(b.coverImage||''))&&String(b.coverImage).length<=2100000) ? `<img class="cover-art" src="${esc(b.coverImage)}" alt="" loading="lazy" decoding="async">` : `<span class="symbol">${esc(b.symbol)}</span>`}
-<button class="fav ${favs().some(id=>String(id)===String(b.id))?'saved':''}" data-fav="${esc(b.id)}" aria-label="${favs().some(id=>String(id)===String(b.id))?'Убрать из избранного':'В избранное'}">${favs().some(id=>String(id)===String(b.id))?'♥':'♡'}</button></div><div class="body"><h3>${esc(b.title)}</h3><div class="author">${esc(b.genre)} · AI Library</div><p class="desc">${esc(b.desc)}</p>
-<div class="meta"><span>◷ ${b.length} мин чтения</span><span>Полное издание · бесплатно</span></div>${(()=>{const saved=getReadingProgress()[b.id];const total=b.chapters.length;if(!total)return '';const read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0;const percent=Math.round(read/total*100);return read>0?`<div class="reading-progress"><div class="reading-progress-label"><span>Прогресс чтения</span><span>${percent}%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:${percent}%"></div></div></div>`:''})()}<button class="btn read" data-read="${esc(b.id)}" ${b.status === 'prerelease' ? 'disabled aria-disabled="true"' : ''}>${b.status === 'prerelease' ? 'Пререлиз · чтение закрыто' : 'Открыть книгу　→'}</button>
-</div></article>`).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase()}
+document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
@@ -2118,6 +2241,8 @@ document.querySelector("#books").addEventListener("click",e=>{
     document.querySelectorAll("#genres [data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre==="Все"));
     render();return;
   }
+  const flipButton=e.target.closest('[data-flip],[data-flip-back]');
+  if(flipButton){const card=flipButton.closest('[data-book-card]');if(card){const flipped=card.classList.toggle('is-flipped');const front=card.querySelector('[data-flip]');if(front)front.setAttribute('aria-expanded',String(flipped));}return;}
   const favoriteButton = e.target.closest("[data-fav]");
   if (favoriteButton) {
     const id = favoriteButton.dataset.fav;
