@@ -62,6 +62,10 @@ assert.match(downloadManager, /validateBook\(book, rawId\)/, "Offline downloads 
 assert.match(downloadManager, /await store\.setDownload\(record\)/, "Offline book content and ready status must be persisted together");
 assert.match(libraryStore, /async getDownloads\(/, "Library storage adapter must expose download collection retrieval");
 assert.match(html, /data-download-book=/, "Published catalog cards must expose offline download actions");
+assert.match(html, /id="my-library-desktop-grid-v2"/, "Personal library responsive grid refinement is missing");
+assert.match(html, /#myLibrary \.library-shelf:last-child\s*\{\s*grid-column:1 \/ -1;/, "Offline shelf must use the full desktop/tablet row");
+assert.match(html, /#myLibrary #myLibraryDownloads\s*\{\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\);\s*\}/, "Downloaded books must use a balanced two-column wide layout");
+assert.match(html, /@media \(max-width:680px\)\s*\{\s*#myLibrary #myLibraryDownloads\s*\{\s*grid-template-columns:minmax\(0,1fr\);/, "Downloaded books must return to one column on mobile");
 assert.match(html, /id="myLibraryDownloads"/, "Personal library must show downloaded books");
 assert.match(html, /async function loadDownloadedBooks\(/, "Offline books must be restored from durable storage at startup");
 assert.match(html, /async function removeOfflineDownload\(/, "Offline downloads must be removable from the personal library");
