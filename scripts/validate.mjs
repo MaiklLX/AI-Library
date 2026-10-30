@@ -90,7 +90,7 @@ assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline n
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
-assert.match(html, /getAllBooks\(\)\.filter\(book=>book\.status!==["\']prerelease["\']&&Array\.isArray\(book\.chapters\)&&book\.chapters\.length>0\)/, "Random discovery must exclude prerelease and books without readable chapters");
+assert.match(html, /getAllBooks\(\)\.filter\(book=>book\.status!==["\']prerelease["\']&&\(Number\(book\.chapterCount\)>0\|\|\(Array\.isArray\(book\.chapters\)&&book\.chapters\.length>0\)\)\)/, "Random discovery must include metadata-only published books and exclude prerelease");
 assert.match(html, /desktop-two-page-book-spread-v31/, "Desktop two-page book spread styles are missing");
 assert.match(html, /function isDesktopReaderSpread\(\)/, "Desktop spread mode detection is missing");
 assert.match(html, /const pageStep=isDesktopReaderSpread\(\)\?2:1/, "Desktop page turns must advance by a two-page spread");
@@ -120,6 +120,8 @@ for (const entry of publishedCatalog.books) {
   assert.ok(!publishedIds.has(entry.id), `Duplicate published book ID: ${entry.id}`);
   publishedIds.add(entry.id);
   assert.ok(typeof entry.path === "string" && entry.path === `./content/books/${entry.id}.json`, `Published book path must match its ID: ${entry.id}`);
+  assert.equal(entry.metadataOnly, true, `Catalog must contain metadata only: ${entry.id}`);
+  assert.ok(Number.isInteger(entry.chapterCount) && entry.chapterCount >= 0, `Catalog chapter count is missing: ${entry.id}`);
   const bookPath = resolve(root, entry.path);
   assert.ok(existsSync(bookPath), `Published book file is missing: ${entry.path}`);
   const book = JSON.parse(readFileSync(bookPath, "utf8"));
@@ -202,13 +204,13 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v51['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(html, /CACHE_PREFIX\s*\+\s*['"]v51['"]/, "Book action update must use the current cache version");
+assert.match(html, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\\.books\\.map\\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
