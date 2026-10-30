@@ -2678,6 +2678,9 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+<style>/* AI Library lazy book loading: metadata first v1 */
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2770,6 +2773,7 @@ function normalizePublishedBook(book) {
       !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(book.id) ||
       typeof book.title !== 'string' || !book.title.trim()) return null;
   const isPrerelease = book.status === 'prerelease';
+  const isMetadataOnly = book.metadataOnly === true;
   const chapters = Array.isArray(book.chapters) ? book.chapters.map(chapter => {
     if (typeof chapter === 'string') return chapter;
     if (chapter && typeof chapter === 'object') {
@@ -2777,7 +2781,7 @@ function normalizePublishedBook(book) {
     }
     return '';
   }).filter(chapter => chapter.trim()) : [];
-  if (!isPrerelease && !chapters.length) return null;
+  if (!isPrerelease && !chapters.length && !isMetadataOnly) return null;
   return {
     ...book,
     id: 'published-' + book.id,
@@ -2790,6 +2794,9 @@ function normalizePublishedBook(book) {
     symbol: typeof book.symbol === 'string' ? book.symbol : '✦',
     cover: typeof book.cover === 'string' && book.cover.startsWith('./content/books/') && book.cover.endsWith('.svg') && !book.cover.includes('..') ? book.cover : '',
     length: Number.isFinite(Number(book.length)) && Number(book.length) > 0 ? Number(book.length) : chapters.length,
+    chapterCount: Number.isInteger(Number(book.chapterCount)) && Number(book.chapterCount) >= 0 ? Number(book.chapterCount) : chapters.length,
+    contentPath: typeof book.path === 'string' && book.path.startsWith('./content/books/') && book.path.endsWith('.json') && !book.path.includes('..') ? book.path : (typeof book.contentPath === 'string' && book.contentPath.startsWith('./content/books/') && book.contentPath.endsWith('.json') && !book.contentPath.includes('..') ? book.contentPath : ''),
+    metadataOnly: isMetadataOnly,
     chapters: isPrerelease ? [] : chapters
   };
 }
@@ -2802,20 +2809,14 @@ async function loadPublishedBooks() {
     if (!catalog || catalog.version !== 1 || !Array.isArray(catalog.books)) {
       throw new Error('Неверный формат каталога опубликованных книг');
     }
-    const loaded = await Promise.all(catalog.books.map(async entry => {
+    // The catalog contains display metadata. Full book JSON is fetched only on explicit read/download.
+    const loaded = catalog.books.map(entry => {
       if (!entry || typeof entry.path !== 'string' ||
           !entry.path.startsWith('./content/books/') || !entry.path.endsWith('.json') ||
           entry.path.includes('..') || typeof entry.id !== 'string') return null;
-      try {
-        const result = await fetch(entry.path, { cache: 'no-cache' });
-        if (!result.ok) return null;
-        const book = normalizePublishedBook(await result.json());
-        return book && book.id === 'published-' + entry.id ? book : null;
-      } catch (error) {
-        console.warn('Не удалось загрузить опубликованную книгу:', entry.path, error);
-        return null;
-      }
-    }));
+      const book = normalizePublishedBook({ ...entry, metadataOnly: true });
+      return book && book.id === 'published-' + entry.id ? book : null;
+    });
     publishedBooks = loaded.filter(Boolean);
     try { localStorage.setItem(PUBLISHED_BOOKS_KEY, JSON.stringify(publishedBooks)); } catch {}
   } catch (error) {
@@ -2825,8 +2826,15 @@ async function loadPublishedBooks() {
       const cached = JSON.parse(localStorage.getItem(PUBLISHED_BOOKS_KEY) || '[]');
       publishedBooks = Array.isArray(cached) ? cached.filter(book =>
         book && typeof book.id === 'string' && book.id.startsWith('published-') &&
-        typeof book.title === 'string' && Array.isArray(book.chapters) && book.chapters.length > 0
-      ) : [];
+        typeof book.title === 'string'
+      ).map(book => ({
+        ...book,
+        contentPath: typeof book.contentPath === 'string' && book.contentPath.startsWith('./content/books/') && book.contentPath.endsWith('.json') && !book.contentPath.includes('..')
+          ? book.contentPath : './content/books/' + book.id.slice(10) + '.json',
+        chapterCount: Number(book.chapterCount) || (Array.isArray(book.chapters) ? book.chapters.length : 0),
+        metadataOnly: true,
+        chapters: []
+      })) : [];
     } catch { publishedBooks = []; }
   }
   syncGenreFilters();
@@ -2842,12 +2850,13 @@ async function loadDownloadedBooks() {
       const normalized = normalizePublishedBook(record.book);
       if (!normalized) continue;
       const existing = byId.get(normalized.id);
-      if (existing) existing.offlineReady = true;
-      else {
-        normalized.offlineOnly = true;
-        normalized.offlineReady = true;
-        byId.set(normalized.id, normalized);
-      }
+      byId.set(normalized.id, {
+        ...(existing || {}),
+        ...normalized,
+        metadataOnly: false,
+        offlineReady: true,
+        offlineOnly: !existing
+      });
     }
     publishedBooks = [...byId.values()];
   } catch (error) {
@@ -2990,6 +2999,24 @@ async function openBookById(id) {
     return;
   }
 
+  if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
+      String(book.id).startsWith('published-') && book.contentPath) {
+    try {
+      const response = await fetch(book.contentPath, { cache: 'no-cache' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const source = await response.json();
+      const loadedBook = normalizePublishedBook({ ...source, contentPath: book.contentPath });
+      if (!loadedBook || loadedBook.id !== book.id || !loadedBook.chapters.length) {
+        throw new Error('Книга не прошла проверку содержимого.');
+      }
+      Object.assign(book, loadedBook, { metadataOnly: false });
+    } catch (error) {
+      console.warn('Не удалось загрузить текст книги:', error);
+      alert('Не удалось загрузить книгу. Проверьте подключение к интернету или скачайте её заранее для чтения офлайн.');
+      return;
+    }
+  }
+
   if (!Array.isArray(book.chapters) || !book.chapters.length) {
     alert('В этой книге пока нет доступных глав.');
     return;
@@ -3030,7 +3057,7 @@ function renderPrereleaseShowcase(){
 }
 
 function renderBookCard(book){
- const progress=getReadingProgress()[book.id],total=Array.isArray(book.chapters)?book.chapters.length:0;
+ const progress=getReadingProgress()[book.id],total=Number(book.chapterCount)|| (Array.isArray(book.chapters)?book.chapters.length:0);
  const read=progress&&Number.isInteger(progress.part)&&total?Math.min(total,Math.max(0,progress.part+1)):0;
  const percent=total?Math.round(read/total*100):0,completed=total>0&&read>=total;
  const coverImage=book.cover||(/^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(String(book.coverImage||''))&&String(book.coverImage).length<=2100000?book.coverImage:'');
@@ -3052,8 +3079,9 @@ const progress=getReadingProgress();
 
 function readCount(book){
   const saved=progress[book.id];
-  if(!saved||!Number.isInteger(saved.part)||!book.chapters.length)return 0;
-  return Math.max(0,Math.min(book.chapters.length,saved.part+1));
+  const total=Number(book.chapterCount)||(Array.isArray(book.chapters)?book.chapters.length:0);
+  if(!saved||!Number.isInteger(saved.part)||!total)return 0;
+  return Math.max(0,Math.min(total,saved.part+1));
 }
 
 if(s==='title'){
