@@ -1512,11 +1512,68 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 }
 </style>
 
+
+<style id="home-screen-polish-v24">
+/* Main screen polish: consistent icon geometry, spacing and responsive alignment. */
+.site-nav-actions{display:grid;grid-template-columns:repeat(3,minmax(132px,1fr));align-items:center;gap:8px;width:min(100%,470px)}
+.site-nav-actions .nav-action{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:44px;padding:0 13px;border-radius:12px;font-size:13px;font-weight:600;line-height:1;letter-spacing:0;text-decoration:none;white-space:nowrap}
+.site-nav-actions .nav-action svg,.hero-action svg{display:block;width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.site-nav-actions .nav-action.active{background:#332a1d;color:#f0d99b;border-color:#8e713b}
+.site-nav-actions .nav-action:hover{border-color:var(--gold);color:#f0d99b;background:#d9b66d0d}
+.site-nav-actions .nav-action.active:hover{background:#3a3020}
+.hero .actions{display:flex;align-items:stretch;gap:11px;margin-top:27px}
+.hero .hero-action{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:48px;padding:0 17px;border-radius:12px;font-size:13px;font-weight:650;line-height:1.2;white-space:nowrap}
+.hero .hero-action svg{width:17px;height:17px;flex-basis:17px}
+.hero .hero-action:not(.primary){background:#1c1b18;border-color:#51432d}
+.hero .hero-action:not(.primary):hover{background:#292319;border-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:0;max-width:540px;margin-top:30px;padding:13px 0;border-top:1px solid #ffffff16;border-bottom:1px solid #ffffff16}
+.stats>div{display:flex;min-width:0;flex-direction:column;justify-content:center;gap:3px;padding:2px 14px}
+.stats>div:first-child{padding-left:0}
+.stats>div+div{border-left:1px solid #ffffff16}
+.stats strong{min-height:29px;display:flex;align-items:center;font-size:22px;line-height:1.2}
+.stats span{font-size:11px;line-height:1.45;color:#aaa59a}
+.site-nav-actions .nav-action:focus-visible,.hero .hero-action:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:900px){.site-nav-actions{width:auto;grid-template-columns:repeat(3,minmax(0,1fr))}.site-nav-actions .nav-action{padding:0 10px}}
+@media(max-width:680px){
+.site-nav-actions{width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.site-nav-actions .nav-action{min-height:44px;gap:6px;padding:0 5px;font-size:clamp(10px,2.8vw,12px)}
+.site-nav-actions .nav-action svg{width:16px;height:16px;flex-basis:16px}
+.hero .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:22px}
+.hero .hero-action{width:100%;min-height:46px;gap:7px;padding:0 8px;font-size:clamp(10px,2.8vw,12px);white-space:normal;text-align:center}
+.hero .hero-action svg{width:16px;height:16px;flex-basis:16px}
+.stats{max-width:none;margin-top:24px;padding:12px 0}
+.stats>div{padding:2px 9px}
+.stats strong{font-size:20px}
+.stats span{font-size:10px}
+}
+@media(max-width:380px){
+.site-nav-actions{gap:5px}
+.site-nav-actions .nav-action{gap:4px;padding:0 3px;font-size:10px}
+.hero .actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.hero .hero-action{gap:5px;padding:0 5px;font-size:10px}
+.stats>div{padding:2px 6px}
+.stats span{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.site-nav-actions .nav-action,.hero .hero-action{transition:none!important}}
+</style>
+
 </head>
 <body>
-<header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация"><button class="pill" id="favoritesToggle">♡ Избранное</button><button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button><a class="pill" href="./book-creator.html">✍ Создать книгу</a></div></nav></div></header>
+<header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
+<button class="pill nav-action" id="favoritesToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.2-8.8 10.1-8.8 10.1S3.2 14 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg><span>Избранное</span></button>
+<button class="pill nav-action active" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/></svg><span>Каталог</span></button>
+<a class="pill nav-action" href="./book-creator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a2.8 2.8 0 0 0-4-4L4.2 15.1 4 20Z"/><path d="M13 6.5 17.5 11"/></svg><span>Создать книгу</span></a>
+</div></nav></div></header>
 <main class="wrap">
-<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions"><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Исследовать библиотеку　↘</button><button class="btn" id="randomBtn">✧ Удиви меня</button><a class="btn primary" href="./book-creator.html">✍ Создать свою книгу</a></div><div class="stats"><div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div><div><strong>✦</strong><span>редакционный отбор</span></div><div><strong>0 ₽</strong><span>доступ к чтению</span></div></div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
+<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions">
+<button class="btn primary hero-action" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7"/></svg><span>Исследовать библиотеку</span></button>
+<button class="btn hero-action" id="randomBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg><span>Удиви меня</span></button>
+</div>
+<div class="stats" aria-label="О библиотеке">
+<div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div>
+<div><strong>✦</strong><span>редакционный отбор</span></div>
+<div><strong>0 ₽</strong><span>доступ к чтению</span></div>
+</div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
 <section class="premiere-section" id="premieres" aria-labelledby="premiereTitle">
   <div class="premiere-heading">
     <div class="eyebrow">✦ ЗАКРЫТАЯ ПРЕМЬЕРА · FIRST LOOK</div>
