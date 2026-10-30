@@ -122,7 +122,7 @@ assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v39['"]/, 
 assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
 assert.match(html, /function formatReaderPageStatus\(state,totalPages\)/, "Reader status must be formatted from the canonical page state");
 assert.match(html, /reader-paper-light-turn-v36/, "Crisp paper-light page-turn layer is missing");
-assert.match(html, /The text itself is never[\s\S]{0,100}transformed/, "Page-turn animation must keep the text untransformed");
+assert.match(html, /body\.reader-open #bookPage,[\s\S]{0,900}?transform:none!important/, "The page surface must remain untransformed while the paper-light layer animates");
 assert.match(html, /body\.reader-open #bookPage\.reader-turn-out-back::after/, "Single-page backward paper-light animation selector is missing");
 const pageStateMatch = html.match(/function getReaderPageState\(index,totalPages,spread\)\{[\s\S]*?\n\}/);
 assert.ok(pageStateMatch, "Could not isolate page-state helper for boundary tests");
