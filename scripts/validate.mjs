@@ -51,6 +51,7 @@ assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
 assert.match(downloadManager, /async function checkForUpdate\(/, "Offline books must support non-destructive update checks");
 assert.match(downloadManager, /catalogRevision: String\(entry\.revision \|\| book\.revision \|\| ''\)/, "Offline downloads must remember the catalog revision");
+assert.match(downloadManager, /if \(entry\.revision && String\(book\.revision \|\| ''\) !== String\(entry\.revision\)\)/, "Offline downloads must reject a text body whose revision differs from the catalog");
 const updateCheckBody = downloadManager.match(/async function checkForUpdate\(id\)\s*\{([\s\S]*?)\n  \}\n\n  async function load/);
 assert.ok(updateCheckBody, "Could not isolate the offline update-check workflow");
 assert.match(updateCheckBody[1], /entry\.revision/, "Offline update checks must compare catalog revision metadata");
