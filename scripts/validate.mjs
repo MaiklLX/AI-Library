@@ -210,4 +210,11 @@ assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
 assert.match(html, /CACHE_PREFIX\s*\+\s*['"]v51['"]/, "Book action update must use the current cache version");
 
+assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
+assert.match(html, /const loaded = catalog\\.books\\.map\\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
+assert.match(html, /Full book JSON is fetched only on explicit read\\/download/, "Book content loading policy is missing");
+assert.match(html, /async function openBookById\\(id\\)[\\s\\S]*?fetch\\(book\\.contentPath, \\{ cache: 'no-cache' \\}\\)/, "Published book text must load on demand when opening a book");
+assert.match(html, /metadataOnly: true,[\\s\\S]*?chapters: \\[\\]/, "Catalog fallback must not retain full book text in local metadata cache");
+assert.match(serviceWorker, /CACHE_PREFIX\\s*\\+\\s*['"]v52['"]/, "Lazy book loading update must use the current cache version");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
