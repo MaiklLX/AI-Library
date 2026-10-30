@@ -216,3 +216,18 @@ Last maintained: 2026-10-30.
 - Earlier failed runs are superseded by the successful final runs above; do not treat their failures as the current release status.
 - Next: add a lightweight catalog-update notice based on catalog metadata/revision only, with no automatic book-body fetches. Before coding, inspect current catalog fields and decide a stable revision/signature strategy. Then perform the structured desktop/tablet/mobile visual audit. Preserve reader interactions and all existing user data.
 
+## Metadata-only catalog update notice (2026-10-30)
+
+- Added a compact, dismissible catalog update notice immediately below the site header.
+- On a successful catalog fetch, the app builds a deterministic snapshot from catalog metadata only: book ID, title, author, genre, status, revision, chapter count, description and release date.
+- The first successful visit establishes a baseline without showing a false update alert. Later changes are classified as added, changed or removed catalog entries.
+- The last-seen metadata signature is stored under the new dedicated key `ai-library-catalog-update-state-v1`; no existing library, reading-progress, personal-book or download storage keys are changed or cleared.
+- Repeated identical updates are not announced again. Offline/error fallback does not run the comparison and does not display a false update.
+- The notice uses textContent for the dynamic message, has an accessible status region and dismiss control, and explicitly states that book texts were not downloaded.
+- No book-body fetch, download-manager, reader, pagination, offline-book or progress logic was added to or changed by this feature.
+- Service Worker app-shell cache bumped from `v52` to `v53`.
+- Release validator includes assertions for the metadata snapshot/check, notice UI, safe text rendering, no-book-body message and cache version.
+- During validation, CI exposed three older validator assertions still pinned to `v52`; all were updated to `v53`. Earlier failed runs are superseded by the final checks for the current SHA.
+- Implementation commits: `52b362570e1fe481e5d0c656529f477d1b152bb1` (notice), `e7b7f7f16d37c87ca2450f44d336d2baa6b728bb` (cache), `81dc7047cf5005f08f2bcbe4308abe10955481d0` (validator text check), `5768944798071f92c3c035f63e6a4063ed21bcca` (all cache assertions aligned).
+- CI and Pages deployment for the final code/documentation SHA: pending verification.
+- Next: verify the final CI/deploy runs, then perform the structured desktop/tablet/mobile visual audit. Keep reader interactions and all user data protected.
