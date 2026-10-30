@@ -2507,7 +2507,7 @@ body.reader-open #pageTurnSheet.flip-back {
 .library-shelf-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
 .library-shelf-heading h3{font:500 22px Georgia,serif;margin:0}
 .library-shelf-heading span{color:#a99b7d;font-size:9px;letter-spacing:.13em;text-align:right}
-.library-book-list{display:grid;gap:9px}.library-storage-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:11px 12px;border:1px solid #d9b66d30;border-radius:10px;background:#d9b66d08}.library-storage-tools p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}.library-storage-tools .btn{flex:0 0 auto;padding:8px 11px;font-size:11px}.library-storage-tools .btn:disabled{opacity:.55;cursor:not-allowed}
+.library-book-list{display:grid;gap:9px}.library-book-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}.library-book-actions .btn{padding:8px 10px;font-size:11px}.library-book-actions .btn:disabled{opacity:.55;cursor:wait}.library-storage-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:11px 12px;border:1px solid #d9b66d30;border-radius:10px;background:#d9b66d08}.library-storage-tools p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}.library-storage-tools .btn{flex:0 0 auto;padding:8px 11px;font-size:11px}.library-storage-tools .btn:disabled{opacity:.55;cursor:not-allowed}
 .library-book-row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px;border:1px solid #ffffff12;border-radius:12px;background:#ffffff04}
 .library-book-symbol{width:52px;height:64px;display:grid;place-items:center;border:1px solid #d9b66d55;border-radius:7px;background:linear-gradient(145deg,#40321e,#171512);color:#e8cd8e;font:27px Georgia,serif}
 .library-book-copy{min-width:0}
@@ -3551,6 +3551,40 @@ async function handleBookDownload(button){
   }
 }
 
+async function handleOfflineUpdateCheck(button){
+  const id=button.dataset.libraryCheckUpdate;
+  if(!id||!window.AILibraryDownloadManager)return;
+  if(button.dataset.updateReady==='true'){
+    button.disabled=true;button.textContent='Обновляем…';
+    try{
+      const record=await window.AILibraryDownloadManager.download(id);
+      const normalized=normalizePublishedBook(record.book);
+      if(!normalized)throw new Error('Новая версия не прошла проверку формата.');
+      const index=publishedBooks.findIndex(book=>String(book.id)===record.id);
+      normalized.offlineReady=true;
+      if(index>=0){normalized.offlineOnly=Boolean(publishedBooks[index].offlineOnly);publishedBooks[index]=normalized;}
+      else{normalized.offlineOnly=true;publishedBooks.push(normalized);}
+      render();
+    }catch(error){
+      button.disabled=false;button.textContent='Повторить обновление';
+      const status=document.querySelector('#myLibraryStorageStatus');
+      if(status)status.textContent='Обновление не завершено. Старая офлайн-копия сохранена. '+(error.message||'');
+    }
+    return;
+  }
+  button.disabled=true;button.textContent='Проверяем…';
+  try{
+    const result=await window.AILibraryDownloadManager.checkForUpdate(id);
+    if(result.available){button.dataset.updateReady='true';button.textContent='Обновить книгу';button.title='Найдена новая версия. Старая копия останется доступной до завершения обновления.';}
+    else{button.dataset.updateReady='false';button.textContent='Книга актуальна ✓';}
+    button.disabled=false;
+  }catch(error){
+    button.disabled=false;button.textContent='Повторить проверку';
+    const status=document.querySelector('#myLibraryStorageStatus');
+    if(status)status.textContent='Не удалось проверить обновление. Офлайн-копия не изменена. '+(error.message||'');
+  }
+}
+
 async function removeOfflineDownload(id){
   try{
     await window.AILibraryDownloadManager.remove(id);
@@ -3619,13 +3653,13 @@ function renderMyLibrary(){
   if(continueRoot)continueRoot.innerHTML=recent.length?recent.map(item=>row(item.book,item.saved)).join(''):'<div class="library-empty">Здесь появятся книги, которые ты начнёшь читать.</div>';
   if(personalRoot)personalRoot.innerHTML=personal.length?personal.map(book=>row(book,progress[book.id])).join(''):'<div class="library-empty">Личные книги появятся здесь после создания или сохранения.</div>';
   const downloads=window.AILibraryDownloadManager?.getCachedDownloads()||[];
-  if(downloadsRoot)downloadsRoot.innerHTML=downloads.length?downloads.map(record=>'<article class="library-book-row"><span class="library-book-symbol" aria-hidden="true">↓</span><div class="library-book-copy"><strong>'+esc(record.title||record.book?.title||'Книга')+'</strong><small>Сохранена на устройстве · '+(record.contentBytes?Math.max(1,Math.round(record.contentBytes/1024))+' КБ':'офлайн')+'</small></div><button class="btn" type="button" data-library-remove-download="'+esc(record.id)+'">Удалить</button></article>').join(''):'<div class="library-empty">Загруженные книги появятся здесь. Они будут доступны без интернета.</div>';
+  if(downloadsRoot)downloadsRoot.innerHTML=downloads.length?downloads.map(record=>'<article class="library-book-row"><span class="library-book-symbol" aria-hidden="true">↓</span><div class="library-book-copy"><strong>'+esc(record.title||record.book?.title||'Книга')+'</strong><small>Сохранена на устройстве · '+(record.contentBytes?Math.max(1,Math.round(record.contentBytes/1024))+' КБ':'офлайн')+'</small></div><div class="library-book-actions"><button class="btn" type="button" data-library-check-update="'+esc(record.id)+'">Проверить обновление</button><button class="btn" type="button" data-library-remove-download="'+esc(record.id)+'">Удалить</button></div></article>').join(''):'<div class="library-empty">Загруженные книги появятся здесь. Они будут доступны без интернета.</div>';
   const count=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=String(value);};
   count('myLibraryPersonalCount',personal.length);count('myLibraryProgressCount',recent.length);count('myLibraryFavoritesCount',favs().length);
 }
 
 document.querySelector('#myLibraryToggle')?.addEventListener('click',()=>document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'}));
-document.querySelector('#myLibrary')?.addEventListener('click',event=>{const remove=event.target.closest('[data-library-remove-download]');if(remove){removeOfflineDownload(remove.dataset.libraryRemoveDownload);return;}const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
+document.querySelector('#myLibrary')?.addEventListener('click',event=>{const update=event.target.closest('[data-library-check-update]');if(update){handleOfflineUpdateCheck(update);return;}const remove=event.target.closest('[data-library-remove-download]');if(remove){removeOfflineDownload(remove.dataset.libraryRemoveDownload);return;}const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
 
 document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
   const modal=document.querySelector("#modal");

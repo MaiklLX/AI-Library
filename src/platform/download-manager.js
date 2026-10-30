@@ -8,6 +8,7 @@
   if (!store) throw new Error('AI Library storage is unavailable.');
   const CATALOG_URL = './content/catalog.json';
   const ready = new Map();
+  const updateAvailable = new Set();
   const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 
   async function readJson(response, label) {
@@ -68,12 +69,35 @@
     // A single IndexedDB put replaces the prior ready version only after validation.
     await store.setDownload(record);
     ready.set(record.id, record);
+    updateAvailable.delete(record.id);
     return record;
+  }
+
+  async function checkForUpdate(id) {
+    const key = String(id || '');
+    const rawId = key.startsWith('published-') ? key.slice(10) : key;
+    if (!slugPattern.test(rawId)) throw new TypeError('Некорректный идентификатор книги.');
+    const current = ready.get('published-' + rawId) || await store.getDownload('published-' + rawId);
+    if (!current || current.status !== 'ready' || !current.book) throw new Error('Сначала сохраните книгу на этом устройстве.');
+    const response = await fetch(CATALOG_URL, { cache: 'no-cache' });
+    const { data: catalog } = await readJson(response, 'Каталог');
+    if (!catalog || catalog.version !== 1 || !Array.isArray(catalog.books)) throw new Error('Каталог имеет неподдерживаемый формат.');
+    const entry = catalog.books.find(item => item && item.id === rawId);
+    if (!entry || entry.path !== './content/books/' + rawId + '.json') throw new Error('Книга отсутствует в актуальном каталоге.');
+    const bookResponse = await fetch(entry.path, { cache: 'no-cache' });
+    const { data: book, text: source } = await readJson(bookResponse, 'Книга');
+    validateBook(book, rawId);
+    const remoteHash = await digest(source);
+    const isDifferent = current.contentHash && remoteHash ? current.contentHash !== remoteHash : JSON.stringify(current.book) !== JSON.stringify(book);
+    if (isDifferent) updateAvailable.add('published-' + rawId);
+    else updateAvailable.delete('published-' + rawId);
+    return { id: 'published-' + rawId, available: isDifferent, currentTitle: current.title, latestTitle: book.title, checkedAt: Date.now() };
   }
 
   async function load() {
     const records = await store.getDownloads();
     ready.clear();
+    updateAvailable.clear();
     for (const record of records) {
       if (record?.status === 'ready' && record.book && record.id === 'published-' + record.book.id) {
         try { validateBook(record.book, record.book.id); ready.set(record.id, record); }
@@ -123,6 +147,8 @@
 
   window.AILibraryDownloadManager = Object.freeze({
     download,
+    checkForUpdate,
+    hasUpdate: id => updateAvailable.has(String(id)),
     load,
     remove,
     isDownloaded: id => ready.has(String(id)),
