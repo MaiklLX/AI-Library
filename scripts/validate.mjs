@@ -40,6 +40,7 @@ assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline n
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
+assert.match(html, /getAllBooks\(\)\.filter\(book=>book\.status!==["\']prerelease["\']&&Array\.isArray\(book\.chapters\)&&book\.chapters\.length>0\)/, "Random discovery must exclude prerelease and books without readable chapters");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
