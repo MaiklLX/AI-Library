@@ -4257,14 +4257,21 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
 </style>
 
 
-<style id="ai-library-star-sheen-v1">
-/* Signature star: a restrained metallic sheen, not a flashing effect. */
+<style id="ai-library-star-sheen-v2">
+/* Signature star: a richer, layered light field with seamless, low-frequency motion. */
 .logo {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: linear-gradient(145deg, #d9b66d12, #d9b66d03 62%);
-  box-shadow: inset 0 0 16px #d9b66d0b, 0 0 18px #d9b66d0a;
+  background:
+    radial-gradient(circle at 50% 48%, #f5d99524 0, #d9b66d0c 34%, transparent 72%),
+    linear-gradient(145deg, #d9b66d1c, #d9b66d05 62%);
+  box-shadow:
+    inset 0 0 18px #d9b66d16,
+    0 0 16px #d9b66d18,
+    0 0 30px #d9b66d0b;
+  text-shadow: 0 0 8px #f3d99a88, 0 0 18px #d9b66d55;
+  animation: aiLogoGlow 8.4s ease-in-out infinite;
 }
 .logo::before {
   content: "";
@@ -4272,48 +4279,115 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
   z-index: -1;
   inset: -55% -80%;
   pointer-events: none;
-  background: linear-gradient(108deg, transparent 42%, #fff0 46%, #f8e6b65c 50%, #fff8 51%, #f8e6b61c 54%, transparent 59%);
-  transform: translateX(-75%) rotate(12deg);
-  animation: aiLogoSheen 5.8s cubic-bezier(.4,0,.2,1) infinite;
+  background: linear-gradient(108deg, transparent 42%, #fff0 46%, #f8e6b67a 50%, #fff9 51%, #f8e6b630 54%, transparent 59%);
+  transform: translateX(-115%) rotate(12deg);
+  opacity: 0;
+  animation: aiLogoSheen 10.8s cubic-bezier(.35,0,.2,1) infinite;
 }
-.logo {
-  text-shadow: 0 0 8px #f3d99a66, 0 0 18px #d9b66d35;
-  animation: aiLogoGlow 4.8s ease-in-out infinite;
+.logo::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 2px;
+  border-radius: 8px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #fff3c8 0 1px, transparent 2px) 15% 25% / 100% 100% no-repeat,
+    radial-gradient(circle, #e8c77d 0 1px, transparent 2px) 82% 22% / 100% 100% no-repeat,
+    radial-gradient(circle, #fff0bd 0 1.2px, transparent 2.2px) 78% 78% / 100% 100% no-repeat,
+    radial-gradient(circle, #d9b66d 0 1px, transparent 2px) 20% 82% / 100% 100% no-repeat,
+    radial-gradient(ellipse at 50% 50%, #f5d99512, transparent 68%);
+  opacity: .5;
+  transform: rotate(0deg) scale(.94);
+  animation: aiLogoParticles 7.2s ease-in-out infinite;
 }
 .hero .spark {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
   color: transparent;
   background: linear-gradient(112deg, #9d7c3e 8%, #f2dfa9 27%, #fff8df 42%, #c49a50 53%, #fff0c4 68%, #9d7c3e 88%);
-  background-size: 230% 100%;
-  background-position: 100% 50%;
+  background-size: 100% 100%;
+  background-position: 50% 50%;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 13px #d9b66d38) drop-shadow(0 10px 18px #0008);
-  animation: sparkFloat 5s ease-in-out infinite, aiHeroStarSheen 6.5s ease-in-out infinite;
-  will-change: background-position, transform, filter;
+  filter: drop-shadow(0 0 16px #d9b66d55) drop-shadow(0 10px 18px #0008);
+  animation: sparkFloat 5s ease-in-out infinite, aiHeroStarGlow 7.6s ease-in-out infinite;
+  will-change: transform, filter;
+}
+.hero .spark::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -.42em -.62em;
+  border: 1px solid #e9ca8545;
+  border-left-color: #fff0;
+  border-right-color: #fff0;
+  border-radius: 50%;
+  transform: rotate(-28deg) scale(.92);
+  box-shadow: 0 0 16px #d9b66d16, inset 0 0 12px #d9b66d0b;
+  animation: aiStarOrbit 18s linear infinite;
+}
+.hero .spark::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -.55em -.72em;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #fff7d9 0 1.5px, transparent 2.8px) 12% 35% / 100% 100% no-repeat,
+    radial-gradient(circle, #f0d18d 0 1px, transparent 2.5px) 88% 24% / 100% 100% no-repeat,
+    radial-gradient(circle, #fff0c4 0 1.4px, transparent 2.8px) 78% 82% / 100% 100% no-repeat,
+    radial-gradient(circle, #d9b66d 0 1px, transparent 2.5px) 18% 78% / 100% 100% no-repeat,
+    radial-gradient(ellipse, #e9c77c1c, transparent 68%);
+  opacity: .45;
+  transform: scale(.92);
+  animation: aiStarParticles 5.8s ease-in-out infinite;
 }
 @keyframes aiLogoSheen {
-  0%, 58% { transform: translateX(-78%) rotate(12deg); opacity: 0; }
-  68% { opacity: .9; }
-  84%, 100% { transform: translateX(78%) rotate(12deg); opacity: 0; }
+  0%, 8%, 100% { transform: translateX(-115%) rotate(12deg); opacity: 0; }
+  15% { opacity: .95; }
+  25% { transform: translateX(115%) rotate(12deg); opacity: 0; }
+  26%, 99% { transform: translateX(-115%) rotate(12deg); opacity: 0; }
 }
 @keyframes aiLogoGlow {
-  0%, 100% { box-shadow: inset 0 0 16px #d9b66d0b, 0 0 14px #d9b66d0a; }
-  50% { box-shadow: inset 0 0 20px #f4dda51a, 0 0 23px #d9b66d25; }
+  0%, 100% { box-shadow: inset 0 0 18px #d9b66d16, 0 0 16px #d9b66d18, 0 0 30px #d9b66d0b; }
+  42% { box-shadow: inset 0 0 24px #f4dda52b, 0 0 24px #d9b66d38, 0 0 42px #d9b66d18; }
+  58% { box-shadow: inset 0 0 20px #f4dda51d, 0 0 19px #d9b66d25, 0 0 34px #d9b66d10; }
 }
-@keyframes aiHeroStarSheen {
-  0%, 18% { background-position: 100% 50%; filter: drop-shadow(0 0 10px #d9b66d2b) drop-shadow(0 10px 18px #0008); }
-  58%, 76% { background-position: 0% 50%; filter: drop-shadow(0 0 22px #f1d79a70) drop-shadow(0 10px 18px #0008); }
-  100% { background-position: -35% 50%; filter: drop-shadow(0 0 10px #d9b66d2b) drop-shadow(0 10px 18px #0008); }
+@keyframes aiLogoParticles {
+  0%, 100% { opacity: .35; transform: rotate(0deg) scale(.92); }
+  36% { opacity: .85; transform: rotate(9deg) scale(1.04); }
+  62% { opacity: .48; transform: rotate(15deg) scale(.98); }
+}
+@keyframes aiHeroStarGlow {
+  0%, 100% { filter: drop-shadow(0 0 12px #d9b66d38) drop-shadow(0 10px 18px #0008); }
+  38% { filter: drop-shadow(0 0 25px #f1d79a88) drop-shadow(0 10px 18px #0008); }
+  54% { filter: drop-shadow(0 0 17px #e8c77d60) drop-shadow(0 10px 18px #0008); }
+}
+@keyframes aiStarOrbit {
+  from { transform: rotate(-28deg) scale(.92); }
+  to { transform: rotate(332deg) scale(.92); }
+}
+@keyframes aiStarParticles {
+  0%, 100% { opacity: .22; transform: scale(.88); }
+  32% { opacity: .9; transform: scale(1.06); }
+  58% { opacity: .38; transform: scale(.96); }
 }
 @media (prefers-reduced-motion: reduce) {
   .logo,
   .logo::before,
-  .hero .spark {
+  .logo::after,
+  .hero .spark,
+  .hero .spark::before,
+  .hero .spark::after {
     animation: none !important;
     will-change: auto;
   }
   .logo::before { display: none; }
-  .hero .spark { background-position: 50% 50%; }
+  .logo::after,
+  .hero .spark::after { opacity: .45; }
+  .hero .spark { filter: drop-shadow(0 0 14px #d9b66d55); }
 }
 </style>
