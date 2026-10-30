@@ -101,7 +101,7 @@ for (const icon of manifest.icons || []) {
 assert.match(html, /id="reader-desktop-flow-layout-v33"/, "Desktop reader must use the stable flex-flow layout");
 assert.match(html, /\.book-spread\s*\{[^}]*position:relative!important;[^}]*display:flex!important;[^}]*flex:1 1 0!important/s, "Desktop book spread must participate in normal reader layout");
 assert.match(html, /\.book-spread>\.book-page\s*\{[^}]*position:relative!important;[^}]*height:auto!important/s, "Desktop pages must not be absolutely stacked");
-assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v37['"]/, "Reader page-turn cache must be refreshed");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v38['"]/, "Reader page-turn cache must be refreshed");
 
 
 assert.match(html, /let pageTokenEstimate = 0/, "Pagination should reuse measured page lengths to reduce DOM layout work");
@@ -111,12 +111,12 @@ assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*retur
 
 
 assert.match(html, /reader-crisp-page-turn-v35/, "Reader must use the crisp non-3D page transition");
-assert.match(html, /const pageState=getReaderPageState\(readingPageIndex,totalPages,spread\)/, "Desktop page index must align through the canonical spread state");
+assert.match(html, /const localPageState=getReaderPageState\(readingPageIndex,chapterPages,spread\)/, "Desktop page index must align through the canonical spread state");
 assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, "Right-page numbering must be conditional on a real page");
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
-assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v37['"]/, "Reader animation cache must be refreshed");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v38['"]/, "Reader animation cache must be refreshed");
 
 
 assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
@@ -139,5 +139,13 @@ assert.match(html, /readerArea\.addEventListener\('pointerdown'/, "Mobile edge a
 assert.match(html, /const surface=isDesktopReaderSpread\(\)\?bookSpreadArea:bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
 assert.match(html, /if\(start\.pointerType!=='mouse'\)toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
 assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
+
+
+assert.match(html, /function ensureBookPageCounts\(\)/, "Book-wide page map must be computed from every chapter");
+assert.match(html, /function getBookPageOffset\(chapterIndex\)/, "Page numbering must include all preceding chapters");
+assert.match(html, /function getBookPageTotal\(\)/, "Reader total must represent the whole book");
+assert.match(html, /reader-mobile-page-turn-v38/, "Mobile page-turn animation must be restored");
+assert.match(html, /readerMobilePaperSweep/, "Mobile page turn must use a smooth paper-light sweep");
+assert.match(html, /const pageOffset=getBookPageOffset\(part\)/, "Visible page numbers must include preceding chapter pages");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
