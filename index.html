@@ -4255,3 +4255,65 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
   justify-content: center;
 }
 </style>
+
+
+<style id="ai-library-star-sheen-v1">
+/* Signature star: a restrained metallic sheen, not a flashing effect. */
+.logo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(145deg, #d9b66d12, #d9b66d03 62%);
+  box-shadow: inset 0 0 16px #d9b66d0b, 0 0 18px #d9b66d0a;
+}
+.logo::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -55% -80%;
+  pointer-events: none;
+  background: linear-gradient(108deg, transparent 42%, #fff0 46%, #f8e6b65c 50%, #fff8 51%, #f8e6b61c 54%, transparent 59%);
+  transform: translateX(-75%) rotate(12deg);
+  animation: aiLogoSheen 5.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+.logo {
+  text-shadow: 0 0 8px #f3d99a66, 0 0 18px #d9b66d35;
+  animation: aiLogoGlow 4.8s ease-in-out infinite;
+}
+.hero .spark {
+  color: transparent;
+  background: linear-gradient(112deg, #9d7c3e 8%, #f2dfa9 27%, #fff8df 42%, #c49a50 53%, #fff0c4 68%, #9d7c3e 88%);
+  background-size: 230% 100%;
+  background-position: 100% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 13px #d9b66d38) drop-shadow(0 10px 18px #0008);
+  animation: sparkFloat 5s ease-in-out infinite, aiHeroStarSheen 6.5s ease-in-out infinite;
+  will-change: background-position, transform, filter;
+}
+@keyframes aiLogoSheen {
+  0%, 58% { transform: translateX(-78%) rotate(12deg); opacity: 0; }
+  68% { opacity: .9; }
+  84%, 100% { transform: translateX(78%) rotate(12deg); opacity: 0; }
+}
+@keyframes aiLogoGlow {
+  0%, 100% { box-shadow: inset 0 0 16px #d9b66d0b, 0 0 14px #d9b66d0a; }
+  50% { box-shadow: inset 0 0 20px #f4dda51a, 0 0 23px #d9b66d25; }
+}
+@keyframes aiHeroStarSheen {
+  0%, 18% { background-position: 100% 50%; filter: drop-shadow(0 0 10px #d9b66d2b) drop-shadow(0 10px 18px #0008); }
+  58%, 76% { background-position: 0% 50%; filter: drop-shadow(0 0 22px #f1d79a70) drop-shadow(0 10px 18px #0008); }
+  100% { background-position: -35% 50%; filter: drop-shadow(0 0 10px #d9b66d2b) drop-shadow(0 10px 18px #0008); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .logo::before,
+  .hero .spark {
+    animation: none !important;
+    will-change: auto;
+  }
+  .logo::before { display: none; }
+  .hero .spark { background-position: 50% 50%; }
+}
+</style>
