@@ -229,5 +229,21 @@ Last maintained: 2026-10-30.
 - Release validator includes assertions for the metadata snapshot/check, notice UI, safe text rendering, no-book-body message and cache version.
 - During validation, CI exposed three older validator assertions still pinned to `v52`; all were updated to `v53`. Earlier failed runs are superseded by the final checks for the current SHA.
 - Implementation commits: `52b362570e1fe481e5d0c656529f477d1b152bb1` (notice), `e7b7f7f16d37c87ca2450f44d336d2baa6b728bb` (cache), `81dc7047cf5005f08f2bcbe4308abe10955481d0` (validator text check), `5768944798071f92c3c035f63e6a4063ed21bcca` (all cache assertions aligned).
-- CI and Pages deployment for the final code/documentation SHA: pending verification.
+- CI run `41116061883`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41116061883
+- GitHub Pages deploy run `41116062025`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41116062025
+- Both completed successfully on SHA `6fc78545258b2378daa55d828fbd535ae1d88006`.
 - Next: verify the final CI/deploy runs, then perform the structured desktop/tablet/mobile visual audit. Keep reader interactions and all user data protected.
+
+## My Library responsive shelf refinement (2026-10-30)
+
+- Completed a source-level responsive audit of the existing home hero, catalog and personal library CSS at desktop, tablet and mobile breakpoints. The audit confirmed the catalog's responsive search/filter controls and two-column-to-one-column book grid, plus the library's one-column mobile behavior.
+- Identified one clear desktop/tablet layout inefficiency: the third (offline downloads) shelf occupied only half of the two-column shelf grid, leaving a large unused half-row.
+- Added isolated style block `my-library-desktop-grid-v2`: on widths 681px and above the offline shelf spans the full row and its book list uses two balanced columns; at 680px and below it explicitly returns to one column.
+- No reader selectors, reader JS, touch handlers, pagination, download manager, storage keys, progress state or book content were changed.
+- Added validator assertions for the desktop/tablet full-row shelf, two-column download list and mobile single-column fallback.
+- Code commit: `c92f0ad6001c91811f43347bdd055929eb711e77`; validator commit: `953ef4fb341a70f8ae1a419f74e04329160f2338`.
+- CI run `41116612010`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41116612010
+- GitHub Pages deploy run `41116611952`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41116611952
+- Both checks completed successfully on SHA `953ef4fb341a70f8ae1a419f74e04329160f2338`.
+- Note: this was a source/CSS structural audit, not a live screenshot-based device rendering test. Real device confirmation remains useful after deployment.
+- Next: continue a conservative visual pass over the home hero/catalog and library controls. Keep reader layout and interaction code protected.
