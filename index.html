@@ -2272,7 +2272,15 @@ body.reader-open #bookPage { transition:opacity .12s ease,transform .12s ease; }
 <style id="reader-paper-light-turn-v36">
 /* Premium restrained page turn: animate paper light, not the printed text. */
 body.reader-open #bookSpread>.book-page,
-body.reader-open #bookPage {
+body.reader-open #bookPage,
+body.reader-open #bookSpread.reader-turn-out-forward>.book-page,
+body.reader-open #bookSpread.reader-turn-out-back>.book-page,
+body.reader-open #bookSpread.reader-turn-in-forward>.book-page,
+body.reader-open #bookSpread.reader-turn-in-back>.book-page,
+body.reader-open #bookPage.reader-turn-out-forward,
+body.reader-open #bookPage.reader-turn-out-back,
+body.reader-open #bookPage.reader-turn-in-forward,
+body.reader-open #bookPage.reader-turn-in-back {
   transition:none!important;
   transform:none!important;
   filter:none!important;
@@ -2294,7 +2302,7 @@ body.reader-open #bookPage.reader-turn-out-forward::after {
   animation:readerPaperLightOut .105s ease-out both;
 }
 body.reader-open #bookSpread.reader-turn-out-back>.book-page::after,
-body.reader-open #bookPage.reader-turn-out-back>.book-page::after {
+body.reader-open #bookPage.reader-turn-out-back::after {
   animation:readerPaperLightOutBack .105s ease-out both;
 }
 body.reader-open #bookSpread.reader-turn-in-forward>.book-page::after,
