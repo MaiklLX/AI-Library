@@ -257,3 +257,13 @@ Last maintained: 2026-10-30.
 - Added validator assertions for the isolated style, one-card selector and responsive column sizing; updated existing cache assertions to `v54`.
 - This is a source-level layout correction; actual rendering on physical devices remains to be confirmed.
 - Next: verify CI and GitHub Pages deployment on the final handover commit, then continue the home/catalog visual pass based on real-device feedback.
+
+## Signature star metallic shimmer (2026-10-30)
+
+- Added isolated CSS layer `ai-library-star-sheen-v1` for the four-point star in the header logo and the larger star in the home hero banner.
+- Header mark receives a periodic diagonal metallic highlight, restrained gold glow and soft surface lighting. Hero star keeps its existing float motion while a slow gold/champagne gradient sheen travels across it.
+- Motion is deliberately low-frequency and non-flashing; no JavaScript timers, event handlers, external assets or new dependencies were added.
+- Both effects are disabled under `prefers-reduced-motion: reduce`.
+- No reader styles or scripts, touch/pagination behavior, book cards, storage, downloads or user data were changed.
+- Service Worker cache bumped from `v54` to `v55`; validator now checks both keyframes, the isolated layer and reduced-motion handling.
+- Source-level validation only; visual appearance still needs confirmation on desktop and mobile after deployment.
