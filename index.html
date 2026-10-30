@@ -2950,7 +2950,7 @@ document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibrar
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
 });
-document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks();if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
+document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>book.status!=="prerelease"&&Array.isArray(book.chapters)&&book.chapters.length>0);if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
 
 /* Cross-platform page gestures: native vertical movement, deliberate horizontal page turns. */
 const readerArea = document.querySelector('#reader');
