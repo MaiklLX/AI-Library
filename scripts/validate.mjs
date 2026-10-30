@@ -103,4 +103,11 @@ assert.match(html, /\.book-spread\s*\{[^}]*position:relative!important;[^}]*disp
 assert.match(html, /\.book-spread>\.book-page\s*\{[^}]*position:relative!important;[^}]*height:auto!important/s, "Desktop pages must not be absolutely stacked");
 assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v33['"]/, "Reader layout cache must be refreshed");
 
+
+assert.match(html, /reader-interaction-performance-fixes-v34/, "Reader interaction fixes must be present");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "Page edge handling must cover the complete two-page spread");
+assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*return/, "Mouse clicks must not be excluded from page edge turns");
+assert.match(html, /requestAnimationFrame\(\(\)=>\{\s*sheet\.classList\.add\(direction>0\?'flip-forward':'flip-back'\)/, "Page-turn animation must start on a committed animation frame");
+assert.match(html, /hasRightPage=spread&&readingPageIndex\+1<readingPages\.length/, "The last odd page must not display a phantom right-page number");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
