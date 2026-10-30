@@ -35,6 +35,15 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
+assert.match(html, /id="audioDock"/, "Audio player interface is missing");
+assert.match(html, /id="audioPlay"/, "Audio playback control is missing");
+assert.match(html, /id="audioSpeed"/, "Audio speed control is missing");
+assert.match(html, /id="audioVoice"/, "Audio voice selection is missing");
+assert.match(html, /id="audioSleep"/, "Audio sleep timer is missing");
+assert.match(html, /function audioSpeakPage\(/, "Device speech playback engine is missing");
+assert.match(html, /function audioAdvancePage\(/, "Audio must advance through the book page by page");
+assert.match(html, /audioStop\(\)/, "Audio stop handling is missing");
+
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*[\'"]v\d+[\'"]/, "Offline shell cache version must be refreshed for the current reader release");
 assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline navigation fallback is missing");
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
