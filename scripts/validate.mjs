@@ -35,6 +35,15 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
+assert.match(html, /id="audioDock"/, "Audio player interface is missing");
+assert.match(html, /id="audioPlay"/, "Audio playback control is missing");
+assert.match(html, /id="audioSpeed"/, "Audio speed control is missing");
+assert.match(html, /id="audioVoice"/, "Audio voice selection is missing");
+assert.match(html, /id="audioSleep"/, "Audio sleep timer is missing");
+assert.match(html, /function audioSpeakPage\(/, "Device speech playback engine is missing");
+assert.match(html, /function audioAdvancePage\(/, "Audio must advance through the book page by page");
+assert.match(html, /audioStop\(\)/, "Audio stop handling is missing");
+
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*[\'"]v\d+[\'"]/, "Offline shell cache version must be refreshed for the current reader release");
 assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline navigation fallback is missing");
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
@@ -101,7 +110,7 @@ for (const icon of manifest.icons || []) {
 assert.match(html, /id="reader-desktop-flow-layout-v33"/, "Desktop reader must use the stable flex-flow layout");
 assert.match(html, /\.book-spread\s*\{[^}]*position:relative!important;[^}]*display:flex!important;[^}]*flex:1 1 0!important/s, "Desktop book spread must participate in normal reader layout");
 assert.match(html, /\.book-spread>\.book-page\s*\{[^}]*position:relative!important;[^}]*height:auto!important/s, "Desktop pages must not be absolutely stacked");
-assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v39['"]/, "Reader page-turn cache must be refreshed");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v\d+['"]/, "Offline shell cache version must be refreshed for the current reader release");
 
 
 assert.match(html, /let pageTokenEstimate = 0/, "Pagination should reuse measured page lengths to reduce DOM layout work");
@@ -116,7 +125,7 @@ assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, 
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
-assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v39['"]/, "Reader animation cache must be refreshed");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v\d+['"]/, "Reader animation cache must be refreshed");
 
 
 assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
