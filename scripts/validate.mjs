@@ -212,6 +212,15 @@ assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Book action update must use the current cache version");
 
+assert.match(html, /PUBLISHED_CATALOG_STATE_KEY/, "Catalog update state key is missing");
+assert.match(html, /function getCatalogMetadataSnapshot\(catalog\)/, "Catalog metadata snapshot helper is missing");
+assert.match(html, /function checkCatalogMetadataUpdate\(catalog\)/, "Catalog metadata update comparison is missing");
+assert.match(html, /checkCatalogMetadataUpdate\(catalog\)/, "Catalog metadata update check must run after successful catalog validation");
+assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is missing");
+assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
+assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
+assert.match(html, /Tексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v53['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
 assert.match(html, /Full book JSON is fetched only on explicit read\/download/, "Book content loading policy is missing");
