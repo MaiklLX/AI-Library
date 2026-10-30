@@ -41,6 +41,9 @@ assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Servi
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
 assert.match(html, /getAllBooks\(\)\.filter\(book=>book\.status!==["\']prerelease["\']&&Array\.isArray\(book\.chapters\)&&book\.chapters\.length>0\)/, "Random discovery must exclude prerelease and books without readable chapters");
+assert.match(html, /readerHoverEnabled=window\.matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches/, "Desktop reader hover controls must be enabled only for mouse-like pointers");
+assert.match(html, /const readerHoverEdge=64/, "Desktop reader controls must reveal from the screen edges");
+assert.match(html, /if \(e\.pointerType === 'mouse'\) return;/, "Mouse clicks on the page must not toggle reader controls");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
