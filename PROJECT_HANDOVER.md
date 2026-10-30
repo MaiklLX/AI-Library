@@ -295,3 +295,21 @@ Last maintained: 2026-10-30.
 
 - The first enhanced-star CI run caught a stale validator assertion that expected the previous single-selector reduced-motion rule. The new CSS correctly disables the star and its pseudo-element layers together; the assertion has been updated to check the new grouped selector.
 - Validator correction commit: `f7dd010f18f88bb58790af1fad84e27827314152`. Re-check CI and Pages deployment on the final handover commit.
+
+
+## Offline Engine metadata-only update verification (2026-10-31)
+
+- Audited the current `main` branch before changing code. Confirmed the offline foundation already exists: IndexedDB runtime, library storage adapter, download manager, personal-library offline shelf, metadata-first catalog, and Service Worker app-shell caching. Do not rebuild these modules from scratch.
+- PR #38 merged: `e00e2124552b2eab0f1b5bd5442b085dac0f5ed7`.
+- `src/platform/download-manager.js` now stores `catalogRevision` with each successful download.
+- `checkForUpdate()` now fetches only `content/catalog.json` and compares the catalog revision with the revision stored in the local book. It no longer fetches the complete book JSON just to check whether an update exists.
+- The full book body is still fetched only when the user explicitly downloads or updates a book.
+- Before saving a downloaded body, the manager rejects a mismatch between `entry.revision` and `book.revision`; the previous ready offline copy is untouched because the IndexedDB write occurs only after validation.
+- The validator now requires a revision on each published catalog entry, verifies catalog/book revision equality, and asserts that the update-check workflow does not fetch `entry.path`.
+- Service Worker cache bumped from `v56` to `v57`.
+- Mocked workflow checks passed: equal revisions report no update; changed revisions report an available update; update check makes exactly one request to `./content/catalog.json`; mismatched book revisions are rejected without a storage write; valid download records the expected revision.
+- PR validation run #278 / ID `41122923081`: success on head SHA `f0a8e007676412faa30fcdfffb5c31ce34fbd396`.
+- Main validation and GitHub Pages deploy were queued after merge; verify final conclusions before calling the merged version deployed.
+- No reader pagination, touch gestures, personal-book data, or existing IndexedDB records were cleared or migrated.
+- Physical-device offline testing remains outstanding.
+- Next: verify main CI/Pages, then run the offline book lifecycle on Android and iOS Safari (download, relaunch, airplane mode, read, progress, reconnect, update).
