@@ -204,4 +204,10 @@ assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus tr
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v50['"]/, "Visual app-shell update must use the current cache version");
 
+
+assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
+assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
+assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
+assert.match(html, /CACHE_PREFIX\s*\+\s*['"]v51['"]/, "Book action update must use the current cache version");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
