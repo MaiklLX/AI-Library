@@ -2544,6 +2544,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="library-shelves">
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Недавно читали</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Мои личные книги</h3><span>СОЗДАННЫЕ И СОХРАНЁННЫЕ</span></div><div class="library-book-list" id="myLibraryPersonalBooks" aria-live="polite"></div></section>
+    <section class="library-shelf"><div class="library-shelf-heading"><h3>Доступно офлайн</h3><span>ХРАНИТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></div><div class="library-book-list" id="myLibraryDownloads" aria-live="polite"></div></section>
   </div>
 </section>
 <section class="premiere-section" id="premieres" aria-labelledby="premiereTitle">
@@ -2587,6 +2588,7 @@ body.reader-open #pageTurnSheet.flip-back {
 </div></div>
 <script src="./src/platform/runtime.js"></script>
 <script src="./src/platform/library-store.js"></script>
+<script src="./src/platform/download-manager.js"></script>
 <script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
 
@@ -2660,8 +2662,38 @@ async function loadPublishedBooks() {
     try { localStorage.setItem(PUBLISHED_BOOKS_KEY, JSON.stringify(publishedBooks)); } catch {}
   } catch (error) {
     console.warn('Каталог опубликованных книг временно недоступен:', error);
-    // Не показываем устаревший локальный каталог: источником истины остаётся опубликованный каталог.
-    publishedBooks = [];
+    // Сохраняем последний проверенный каталог как резервный источник при отсутствии сети.
+    try {
+      const cached = JSON.parse(localStorage.getItem(PUBLISHED_BOOKS_KEY) || '[]');
+      publishedBooks = Array.isArray(cached) ? cached.filter(book =>
+        book && typeof book.id === 'string' && book.id.startsWith('published-') &&
+        typeof book.title === 'string' && Array.isArray(book.chapters) && book.chapters.length > 0
+      ) : [];
+    } catch { publishedBooks = []; }
+  }
+  syncGenreFilters();
+  render();
+  updateContinueReadingButton();
+}
+
+async function loadDownloadedBooks() {
+  try {
+    const records = await window.AILibraryDownloadManager.load();
+    const byId = new Map(publishedBooks.map(book => [String(book.id), book]));
+    for (const record of records) {
+      const normalized = normalizePublishedBook(record.book);
+      if (!normalized) continue;
+      const existing = byId.get(normalized.id);
+      if (existing) existing.offlineReady = true;
+      else {
+        normalized.offlineOnly = true;
+        normalized.offlineReady = true;
+        byId.set(normalized.id, normalized);
+      }
+    }
+    publishedBooks = [...byId.values()];
+  } catch (error) {
+    console.warn('Не удалось восстановить офлайн-книги:', error);
   }
   syncGenreFilters();
   render();
@@ -2853,7 +2885,7 @@ function renderBookCard(book){
  '<h3>'+esc(book.title)+'</h3><div class="author">'+esc(book.author||'AI Library')+'</div><p class="desc">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p>'+
  '<div class="meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>Полное издание · бесплатно</span></div>'+
  (read>0?'<div class="reading-progress"><div class="reading-progress-label"><span>'+(completed?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+
- '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button></div></div></div></article>';
+ '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
 }
 
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
@@ -2901,6 +2933,8 @@ document.querySelector("#books").addEventListener("click",e=>{
     document.querySelectorAll("#genres [data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre==="Все"));
     render();return;
   }
+  const downloadButton = e.target.closest('[data-download-book]');
+  if (downloadButton) { handleBookDownload(downloadButton); return; }
   const favoriteButton = e.target.closest("[data-fav]");
   if (!favoriteButton) {
     const flipButton=e.target.closest('[data-flip],[data-flip-back]');
@@ -3496,6 +3530,35 @@ function updateContinueReadingButton() {
   btn.onclick = () => openBookById(book.id);
 }
 
+async function handleBookDownload(button){
+  const id=button.dataset.downloadBook;
+  if(!id||!window.AILibraryDownloadManager)return;
+  button.disabled=true;button.textContent='Проверяем и сохраняем…';
+  try{
+    const record=await window.AILibraryDownloadManager.download(id);
+    const normalized=normalizePublishedBook(record.book);
+    if(!normalized)throw new Error('Книга не прошла проверку формата.');
+    const index=publishedBooks.findIndex(book=>String(book.id)===record.id);
+    normalized.offlineReady=true;
+    if(index>=0){normalized.offlineOnly=Boolean(publishedBooks[index].offlineOnly);publishedBooks[index]=normalized;}
+    else{normalized.offlineOnly=true;publishedBooks.push(normalized);}
+    syncGenreFilters();render();
+  }catch(error){
+    console.error('Не удалось скачать книгу:',error);
+    button.disabled=false;button.textContent='Повторить загрузку';
+    const summary=document.querySelector('#catalogSummary');
+    if(summary)summary.textContent=error.message||'Не удалось сохранить книгу для офлайн-чтения.';
+  }
+}
+
+async function removeOfflineDownload(id){
+  try{
+    await window.AILibraryDownloadManager.remove(id);
+    publishedBooks=publishedBooks.filter(book=>!(String(book.id)===String(id)&&book.offlineOnly));
+    render();
+  }catch(error){alert('Не удалось удалить офлайн-копию. '+(error.message||''));}
+}
+
 function renderMyLibrary(){
   const progress=getReadingProgress();
   const all=getAllBooks().filter(book=>book.status!=='prerelease'&&Array.isArray(book.chapters)&&book.chapters.length>0);
@@ -3507,15 +3570,17 @@ function renderMyLibrary(){
     const label=read>=total?'Завершено':read>0?'Прочитано '+percent+'%':book.genre||'Личная книга';
     return '<article class="library-book-row"><span class="library-book-symbol" aria-hidden="true">'+esc(book.symbol||'✦')+'</span><div class="library-book-copy"><strong>'+esc(book.title)+'</strong><small>'+esc(book.author||'AI Library')+' · '+esc(label)+'</small>'+(read?'<div class="library-book-progress" aria-label="Прочитано '+percent+' процентов"><span style="width:'+percent+'%"></span></div>':'')+'</div><button class="btn" type="button" data-library-read="'+esc(book.id)+'">Читать →</button></article>';
   };
-  const continueRoot=document.querySelector('#myLibraryContinue'),personalRoot=document.querySelector('#myLibraryPersonalBooks');
+  const continueRoot=document.querySelector('#myLibraryContinue'),personalRoot=document.querySelector('#myLibraryPersonalBooks'),downloadsRoot=document.querySelector('#myLibraryDownloads');
   if(continueRoot)continueRoot.innerHTML=recent.length?recent.map(item=>row(item.book,item.saved)).join(''):'<div class="library-empty">Здесь появятся книги, которые ты начнёшь читать.</div>';
   if(personalRoot)personalRoot.innerHTML=personal.length?personal.map(book=>row(book,progress[book.id])).join(''):'<div class="library-empty">Личные книги появятся здесь после создания или сохранения.</div>';
+  const downloads=window.AILibraryDownloadManager?.getCachedDownloads()||[];
+  if(downloadsRoot)downloadsRoot.innerHTML=downloads.length?downloads.map(record=>'<article class="library-book-row"><span class="library-book-symbol" aria-hidden="true">↓</span><div class="library-book-copy"><strong>'+esc(record.title||record.book?.title||'Книга')+'</strong><small>Сохранена на устройстве · '+(record.contentBytes?Math.max(1,Math.round(record.contentBytes/1024))+' КБ':'офлайн')+'</small></div><button class="btn" type="button" data-library-remove-download="'+esc(record.id)+'">Удалить</button></article>').join(''):'<div class="library-empty">Загруженные книги появятся здесь. Они будут доступны без интернета.</div>';
   const count=(id,value)=>{const node=document.getElementById(id);if(node)node.textContent=String(value);};
   count('myLibraryPersonalCount',personal.length);count('myLibraryProgressCount',recent.length);count('myLibraryFavoritesCount',favs().length);
 }
 
 document.querySelector('#myLibraryToggle')?.addEventListener('click',()=>document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'}));
-document.querySelector('#myLibrary')?.addEventListener('click',event=>{const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
+document.querySelector('#myLibrary')?.addEventListener('click',event=>{const remove=event.target.closest('[data-library-remove-download]');if(remove){removeOfflineDownload(remove.dataset.libraryRemoveDownload);return;}const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
 
 document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
   const modal=document.querySelector("#modal");
@@ -3784,7 +3849,7 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
 loadPersonalBooks();
 syncGenreFilters();
 render();
-loadPublishedBooks();
+loadPublishedBooks().finally(loadDownloadedBooks);
 updateContinueReadingButton();
 
 </script>
