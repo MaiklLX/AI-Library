@@ -156,3 +156,16 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - PR #40 validation passed: run `41128288334`; documentation-only.
 - Next exact action: locate the source repository/deployment project for `ai-library-generator`, inspect its routes, D1 binding/schema, secrets, CORS and usage metrics, then design versioned migrations and tests. Keep current generation endpoints unchanged.
 - No community feature has been implemented or deployed yet. No real-device offline test has been confirmed.
+
+
+## Product direction update — community-authored library (2026-10-31)
+
+- The user has decided to stop automatic/background generation of public-catalogue books because the current generated results are incomplete and do not meet the desired quality bar.
+- The existing user-facing book creator is explicitly retained and should be treated as a core feature, not removed.
+- Target lifecycle: private author draft → preview/completeness checks → explicit paid publication submission (coin fee and refund/moderation details still to be designed) → attributed public book → eligibility for ratings and competitions.
+- Add a creator progression system: competition placements award verified author XP; XP/achievements unlock profile statuses. Coins remain a separate spendable currency; XP/status are non-spendable progression.
+- Competition scoring needs refinement before implementation. A daily shortlist/ranked competition is likely needed if the product is to award top-place rewards; preserve lifetime book rating separately from daily event results.
+- Do not delete existing catalogue books or personal drafts. Do not remove the user-initiated generation path if it powers the book creator.
+- The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
+- No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
+- Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
