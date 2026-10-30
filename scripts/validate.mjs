@@ -36,6 +36,15 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
+assert.match(html, /<script src=["']\.\/src\/platform\/runtime\.js["']><\/script>/, "Cross-platform runtime must load before the main application");
+assert.match(serviceWorker, /['"]\.\/src\/platform\/runtime\.js['"]/, "Platform runtime must be included in the offline app shell");
+assert.match(platformRuntime, /const DB_NAME = ['"]ai-library-platform['"]/, "Platform storage database is missing");
+assert.match(platformRuntime, /books: 'books',[\s\S]*metadata: 'metadata',[\s\S]*downloads: 'downloads'/, "Platform storage collections are incomplete");
+try {
+  new Function(platformRuntime);
+} catch (error) {
+  throw new Error(`Platform runtime has a syntax error: ${error.message}`);
+}
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*[\'"]v\d+[\'"]/, "Offline shell cache version must be refreshed for the current reader release");
 assert.match(serviceWorker, /request\.mode\s*===\s*['"]navigate['"]/, "Offline navigation fallback is missing");
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
