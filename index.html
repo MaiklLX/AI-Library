@@ -1491,6 +1491,27 @@ body.reader-open.reader-chrome-hidden .reader-settings { opacity:0; pointer-even
 }
 </style>
 
+
+<style id="reader-pinch-theme-toggle-v23">
+/* Clear theme affordance and a deliberate primary chapter action. */
+.reader-theme-toggle { background:rgba(225,190,112,.2); border-color:rgba(225,190,112,.65); color:#ffe0a0; font-size:20px; }
+.reader-theme-toggle span { line-height:1; }
+body.reader-open .reader-bottombar .reader-next-chapter {
+  flex:0 0 auto; width:auto; min-width:148px; max-width:min(48vw,230px); height:42px;
+  padding:0 17px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;
+  gap:10px; white-space:nowrap; border:1px solid rgba(231,195,126,.72);
+  background:linear-gradient(135deg,#b88a43,#8e652d); color:#fff8e9;
+  box-shadow:0 5px 18px rgba(0,0,0,.22); font:600 13px/1 system-ui,sans-serif;
+  letter-spacing:.01em; transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+body.reader-open .reader-bottombar .reader-next-chapter span { font-size:17px; line-height:1; }
+body.reader-open .reader-bottombar .reader-next-chapter:not(:disabled):active { transform:scale(.97); filter:brightness(1.08); }
+body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; box-shadow:none; }
+@media(max-width:600px) {
+  body.reader-open .reader-bottombar .reader-next-chapter { min-width:138px; max-width:54vw; padding:0 13px; font-size:12px; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация"><button class="pill" id="favoritesToggle">♡ Избранное</button><button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button><a class="pill" href="./book-creator.html">✍ Создать книгу</a></div></nav></div></header>
@@ -1520,7 +1541,7 @@ body.reader-open.reader-chrome-hidden .reader-settings { opacity:0; pointer-even
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
     <div class="reader-heading"><h2 id="modalTitle"></h2><span class="reader-subheading" id="chapterLabel"></span></div>
-    <button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-expanded="false">Aa</button>
+    <button class="reader-icon-button reader-theme-toggle" id="readerThemeToggle" type="button" aria-label="Переключить на тёмную тему" title="Переключить тему"><span id="readerThemeIcon" aria-hidden="true">☾</span></button><button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-expanded="false">Aa</button>
   </div>
   <div class="eyebrow" id="modalGenre" hidden></div><div class="detail" id="modalAuthor" hidden></div>
   <div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader" tabindex="0" aria-label="Текст книги. Используйте стрелки или Page Up и Page Down для перелистывания."></div><div class="book-page-number" id="bookPageNumber">1</div></div>
@@ -1529,7 +1550,7 @@ body.reader-open.reader-chrome-hidden .reader-settings { opacity:0; pointer-even
     <span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select>
     <label for="readerTheme">Тема</label><select id="readerTheme" aria-label="Тема оформления"><option value="sepia">Сепия</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
   </div>
-  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button" id="nextChapter" type="button" aria-label="Следующая часть">→</button></div>
+  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
   <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
 </div></div>
 <script>
@@ -1952,9 +1973,11 @@ let readerPreviousFocus = null;
 
 
 function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7',theme:'sepia'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing,theme:['sepia','light','dark'].includes(String(saved.theme))?String(saved.theme):defaults.theme}}catch{return defaults}}
-function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme}
+function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme;const themeIcon=document.querySelector('#readerThemeIcon');const themeButton=document.querySelector('#readerThemeToggle');if(themeIcon)themeIcon.textContent=settings.theme==='dark'?'☀':'☾';if(themeButton){const nextTheme=settings.theme==='dark'?'светлую':'тёмную';themeButton.setAttribute('aria-label',`Переключить на ${nextTheme} тему`);themeButton.title=`Переключить на ${nextTheme} тему`}}
 function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
 document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));document.querySelector('#readerTheme')?.addEventListener('change',event=>changeReaderSetting('theme',event.target.value));
+document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{});
+document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{const theme=getReaderSettings().theme;changeReaderSetting('theme',theme==='dark'?'light':'dark');});
 
 let readerChromeTimer=null;
 function setReaderChromeVisible(visible,autoHide=false){const modal=document.querySelector('#modal');if(!modal)return;document.body.classList.toggle('reader-chrome-hidden',!visible);if(readerChromeTimer)clearTimeout(readerChromeTimer);const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!visible&&panel){panel.hidden=true;if(toggle)toggle.setAttribute('aria-expanded','false')}if(visible&&autoHide&&!panel?.hidden){return}if(visible&&autoHide)readerChromeTimer=setTimeout(()=>setReaderChromeVisible(false),3200)}
@@ -2237,10 +2260,11 @@ function showPart() {
   document.querySelector('#prevChapter').disabled =
     part === 0;
 
-  document.querySelector('#nextChapter').textContent =
+  document.querySelector('#nextChapter').innerHTML =
     part === current.chapters.length - 1
-      ? 'Закрыть чтение'
-      : 'Следующая часть →';
+      ? 'Закрыть чтение <span aria-hidden="true">×</span>'
+      : 'Следующая часть <span aria-hidden="true">→</span>';
+  document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? 'Закрыть чтение' : 'Следующая часть');
 
   saveReadingProgress();
 }
@@ -2351,6 +2375,53 @@ bookPageArea.addEventListener('pointerup', e => {
   else toggleReaderChrome();
 }, { passive: true });
 bookPageArea.addEventListener('pointercancel', () => { edgeTapStart = null; }, { passive: true });
+
+// Two-finger pinch changes the reader font size without losing the reading position.
+const readerPinchPointers = new Map();
+let readerPinchStartDistance = 0;
+let readerPinchStartFontSize = 17;
+let readerPinchLastFontSize = 17;
+let readerPinchActive = false;
+const getReaderPinchDistance = () => {
+  const points = [...readerPinchPointers.values()];
+  if (points.length < 2) return 0;
+  return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+};
+bookPageArea.addEventListener('pointerdown', e => {
+  if (!readingModal.classList.contains('open') || e.pointerType !== 'touch') return;
+  readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(readerPinchPointers.size===2){
+    readerPinchActive=true;
+    readerPinchStartDistance=getReaderPinchDistance();
+    readerPinchStartFontSize=getReaderSettings().fontSize;
+    readerPinchLastFontSize=readerPinchStartFontSize;
+    edgeTapStart=null;
+    resetReaderSwipe();
+  }
+}, {capture:true,passive:true});
+bookPageArea.addEventListener('pointermove', e => {
+  if(!readerPinchPointers.has(e.pointerId))return;
+  readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(!readerPinchActive||readerPinchPointers.size<2)return;
+  if(e.cancelable)e.preventDefault();
+  const distance=getReaderPinchDistance();
+  const delta=Math.round((distance-readerPinchStartDistance)/18);
+  const nextSize=Math.max(14,Math.min(24,readerPinchStartFontSize+delta));
+  if(nextSize!==readerPinchLastFontSize){
+    readerPinchLastFontSize=nextSize;
+    changeReaderSetting('fontSize',nextSize);
+  }
+}, {capture:true,passive:false});
+const finishReaderPinch = e => {
+  readerPinchPointers.delete(e.pointerId);
+  if(readerPinchPointers.size<2){
+    readerPinchActive=false;
+    readerPinchStartDistance=0;
+  }
+};
+bookPageArea.addEventListener('pointerup',finishReaderPinch,{capture:true,passive:true});
+bookPageArea.addEventListener('pointercancel',finishReaderPinch,{capture:true,passive:true});
+
 
 readingModal.addEventListener('touchend', () => { pullGuardActive = false; pullStartY = 0; }, { passive: true });
 readingModal.addEventListener('touchcancel', () => { pullGuardActive = false; pullStartY = 0; }, { passive: true });
