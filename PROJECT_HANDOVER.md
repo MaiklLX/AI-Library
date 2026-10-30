@@ -177,6 +177,22 @@ Current observed visual foundation in `index.html`:
 - The first CI attempt exposed a stale validator assertion still expecting cache `v50`; corrected it to `v51` in commit `2d0a509a24148ed9ed2b05a8db6be7f95b7793cc`. The final CI/deploy run for this corrected state is pending verification.
 - Next: verify CI and Pages deployment, then user should test card flip and both buttons on an actual phone; adjust further only from observed behavior.
 
+
+## Metadata-first catalog and on-demand book content (2026-10-30)
+
+- Corrected startup behavior: `loadPublishedBooks()` now reads book display metadata from `content/catalog.json` only. It no longer fetches every full `content/books/*.json` body at launch.
+- Expanded catalog entries with the fields needed for cards and prerelease presentation, plus `metadataOnly: true` and `chapterCount`; the catalog itself contains no chapter text.
+- Full published book JSON is fetched only when the user explicitly opens a book. The existing download action continues to fetch and validate full content only after the user presses Download.
+- Existing offline downloads remain usable: IndexedDB download records are merged over catalog metadata at startup, restoring their full chapter content for offline reading. The merge was corrected to prefer the downloaded record over metadata.
+- Legacy published-book localStorage cache is converted to metadata-only records on fallback; downloaded content is not copied into the catalog cache.
+- Preserved reading progress counts, personal-library recent books, and random discovery using metadata chapter counts.
+- Service Worker app-shell cache bumped from `v51` to `v52`.
+- Release validator now checks metadata-only catalog entries, startup mapping without book-body fetches, lazy fetch on read, and the updated cache version.
+- Current implementation SHA: `712cc04c02676591525329cf3e19e818d24d7aea`.
+- CI and Pages deployment for the final SHA: pending verification at the time of this checkpoint.
+- Real-device follow-up: test opening a not-yet-downloaded book online, opening a downloaded book offline, progress restoration, random discovery, and confirm no full book JSON is requested on initial startup.
+- Next: verify CI/deploy, then add a lightweight catalog-update notice based on metadata revision only (no automatic chapter fetches).
+
 ---
 Last maintained: 2026-10-30.
 
