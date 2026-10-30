@@ -326,3 +326,14 @@ Last maintained: 2026-10-30.
 - PR #40 validation passed: run `41128288334`; documentation-only.
 - Next exact action: locate the source repository/deployment project for `ai-library-generator`, inspect its routes, D1 binding/schema, secrets, CORS and usage metrics, then design versioned migrations and tests. Keep current generation endpoints unchanged.
 - No community feature has been implemented or deployed yet. No real-device offline test has been confirmed.
+
+
+## Product direction update — community-authored library (2026-10-31)
+
+- Stop automatic/background generation of public-catalogue books once the external Cloudflare Worker source is available and audited. The scheduled handler has not yet been disabled.
+- Keep the existing user-facing Book Creator as a core feature. Its current workflow is user-driven: prepare a brief, work with ChatGPT, import/edit a manuscript, preview it, and save/export personal books locally. The inspected creator currently uses browser localStorage; it is not a server-backed multi-device author account.
+- Proposed next lifecycle: private draft → preview/completeness checks → explicit paid publication submission (coin fee, refund and moderation rules pending) → attributed public book → eligibility for community ratings/competitions.
+- Separate spendable coins, permanent book ratings, author XP and profile statuses. Competition XP is granted only once after server-verified final standings.
+- Do not delete existing public books or personal drafts. Do not remove any explicit user-initiated creation path if it is required by Book Creator.
+- Worker-side scheduled generation remains pending because the Cloudflare dashboard/source is currently unavailable. No live generation behavior has been changed.
+- PR #42 records this product direction in docs/COMMUNITY_SYSTEM_SPEC.md and docs/PROJECT_HANDOFF.md. Application and Worker code remain unchanged.
