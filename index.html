@@ -1734,9 +1734,10 @@ document.querySelector("#books").addEventListener("click",e=>{
 
 function getReadingProgress() {
   try {
-    return JSON.parse(
-      localStorage.getItem('ai-library-progress') || '{}'
-    );
+    const saved = JSON.parse(localStorage.getItem('ai-library-progress') || '{}');
+    return saved && typeof saved === 'object' && !Array.isArray(saved)
+      ? saved
+      : {};
   } catch {
     return {};
   }
@@ -1766,9 +1767,13 @@ function saveReadingProgress() {
 }
 
 function openBook(id) {
-current = getAllBooks().find(b => String(b.id) === String(id));
+  current = getAllBooks().find(b => String(b.id) === String(id));
 
   if (!current) return;
+  if (!Array.isArray(current.chapters) || current.chapters.length === 0) {
+    alert('В этой книге пока нет доступных глав.');
+    return;
+  }
   if (current.status === 'prerelease') {
     current = null;
     alert('Эта книга пока недоступна для чтения. Следи за объявлением официального релиза.');
@@ -1821,6 +1826,7 @@ function openReadingSpace() {
 function closeReadingSpace() {
   const modal = document.querySelector('#modal');
   if (!modal || !modal.classList.contains('open')) return;
+  saveReadingProgress();
   modal.classList.remove('open');
   modal.style.touchAction = '';
   document.body.classList.remove('reader-open');
