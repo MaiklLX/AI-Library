@@ -1877,8 +1877,6 @@ function closeReadingSpace() {
 
 function paginateCurrentChapter(preserveOffset = null) {
   const reader = document.querySelector('#reader');
-  const pageLabel = document.querySelector('#bookPageLabel');
-  const pageNumber = document.querySelector('#bookPageNumber');
   const page = document.querySelector('#bookPage');
   const text = String(current?.chapters?.[part] || '').trim();
 
@@ -1886,52 +1884,114 @@ function paginateCurrentChapter(preserveOffset = null) {
   readingPageIndex = 0;
   readingPages = [];
 
-  // Сначала используем весь доступный размер страницы, затем делим текст по словам.
-  const availableHeight = Math.max(140, reader.clientHeight || 300);
-  const words = text.split(/(\s+)/).filter(token => token.length > 0);
+  // Measure against the real reader viewport, including its active font,
+  // line-height, width and padding. A hidden clone must not inherit the
+  // reader's clipping/flex constraints or it can report a false fit.
+  const readerRect = reader.getBoundingClientRect();
+  const availableHeight = Math.max(1, reader.clientHeight || readerRect.height || 1);
+  const availableWidth = Math.max(1, reader.clientWidth || readerRect.width || 1);
   const probe = reader.cloneNode(false);
   probe.id = 'readerMeasure';
-  // Сохраняем скопированные с reader настройки шрифта и интервала:
-  // иначе измерение идёт старым шрифтом и страница переполняется.
-  probe.style.cssText += `;position:absolute;visibility:hidden;pointer-events:none;left:-10000px;top:0;width:${reader.clientWidth || 300}px;height:auto;max-height:none;overflow:visible;display:block;flex:none;white-space:pre-wrap;`;
   probe.textContent = '';
+  probe.style.cssText += [
+    ';position:absolute!important',
+    'visibility:hidden!important',
+    'pointer-events:none!important',
+    'left:-100000px!important',
+    'top:0!important',
+    'width:' + availableWidth + 'px!important',
+    'height:auto!important',
+    'min-height:0!important',
+    'max-height:none!important',
+    'max-width:none!important',
+    'overflow:visible!important',
+    'display:block!important',
+    'flex:none!important',
+    'transform:none!important',
+    'contain:none!important',
+    'white-space:pre-wrap!important',
+    'overflow-wrap:anywhere!important'
+  ].join(';');
   page.appendChild(probe);
 
   const fits = candidate => {
     probe.textContent = candidate;
-    return probe.scrollHeight <= availableHeight + 2;
+    // scrollHeight includes wrapped lines and vertical padding. Check width
+    // too, so an unexpectedly unbreakable run cannot silently overflow.
+    return probe.scrollHeight <= availableHeight + 0.5 &&
+      probe.scrollWidth <= availableWidth + 1;
   };
 
+  // Keep every whitespace character in the source. In particular, do not
+  // trim page fragments or skip whitespace between pages: that changed the
+  // original manuscript and could hide omissions at page boundaries.
+  const tokens = text.match(/\\s+|[^\\s]+/g) || [];
   let cursor = 0;
-  while (cursor < words.length) {
+
+  while (cursor < tokens.length) {
     let low = cursor + 1;
-    let high = words.length;
-    let best = cursor + 1;
+    let high = tokens.length;
+    let best = cursor;
+
     while (low <= high) {
       const mid = Math.floor((low + high) / 2);
-      const candidate = words.slice(cursor, mid).join('');
-      if (fits(candidate)) {
+      if (fits(tokens.slice(cursor, mid).join(''))) {
         best = mid;
         low = mid + 1;
       } else {
         high = mid - 1;
       }
     }
-    let end = Math.max(cursor + 1, best);
-    // Если возможно, заканчиваем страницу на границе абзаца.
-    if (end < words.length) {
-      for (let k = end - 1; k > cursor + Math.max(1, Math.floor((end - cursor) * .65)); k--) {
-        if (/\n\s*\n/.test(words[k])) { end = k + 1; break; }
+
+    // A single unusually long word/token may be taller than the page.
+    // Split it by Unicode code points rather than allowing it to be clipped.
+    if (best === cursor) {
+      const token = tokens[cursor];
+      const chars = Array.from(token);
+      let charLow = 1;
+      let charHigh = chars.length;
+      let charBest = 0;
+      while (charLow <= charHigh) {
+        const mid = Math.floor((charLow + charHigh) / 2);
+        if (fits(chars.slice(0, mid).join(''))) {
+          charBest = mid;
+          charLow = mid + 1;
+        } else {
+          charHigh = mid - 1;
+        }
+      }
+      const take = Math.max(1, charBest);
+      const head = chars.slice(0, take).join('');
+      const tail = chars.slice(take).join('');
+      readingPages.push(head);
+      if (tail) tokens[cursor] = tail;
+      else cursor++;
+      continue;
+    }
+
+    let end = best;
+    // Prefer a nearby paragraph boundary without ever discarding characters.
+    if (end < tokens.length) {
+      const floor = cursor + Math.max(1, Math.floor((end - cursor) * 0.65));
+      for (let k = end - 1; k >= floor; k--) {
+        if (/\\n\\s*\\n/.test(tokens[k])) {
+          end = k + 1;
+          break;
+        }
       }
     }
-    readingPages.push(words.slice(cursor, end).join('').trim());
+
+    readingPages.push(tokens.slice(cursor, end).join(''));
     cursor = end;
-    while (cursor < words.length && /^\s+$/.test(words[cursor]) && !/\n/.test(words[cursor])) cursor++;
   }
+
   probe.remove();
   if (!readingPages.length) readingPages = [''];
 
-  // При смене шрифта или размеров возвращаемся к прежнему месту в главе.
+  // Safety invariant: concatenating all generated pages must reproduce the
+  // complete chapter exactly. Fall back to one intact page if it ever fails.
+  if (readingPages.join('') !== text) readingPages = [text];
+
   if (Number.isFinite(preserveOffset)) {
     const offsets = getReadingPageOffsets(text, readingPages);
     const targetOffset = Math.max(0, Math.min(preserveOffset, text.length));
@@ -1944,7 +2004,6 @@ function paginateCurrentChapter(preserveOffset = null) {
   }
   renderReadingPage(false);
 }
-
 function renderReadingPage(animate = true) {
   const reader = document.querySelector('#reader');
   const page = document.querySelector('#bookPage');
