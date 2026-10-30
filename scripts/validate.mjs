@@ -116,7 +116,7 @@ assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, 
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
-assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v35['"]/, "Reader animation cache must be refreshed");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v36['"]/, "Reader animation cache must be refreshed");
 
 
 assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
