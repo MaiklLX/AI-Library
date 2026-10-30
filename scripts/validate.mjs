@@ -104,6 +104,7 @@ assert.match(html, /\.book-spread>\.book-page\s*\{[^}]*position:relative!importa
 assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v34['"]/, "Reader interaction cache must be refreshed");
 
 
+assert.match(html, /let pageTokenEstimate = 0/, "Pagination should reuse measured page lengths to reduce DOM layout work");
 assert.match(html, /reader-interaction-performance-fixes-v34/, "Reader interaction fixes must be present");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "Page edge handling must cover the complete two-page spread");
 assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*return/, "Mouse clicks must not be excluded from page edge turns");
