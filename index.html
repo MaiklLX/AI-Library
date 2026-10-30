@@ -2039,8 +2039,8 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 @media(max-width:680px){#books .book{aspect-ratio:3/4!important}#books .book-front-fav{top:7px;right:7px;width:32px;height:32px;min-height:32px;font-size:19px}#books .book-front .cover-progress{left:7px;bottom:7px;min-height:26px;padding:4px 7px}}
 @media(prefers-reduced-motion:reduce){#books .book-flip-inner{transition:none!important}}
 </style>
-<style id="prerelease-premium-highlight-v29">
-/* v29: give the closed premiere a restrained premium spotlight */
+<style id="prerelease-premium-highlight-v30">
+/* v30: wider, earlier light sweep and a calm floating pulse */
 .premiere-heading .eyebrow{
   display:flex;align-items:center;justify-content:center;gap:9px;
   width:max-content;max-width:100%;margin:0 auto;padding:8px 14px;
@@ -2052,12 +2052,25 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 .premiere-card{
   border-color:#d9b66d99;
   box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d18,0 0 34px #d9b66d18;
-  animation:premiereRise .75s cubic-bezier(.2,.7,.2,1) both,premiereGlow 6s ease-in-out 1s infinite;
+  animation:premiereRise .75s cubic-bezier(.2,.7,.2,1) both,
+    premiereGlow 6s ease-in-out 1s infinite,
+    premiereSway 10s ease-in-out .75s infinite;
+  transform-origin:50% 50%;
+  will-change:transform,box-shadow;
 }
 .premiere-card:after{
   content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
-  background:linear-gradient(112deg,transparent 22%,#f4d58c08 39%,#fff1c51b 48%,#f4d58c08 56%,transparent 73%);
-  transform:translateX(-115%);animation:premiereSweep 9s ease-in-out 1.4s infinite;
+  background:linear-gradient(108deg,
+    transparent 4%,
+    #f4d58c08 18%,
+    #f4d58c20 31%,
+    #fff4d2a0 43%,
+    #fff8dfbd 49%,
+    #f4d58c48 57%,
+    #f4d58c12 69%,
+    transparent 86%);
+  transform:translateX(-120%);
+  animation:premiereSweep 7s cubic-bezier(.42,0,.28,1) .35s infinite;
 }
 .premiere-locked{
   border-color:#d9b66dcc;
@@ -2075,16 +2088,22 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
   0%,100%{box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d18,0 0 26px #d9b66d12}
   50%{box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d35,0 0 42px #d9b66d28}
 }
+@keyframes premiereSway{
+  0%,100%{transform:translateY(0) rotate(0deg) scale(1)}
+  25%{transform:translateY(-2px) rotate(-.16deg) scale(1.002)}
+  50%{transform:translateY(-3px) rotate(0deg) scale(1.004)}
+  75%{transform:translateY(-1px) rotate(.16deg) scale(1.002)}
+}
 @keyframes premiereSweep{
-  0%,58%{transform:translateX(-115%)}
-  82%,100%{transform:translateX(115%)}
+  0%{transform:translateX(-120%)}
+  65%,100%{transform:translateX(120%)}
 }
 @keyframes premiereStatusPulse{
   0%,100%{opacity:.65;box-shadow:0 0 5px #f0cf78}
   50%{opacity:1;box-shadow:0 0 10px #f0cf78,0 0 20px #d9b66d}
 }
 @media(prefers-reduced-motion:reduce){
-  .premiere-card{animation:none!important}
+  .premiere-card{animation:none!important;will-change:auto}
   .premiere-card:after{animation:none!important;display:none}
   .premiere-locked:after{animation:none!important}
 }
