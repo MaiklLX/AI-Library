@@ -2268,6 +2268,60 @@ body.reader-open #bookPage { transition:opacity .12s ease,transform .12s ease; }
 }
 </style>
 
+
+<style id="reader-paper-light-turn-v36">
+/* Premium restrained page turn: animate paper light, not the printed text. */
+body.reader-open #bookSpread>.book-page,
+body.reader-open #bookPage,
+body.reader-open #bookSpread.reader-turn-out-forward>.book-page,
+body.reader-open #bookSpread.reader-turn-out-back>.book-page,
+body.reader-open #bookSpread.reader-turn-in-forward>.book-page,
+body.reader-open #bookSpread.reader-turn-in-back>.book-page,
+body.reader-open #bookPage.reader-turn-out-forward,
+body.reader-open #bookPage.reader-turn-out-back,
+body.reader-open #bookPage.reader-turn-in-forward,
+body.reader-open #bookPage.reader-turn-in-back {
+  transition:none!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+}
+body.reader-open #bookSpread>.book-page::after,
+body.reader-open #bookPage::after {
+  content:"";
+  position:absolute;
+  z-index:6;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.035) 35%,rgba(255,255,255,.16) 50%,rgba(20,15,8,.13) 72%,transparent 100%);
+}
+body.reader-open #bookSpread.reader-turn-out-forward>.book-page::after,
+body.reader-open #bookPage.reader-turn-out-forward::after {
+  animation:readerPaperLightOut .105s ease-out both;
+}
+body.reader-open #bookSpread.reader-turn-out-back>.book-page::after,
+body.reader-open #bookPage.reader-turn-out-back::after {
+  animation:readerPaperLightOutBack .105s ease-out both;
+}
+body.reader-open #bookSpread.reader-turn-in-forward>.book-page::after,
+body.reader-open #bookPage.reader-turn-in-forward::after {
+  animation:readerPaperLightIn .15s ease-out both;
+}
+body.reader-open #bookSpread.reader-turn-in-back>.book-page::after,
+body.reader-open #bookPage.reader-turn-in-back::after {
+  animation:readerPaperLightInBack .15s ease-out both;
+}
+@keyframes readerPaperLightOut {0%{opacity:0}55%{opacity:.9}100%{opacity:.18}}
+@keyframes readerPaperLightOutBack {0%{opacity:0}55%{opacity:.75}100%{opacity:.12}}
+@keyframes readerPaperLightIn {0%{opacity:.28}100%{opacity:0}}
+@keyframes readerPaperLightInBack {0%{opacity:.2}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+  body.reader-open #bookSpread>.book-page::after,
+  body.reader-open #bookPage::after{animation:none!important;opacity:0!important}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2993,6 +3047,19 @@ function paginateCurrentChapter(preserveOffset = null) {
   }
   renderReadingPage(false);
 }
+function getReaderPageState(index,totalPages,spread){
+  const total=Math.max(1,Math.floor(Number(totalPages)||1));
+  const requested=Math.max(0,Math.min(Math.floor(Number(index)||0),total-1));
+  const startIndex=spread?Math.floor(requested/2)*2:requested;
+  const leftPage=startIndex+1;
+  const rightPage=spread&&startIndex+1<total?startIndex+2:null;
+  return {startIndex,leftPage,rightPage};
+}
+function formatReaderPageStatus(state,totalPages){
+  const total=Math.max(1,Math.floor(Number(totalPages)||1));
+  return `СТР. ${state.leftPage}${state.rightPage!==null?'–'+state.rightPage:''} / ${total}`;
+}
+
 function renderReadingPage(animate = true) {
   const reader=document.querySelector('#reader');
   const page=document.querySelector('#bookPage');
@@ -3000,9 +3067,8 @@ function renderReadingPage(animate = true) {
 
   const spread=isDesktopReaderSpread();
   const totalPages=Math.max(1,readingPages.length);
-  // The desktop index always points to the left page of a spread.
-  readingPageIndex=Math.max(0,Math.min(readingPageIndex,totalPages-1));
-  if(spread)readingPageIndex=Math.floor(readingPageIndex/2)*2;
+  const pageState=getReaderPageState(readingPageIndex,totalPages,spread);
+  readingPageIndex=pageState.startIndex;
 
   const rightPage=document.querySelector('#bookPageRight');
   const rightReader=document.querySelector('#readerRight');
@@ -3011,9 +3077,9 @@ function renderReadingPage(animate = true) {
   const rightLabel=document.querySelector('#bookPageLabelRight');
   const rightNumber=document.querySelector('#bookPageNumberRight');
 
-  const leftPageNumber=readingPageIndex+1;
-  const hasRightPage=spread&&readingPageIndex+1<totalPages;
-  const rightPageNumber=hasRightPage?readingPageIndex+2:null;
+  const leftPageNumber=pageState.leftPage;
+  const hasRightPage=pageState.rightPage!==null;
+  const rightPageNumber=pageState.rightPage;
 
   reader.textContent=readingPages[readingPageIndex]||'';
   if(rightReader)rightReader.textContent=hasRightPage?(readingPages[readingPageIndex+1]||''):'';
@@ -3026,12 +3092,7 @@ function renderReadingPage(animate = true) {
   if(rightPage){rightPage.dataset.theme=page.dataset.theme||'sepia';rightPage.classList.toggle('is-empty',!hasRightPage);rightPage.setAttribute('aria-hidden',String(!hasRightPage));}
 
   const status=document.querySelector('#readerPageStatus');
-  if(status){
-    const visibleEnd=rightPageNumber||leftPageNumber;
-    status.textContent=spread
-      ?`СТР. ${leftPageNumber}${hasRightPage?'–'+visibleEnd:''} / ${totalPages}`
-      :`СТР. ${leftPageNumber} / ${totalPages}`;
-  }
+  if(status)status.textContent=formatReaderPageStatus(pageState,totalPages);
   reader.scrollTop=0;
   if(animate){
     // Retain compatibility with the legacy page-turn sheet without forcing
@@ -3052,23 +3113,19 @@ function animateBookPageTurn(direction,afterTurn){
   const outClass=direction>0?'reader-turn-out-forward':'reader-turn-out-back';
   const inClass=direction>0?'reader-turn-in-forward':'reader-turn-in-back';
   host.classList.remove('reader-turn-out-forward','reader-turn-out-back','reader-turn-in-forward','reader-turn-in-back');
-  // A short 2D transition keeps glyphs sharp: the paper moves, never rotates.
-  void host.offsetWidth;
+  // Animate only a translucent paper-light layer. The text itself is never
+  // transformed, filtered, faded or reflowed during the page turn.
   host.classList.add(outClass);
   window.setTimeout(()=>{
     try{afterTurn();}finally{
       host.classList.remove(outClass);
       host.classList.add(inClass);
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        host.classList.remove(inClass);
-        readerTurnInProgress=false;
-      }));
       window.setTimeout(()=>{
         host.classList.remove(inClass);
         readerTurnInProgress=false;
-      },360);
+      },150);
     }
-  },125);
+  },105);
 }
 
 function turnReadingPage(direction) {
