@@ -53,6 +53,10 @@
       return value;
     },
 
+    async getDownloads() {
+      return storage.getAll('downloads');
+    },
+
     async getDownload(id) {
       return storage.get('downloads', requireId(id, 'Download'));
     },
