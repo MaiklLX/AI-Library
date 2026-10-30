@@ -46,6 +46,10 @@ assert.match(html, /function isDesktopReaderSpread\(\)/, "Desktop spread mode de
 assert.match(html, /const pageStep=isDesktopReaderSpread\(\)\?2:1/, "Desktop page turns must advance by a two-page spread");
 assert.match(html, /book-page-right/, "The right page of the desktop spread is missing");
 assert.match(html, /#books \.book-flip-back\{display:none!important\}/, "Desktop card back-flip affordance must be hidden");
+assert.match(html, /desktop-reader-spread-layout-fix-v32/, "Desktop spread must override the immersive single-page absolute layout");
+assert.match(html, /position:relative!important;inset:auto!important;flex:1 1 50%!important/, "Desktop spread pages must sit side by side rather than overlap");
+assert.match(html, /reader-settings\{top:calc\(66px/, "Desktop reading settings must open below the top toolbar");
+assert.match(html, /rightReader\.style\.fontSize=settings\.fontSize/, "Reader typography settings must apply to both pages");
 assert.match(html, /readerHoverEnabled=window\.matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches/, "Desktop reader hover controls must be enabled only for mouse-like pointers");
 assert.match(html, /const readerHoverEdge=64/, "Desktop reader controls must reveal from the screen edges");
 assert.match(html, /if \(e\.pointerType === 'mouse'\) return;/, "Mouse clicks on the page must not toggle reader controls");
