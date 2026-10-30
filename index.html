@@ -3826,12 +3826,12 @@ document.querySelector('#requestStoragePersistence')?.addEventListener('click',a
 
 function renderMyLibrary(){
   const progress=getReadingProgress();
-  const all=getAllBooks().filter(book=>book.status!=='prerelease'&&Array.isArray(book.chapters)&&book.chapters.length>0);
+  const all=getAllBooks().filter(book=>book.status!=='prerelease'&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));
   const byId=new Map(all.map(book=>[String(book.id),book]));
   const recent=Object.entries(progress).filter(([id,saved])=>byId.has(String(id))&&saved&&Number.isInteger(saved.part)).sort((a,b)=>(Number(b[1].updatedAt)||0)-(Number(a[1].updatedAt)||0)).map(([id,saved])=>({book:byId.get(String(id)),saved})).slice(0,4);
   const personal=personalBooks.filter(book=>Array.isArray(book.chapters)&&book.chapters.length>0);
   const row=(book,saved)=>{
-    const total=book.chapters.length,read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0,percent=total?Math.round(read/total*100):0;
+    const total=Number(book.chapterCount)||(Array.isArray(book.chapters)?book.chapters.length:0),read=saved&&Number.isInteger(saved.part)?Math.min(total,Math.max(0,saved.part+1)):0,percent=total?Math.round(read/total*100):0;
     const label=read>=total?'Завершено':read>0?'Прочитано '+percent+'%':book.genre||'Личная книга';
     return '<article class="library-book-row"><span class="library-book-symbol" aria-hidden="true">'+esc(book.symbol||'✦')+'</span><div class="library-book-copy"><strong>'+esc(book.title)+'</strong><small>'+esc(book.author||'AI Library')+' · '+esc(label)+'</small>'+(read?'<div class="library-book-progress" aria-label="Прочитано '+percent+' процентов"><span style="width:'+percent+'%"></span></div>':'')+'</div><button class="btn" type="button" data-library-read="'+esc(book.id)+'">Читать →</button></article>';
   };
@@ -3855,7 +3855,7 @@ document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibrar
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
 });
-document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>book.status!=="prerelease"&&Array.isArray(book.chapters)&&book.chapters.length>0);if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
+document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>book.status!=="prerelease"&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
 
 /* Cross-platform page gestures: native vertical movement, deliberate horizontal page turns. */
 const readerArea = document.querySelector('#reader');
