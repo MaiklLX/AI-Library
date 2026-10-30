@@ -243,5 +243,5 @@ assert.match(html, /grid-template-columns: minmax\(0, min\(100%, 360px\)\)/, "Th
 assert.match(html, /ai-library-star-sheen-v1/, "Signature star shimmer layer is missing");
 assert.match(html, /@keyframes aiLogoSheen/, "Logo metallic highlight animation is missing");
 assert.match(html, /@keyframes aiHeroStarSheen/, "Hero star metallic gradient animation is missing");
-assert.match(html, /@media \\(prefers-reduced-motion: reduce\\)/, "Signature star animations must respect reduced-motion preferences");
-assert.match(html, /\\.hero \\.spark\\s*\\{\\s*animation: none !important;/, "Hero star animation must be disabled for reduced-motion users");
+assert.ok(html.includes("@media (prefers-reduced-motion: reduce)"), "Signature star animations must respect reduced-motion preferences");
+assert.ok(html.includes(".hero .spark {\n    animation: none !important;"), "Hero star animation must be disabled for reduced-motion users");
