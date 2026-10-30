@@ -48,6 +48,11 @@ assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expo
 assert.match(libraryStore, /async saveBook\(/, "Library storage adapter must expose book persistence");
 assert.match(libraryStore, /async getMetadata\(/, "Library storage adapter must expose metadata retrieval");
 assert.match(libraryStore, /async setDownload\(/, "Library storage adapter must expose download-state persistence");
+assert.match(html, /id="myLibrary"/, "Personal library section is missing");
+assert.match(html, /id="myLibraryToggle"/, "Personal library navigation control is missing");
+assert.match(html, /function renderMyLibrary\(/, "Personal library renderer is missing");
+assert.match(html, /data-library-read=/, "Personal library book actions are missing");
+assert.match(html, /renderPrereleaseShowcase\(\);renderMyLibrary\(\)/, "Personal library must refresh with catalog rendering");
 assert.doesNotMatch(libraryStore, /localStorage\.clear|localStorage\.removeItem|PERSONAL_BOOKS_KEY/, "Platform storage adapter must not migrate or clear legacy browser data");
 try {
   new Function(libraryStore);
