@@ -2154,6 +2154,63 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
   .premiere-heading .eyebrow{margin-left:0;font-size:9px;padding:7px 11px}
 }
 </style>
+
+<style id="reader-desktop-flow-layout-v33">
+/* Desktop reader layout: use normal flex flow instead of stacked absolute layers. */
+@media (min-width:1100px) and (hover:hover) and (pointer:fine) {
+  body.reader-open .modal.open { display:flex!important; align-items:stretch!important; justify-content:stretch!important; }
+  body.reader-open .modal.open .reader-shell {
+    position:relative!important; display:flex!important; flex-direction:column!important;
+    width:100%!important; height:100%!important; min-width:0!important; min-height:0!important;
+    max-width:none!important; max-height:100%!important; margin:0!important; padding:0!important;
+    overflow:hidden!important; border:0!important; border-radius:0!important;
+  }
+  body.reader-open .modal.open .book-spread {
+    position:relative!important; inset:auto!important; display:flex!important; flex:1 1 0!important;
+    align-self:stretch!important; width:100%!important; height:auto!important; min-width:0!important;
+    min-height:0!important; max-width:none!important; margin:0!important; padding:0!important;
+    gap:0!important; overflow:hidden!important; perspective:2200px;
+  }
+  body.reader-open .modal.open .book-spread>.book-page {
+    position:relative!important; inset:auto!important; display:flex!important; flex:1 1 50%!important;
+    width:50%!important; height:auto!important; min-width:0!important; min-height:0!important;
+    max-height:none!important; margin:0!important; padding:calc(76px + env(safe-area-inset-top)) clamp(24px,3.2vw,58px) calc(82px + env(safe-area-inset-bottom))!important;
+    overflow:hidden!important; border:1px solid rgba(202,177,125,.58)!important;
+    border-radius:5px 0 0 5px!important; box-shadow:inset -14px 0 22px #6c573018,0 4px 20px #0002!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page-right {
+    display:flex!important; border-left:0!important; border-radius:0 5px 5px 0!important;
+    box-shadow:inset 14px 0 22px #6c573018,0 4px 20px #0002!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page .book-running-head { display:none!important; }
+  body.reader-open .modal.open .book-spread>.book-page .reader {
+    display:block!important; flex:1 1 0!important; width:100%!important; height:auto!important;
+    min-width:0!important; min-height:0!important; max-height:none!important; margin:0!important;
+    padding:0!important; overflow:hidden!important; font-size:clamp(17px,2.1vh,22px); line-height:1.78;
+  }
+  body.reader-open .modal.open .book-spread>.book-page .book-page-number {
+    position:absolute!important; bottom:calc(76px + env(safe-area-inset-bottom))!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="sepia"] { background:linear-gradient(135deg,#fbf7ed 0%,#f4ecd9 100%)!important;color:#302a20!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="light"] { background:#fff!important;color:#242424!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="dark"] { background:#17191d!important;color:#e8e8e8!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="dark"] .reader { color:#e8e8e8!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="light"] .reader { color:#242424!important; }
+  body.reader-open .modal.open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet {
+    position:absolute!important; top:0!important; bottom:0!important; left:auto!important; right:0!important;
+    width:50%!important; height:auto!important; z-index:8!important; padding:0!important;
+    transform-origin:left center;
+  }
+  body.reader-open .modal.open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet.flip-back {
+    left:0!important; right:auto!important; transform-origin:right center;
+  }
+  body.reader-open .reader-settings {
+    top:calc(66px + env(safe-area-inset-top))!important; right:20px!important; left:auto!important;
+    bottom:auto!important; width:min(430px,calc(100vw - 40px)); z-index:20!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
