@@ -49,6 +49,10 @@ assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expo
 assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\']><\/script>/, "Offline download manager must load after the storage adapter");
 assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
+assert.match(downloadManager, /async function getStorageInfo\(/, "Offline storage status must be available to the library UI");
+assert.match(downloadManager, /async function requestPersistence\(/, "Persistent storage must be requested only through an explicit user action");
+assert.match(html, /id="requestStoragePersistence"/, "Personal library must expose an explicit storage protection action");
+assert.match(html, /id="myLibraryStorageStatus"/, "Personal library must show local storage status");
 assert.match(downloadManager, /validateBook\(book, rawId\)/, "Offline downloads must validate book structure before saving");
 assert.match(downloadManager, /await store\.setDownload\(record\)/, "Offline book content and ready status must be persisted together");
 assert.match(libraryStore, /async getDownloads\(/, "Library storage adapter must expose download collection retrieval");

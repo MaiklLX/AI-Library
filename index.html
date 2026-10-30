@@ -2507,7 +2507,7 @@ body.reader-open #pageTurnSheet.flip-back {
 .library-shelf-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
 .library-shelf-heading h3{font:500 22px Georgia,serif;margin:0}
 .library-shelf-heading span{color:#a99b7d;font-size:9px;letter-spacing:.13em;text-align:right}
-.library-book-list{display:grid;gap:9px}
+.library-book-list{display:grid;gap:9px}.library-storage-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:11px 12px;border:1px solid #d9b66d30;border-radius:10px;background:#d9b66d08}.library-storage-tools p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}.library-storage-tools .btn{flex:0 0 auto;padding:8px 11px;font-size:11px}.library-storage-tools .btn:disabled{opacity:.55;cursor:not-allowed}
 .library-book-row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px;border:1px solid #ffffff12;border-radius:12px;background:#ffffff04}
 .library-book-symbol{width:52px;height:64px;display:grid;place-items:center;border:1px solid #d9b66d55;border-radius:7px;background:linear-gradient(145deg,#40321e,#171512);color:#e8cd8e;font:27px Georgia,serif}
 .library-book-copy{min-width:0}
@@ -2544,7 +2544,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="library-shelves">
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Недавно читали</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Мои личные книги</h3><span>СОЗДАННЫЕ И СОХРАНЁННЫЕ</span></div><div class="library-book-list" id="myLibraryPersonalBooks" aria-live="polite"></div></section>
-    <section class="library-shelf"><div class="library-shelf-heading"><h3>Доступно офлайн</h3><span>ХРАНИТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></div><div class="library-book-list" id="myLibraryDownloads" aria-live="polite"></div></section>
+    <section class="library-shelf"><div class="library-shelf-heading"><h3>Доступно офлайн</h3><span>ХРАНИТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></div><div class="library-storage-tools"><p id="myLibraryStorageStatus" aria-live="polite">Проверяем состояние хранилища…</p><button class="btn" id="requestStoragePersistence" type="button">Защитить офлайн-книги</button></div><div class="library-book-list" id="myLibraryDownloads" aria-live="polite"></div></section>
   </div>
 </section>
 <section class="premiere-section" id="premieres" aria-labelledby="premiereTitle">
@@ -3558,6 +3558,51 @@ async function removeOfflineDownload(id){
     render();
   }catch(error){alert('Не удалось удалить офлайн-копию. '+(error.message||''));}
 }
+
+function formatLibraryStorageBytes(bytes){
+  const value=Number(bytes);
+  if(!Number.isFinite(value)||value<0)return '—';
+  if(value<1024)return Math.round(value)+' Б';
+  if(value<1024*1024)return (value/1024).toFixed(1)+' КБ';
+  if(value<1024*1024*1024)return (value/(1024*1024)).toFixed(1)+' МБ';
+  return (value/(1024*1024*1024)).toFixed(2)+' ГБ';
+}
+
+async function refreshLibraryStorageStatus(){
+  const status=document.querySelector('#myLibraryStorageStatus');
+  const button=document.querySelector('#requestStoragePersistence');
+  if(!status||!window.AILibraryDownloadManager?.getStorageInfo)return;
+  try{
+    const info=await window.AILibraryDownloadManager.getStorageInfo();
+    const usage=info.usage===null?'': ' Используется примерно '+formatLibraryStorageBytes(info.usage);
+    const quota=info.quota===null?'':' из '+formatLibraryStorageBytes(info.quota);
+    status.textContent=(info.persisted?'Защита хранения включена.':'Хранилище работает в обычном режиме.')+usage+quota+'. Оценка включает данные всего сайта.';
+    if(button){
+      button.hidden=info.persisted;
+      button.disabled=!info.persistenceSupported;
+      button.textContent=info.persistenceSupported?'Защитить офлайн-книги':'Защита не поддерживается';
+    }
+  }catch(error){
+    status.textContent='Не удалось проверить состояние локального хранилища.';
+    if(button)button.disabled=true;
+  }
+}
+
+document.querySelector('#requestStoragePersistence')?.addEventListener('click',async event=>{
+  const button=event.currentTarget;
+  const status=document.querySelector('#myLibraryStorageStatus');
+  button.disabled=true;
+  button.textContent='Запрашиваем защиту…';
+  try{
+    const result=await window.AILibraryDownloadManager.requestPersistence();
+    if(status)status.textContent=result.persisted?'Защита локального хранилища включена.':'Браузер не предоставил постоянное хранение. Книги остаются сохранёнными, но могут зависеть от правил очистки браузера.';
+    await refreshLibraryStorageStatus();
+  }catch(error){
+    if(status)status.textContent='Не удалось включить защиту хранения. Проверь настройки браузера.';
+    button.disabled=false;
+    button.textContent='Повторить запрос';
+  }
+});
 
 function renderMyLibrary(){
   const progress=getReadingProgress();

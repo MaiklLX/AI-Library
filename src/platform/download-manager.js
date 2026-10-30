@@ -90,11 +90,44 @@
     return true;
   }
 
+  async function getStorageInfo() {
+    const storageManager = navigator.storage;
+    let estimate = {};
+    let persisted = false;
+    try {
+      if (typeof storageManager?.estimate === 'function') estimate = await storageManager.estimate();
+    } catch (error) {
+      console.warn('AI Library: не удалось оценить хранилище.', error);
+    }
+    try {
+      if (typeof storageManager?.persisted === 'function') persisted = await storageManager.persisted();
+    } catch (error) {
+      console.warn('AI Library: не удалось проверить защиту хранилища.', error);
+    }
+    return {
+      usage: Number.isFinite(estimate.usage) ? estimate.usage : null,
+      quota: Number.isFinite(estimate.quota) ? estimate.quota : null,
+      persisted: persisted === true,
+      persistenceSupported: typeof storageManager?.persist === 'function'
+    };
+  }
+
+  async function requestPersistence() {
+    const storageManager = navigator.storage;
+    if (typeof storageManager?.persist !== 'function') {
+      return { supported: false, persisted: false };
+    }
+    const persisted = await storageManager.persist();
+    return { supported: true, persisted: persisted === true };
+  }
+
   window.AILibraryDownloadManager = Object.freeze({
     download,
     load,
     remove,
     isDownloaded: id => ready.has(String(id)),
-    getCachedDownloads: () => [...ready.values()]
+    getCachedDownloads: () => [...ready.values()],
+    getStorageInfo,
+    requestPersistence
   });
 })();
