@@ -52,7 +52,7 @@ assert.match(html, /reader-settings\{top:calc\(66px/, "Desktop reading settings 
 assert.match(html, /rightReader\.style\.fontSize=settings\.fontSize/, "Reader typography settings must apply to both pages");
 assert.match(html, /readerHoverEnabled=window\.matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches/, "Desktop reader hover controls must be enabled only for mouse-like pointers");
 assert.match(html, /const readerHoverEdge=64/, "Desktop reader controls must reveal from the screen edges");
-assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "Mouse and touch page-edge interaction must cover the full spread");
+assert.match(html, /readerArea\.addEventListener\('pointerup'/, "Mouse and touch page-edge interaction must use the visible reader viewport");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
