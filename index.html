@@ -2604,6 +2604,80 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+
+<style>
+<!-- AI Library book-card actions: accessible sizing v1 -->
+#books .book-back-actions {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 9px !important;
+  margin-top: 14px !important;
+}
+#books .book-back-actions .read,
+#books .book-back-actions .offline-download {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  flex: 1 1 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  touch-action: manipulation;
+}
+#books .book-back-actions .read {
+  border: 1px solid #e4c783 !important;
+  background: linear-gradient(135deg, #ead09a, #c69d55) !important;
+  color: #21190d !important;
+  box-shadow: 0 5px 16px rgba(217, 182, 109, .2) !important;
+}
+#books .book-back-actions .read:hover {
+  background: linear-gradient(135deg, #f2dfb4, #d9b66d) !important;
+  border-color: #f2dfb4 !important;
+  box-shadow: 0 7px 20px rgba(217, 182, 109, .28) !important;
+}
+#books .book-back-actions .offline-download {
+  border: 1px solid rgba(217, 182, 109, .48) !important;
+  background: linear-gradient(145deg, #302719, #211d16) !important;
+  color: #ead09a !important;
+}
+#books .book-back-actions .read:focus-visible,
+#books .book-back-actions .offline-download:focus-visible {
+  outline: 3px solid #f0d99b !important;
+  outline-offset: 3px !important;
+}
+@media (max-width: 700px) {
+  #books .book-back-actions { gap: 7px !important; margin-top: 11px !important; }
+  #books .book-back-actions .read,
+  #books .book-back-actions .offline-download {
+    min-height: 46px !important;
+    padding: 9px 8px !important;
+    font-size: 12px !important;
+  }
+}
+@media (max-width: 380px) {
+  #books .book-back-actions { gap: 8px !important; margin-top: 12px !important; }
+  #books .book-back-actions .read,
+  #books .book-back-actions .offline-download {
+    min-height: 48px !important;
+    padding: 10px !important;
+    font-size: 13px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #books .book-back-actions .read,
+  #books .book-back-actions .offline-download { transition: none !important; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
