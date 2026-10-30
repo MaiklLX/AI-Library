@@ -2681,6 +2681,15 @@ body.reader-open #pageTurnSheet.flip-back {
 <style>/* AI Library lazy book loading: metadata first v1 */
 </style>
 
+<style>
+.catalog-update-notice{width:min(1180px,calc(100% - 40px));box-sizing:border-box;display:flex;align-items:center;gap:12px;margin:14px auto 0;padding:12px 15px;border:1px solid rgba(217,182,109,.32);border-radius:13px;background:linear-gradient(110deg,rgba(217,182,109,.13),rgba(255,255,255,.035));color:var(--ai-paper,#f2eadb);box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.catalog-update-notice[hidden]{display:none!important}.catalog-update-mark{color:var(--ai-gold,#d9b66d);font-size:20px}
+.catalog-update-notice p{flex:1;margin:0;font-size:13px;line-height:1.5}
+.catalog-update-notice button{flex:0 0 34px;width:34px;height:34px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(255,255,255,.05);color:inherit;font-size:21px;cursor:pointer;touch-action:manipulation}
+.catalog-update-notice button:focus-visible{outline:2px solid var(--ai-gold,#d9b66d);outline-offset:2px}
+@media(max-width:600px){.catalog-update-notice{width:calc(100% - 28px);margin-top:10px;padding:10px 11px;gap:9px}.catalog-update-notice p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.catalog-update-notice *{transition:none!important}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2689,6 +2698,11 @@ body.reader-open #pageTurnSheet.flip-back {
 <button class="pill nav-action active" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/></svg><span>Каталог</span></button>
 <a class="pill nav-action" href="./book-creator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a2.8 2.8 0 0 0-4-4L4.2 15.1 4 20Z"/><path d="M13 6.5 17.5 11"/></svg><span>Создать книгу</span></a>
 </div></nav></div></header>
+<div id="catalogUpdateNotice" class="catalog-update-notice" role="status" aria-live="polite" hidden>
+  <span class="catalog-update-mark" aria-hidden="true">✦</span>
+  <p id="catalogUpdateMessage"></p>
+  <button id="dismissCatalogUpdate" type="button" aria-label="Закрыть уведомление">×</button>
+</div>
 <main class="wrap">
 <section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions">
 <button class="btn primary hero-action" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7"/></svg><span>Исследовать библиотеку</span></button>
@@ -2801,6 +2815,46 @@ function normalizePublishedBook(book) {
   };
 }
 
+const PUBLISHED_CATALOG_STATE_KEY = 'ai-library-catalog-update-state-v1';
+
+function getCatalogMetadataSnapshot(catalog) {
+  return (Array.isArray(catalog?.books) ? catalog.books : []).map(book => ({
+    id:String(book.id||''),title:String(book.title||''),author:String(book.author||''),
+    genre:String(book.genre||''),status:String(book.status||''),revision:String(book.revision||''),
+    chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
+    releaseDate:String(book.releaseDate||'')
+  })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
+}
+function checkCatalogMetadataUpdate(catalog) {
+  const current=getCatalogMetadataSnapshot(catalog),signature=JSON.stringify(current);
+  let previous=null;
+  try{previous=JSON.parse(localStorage.getItem(PUBLISHED_CATALOG_STATE_KEY)||'null')}catch{}
+  if(!previous||!Array.isArray(previous.books)){
+    try{localStorage.setItem(PUBLISHED_CATALOG_STATE_KEY,JSON.stringify({signature,books:current}))}catch{}
+    return;
+  }
+  if(previous.signature===signature)return;
+  const oldById=new Map(previous.books.map(book=>[book.id,book]));
+  const newById=new Map(current.map(book=>[book.id,book]));
+  const added=current.filter(book=>!oldById.has(book.id)).length;
+  const changed=current.filter(book=>oldById.has(book.id)&&JSON.stringify(oldById.get(book.id))!==JSON.stringify(book)).length;
+  const removed=previous.books.filter(book=>!newById.has(book.id)).length;
+  try{localStorage.setItem(PUBLISHED_CATALOG_STATE_KEY,JSON.stringify({signature,books:current}))}catch{}
+  showCatalogUpdateNotice({added,changed,removed});
+}
+function showCatalogUpdateNotice(change) {
+  const notice=document.getElementById('catalogUpdateNotice');
+  const message=document.getElementById('catalogUpdateMessage');
+  if(!notice||!message)return;
+  const parts=[];
+  if(change.added)parts.push('новых книг: '+change.added);
+  if(change.changed)parts.push('обновлено: '+change.changed);
+  if(change.removed)parts.push('снято с публикации: '+change.removed);
+  if(!parts.length)return;
+  message.textContent='Каталог обновлён · '+parts.join(' · ')+'. Тексты книг не загружались.';
+  notice.hidden=false;
+}
+
 async function loadPublishedBooks() {
   try {
     const response = await fetch(PUBLISHED_CATALOG_URL, { cache: 'no-cache' });
@@ -2809,6 +2863,7 @@ async function loadPublishedBooks() {
     if (!catalog || catalog.version !== 1 || !Array.isArray(catalog.books)) {
       throw new Error('Неверный формат каталога опубликованных книг');
     }
+    checkCatalogMetadataUpdate(catalog);
     // The catalog contains display metadata. Full book JSON is fetched only on explicit read/download.
     const loaded = catalog.books.map(entry => {
       if (!entry || typeof entry.path !== 'string' ||
@@ -4173,4 +4228,10 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 })();
 </script>
 
+<script>
+document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
+  const notice=document.getElementById('catalogUpdateNotice');
+  if(notice)notice.hidden=true;
+});
+</script>
 </body></html>
