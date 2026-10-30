@@ -273,3 +273,8 @@ Last maintained: 2026-10-30.
 - The first CI attempt correctly blocked deployment because the newly added reduced-motion assertion used an over-escaped regular expression. The animation CSS itself was not the failing check.
 - Replaced that assertion with two focused checks for the media query and the hero-star animation override. Validator fix commit: `83b6da2daae66bf047d3f93c6d0e05d6e0fe0361`.
 - Re-run CI and Pages deployment on this commit before treating the visual change as published.
+
+### Validator assertion adjustment (continued)
+
+- A second CI run showed the escaped regular-expression delimiters were still over-escaped by the file-update string. Replaced both reduced-motion assertions with literal `includes()` checks, avoiding regex parsing entirely.
+- Validator fix commit: `79333f0ba5fe13efd0c29a03909257252fd1ed78`. Re-check CI and deployment on the final handover commit.
