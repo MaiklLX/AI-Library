@@ -1801,13 +1801,32 @@ function openBook(id) {
 let readingPages = [];
 let readingPageIndex = 0;
 let readerScrollRestore = 0;
+
+// Возвращает позиции начала страниц в исходном тексте главы.
+// Последовательный поиск не путает повторяющиеся фрагменты.
+function getReadingPageOffsets(source, pages) {
+  let cursor = 0;
+  return pages.map(pageText => {
+    const found = source.indexOf(pageText, cursor);
+    const start = found >= 0 ? found : cursor;
+    cursor = start + pageText.length;
+    return start;
+  });
+}
+
+function getCurrentReadingOffset() {
+  const source = String(current?.chapters?.[part] || '').trim();
+  if (!source || !readingPages.length) return 0;
+  const offsets = getReadingPageOffsets(source, readingPages);
+  return offsets[Math.max(0, Math.min(readingPageIndex, offsets.length - 1))] || 0;
+}
 let readerBodyTop = 0;
 let readerPreviousFocus = null;
 
 
 function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing}}catch{return defaults}}
 function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing}
-function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}applyReaderSettings();if(current){const savedPage=readingPageIndex;paginateCurrentChapter();readingPageIndex=Math.max(0,Math.min(savedPage,readingPages.length-1));renderReadingPage(false)}}
+function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current?getCurrentReadingOffset():null;applyReaderSettings();if(current)paginateCurrentChapter(savedOffset)}
 document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));
 
 function openReadingSpace() {
@@ -1836,7 +1855,7 @@ function closeReadingSpace() {
   readerPreviousFocus = null;
 }
 
-function paginateCurrentChapter() {
+function paginateCurrentChapter(preserveOffset = null) {
   const reader = document.querySelector('#reader');
   const pageLabel = document.querySelector('#bookPageLabel');
   const pageNumber = document.querySelector('#bookPageNumber');
@@ -1891,6 +1910,18 @@ function paginateCurrentChapter() {
   }
   probe.remove();
   if (!readingPages.length) readingPages = [''];
+
+  // При смене шрифта или размеров возвращаемся к прежнему месту в главе.
+  if (Number.isFinite(preserveOffset)) {
+    const offsets = getReadingPageOffsets(text, readingPages);
+    const targetOffset = Math.max(0, Math.min(preserveOffset, text.length));
+    let targetPage = 0;
+    for (let i = 0; i < offsets.length; i++) {
+      if (offsets[i] <= targetOffset) targetPage = i;
+      else break;
+    }
+    readingPageIndex = targetPage;
+  }
   renderReadingPage(false);
 }
 
@@ -2168,11 +2199,8 @@ document.querySelector('#bookPage').addEventListener('wheel', e => {
 
 window.addEventListener('resize', () => {
   if (!current || !document.querySelector('#modal').classList.contains('open')) return;
-  const oldIndex = readingPageIndex;
-  paginateCurrentChapter();
-  readingPageIndex = Math.min(oldIndex, readingPages.length - 1);
-  renderReadingPage(false);
-});
+  paginateCurrentChapter(getCurrentReadingOffset());
+}, { passive: true });
 
 
 /* AI Library Release — резервное копирование личных данных */
@@ -2346,10 +2374,8 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       pending = false;
       if (!modal.classList.contains('open') || !document.body.classList.contains('reader-open')) return;
       if (typeof paginateCurrentChapter === 'function' && typeof current !== 'undefined' && current) {
-        const oldIndex = typeof readingPageIndex === 'number' ? readingPageIndex : 0;
-        paginateCurrentChapter();
-        readingPageIndex = Math.max(0, Math.min(oldIndex, readingPages.length - 1));
-        if (typeof renderReadingPage === 'function') renderReadingPage(false);
+        const savedOffset = typeof getCurrentReadingOffset === 'function' ? getCurrentReadingOffset() : 0;
+        paginateCurrentChapter(savedOffset);
       }
     }));
   };
