@@ -2690,6 +2690,17 @@ body.reader-open #pageTurnSheet.flip-back {
 @media(max-width:600px){.catalog-update-notice{width:calc(100% - 28px);margin-top:10px;padding:10px 11px;gap:9px}.catalog-update-notice p{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.catalog-update-notice *{transition:none!important}}
 </style>
+<style id="my-library-desktop-grid-v2">
+/* Keep the third shelf from leaving an unused half-row on wider layouts. */
+@media (min-width:681px) {
+  #myLibrary .library-shelf:last-child { grid-column:1 / -1; }
+  #myLibrary #myLibraryDownloads { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #myLibrary #myLibraryDownloads .library-empty { grid-column:1 / -1; }
+}
+@media (max-width:680px) {
+  #myLibrary #myLibraryDownloads { grid-template-columns:minmax(0,1fr); }
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
