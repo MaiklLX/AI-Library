@@ -332,7 +332,8 @@ Last maintained: 2026-10-30.
 
 - Stop automatic/background generation of public-catalogue books once the external Cloudflare Worker source is available and audited. The scheduled handler has not yet been disabled.
 - Keep the existing user-facing Book Creator as a core feature. Its current workflow is user-driven: prepare a brief, work with ChatGPT, import/edit a manuscript, preview it, and save/export personal books locally. The inspected creator currently uses browser localStorage; it is not a server-backed multi-device author account.
-- Proposed next lifecycle: private draft → preview/completeness checks → explicit paid publication submission (coin fee, refund and moderation rules pending) → attributed public book → eligibility for community ratings/competitions.
+- Target lifecycle: private draft → preview/completeness checks → explicit publication by the author for a clearly displayed coin fee → attributed public book → eligibility for community ratings/competitions. The author-paid fee is confirmed; exact amount, moderation and refund/settlement rules remain open.
+- Require explicit author confirmation before any coin debit. Private drafting, preview, local save and export remain free.
 - Separate spendable coins, permanent book ratings, author XP and profile statuses. Competition XP is granted only once after server-verified final standings.
 - Do not delete existing public books or personal drafts. Do not remove any explicit user-initiated creation path if it is required by Book Creator.
 - Worker-side scheduled generation remains pending because the Cloudflare dashboard/source is currently unavailable. No live generation behavior has been changed.
