@@ -2368,6 +2368,36 @@ body.reader-open #bookPage.reader-turn-in-back::after {
   body.reader-open #bookPage {transition:none!important;animation:none!important}
 }
 </style>
+
+<style id="reader-mobile-page-turn-v38">
+@media (max-width:1099px), (hover:none) and (pointer:coarse) {
+  body.reader-open #bookSpread>.book-page::after,
+  body.reader-open #bookPage::after {
+    display:block!important;opacity:0;
+    background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.015) 28%,rgba(255,255,255,.13) 49%,rgba(20,15,8,.10) 64%,transparent 100%);
+    background-size:220% 100%;animation:none;transition:opacity .12s ease;
+  }
+  body.reader-open #bookSpread.reader-turn-out-forward>.book-page::after,
+  body.reader-open #bookPage.reader-turn-out-forward::after,
+  body.reader-open #bookSpread.reader-turn-out-back>.book-page::after,
+  body.reader-open #bookPage.reader-turn-out-back::after {
+    opacity:1!important;animation:readerMobilePaperSweep .32s cubic-bezier(.22,.68,.25,1) both;
+  }
+  body.reader-open #bookSpread.reader-turn-in-forward>.book-page::after,
+  body.reader-open #bookPage.reader-turn-in-forward::after,
+  body.reader-open #bookSpread.reader-turn-in-back>.book-page::after,
+  body.reader-open #bookPage.reader-turn-in-back::after {opacity:0!important}
+}
+@keyframes readerMobilePaperSweep {
+  from{background-position:100% 0;opacity:0}
+  22%{opacity:.85}
+  to{background-position:0 0;opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  body.reader-open #bookSpread>.book-page::after,
+  body.reader-open #bookPage::after{animation:none!important;opacity:0!important}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2811,6 +2841,7 @@ function openBook(id) {
   current = getAllBooks().find(b => String(b.id) === String(id));
 
   if (!current) return;
+  bookPageCounts = null;
   if (!Array.isArray(current.chapters) || current.chapters.length === 0) {
     alert('В этой книге пока нет доступных глав.');
     return;
@@ -2937,7 +2968,7 @@ function closeReadingSpace() {
   readerPreviousFocus = null;
 }
 
-function paginateCurrentChapter(preserveOffset = null) {
+function paginateCurrentChapter(preserveOffset = null, renderResult = true) {
   const reader = document.querySelector('#reader');
   const page = document.querySelector('#bookPage');
   const text = String(current?.chapters?.[part] || '').trim();
@@ -3091,8 +3122,30 @@ function paginateCurrentChapter(preserveOffset = null) {
     }
     readingPageIndex = isDesktopReaderSpread() ? Math.floor(targetPage / 2) * 2 : targetPage;
   }
-  renderReadingPage(false);
+  if(renderResult)renderReadingPage(false);
 }
+let bookPageCounts = null;
+function ensureBookPageCounts(){
+  if(!current||!Array.isArray(current.chapters))return [Math.max(1,readingPages.length)];
+  if(Array.isArray(bookPageCounts)&&bookPageCounts.length===current.chapters.length)return bookPageCounts;
+  const originalPart=part,originalPages=readingPages,originalIndex=readingPageIndex;
+  const counts=[];
+  for(let chapter=0;chapter<current.chapters.length;chapter++){
+    part=chapter;
+    paginateCurrentChapter(null,false);
+    counts.push(Math.max(1,readingPages.length));
+  }
+  part=originalPart;readingPages=originalPages;readingPageIndex=originalIndex;
+  bookPageCounts=counts;
+  return counts;
+}
+function getBookPageOffset(chapterIndex){
+  return ensureBookPageCounts().slice(0,Math.max(0,chapterIndex)).reduce((sum,count)=>sum+count,0);
+}
+function getBookPageTotal(){
+  return ensureBookPageCounts().reduce((sum,count)=>sum+count,0);
+}
+
 function getReaderPageState(index,totalPages,spread){
   const total=Math.max(1,Math.floor(Number(totalPages)||1));
   const requested=Math.max(0,Math.min(Math.floor(Number(index)||0),total-1));
@@ -3112,8 +3165,11 @@ function renderReadingPage(animate = true) {
   if(!reader||!page)return;
 
   const spread=isDesktopReaderSpread();
-  const totalPages=Math.max(1,readingPages.length);
-  const pageState=getReaderPageState(readingPageIndex,totalPages,spread);
+  const chapterPages=Math.max(1,readingPages.length);
+  const pageOffset=getBookPageOffset(part);
+  const totalPages=getBookPageTotal();
+  const localPageState=getReaderPageState(readingPageIndex,chapterPages,spread);
+  const pageState={...localPageState,leftPage:localPageState.leftPage+pageOffset,rightPage:localPageState.rightPage===null?null:localPageState.rightPage+pageOffset};
   readingPageIndex=pageState.startIndex;
 
   const rightPage=document.querySelector('#bookPageRight');
@@ -3223,6 +3279,8 @@ function showPart() {
       : 'AI Library';
 
   paginateCurrentChapter();
+  ensureBookPageCounts();
+  renderReadingPage(false);
 
   const page = document.querySelector('#bookPage');
   if (page) page.classList.remove('turn-forward','turn-back');
