@@ -1650,7 +1650,7 @@ async function openBookById(id) {
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const safeClass=value=>String(value||'').split(/\\s+/).filter(token=>/^[a-zA-Z0-9_-]{1,40}$/.test(token)).slice(0,3).join(' ');
+const safeClass=value=>String(value||'').split(/\s+/).filter(token=>/^[a-zA-Z0-9_-]{1,40}$/.test(token)).slice(0,3).join(' ');
 function syncGenreFilters(){
   const root=document.querySelector("#genres");
   if(!root)return;
@@ -1925,7 +1925,7 @@ function paginateCurrentChapter(preserveOffset = null) {
   // Keep every whitespace character in the source. In particular, do not
   // trim page fragments or skip whitespace between pages: that changed the
   // original manuscript and could hide omissions at page boundaries.
-  const tokens = text.match(/\\s+|[^\\s]+/g) || [];
+  const tokens = text.match(/\s+|[^\s]+/g) || [];
   let cursor = 0;
 
   while (cursor < tokens.length) {
@@ -1974,7 +1974,7 @@ function paginateCurrentChapter(preserveOffset = null) {
     if (end < tokens.length) {
       const floor = cursor + Math.max(1, Math.floor((end - cursor) * 0.65));
       for (let k = end - 1; k >= floor; k--) {
-        if (/\\n\\s*\\n/.test(tokens[k])) {
+        if (/\n\s*\n/.test(tokens[k])) {
           end = k + 1;
           break;
         }
