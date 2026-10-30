@@ -138,6 +138,7 @@ assert.match(html, /reader-mobile-touch-recovery-v37/, "Mobile reader interactio
 assert.match(html, /mobile-paper-page-turn-v38/, "Mobile paper page-turn animation styles are missing");
 assert.match(html, /ios-reader-and-catalog-fixes-v39/, "iOS reader and catalog compatibility fixes are missing");
 assert.match(html, /padding-bottom:34px!important/, "Reader pagination must reserve space for the page number footer");
+assert.match(html, /style\.paddingBottom/, "Book-wide page metrics cache must account for the reserved page-number footer");
 assert.match(html, /aiLibraryIOSPaperFold/, "iOS fallback page-turn animation is missing");
 assert.match(html, /function getReaderBookPageMetrics\(/, "Book-wide page metrics are missing");
 assert.match(html, /function getBookPageNumber\(/, "Book-wide page numbering is missing");
