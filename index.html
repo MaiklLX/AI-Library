@@ -2231,7 +2231,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join('')::'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase()}
+document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
