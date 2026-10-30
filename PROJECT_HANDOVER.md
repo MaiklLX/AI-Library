@@ -204,3 +204,15 @@ Last maintained: 2026-10-30.
 - The main stylesheet has accumulated several appended CSS revisions. The reader also has multiple versioned layout overrides. This is a regression risk: broad CSS cleanup or global typography/layout changes could undo carefully tuned page geometry and touch behavior.
 - The first visual pass must therefore be scoped to the home/catalog and personal-library surfaces. Treat all `body.reader-open` rules and reader pagination/gesture code as protected until separately audited.
 - This initial audit preceded the first visual implementation. The isolated token layer and home/catalog polish are now committed and deployed in the milestone above. Next: capture/inspect desktop, tablet and mobile rendering, then adjust only the affected home/catalog selectors.
+
+## Metadata-first loading validation and release recovery (2026-10-30)
+
+- Confirmed the metadata-first implementation on `main`: startup loads `content/catalog.json` metadata only; it does not fetch full book JSON bodies. Full text is fetched on explicit read, and the existing explicit download flow remains unchanged.
+- The first release attempts exposed defects in newly added validator assertions (incorrect regular-expression escaping and checking the Service Worker cache version against the HTML document). These were corrected in `scripts/validate.mjs`; no reader, storage, download, or book-content behavior was changed during this recovery.
+- Final validator correction commit: `2876c0aeba220fe12d16ce98ac80019b109f0948`.
+- CI run #239 / ID `41113431453`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41113431453
+- GitHub Pages deploy #222 / ID `41113431733`: success — https://github.com/MaiklLX/AI-Library/actions/runs/41113431733
+- Both checks completed successfully for the same `main` SHA. Service Worker cache remains `v52`.
+- Earlier failed runs are superseded by the successful final runs above; do not treat their failures as the current release status.
+- Next: add a lightweight catalog-update notice based on catalog metadata/revision only, with no automatic book-body fetches. Before coding, inspect current catalog fields and decide a stable revision/signature strategy. Then perform the structured desktop/tablet/mobile visual audit. Preserve reader interactions and all existing user data.
+
