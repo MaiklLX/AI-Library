@@ -20,7 +20,10 @@
 - GitHub Pages deploy #197: success — https://github.com/MaiklLX/AI-Library/actions/runs/41106373175
 - Current Service Worker cache: `v49`
 - Current catalog schema: `version: 1`; catalog currently lists `avtomaticheskaya-polnoch` and `ty-v-moih-planah`.
-- This handover file is being added in its own documentation commit after the verified application checkpoint. Re-check CI and deploy for the documentation commit before treating that commit as published.
+- Handover documentation commit: `9d58da96b453e02725e7e7337d0b33200155ff6e`.
+- CI run #215: success — https://github.com/MaiklLX/AI-Library/actions/runs/41108319275
+- GitHub Pages deploy #198: success — https://github.com/MaiklLX/AI-Library/actions/runs/41108319331
+- The handover document is committed and the documentation commit is deployed.
 
 ## Implemented capabilities
 
@@ -147,3 +150,12 @@ Current observed visual foundation in `index.html`:
 
 ---
 Last maintained: 2026-10-30.
+
+
+## Visual audit — first source inspection (2026-10-30)
+
+- The current visual identity is a dark charcoal/black base with muted gold accents, editorial serif headings and gradient book-card covers.
+- Responsive rules already exist for desktop, tablet and mobile, including mobile navigation and a dedicated reader layout.
+- The main stylesheet has accumulated several appended CSS revisions. The reader also has multiple versioned layout overrides. This is a regression risk: broad CSS cleanup or global typography/layout changes could undo carefully tuned page geometry and touch behavior.
+- The first visual pass must therefore be scoped to the home/catalog and personal-library surfaces. Treat all `body.reader-open` rules and reader pagination/gesture code as protected until separately audited.
+- No visual code was changed in this checkpoint. Next: create a clear token layer and make the first isolated home/catalog improvement; then validate at desktop/tablet/mobile widths and ask the user to check the actual device rendering before expanding the redesign.
