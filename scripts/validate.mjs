@@ -140,4 +140,12 @@ assert.match(html, /const surface=isDesktopReaderSpread\(\)\?bookSpreadArea:book
 assert.match(html, /if\(start\.pointerType!=='mouse'\)toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
 assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
 
+
+assert.match(html, /function ensureBookPageCounts\(\)/, "Book-wide page map must be computed from every chapter");
+assert.match(html, /function getBookPageOffset\(chapterIndex\)/, "Page numbering must include all preceding chapters");
+assert.match(html, /function getBookPageTotal\(\)/, "Reader total must represent the whole book");
+assert.match(html, /reader-mobile-page-turn-v38/, "Mobile page-turn animation must be restored");
+assert.match(html, /readerMobilePaperSweep/, "Mobile page turn must use a smooth paper-light sweep");
+assert.match(html, /const pageOffset=getBookPageOffset\(part\)/, "Visible page numbers must include preceding chapter pages");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
