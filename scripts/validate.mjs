@@ -50,6 +50,12 @@ assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\'
 assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
 assert.match(downloadManager, /async function checkForUpdate\(/, "Offline books must support non-destructive update checks");
+assert.match(downloadManager, /catalogRevision: String\(entry\.revision \|\| book\.revision \|\| ''\)/, "Offline downloads must remember the catalog revision");
+assert.match(downloadManager, /if \(entry\.revision && String\(book\.revision \|\| ''\) !== String\(entry\.revision\)\)/, "Offline downloads must reject a text body whose revision differs from the catalog");
+const updateCheckBody = downloadManager.match(/async function checkForUpdate\(id\)\s*\{([\s\S]*?)\n  \}\n\n  async function load/);
+assert.ok(updateCheckBody, "Could not isolate the offline update-check workflow");
+assert.match(updateCheckBody[1], /entry\.revision/, "Offline update checks must compare catalog revision metadata");
+assert.doesNotMatch(updateCheckBody[1], /fetch\(entry\.path/, "Checking for an update must not download the full book body");
 assert.match(downloadManager, /updateAvailable\.delete\(record\.id\)/, "Successful replacement must clear the pending update state");
 assert.match(html, /data-library-check-update=/, "Downloaded books must expose update checks in the personal library");
 assert.match(html, /async function handleOfflineUpdateCheck\(/, "Personal library update action must be wired");
@@ -126,6 +132,7 @@ for (const entry of publishedCatalog.books) {
   assert.ok(typeof entry.path === "string" && entry.path === `./content/books/${entry.id}.json`, `Published book path must match its ID: ${entry.id}`);
   assert.equal(entry.metadataOnly, true, `Catalog must contain metadata only: ${entry.id}`);
   assert.ok(Number.isInteger(entry.chapterCount) && entry.chapterCount >= 0, `Catalog chapter count is missing: ${entry.id}`);
+  if (entry.status !== "prerelease") assert.ok(typeof entry.revision === "string" && entry.revision.trim(), `Published catalog revision is required: ${entry.id}`);
   const bookPath = resolve(root, entry.path);
   assert.ok(existsSync(bookPath), `Published book file is missing: ${entry.path}`);
   const book = JSON.parse(readFileSync(bookPath, "utf8"));
@@ -135,6 +142,7 @@ for (const entry of publishedCatalog.books) {
     assert.ok(!Array.isArray(book.chapters) || book.chapters.length === 0, `Prerelease book must not expose chapters: ${entry.id}`);
   } else {
     assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
+    assert.equal(String(book.revision || ""), String(entry.revision || ""), `Published book revision must match its catalog metadata: ${entry.id}`);
     assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
   }
 }
@@ -208,13 +216,13 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v56['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v56['"]/, "Book action update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /PUBLISHED_CATALOG_STATE_KEY/, "Catalog update state key is missing");
 assert.match(html, /function getCatalogMetadataSnapshot\(catalog\)/, "Catalog metadata snapshot helper is missing");
@@ -224,13 +232,13 @@ assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is miss
 assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
 assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
 assert.match(html, /Тексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v56['"]/, "Catalog update notice must use the refreshed app-shell cache");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
 assert.match(html, /Full book JSON is fetched only on explicit read\/download/, "Book content loading policy is missing");
 assert.match(html, /async function openBookById\(id\)[\s\S]*?fetch\(book\.contentPath, \{ cache: 'no-cache' \}\)/, "Published book text must load on demand when opening a book");
 assert.match(html, /metadataOnly: true,[\s\S]*?chapters: \[\]/, "Catalog fallback must not retain full book text in local metadata cache");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v56['"]/, "Lazy book loading update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Lazy book loading update must use the current cache version");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
 
