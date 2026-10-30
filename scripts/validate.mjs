@@ -249,4 +249,4 @@ assert.match(html, /@keyframes aiHeroStarGlow/, "Hero star glow animation is mis
 assert.ok(html.includes("0%, 8%, 100% { transform: translateX(-115%) rotate(12deg); opacity: 0; }"), "Logo sheen must return to an invisible identical start/end state");
 assert.ok(html.includes("@media (prefers-reduced-motion: reduce)"), "Signature star animations must respect reduced-motion preferences");
 assert.ok(html.includes(".hero .spark::after"), "Hero star ambient particle layer is missing");
-assert.ok(html.includes(".hero .spark {\n    animation: none !important;"), "Hero star animation must be disabled for reduced-motion users");
+assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and ambient layers must be disabled for reduced-motion users");
