@@ -63,6 +63,48 @@ This document records the agreed community features before implementation. It is
 - Removing a local download must not remove the server-side entitlement.
 - Public books and existing personal books must retain their current behavior.
 
+## 5. User-authored books and creator economy
+
+The product direction is to stop automatic/background book generation as a way of filling the public catalogue. Automatically generated low-quality or incomplete books should not be published just to make the catalogue look active. This does **not** mean deleting existing books or disabling the user's existing book-creation tool.
+
+The user-facing book creator is retained as a core product feature and becomes the primary creation path:
+- A user can create and edit a book as a personal draft.
+- Drafts are private to their author until they explicitly submit them for publication.
+- Before submission, the creator should offer a preview and basic completeness/format validation (title, author attribution, description, genre, cover, chapter structure and readable content).
+- A publication submission may require a clearly displayed coin fee. The exact fee, refund rules, moderation process and whether the fee is charged on submission or approval must be finalized before implementation.
+- Published books are attributed to their creator and become eligible for community ratings and selected competitions.
+- Publishing must not silently replace or delete the author's local draft. A published copy and a personal working draft have distinct lifecycle states.
+- Add reporting/moderation and clear content, copyright, plagiarism and safety rules before opening publication to all users.
+
+### Creator progression, XP and status
+
+Keep these systems distinct:
+- **Coins** are a spendable economy: publication fees and future exclusive unlocks.
+- **Book rating** is community feedback and remains cumulative.
+- **Author XP** measures verified creator achievements and competition results; it is not spendable.
+- **User status/rank** is a progression label unlocked by XP thresholds and/or explicitly defined achievements.
+
+Competition rewards should be awarded once, after the competition closes and the final result is server-verified. Rank-based XP can reward authors whose books place in the daily "Book of the Day" competition or other explicitly defined rating events. Replays, duplicate settlement jobs, self-voting, vote manipulation and multiple accounts must not create duplicate rewards. Store reward events in an auditable ledger with unique idempotency keys. Publish the reward table and status thresholds before launch; do not invent balances or grant XP from client-side UI events.
+
+### Competition model — design refinement required
+
+The earlier single-featured-book daily contest is not sufficient by itself to determine a ranked winner among multiple authors. The competition design must be refined to define:
+- whether each daily event contains a shortlist of several eligible books in one genre;
+- how users cast their limited daily vote and whether negative votes remain part of this particular competition;
+- tie-breaking, minimum-vote thresholds, contest timezone and close/settlement time;
+- whether lifetime book ratings and event standings are separate (they should be);
+- how books enter a contest and whether the same book can re-enter.
+
+Until these rules are finalized, keep the already agreed permanent +/- book-rating principles, but do not implement XP payouts or claim a competition winner based on an undefined scoring model.
+
+### Automatic generation policy
+
+- Disable automatic/scheduled generation and automatic insertion of generated books into the public catalogue once the owning Worker source is available and audited.
+- Do not remove the manual book creator or the existing user-facing workflow.
+- Do not delete existing published books, personal drafts, or database records as part of this change.
+- Keep the current generation endpoint untouched until its callers and dependencies are audited. If it powers the user-facing creator, it must remain available for explicit user-initiated creation.
+- The Cloudflare Worker source is currently outside this repository, so the scheduled handler cannot safely be disabled from this repository alone. Record this as a pending backend action, not a completed change.
+
 ## Proposed data model (logical)
 
 Names are illustrative; adapt to the actual existing D1 schema after inspecting the deployed Worker source.
