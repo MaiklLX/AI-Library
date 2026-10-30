@@ -50,6 +50,11 @@ assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\'
 assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
 assert.match(downloadManager, /async function checkForUpdate\(/, "Offline books must support non-destructive update checks");
+assert.match(downloadManager, /catalogRevision: String\(entry\.revision \|\| book\.revision \|\| ''\)/, "Offline downloads must remember the catalog revision");
+const updateCheckBody = downloadManager.match(/async function checkForUpdate\(id\)\s*\{([\\s\\S]*?)\\n  \\}\\n\\n  async function load/);
+assert.ok(updateCheckBody, "Could not isolate the offline update-check workflow");
+assert.match(updateCheckBody[1], /entry\.revision/, "Offline update checks must compare catalog revision metadata");
+assert.doesNotMatch(updateCheckBody[1], /fetch\(entry\.path/, "Checking for an update must not download the full book body");
 assert.match(downloadManager, /updateAvailable\.delete\(record\.id\)/, "Successful replacement must clear the pending update state");
 assert.match(html, /data-library-check-update=/, "Downloaded books must expose update checks in the personal library");
 assert.match(html, /async function handleOfflineUpdateCheck\(/, "Personal library update action must be wired");
@@ -126,6 +131,7 @@ for (const entry of publishedCatalog.books) {
   assert.ok(typeof entry.path === "string" && entry.path === `./content/books/${entry.id}.json`, `Published book path must match its ID: ${entry.id}`);
   assert.equal(entry.metadataOnly, true, `Catalog must contain metadata only: ${entry.id}`);
   assert.ok(Number.isInteger(entry.chapterCount) && entry.chapterCount >= 0, `Catalog chapter count is missing: ${entry.id}`);
+  if (entry.status !== "prerelease") assert.ok(typeof entry.revision === "string" && entry.revision.trim(), `Published catalog revision is required: ${entry.id}`);
   const bookPath = resolve(root, entry.path);
   assert.ok(existsSync(bookPath), `Published book file is missing: ${entry.path}`);
   const book = JSON.parse(readFileSync(bookPath, "utf8"));
@@ -135,6 +141,7 @@ for (const entry of publishedCatalog.books) {
     assert.ok(!Array.isArray(book.chapters) || book.chapters.length === 0, `Prerelease book must not expose chapters: ${entry.id}`);
   } else {
     assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
+    assert.equal(String(book.revision || ""), String(entry.revision || ""), `Published book revision must match its catalog metadata: ${entry.id}`);
     assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
   }
 }
