@@ -2039,6 +2039,59 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 @media(max-width:680px){#books .book{aspect-ratio:3/4!important}#books .book-front-fav{top:7px;right:7px;width:32px;height:32px;min-height:32px;font-size:19px}#books .book-front .cover-progress{left:7px;bottom:7px;min-height:26px;padding:4px 7px}}
 @media(prefers-reduced-motion:reduce){#books .book-flip-inner{transition:none!important}}
 </style>
+<style id="prerelease-premium-highlight-v29">
+/* v29: give the closed premiere a restrained premium spotlight */
+.premiere-heading .eyebrow{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:max-content;max-width:100%;margin:0 auto;padding:8px 14px;
+  border:1px solid #d9b66d66;border-radius:999px;
+  background:linear-gradient(110deg,#d9b66d18,#d9b66d08);
+  box-shadow:0 0 22px #d9b66d12,inset 0 0 14px #d9b66d08;
+  text-shadow:0 0 12px #e5c77955;
+}
+.premiere-card{
+  border-color:#d9b66d99;
+  box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d18,0 0 34px #d9b66d18;
+  animation:premiereRise .75s cubic-bezier(.2,.7,.2,1) both,premiereGlow 6s ease-in-out 1s infinite;
+}
+.premiere-card:after{
+  content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
+  background:linear-gradient(112deg,transparent 22%,#f4d58c08 39%,#fff1c51b 48%,#f4d58c08 56%,transparent 73%);
+  transform:translateX(-115%);animation:premiereSweep 9s ease-in-out 1.4s infinite;
+}
+.premiere-locked{
+  border-color:#d9b66dcc;
+  background:linear-gradient(105deg,#d9b66d20,#d9b66d09 70%);
+  box-shadow:0 0 22px #d9b66d16,inset 0 0 14px #d9b66d0b;
+  color:#f0d89d;font-weight:700;
+}
+.premiere-locked:after{
+  content:"";flex:0 0 7px;width:7px;height:7px;margin-left:auto;
+  border-radius:50%;background:#f0cf78;
+  box-shadow:0 0 8px #f0cf78,0 0 18px #d9b66d99;
+  animation:premiereStatusPulse 2.4s ease-in-out infinite;
+}
+@keyframes premiereGlow{
+  0%,100%{box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d18,0 0 26px #d9b66d12}
+  50%{box-shadow:0 24px 70px #0007,0 0 0 1px #d9b66d35,0 0 42px #d9b66d28}
+}
+@keyframes premiereSweep{
+  0%,58%{transform:translateX(-115%)}
+  82%,100%{transform:translateX(115%)}
+}
+@keyframes premiereStatusPulse{
+  0%,100%{opacity:.65;box-shadow:0 0 5px #f0cf78}
+  50%{opacity:1;box-shadow:0 0 10px #f0cf78,0 0 20px #d9b66d}
+}
+@media(prefers-reduced-motion:reduce){
+  .premiere-card{animation:none!important}
+  .premiere-card:after{animation:none!important;display:none}
+  .premiere-locked:after{animation:none!important}
+}
+@media(max-width:700px){
+  .premiere-heading .eyebrow{margin-left:0;font-size:9px;padding:7px 11px}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
