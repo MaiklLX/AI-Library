@@ -1381,9 +1381,9 @@ body.reader-open .modal.open .book-flip-sheet.flip-back {
 
 </head>
 <body>
-<header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button></div></nav></div></header>
+<header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div><button class="pill" id="favoritesToggle">♡ Избранное</button> <button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button> <a class="pill" href="./book-creator.html">✍ Создать книгу</a></div></nav></div></header>
 <main class="wrap">
-<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions"><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Исследовать библиотеку　↘</button><button class="btn" id="randomBtn">✧ Удиви меня</button></div><div class="stats"><div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div><div><strong>✦</strong><span>редакционный отбор</span></div><div><strong>0 ₽</strong><span>доступ к чтению</span></div></div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
+<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions"><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Исследовать библиотеку　↘</button><button class="btn" id="randomBtn">✧ Удиви меня</button><a class="btn primary" href="./book-creator.html">✍ Создать свою книгу</a></div><div class="stats"><div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div><div><strong>✦</strong><span>редакционный отбор</span></div><div><strong>0 ₽</strong><span>доступ к чтению</span></div></div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
 <section class="premiere-section" id="premieres" aria-labelledby="premiereTitle">
   <div class="premiere-heading">
     <div class="eyebrow">✦ ЗАКРЫТАЯ ПРЕМЬЕРА · FIRST LOOK</div>
@@ -1420,7 +1420,7 @@ let publishedBooks = [];
 
 function getAllBooks() {
   // Публичная библиотека наполняется только через проверенный content/catalog.json.
-  return [...books, ...publishedBooks];
+  return [...books, ...publishedBooks, ...personalBooks];
 }
 
 function normalizePublishedBook(book) {
@@ -2287,6 +2287,7 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
   }
 });
 
+loadPersonalBooks();
 syncGenreFilters();
 render();
 loadPublishedBooks();
