@@ -4246,3 +4246,12 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
 });
 </script>
 </body></html>
+
+
+<style id="catalog-single-book-balance-v1">
+/* Keep a one-book catalog visually intentional; the regular grid resumes as soon as more books arrive. */
+#books.grid:has(> .book:only-child) {
+  grid-template-columns: minmax(0, min(100%, 360px));
+  justify-content: center;
+}
+</style>
