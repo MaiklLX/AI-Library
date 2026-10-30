@@ -1,7 +1,7 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v44';
-const APP_SHELL = ['./', './index.html', './premiere.html', './book-creator.html', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js'];
+const CACHE_NAME = CACHE_PREFIX + 'v45';
+const APP_SHELL = ['./', './index.html', './premiere.html', './book-creator.html', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js'];
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
