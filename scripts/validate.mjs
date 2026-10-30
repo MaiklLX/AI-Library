@@ -9,6 +9,7 @@ const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), 
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
 const libraryStore = readFileSync(resolve(root, "src/platform/library-store.js"), "utf8");
+const downloadManager = readFileSync(resolve(root, "src/platform/download-manager.js"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
@@ -45,6 +46,17 @@ assert.match(platformRuntime, /transaction\.oncomplete/, "IndexedDB writes must 
 assert.match(html, /<script src=["']\.\/src\/platform\/library-store\.js["']><\/script>/, "Library storage adapter must load after the platform runtime");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/library-store\.js['"]/, "Library storage adapter must be cached for offline startup");
 assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expose book retrieval");
+assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\']><\/script>/, "Offline download manager must load after the storage adapter");
+assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
+assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
+assert.match(downloadManager, /validateBook\(book, rawId\)/, "Offline downloads must validate book structure before saving");
+assert.match(downloadManager, /await store\.setDownload\(record\)/, "Offline book content and ready status must be persisted together");
+assert.match(libraryStore, /async getDownloads\(/, "Library storage adapter must expose download collection retrieval");
+assert.match(html, /data-download-book=/, "Published catalog cards must expose offline download actions");
+assert.match(html, /id="myLibraryDownloads"/, "Personal library must show downloaded books");
+assert.match(html, /async function loadDownloadedBooks\(/, "Offline books must be restored from durable storage at startup");
+assert.match(html, /async function removeOfflineDownload\(/, "Offline downloads must be removable from the personal library");
+try { new Function(downloadManager); } catch (error) { throw new Error(`Offline download manager has a syntax error: ${error.message}`); }
 assert.match(libraryStore, /async saveBook\(/, "Library storage adapter must expose book persistence");
 assert.match(libraryStore, /async getMetadata\(/, "Library storage adapter must expose metadata retrieval");
 assert.match(libraryStore, /async setDownload\(/, "Library storage adapter must expose download-state persistence");
