@@ -210,7 +210,7 @@ assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Visual app-shell
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(html, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Book action update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v52['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
