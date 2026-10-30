@@ -62,6 +62,7 @@
       title: book.title,
       book,
       catalogVersion: catalog.version,
+      catalogRevision: String(entry.revision || book.revision || '').trim() || null,
       contentHash,
       contentBytes: new TextEncoder().encode(source).length,
       downloadedAt: Date.now()
@@ -84,14 +85,26 @@
     if (!catalog || catalog.version !== 1 || !Array.isArray(catalog.books)) throw new Error('Каталог имеет неподдерживаемый формат.');
     const entry = catalog.books.find(item => item && item.id === rawId);
     if (!entry || entry.path !== './content/books/' + rawId + '.json') throw new Error('Книга отсутствует в актуальном каталоге.');
-    const bookResponse = await fetch(entry.path, { cache: 'no-cache' });
-    const { data: book, text: source } = await readJson(bookResponse, 'Книга');
-    validateBook(book, rawId);
-    const remoteHash = await digest(source);
-    const isDifferent = current.contentHash && remoteHash ? current.contentHash !== remoteHash : JSON.stringify(current.book) !== JSON.stringify(book);
+
+    // The catalog carries the published revision. A check must not download the book body.
+    const latestRevision = String(entry.revision || '').trim();
+    const currentRevision = String(current.catalogRevision || current.book.revision || '').trim();
+    if (!latestRevision || !currentRevision) {
+      throw new Error('Не удалось безопасно проверить редакцию: отсутствует номер версии в каталоге или локальной книге.');
+    }
+
+    const isDifferent = latestRevision !== currentRevision;
     if (isDifferent) updateAvailable.add('published-' + rawId);
     else updateAvailable.delete('published-' + rawId);
-    return { id: 'published-' + rawId, available: isDifferent, currentTitle: current.title, latestTitle: book.title, checkedAt: Date.now() };
+    return {
+      id: 'published-' + rawId,
+      available: isDifferent,
+      currentTitle: current.title,
+      latestTitle: entry.title || current.title,
+      currentRevision,
+      latestRevision,
+      checkedAt: Date.now()
+    };
   }
 
   async function load() {
