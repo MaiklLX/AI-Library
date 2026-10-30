@@ -1985,7 +1985,9 @@ function showPart() {
     current.title;
 
   document.querySelector('#modalAuthor').textContent =
-    'AI Library · авторский проект';
+    typeof current.author === 'string' && current.author.trim()
+      ? current.author.trim()
+      : 'AI Library';
 
   paginateCurrentChapter();
 
