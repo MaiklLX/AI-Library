@@ -290,3 +290,8 @@ Last maintained: 2026-10-30.
 - No reader code, page navigation, touch handling, book content, storage, downloads or user data were changed.
 - This is a source-level refinement; verify the visual intensity and layering on desktop and mobile after deployment.
 - Latest feature implementation is on `main`; CI and Pages deployment must be checked on the final handover commit before calling it published.
+
+### Validation follow-up
+
+- The first enhanced-star CI run caught a stale validator assertion that expected the previous single-selector reduced-motion rule. The new CSS correctly disables the star and its pseudo-element layers together; the assertion has been updated to check the new grouped selector.
+- Validator correction commit: `f7dd010f18f88bb58790af1fad84e27827314152`. Re-check CI and Pages deployment on the final handover commit.
