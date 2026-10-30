@@ -2154,6 +2154,92 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
   .premiere-heading .eyebrow{margin-left:0;font-size:9px;padding:7px 11px}
 }
 </style>
+
+<style id="reader-desktop-flow-layout-v33">
+/* Desktop reader layout: use normal flex flow instead of stacked absolute layers. */
+@media (min-width:1100px) and (hover:hover) and (pointer:fine) {
+  body.reader-open .modal.open { display:flex!important; align-items:stretch!important; justify-content:stretch!important; }
+  body.reader-open .modal.open .reader-shell {
+    position:relative!important; display:flex!important; flex-direction:column!important;
+    width:100%!important; height:100%!important; min-width:0!important; min-height:0!important;
+    max-width:none!important; max-height:100%!important; margin:0!important; padding:0!important;
+    overflow:hidden!important; border:0!important; border-radius:0!important;
+  }
+  body.reader-open .modal.open .book-spread {
+    position:relative!important; inset:auto!important; display:flex!important; flex:1 1 0!important;
+    align-self:stretch!important; width:100%!important; height:auto!important; min-width:0!important;
+    min-height:0!important; max-width:none!important; margin:0!important; padding:0!important;
+    gap:0!important; overflow:hidden!important; perspective:2200px;
+  }
+  body.reader-open .modal.open .book-spread>.book-page {
+    position:relative!important; inset:auto!important; display:flex!important; flex:1 1 50%!important;
+    width:50%!important; height:auto!important; min-width:0!important; min-height:0!important;
+    max-height:none!important; margin:0!important; padding:calc(76px + env(safe-area-inset-top)) clamp(24px,3.2vw,58px) calc(82px + env(safe-area-inset-bottom))!important;
+    overflow:hidden!important; border:1px solid rgba(202,177,125,.58)!important;
+    border-radius:5px 0 0 5px!important; box-shadow:inset -14px 0 22px #6c573018,0 4px 20px #0002!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page-right {
+    display:flex!important; border-left:0!important; border-radius:0 5px 5px 0!important;
+    box-shadow:inset 14px 0 22px #6c573018,0 4px 20px #0002!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page .book-running-head { display:none!important; }
+  body.reader-open .modal.open .book-spread>.book-page .reader {
+    display:block!important; flex:1 1 0!important; width:100%!important; height:auto!important;
+    min-width:0!important; min-height:0!important; max-height:none!important; margin:0!important;
+    padding:0!important; overflow:hidden!important; font-size:clamp(17px,2.1vh,22px); line-height:1.78;
+  }
+  body.reader-open .modal.open .book-spread>.book-page .book-page-number {
+    position:absolute!important; bottom:calc(76px + env(safe-area-inset-bottom))!important;
+  }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="sepia"] { background:linear-gradient(135deg,#fbf7ed 0%,#f4ecd9 100%)!important;color:#302a20!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="light"] { background:#fff!important;color:#242424!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="dark"] { background:#17191d!important;color:#e8e8e8!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="dark"] .reader { color:#e8e8e8!important; }
+  body.reader-open .modal.open .book-spread>.book-page[data-theme="light"] .reader { color:#242424!important; }
+  body.reader-open .modal.open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet {
+    position:absolute!important; top:0!important; bottom:0!important; left:auto!important; right:0!important;
+    width:50%!important; height:auto!important; z-index:8!important; padding:0!important;
+    transform-origin:left center;
+  }
+  body.reader-open .modal.open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet.flip-back {
+    left:0!important; right:auto!important; transform-origin:right center;
+  }
+  body.reader-open .reader-settings {
+    top:calc(66px + env(safe-area-inset-top))!important; right:20px!important; left:auto!important;
+    bottom:auto!important; width:min(430px,calc(100vw - 40px)); z-index:20!important;
+  }
+}
+</style>
+
+
+<style id="reader-interaction-performance-fixes-v34">
+/* Reliable click targets and composited page-turn layers across Chromium browsers. */
+body.reader-open .book-spread { isolation:isolate; }
+body.reader-open .book-spread>.book-page { cursor:default; }
+body.reader-open .book-spread>.book-page .reader { cursor:text; }
+body.reader-open .book-spread>.book-page.book-flip-sheet {
+  position:absolute!important; inset:0!important; z-index:12!important;
+  display:flex!important; flex-direction:column!important; pointer-events:none!important;
+  transform-style:preserve-3d; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  will-change:transform,filter;
+}
+body.reader-open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet {
+  top:0!important; bottom:0!important; left:auto!important; right:0!important;
+  width:50%!important; height:auto!important; transform-origin:left center;
+}
+body.reader-open .book-spread>.book-page.book-flip-sheet.spread-turn-sheet.flip-back {
+  left:0!important; right:auto!important; transform-origin:right center;
+}
+body.reader-open .book-page-right.is-empty .book-page-number,
+body.reader-open .book-page-right.is-empty .book-running-head { visibility:hidden!important; }
+@media (min-width:1100px) and (hover:hover) and (pointer:fine) {
+  body.reader-open .book-spread>.book-page:first-child { cursor:w-resize; }
+  body.reader-open .book-spread>.book-page-right:not(.is-empty) { cursor:e-resize; }
+}
+@media(prefers-reduced-motion:reduce) {
+  body.reader-open .book-spread>.book-page.book-flip-sheet { will-change:auto; }
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2775,11 +2861,37 @@ function paginateCurrentChapter(preserveOffset = null) {
   // original manuscript and could hide omissions at page boundaries.
   const tokens = text.match(/\s+|[^\s]+/g) || [];
   let cursor = 0;
+  // Reuse the measured length of the previous page to narrow later searches.
+  let pageTokenEstimate = 0;
 
   while (cursor < tokens.length) {
     let low = cursor + 1;
     let high = tokens.length;
     let best = cursor;
+
+    if (pageTokenEstimate > 0) {
+      const lowerProbe = Math.min(tokens.length, cursor + Math.max(1, Math.floor(pageTokenEstimate * 0.72)));
+      const upperProbe = Math.min(tokens.length, cursor + Math.max(2, Math.ceil(pageTokenEstimate * 1.28)));
+      if (lowerProbe > cursor && fits(tokens.slice(cursor, lowerProbe).join(''))) {
+        best = lowerProbe;
+        low = lowerProbe + 1;
+      }
+      high = upperProbe;
+      if (upperProbe > best && fits(tokens.slice(cursor, upperProbe).join(''))) {
+        best = upperProbe;
+        low = upperProbe + 1;
+        while (high < tokens.length && best === high) {
+          const expanded = Math.min(tokens.length, cursor + Math.max((high - cursor) * 2, pageTokenEstimate * 2));
+          if (expanded <= high || !fits(tokens.slice(cursor, expanded).join(''))) {
+            high = expanded - 1;
+            break;
+          }
+          best = expanded;
+          low = expanded + 1;
+          high = expanded;
+        }
+      }
+    }
 
     while (low <= high) {
       const mid = Math.floor((low + high) / 2);
@@ -2790,6 +2902,7 @@ function paginateCurrentChapter(preserveOffset = null) {
         high = mid - 1;
       }
     }
+    if (best > cursor) pageTokenEstimate = best - cursor;
 
     // A single unusually long word/token may be taller than the page.
     // Split it by Unicode code points rather than allowing it to be clipped.
@@ -2869,9 +2982,10 @@ function renderReadingPage(animate = true) {
   const pageEnd=Math.min(readingPages.length,readingPageIndex+(spread?2:1));
   if(pageLabel)pageLabel.textContent=spread?`СТРАНИЦЫ ${readingPageIndex+1}–${pageEnd}`:`СТР. ${readingPageIndex+1} / ${readingPages.length}`;
   if(pageNumber)pageNumber.textContent=String(readingPageIndex+1);
-  if(rightLabel)rightLabel.textContent=`СТР. ${readingPageIndex+2}`;
-  if(rightNumber)rightNumber.textContent=String(readingPageIndex+2);
-  if(rightPage)rightPage.dataset.theme=document.querySelector('#bookPage')?.dataset.theme||'sepia';
+  const hasRightPage=spread&&readingPageIndex+1<readingPages.length;
+  if(rightLabel){rightLabel.textContent=hasRightPage?`СТР. ${readingPageIndex+2}`:'';rightLabel.hidden=!hasRightPage;}
+  if(rightNumber){rightNumber.textContent=hasRightPage?String(readingPageIndex+2):'';rightNumber.hidden=!hasRightPage;}
+  if(rightPage){rightPage.dataset.theme=document.querySelector('#bookPage')?.dataset.theme||'sepia';rightPage.classList.toggle('is-empty',!hasRightPage);}
   const status=document.querySelector('#readerPageStatus');
   if(status)status.textContent=spread?`СТР. ${readingPageIndex+1}–${pageEnd} / ${readingPages.length}`:`СТР. ${readingPageIndex+1} / ${readingPages.length}`;
   if (animate) {
@@ -2902,21 +3016,31 @@ function animateBookPageTurn(direction, afterTurn) {
   const sheet=page.cloneNode(true);
   sheet.removeAttribute('id');
   sheet.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-  sheet.classList.remove('turn-forward', 'turn-back');
-  sheet.classList.add('book-flip-sheet',direction>0?'flip-forward':'flip-back');
+  sheet.classList.remove('turn-forward','turn-back','is-empty');
+  sheet.classList.add('book-flip-sheet');
   if(spread)sheet.classList.add('spread-turn-sheet');
   sheet.setAttribute('aria-hidden','true');
-  (spread?document.querySelector('#bookSpread'):page).appendChild(sheet);
-  afterTurn();
+  const host=spread?document.querySelector('#bookSpread'):page;
+  if(!host){afterTurn();return;}
+  host.appendChild(sheet);
 
-  let finished = false;
-  const cleanup = () => {
-    if (finished) return;
-    finished = true;
+  let finished=false;
+  const cleanup=()=>{
+    if(finished)return;
+    finished=true;
     sheet.remove();
   };
-  sheet.addEventListener('animationend', cleanup, { once: true });
-  window.setTimeout(cleanup, 900);
+  sheet.addEventListener('animationend',cleanup,{once:true});
+  window.setTimeout(cleanup,900);
+
+  // Force the initial transform to be committed before starting the turn.
+  // Then update the underlying spread on the next frame, so Chromium-based
+  // browsers can paint the outgoing page before the new text replaces it.
+  void sheet.offsetWidth;
+  requestAnimationFrame(()=>{
+    sheet.classList.add(direction>0?'flip-forward':'flip-back');
+    requestAnimationFrame(afterTurn);
+  });
 }
 
 function turnReadingPage(direction) {
@@ -3074,30 +3198,33 @@ readerArea.addEventListener('pointerup', e => {
 readerArea.addEventListener('pointercancel', resetReaderSwipe, { passive: true });
 readerArea.addEventListener('lostpointercapture', resetReaderSwipe, { passive: true });
 
-// Tap near the paper's left or right edge to turn a page (e-book style).
+// Tap/click the outer paper edges to turn pages on desktop and touch devices.
 const bookPageArea = document.querySelector('#bookPage');
+const bookSpreadArea = document.querySelector('#bookSpread');
 let edgeTapStart = null;
-bookPageArea.addEventListener('pointerdown', e => {
-  if (!readingModal.classList.contains('open') || !e.isPrimary) return;
-  const rect = bookPageArea.getBoundingClientRect();
-  if (!rect.width || e.clientX < rect.left || e.clientX > rect.right) return;
-  edgeTapStart = { id: e.pointerId, x: e.clientX, y: e.clientY, time: Date.now() };
-}, { passive: true });
-bookPageArea.addEventListener('pointerup', e => {
-  const start = edgeTapStart;
-  edgeTapStart = null;
-  if (!start || start.id !== e.pointerId || !readingModal.classList.contains('open') || !current) return;
-  if (Date.now() - start.time > 650 || Math.abs(e.clientX - start.x) > 12 || Math.abs(e.clientY - start.y) > 12) return;
-  if (window.getSelection()?.toString()) return;
-  if (e.pointerType === 'mouse') return;
-  const rect = bookPageArea.getBoundingClientRect();
-  if (!rect.width || e.clientX < rect.left || e.clientX > rect.right) return;
-  const edgeWidth = Math.max(56, Math.min(96, rect.width * 0.18));
-  if (e.clientX - rect.left <= edgeWidth) turnReadingPage(-1);
-  else if (rect.right - e.clientX <= edgeWidth) turnReadingPage(1);
-  else toggleReaderChrome();
-}, { passive: true });
-bookPageArea.addEventListener('pointercancel', () => { edgeTapStart = null; }, { passive: true });
+bookSpreadArea.addEventListener('pointerdown', e => {
+  if (!readingModal.classList.contains('open') || !e.isPrimary || (e.pointerType==='mouse'&&e.button!==0)) return;
+  const page=e.target.closest?.('.book-page');
+  if(!page||page.classList.contains('book-flip-sheet'))return;
+  const rect=bookSpreadArea.getBoundingClientRect();
+  if(!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
+  edgeTapStart={id:e.pointerId,x:e.clientX,y:e.clientY,time:Date.now(),pointerType:e.pointerType};
+}, { passive:true });
+bookSpreadArea.addEventListener('pointerup', e => {
+  const start=edgeTapStart;
+  edgeTapStart=null;
+  if(!start||start.id!==e.pointerId||!readingModal.classList.contains('open')||!current)return;
+  if(Date.now()-start.time>650||Math.abs(e.clientX-start.x)>12||Math.abs(e.clientY-start.y)>12)return;
+  if(window.getSelection()?.toString())return;
+  const rect=bookSpreadArea.getBoundingClientRect();
+  if(!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
+  const edgeWidth=Math.max(48,Math.min(92,rect.width*(isDesktopReaderSpread()?0.075:0.18)));
+  if(e.clientX-rect.left<=edgeWidth){turnReadingPage(-1);return;}
+  if(rect.right-e.clientX<=edgeWidth){turnReadingPage(1);return;}
+  if(start.pointerType!=='mouse')toggleReaderChrome();
+}, { passive:true });
+bookSpreadArea.addEventListener('pointercancel',()=>{edgeTapStart=null;},{passive:true});
+bookSpreadArea.addEventListener('lostpointercapture',()=>{edgeTapStart=null;},{passive:true});
 
 // Two-finger pinch changes the reader font size without losing the reading position.
 const readerPinchPointers = new Map();

@@ -52,7 +52,7 @@ assert.match(html, /reader-settings\{top:calc\(66px/, "Desktop reading settings 
 assert.match(html, /rightReader\.style\.fontSize=settings\.fontSize/, "Reader typography settings must apply to both pages");
 assert.match(html, /readerHoverEnabled=window\.matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches/, "Desktop reader hover controls must be enabled only for mouse-like pointers");
 assert.match(html, /const readerHoverEdge=64/, "Desktop reader controls must reveal from the screen edges");
-assert.match(html, /if \(e\.pointerType === 'mouse'\) return;/, "Mouse clicks on the page must not toggle reader controls");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "Mouse and touch page-edge interaction must cover the full spread");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
@@ -97,4 +97,18 @@ for (const icon of manifest.icons || []) {
     assert.ok(existsSync(resolve(root, icon.src)), `Manifest icon does not exist: ${icon.src}`);
   }
 }
+
+assert.match(html, /id="reader-desktop-flow-layout-v33"/, "Desktop reader must use the stable flex-flow layout");
+assert.match(html, /\.book-spread\s*\{[^}]*position:relative!important;[^}]*display:flex!important;[^}]*flex:1 1 0!important/s, "Desktop book spread must participate in normal reader layout");
+assert.match(html, /\.book-spread>\.book-page\s*\{[^}]*position:relative!important;[^}]*height:auto!important/s, "Desktop pages must not be absolutely stacked");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v34['"]/, "Reader interaction cache must be refreshed");
+
+
+assert.match(html, /let pageTokenEstimate = 0/, "Pagination should reuse measured page lengths to reduce DOM layout work");
+assert.match(html, /reader-interaction-performance-fixes-v34/, "Reader interaction fixes must be present");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "Page edge handling must cover the complete two-page spread");
+assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*return/, "Mouse clicks must not be excluded from page edge turns");
+assert.match(html, /requestAnimationFrame\(\(\)=>\{\s*sheet\.classList\.add\(direction>0\?'flip-forward':'flip-back'\)/, "Page-turn animation must start on a committed animation frame");
+assert.match(html, /hasRightPage=spread&&readingPageIndex\+1<readingPages\.length/, "The last odd page must not display a phantom right-page number");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
