@@ -2701,6 +2701,133 @@ body.reader-open #pageTurnSheet.flip-back {
   #myLibrary #myLibraryDownloads { grid-template-columns:minmax(0,1fr); }
 }
 </style>
+
+<style id="hero-cosmic-star-v1">
+/* AI Library — Hero Cosmic Star v1
+   Isolated visual layer: hero artwork only. No layout or reader logic changes. */
+.hero .art {
+  isolation: isolate;
+  background-color: #171512;
+  background-image:
+    radial-gradient(ellipse at 50% 48%, rgba(217,182,109,.19) 0%, rgba(217,182,109,.055) 24%, transparent 53%),
+    radial-gradient(1.5px 1.5px at 13% 24%, rgba(255,238,190,.68) 98%, transparent),
+    radial-gradient(1px 1px at 26% 76%, rgba(255,231,177,.48) 98%, transparent),
+    radial-gradient(1.5px 1.5px at 79% 22%, rgba(255,245,215,.7) 98%, transparent),
+    radial-gradient(1px 1px at 88% 68%, rgba(217,182,109,.68) 98%, transparent),
+    radial-gradient(1px 1px at 61% 13%, rgba(255,238,190,.42) 98%, transparent),
+    radial-gradient(1px 1px at 38% 34%, rgba(255,238,190,.36) 98%, transparent),
+    linear-gradient(145deg, #302719 0%, #171717 68%);
+  box-shadow: 0 22px 60px rgba(0,0,0,.42), inset 0 0 90px rgba(217,182,109,.055);
+}
+.hero .art::before,
+.hero .art::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(76%, 290px);
+  height: auto;
+  aspect-ratio: 1;
+  border: 1px solid rgba(226,194,125,.28);
+  border-radius: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.hero .art::before {
+  box-shadow: 0 0 34px rgba(217,182,109,.075), inset 0 0 34px rgba(217,182,109,.035);
+  animation: aiStarOrbitOuter 34s linear infinite;
+}
+.hero .art::after {
+  width: min(57%, 218px);
+  border-color: rgba(242,218,164,.22);
+  box-shadow: 0 0 48px rgba(217,182,109,.09);
+  animation: aiStarOrbitInner 27s linear infinite reverse;
+}
+.hero .spark {
+  position: relative;
+  z-index: 2;
+  color: transparent;
+  background: linear-gradient(112deg, #c9a45f 5%, #fff1c3 34%, #ffffff 50%, #e4c47f 68%, #b98d49 95%);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 13px rgba(235,204,137,.42)) drop-shadow(0 0 34px rgba(217,182,109,.2));
+  animation: sparkFloat 5s ease-in-out infinite, aiStarSheen 8s ease-in-out infinite alternate;
+}
+.hero .spark::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -.72em;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,224,157,.24) 0%, rgba(217,182,109,.11) 28%, rgba(217,182,109,.035) 52%, transparent 72%);
+  filter: blur(13px);
+  animation: aiStarAura 4.8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.hero .spark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff1bd;
+  box-shadow:
+    0 -1.22em 0 1px rgba(255,239,192,.9),
+    .92em -.72em 0 0 rgba(240,210,145,.78),
+    1.18em .28em 0 -1px rgba(255,245,216,.85),
+    .25em 1.13em 0 0 rgba(224,190,119,.78),
+    -.95em .72em 0 -1px rgba(255,239,192,.8),
+    -1.12em -.34em 0 0 rgba(238,211,157,.68);
+  transform: translate(-50%,-50%);
+  animation: aiStarParticles 24s linear infinite;
+  pointer-events: none;
+}
+@keyframes aiStarOrbitOuter {
+  from { transform: translate(-50%,-50%) rotate(0deg) scale(1); }
+  to { transform: translate(-50%,-50%) rotate(360deg) scale(1); }
+}
+@keyframes aiStarOrbitInner {
+  from { transform: translate(-50%,-50%) rotate(0deg) scale(.985); }
+  to { transform: translate(-50%,-50%) rotate(360deg) scale(.985); }
+}
+@keyframes aiStarSheen {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+@keyframes aiStarAura {
+  from { opacity: .58; transform: scale(.92); }
+  to { opacity: 1; transform: scale(1.12); }
+}
+@keyframes aiStarParticles {
+  from { transform: translate(-50%,-50%) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotate(360deg); }
+}
+@media (max-width: 540px) {
+  .hero .art {
+    background-size: auto, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, auto;
+  }
+  .hero .art::before { width: min(82%, 240px); }
+  .hero .art::after { width: min(62%, 180px); }
+  .hero .spark {
+    filter: drop-shadow(0 0 11px rgba(235,204,137,.38)) drop-shadow(0 0 25px rgba(217,182,109,.18));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .art::before,
+  .hero .art::after,
+  .hero .spark,
+  .hero .spark::before,
+  .hero .spark::after {
+    animation: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
