@@ -2828,6 +2828,80 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+
+<style id="hero-cosmic-depth-v2">
+/* AI Library — Cosmic Depth v2: a restrained light-current layer around the hero star. */
+.hero .art { position: relative; }
+.hero .art .cosmic-halo {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 46%;
+  width: min(88%, 340px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: .62;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 34deg,
+    rgba(239,210,151,.04) 48deg,
+    rgba(255,235,188,.34) 54deg,
+    rgba(217,182,109,.08) 62deg,
+    transparent 78deg 154deg,
+    rgba(239,210,151,.05) 172deg,
+    rgba(255,235,188,.24) 180deg,
+    transparent 194deg 274deg,
+    rgba(217,182,109,.08) 292deg,
+    rgba(255,235,188,.3) 300deg,
+    transparent 316deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 53%, #000 57%, #000 60%, transparent 66%);
+  mask: radial-gradient(circle, transparent 53%, #000 57%, #000 60%, transparent 66%);
+  filter: blur(5px) drop-shadow(0 0 12px rgba(217,182,109,.13));
+  transform: translate(-50%,-50%);
+  animation: aiStarCurrent 46s linear infinite, aiStarCurrentBreath 7s ease-in-out infinite alternate;
+}
+.hero .art::before {
+  animation: aiStarOrbitOuter 34s linear infinite, aiStarRingBreath 8s ease-in-out infinite alternate;
+}
+.hero .art::after {
+  animation: aiStarOrbitInner 27s linear infinite reverse, aiStarInnerBreath 6.5s ease-in-out infinite alternate;
+}
+.hero .spark {
+  animation: sparkFloat 5s ease-in-out infinite, aiStarSheen 8s ease-in-out infinite alternate, aiStarCorePulse 6s ease-in-out infinite;
+}
+@keyframes aiStarCurrent {
+  from { transform: translate(-50%,-50%) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotate(360deg); }
+}
+@keyframes aiStarCurrentBreath {
+  from { opacity: .38; filter: blur(7px) drop-shadow(0 0 8px rgba(217,182,109,.08)); }
+  to { opacity: .78; filter: blur(4px) drop-shadow(0 0 17px rgba(217,182,109,.2)); }
+}
+@keyframes aiStarRingBreath {
+  from { box-shadow: 0 0 20px rgba(217,182,109,.035), inset 0 0 20px rgba(217,182,109,.015); }
+  to { box-shadow: 0 0 48px rgba(217,182,109,.13), inset 0 0 38px rgba(217,182,109,.055); }
+}
+@keyframes aiStarInnerBreath {
+  from { opacity: .52; box-shadow: 0 0 22px rgba(217,182,109,.045); }
+  to { opacity: .95; box-shadow: 0 0 42px rgba(217,182,109,.15); }
+}
+@keyframes aiStarCorePulse {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(235,204,137,.34)) drop-shadow(0 0 29px rgba(217,182,109,.16)); }
+  50% { filter: drop-shadow(0 0 18px rgba(255,229,174,.52)) drop-shadow(0 0 43px rgba(217,182,109,.26)); }
+}
+@media (max-width: 540px) {
+  .hero .art .cosmic-halo { width: min(94%, 270px); filter: blur(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .art .cosmic-halo,
+  .hero .art::before,
+  .hero .art::after,
+  .hero .spark { animation: none !important; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2850,7 +2924,7 @@ body.reader-open #pageTurnSheet.flip-back {
 <div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div>
 <div><strong>✦</strong><span>редакционный отбор</span></div>
 <div><strong>0 ₽</strong><span>доступ к чтению</span></div>
-</div></div><div class="art"><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
+</div></div><div class="art"><i class="cosmic-halo" aria-hidden="true"></i><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
 <section class="my-library-section" id="myLibrary" aria-labelledby="myLibraryTitle">
   <div class="my-library-heading"><div><div class="eyebrow">ТВОЯ ЛИЧНАЯ КОЛЛЕКЦИЯ</div><h2 id="myLibraryTitle">Моя библиотека</h2><p>Личные книги и истории, к которым ты уже возвращался.</p></div><a class="btn library-catalog-link" href="#catalog">Открыть каталог →</a></div>
   <div class="library-stats"><div><strong id="myLibraryPersonalCount">0</strong><span>личных книг</span></div><div><strong id="myLibraryProgressCount">0</strong><span>книг с прогрессом</span></div><div><strong id="myLibraryFavoritesCount">0</strong><span>в избранном</span></div></div>
