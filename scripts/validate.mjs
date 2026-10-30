@@ -111,7 +111,7 @@ assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*retur
 
 
 assert.match(html, /reader-crisp-page-turn-v35/, "Reader must use the crisp non-3D page transition");
-assert.match(html, /readerPageIndex=Math\.floor\(readingPageIndex\/2\)\*2/, "Desktop page index must align to the left page of a spread");
+assert.match(html, /if\(spread\)readingPageIndex=Math\.floor\(readingPageIndex\/2\)\*2/, "Desktop page index must align to the left page of a spread");
 assert.match(html, /const hasRightPage=spread&&readingPageIndex\+1<totalPages/, "Right-page numbering must be conditional on a real page");
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
