@@ -1874,6 +1874,158 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 @media(prefers-reduced-motion:reduce){#books .book-flip-inner{transition:none!important}.premiere-card,.premiere-orbit,.premiere-orbit:before,.premiere-orbit:after,.premiere-empty-icon{animation:none!important}.premiere-book-cover{transition:none!important}}
 
 </style>
+<style id="prerelease-mobile-compact-v27">
+
+/* v27: mobile prerelease is a compact editorial strip, not a hero panel */
+@media screen and (max-width:680px){
+  #premieres.premiere-section{
+    margin:8px 0 26px!important;
+    padding:0!important;
+  }
+  #premieres.premiere-section:before{display:none!important}
+  #premieres .premiere-heading{
+    max-width:none!important;
+    margin:0 0 10px!important;
+    padding:0!important;
+    text-align:left!important;
+  }
+  #premieres .premiere-heading .eyebrow{
+    display:block!important;
+    margin:0 0 5px!important;
+    font-size:8px!important;
+    line-height:1.2!important;
+    letter-spacing:.12em!important;
+  }
+  #premieres .premiere-heading .eyebrow:before,
+  #premieres .premiere-heading .eyebrow:after{display:none!important}
+  #premieres .premiere-heading h2{
+    max-width:100%!important;
+    margin:0!important;
+    font-size:clamp(19px,5.4vw,24px)!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+    text-wrap:balance;
+  }
+  #premieres .premiere-heading p{display:none!important}
+  #prereleaseStage{min-width:0}
+  #prereleaseStage .premiere-card{
+    display:grid!important;
+    grid-template-columns:64px minmax(0,1fr)!important;
+    gap:11px!important;
+    align-items:center!important;
+    min-height:0!important;
+    padding:10px!important;
+    border-radius:12px!important;
+    box-shadow:0 5px 18px #0003!important;
+  }
+  #prereleaseStage .premiere-art{
+    display:grid!important;
+    place-items:center!important;
+    min-height:88px!important;
+    height:88px!important;
+    overflow:visible!important;
+  }
+  #prereleaseStage .premiere-orbit{display:none!important}
+  #prereleaseStage .premiere-book-cover{
+    width:58px!important;
+    max-width:100%!important;
+    height:auto!important;
+    aspect-ratio:2/3!important;
+    border-radius:3px 6px 6px 3px!important;
+    box-shadow:4px 6px 12px #0008!important;
+    transform:none!important;
+  }
+  #prereleaseStage .premiere-stamp{display:none!important}
+  #prereleaseStage .premiere-copy{
+    width:auto!important;
+    max-width:none!important;
+    min-width:0!important;
+  }
+  #prereleaseStage .premiere-kicker{display:none!important}
+  #prereleaseStage .premiere-copy h3{
+    margin:0 0 3px!important;
+    font-size:17px!important;
+    line-height:1.15!important;
+    letter-spacing:-.01em!important;
+    overflow-wrap:anywhere;
+  }
+  #prereleaseStage .premiere-tagline{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:1!important;
+    overflow:hidden!important;
+    margin:0 0 3px!important;
+    font-size:10px!important;
+    line-height:1.35!important;
+  }
+  #prereleaseStage .premiere-byline{
+    margin:0 0 7px!important;
+    font-size:9px!important;
+    line-height:1.3!important;
+  }
+  #prereleaseStage .premiere-description,
+  #prereleaseStage .premiere-meta,
+  #prereleaseStage .premiere-editor-note{display:none!important}
+  #prereleaseStage .premiere-locked{
+    display:block!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:5px 7px!important;
+    border-radius:7px!important;
+    font-size:8px!important;
+    line-height:1.3!important;
+  }
+  #prereleaseStage .premiere-locked .lock{display:none!important}
+  #prereleaseStage .premiere-open{
+    display:inline-flex!important;
+    width:auto!important;
+    min-height:30px!important;
+    margin:7px 0 0!important;
+    padding:0 10px!important;
+    font-size:9px!important;
+    line-height:1!important;
+  }
+  #prereleaseStage .premiere-empty{
+    display:grid!important;
+    grid-template-columns:32px minmax(0,1fr)!important;
+    gap:9px!important;
+    align-items:center!important;
+    min-height:0!important;
+    padding:10px 12px!important;
+    border-radius:11px!important;
+  }
+  #prereleaseStage .premiere-empty:after{display:none!important}
+  #prereleaseStage .premiere-empty-icon{
+    width:30px!important;
+    font-size:18px!important;
+    animation:none!important;
+  }
+  #prereleaseStage .premiere-empty h3{
+    margin:0 0 3px!important;
+    font-size:14px!important;
+    line-height:1.2!important;
+  }
+  #prereleaseStage .premiere-empty p{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+    font-size:9px!important;
+    line-height:1.35!important;
+  }
+}
+@media screen and (max-width:380px){
+  #premieres.premiere-section{margin:5px 0 20px!important}
+  #premieres .premiere-heading{margin-bottom:8px!important}
+  #premieres .premiere-heading h2{font-size:19px!important}
+  #prereleaseStage .premiere-card{grid-template-columns:54px minmax(0,1fr)!important;gap:9px!important;padding:8px!important}
+  #prereleaseStage .premiere-art{height:78px!important;min-height:78px!important}
+  #prereleaseStage .premiere-book-cover{width:50px!important}
+  #prereleaseStage .premiere-copy h3{font-size:15px!important}
+  #prereleaseStage .premiere-open{min-height:28px!important;margin-top:5px!important}
+}
+
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
