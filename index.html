@@ -3122,11 +3122,7 @@ function showPart() {
   paginateCurrentChapter();
 
   const page = document.querySelector('#bookPage');
-  if (page) {
-    page.classList.remove('turn-forward', 'turn-back');
-    void page.offsetWidth;
-    page.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turn-back' : 'turn-forward');
-  }
+  if (page) page.classList.remove('turn-forward','turn-back');
   window.__aiLibraryTurnDirection = 'forward';
 
   document.querySelector('#chapterLabel').textContent =
