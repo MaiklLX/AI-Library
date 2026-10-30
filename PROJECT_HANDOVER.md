@@ -247,3 +247,13 @@ Last maintained: 2026-10-30.
 - Both checks completed successfully on SHA `953ef4fb341a70f8ae1a419f74e04329160f2338`.
 - Note: this was a source/CSS structural audit, not a live screenshot-based device rendering test. Real device confirmation remains useful after deployment.
 - Next: continue a conservative visual pass over the home hero/catalog and library controls. Keep reader layout and interaction code protected.
+
+## Single-book catalog balance (2026-10-30)
+
+- The published catalog currently contains one full published book; the catalog grid still reserved three desktop columns, leaving the only card visually stranded in a narrow left column.
+- Added isolated style layer `catalog-single-book-balance-v1` in `index.html`: when the grid contains exactly one book card, it uses a centered, responsive column capped at 360px. As soon as more books are published, the selector stops matching and the existing three-/two-/one-column responsive grid remains in control.
+- No book-card markup, flip interaction, read/download handlers, reader code, pagination, IndexedDB, localStorage, catalog data or user records were changed.
+- Service Worker app-shell cache bumped from `v53` to `v54`.
+- Added validator assertions for the isolated style, one-card selector and responsive column sizing; updated existing cache assertions to `v54`.
+- This is a source-level layout correction; actual rendering on physical devices remains to be confirmed.
+- Next: verify CI and GitHub Pages deployment on the final handover commit, then continue the home/catalog visual pass based on real-device feedback.
