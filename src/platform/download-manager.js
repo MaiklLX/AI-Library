@@ -55,6 +55,9 @@
     const bookResponse = await fetch(entry.path, { cache: 'no-cache' });
     const { data: book, text: source } = await readJson(bookResponse, 'Книга');
     validateBook(book, rawId);
+    if (entry.revision && String(book.revision || '') !== String(entry.revision)) {
+      throw new Error('Редакция загруженного текста не совпадает с каталогом. Предыдущая офлайн-копия сохранена.');
+    }
     const contentHash = await digest(source);
     const record = {
       id: 'published-' + rawId,
