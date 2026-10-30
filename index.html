@@ -1399,6 +1399,98 @@ body.reader-open{position:fixed;width:100%;overflow:hidden}
 @media(orientation:landscape) and (max-height:560px){body.reader-open .modal.open{display:flex;align-items:stretch;justify-content:center;height:var(--ai-library-reader-viewport-height,100dvh);max-height:var(--ai-library-reader-viewport-height,100dvh);min-height:0}body.reader-open .modal.open .dialog{display:flex;flex-direction:column;width:min(100%,1120px);height:100%;max-height:100%;min-height:0;overflow:hidden;padding:max(4px,var(--ai-safe-top)) max(10px,var(--ai-safe-right)) max(4px,var(--ai-safe-bottom)) max(10px,var(--ai-safe-left))}body.reader-open #modalTitle{flex:0 0 auto;font-size:17px;line-height:1.1;margin:0 34px 2px 0}body.reader-open #modalGenre,body.reader-open #modalAuthor,body.reader-open .notice{display:none!important}body.reader-open .modal.open .book-page{display:flex;flex:1 1 0;min-height:0;margin:2px 0 3px!important;padding:7px 16px 21px!important}body.reader-open .modal.open .book-running-head{flex:0 0 auto;padding-bottom:3px;font-size:8px}body.reader-open .modal.open .reader{display:block;flex:1 1 0;min-height:0;height:auto;margin:4px 0 2px!important;font-size:15px;line-height:1.35;overflow:hidden!important}body.reader-open .reader-settings{flex:0 0 auto;margin:0 0 2px!important;padding:2px 5px!important;gap:5px;font-size:10px}body.reader-open .reader-settings button,body.reader-open .reader-settings select{min-height:24px!important;padding:1px 5px!important;font-size:10px}body.reader-open .controls{flex:0 0 auto;gap:6px;padding-top:3px!important}body.reader-open .controls .btn{min-height:27px!important;padding:3px 8px!important;font-size:10px}body.reader-open #chapterLabel{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.book,.art,.btn,.pill,.genre{transition:none!important}}
 </style>
+
+<style id="immersive-reader-v22">
+/* Immersive e-reader: full-viewport paper with controls in reserved safe bands. */
+body.reader-open .modal.open { padding:0 !important; align-items:stretch; }
+body.reader-open .modal.open .reader-shell {
+  position:relative !important; display:block !important; width:100% !important; height:100% !important;
+  min-height:0 !important; max-height:100% !important; max-width:none !important;
+  margin:0 !important; padding:0 !important; overflow:hidden !important;
+  border:0 !important; border-radius:0 !important; background:transparent !important;
+}
+body.reader-open .modal.open .book-page {
+  position:absolute !important; inset:0 !important; width:100% !important; height:100% !important;
+  min-height:0 !important; max-height:none !important; margin:0 !important;
+  border:0 !important; border-radius:0 !important; box-shadow:none !important;
+  padding:calc(76px + env(safe-area-inset-top)) clamp(24px, 7vw, 112px) calc(82px + env(safe-area-inset-bottom)) !important;
+  background:linear-gradient(135deg,#fbf7ed 0%,#f4ecd9 100%); color:#302a20;
+  transition:background .2s ease,color .2s ease;
+}
+body.reader-open .modal.open .book-page[data-theme="light"] {
+  background:#fff !important; color:#242424 !important;
+}
+body.reader-open .modal.open .book-page[data-theme="dark"] {
+  background:#17191d !important; color:#e8e8e8 !important;
+}
+body.reader-open .modal.open .book-page[data-theme="dark"] .reader { color:#e8e8e8 !important; }
+body.reader-open .modal.open .book-page[data-theme="light"] .reader { color:#242424 !important; }
+body.reader-open .modal.open .book-running-head { display:none !important; }
+body.reader-open .modal.open .reader {
+  margin:0 !important; padding:0 !important; width:100% !important; height:100% !important;
+  max-height:none !important; color:#302a20 !important;
+  font-size:clamp(17px,2.1vh,22px); line-height:1.78; overflow:hidden !important;
+}
+body.reader-open .modal.open .book-page-number { bottom:calc(76px + env(safe-area-inset-bottom)) !important; }
+.reader-topbar,.reader-bottombar {
+  position:absolute; z-index:12; left:0; right:0; display:flex; align-items:center;
+  gap:12px; padding:10px max(16px,env(safe-area-inset-left));
+  background:linear-gradient(180deg,rgba(10,10,10,.76),rgba(10,10,10,.22));
+  color:#fff; transition:opacity .22s ease,transform .22s ease;
+}
+.reader-topbar { top:0; min-height:calc(62px + env(safe-area-inset-top)); padding-top:calc(8px + env(safe-area-inset-top)); }
+.reader-bottombar { bottom:0; min-height:calc(62px + env(safe-area-inset-bottom)); padding-bottom:calc(8px + env(safe-area-inset-bottom)); justify-content:center; background:linear-gradient(0deg,rgba(10,10,10,.78),rgba(10,10,10,.18)); }
+.reader-heading { min-width:0; flex:1; text-align:center; }
+body.reader-open .reader-heading h2 { margin:0 !important; color:#fff !important; font:600 15px/1.3 system-ui,sans-serif !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.reader-subheading,.reader-page-status { color:#ffffffc9; font-size:11px; letter-spacing:.08em; }
+.reader-icon-button,.reader-nav-button {
+  display:grid; place-items:center; flex:0 0 40px; width:40px; height:40px; min-height:40px;
+  padding:0; border:1px solid #ffffff40; border-radius:50%; background:#10101070; color:#fff;
+  font:600 18px/1 system-ui,sans-serif; cursor:pointer; backdrop-filter:blur(12px);
+}
+.reader-icon-button:focus-visible,.reader-nav-button:focus-visible { outline:2px solid #d9b66d; outline-offset:3px; }
+.reader-page-status { min-width:100px; text-align:center; }
+body.reader-open .reader-bottombar .reader-nav-button { flex:0 0 42px; width:42px; height:42px; }
+body.reader-open .reader-settings {
+  position:absolute !important; z-index:14; left:12px; right:12px; bottom:calc(70px + env(safe-area-inset-bottom));
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px;
+  margin:0 !important; padding:12px !important; border:1px solid #ffffff35; border-radius:14px;
+  background:rgba(22,22,22,.92) !important; color:#f5f2eb !important;
+  box-shadow:0 12px 40px #0006; backdrop-filter:blur(18px);
+}
+body.reader-open .reader-settings[hidden] { display:none !important; }
+body.reader-open .reader-settings button,body.reader-open .reader-settings select {
+  min-height:36px !important; padding:5px 9px !important; border-radius:8px;
+}
+body.reader-open .reader-settings select { max-width:140px; background:#292929; color:#fff; border:1px solid #ffffff35; }
+body.reader-open .reader-settings label,body.reader-open .reader-settings span { color:#eee !important; }
+body.reader-open.reader-chrome-hidden .reader-topbar,
+body.reader-open.reader-chrome-hidden .reader-bottombar {
+  opacity:0; pointer-events:none; transform:translateY(-8px);
+}
+body.reader-open.reader-chrome-hidden .reader-bottombar { transform:translateY(8px); }
+body.reader-open.reader-chrome-hidden .reader-settings { opacity:0; pointer-events:none; }
+@media (max-width:600px) {
+  body.reader-open .modal.open .book-page {
+    padding:calc(70px + env(safe-area-inset-top)) 20px calc(76px + env(safe-area-inset-bottom)) !important;
+  }
+  body.reader-open .modal.open .reader { font-size:17px; line-height:1.68; }
+  .reader-topbar { gap:8px; padding-left:max(10px,env(safe-area-inset-left)); padding-right:max(10px,env(safe-area-inset-right)); }
+  .reader-icon-button { width:36px; height:36px; flex-basis:36px; }
+  body.reader-open .reader-settings { left:8px; right:8px; bottom:calc(66px + env(safe-area-inset-bottom)); gap:6px; padding:9px !important; font-size:12px; }
+  body.reader-open .reader-settings select { max-width:112px; }
+}
+@media (orientation:landscape) and (max-height:520px) {
+  body.reader-open .modal.open .book-page { padding-top:calc(56px + env(safe-area-inset-top)) !important; padding-bottom:calc(58px + env(safe-area-inset-bottom)) !important; }
+  .reader-topbar { min-height:calc(48px + env(safe-area-inset-top)); }
+  .reader-bottombar { min-height:calc(48px + env(safe-area-inset-bottom)); }
+  .reader-icon-button,.reader-nav-button { width:34px; height:34px; min-height:34px; flex-basis:34px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .reader-topbar,.reader-bottombar,body.reader-open .modal.open .book-page { transition:none !important; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация"><button class="pill" id="favoritesToggle">♡ Избранное</button><button class="pill active" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Каталог</button><a class="pill" href="./book-creator.html">✍ Создать книгу</a></div></nav></div></header>
@@ -1424,7 +1516,22 @@ body.reader-open{position:fixed;width:100%;overflow:hidden}
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и открывай новые истории по мере их официального выхода.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog"><button class="close" id="closeModal" aria-label="Закрыть">×</button><div class="eyebrow" id="modalGenre"></div><h2 id="modalTitle"></h2><div class="detail" id="modalAuthor"></div><div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader" tabindex="0" aria-label="Текст книги. Используйте стрелки или Page Up и Page Down для перелистывания."></div><div class="book-page-number" id="bookPageNumber">1</div></div><div class="reader-settings" aria-label="Настройки чтения"><span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button><span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select></div><div class="controls"><button class="btn" id="prevChapter">← Предыдущая часть</button><span class="detail" id="chapterLabel"></span><button class="btn primary" id="nextChapter">Следующая часть →</button></div><p class="notice">Прогресс и настройки чтения сохраняются в этом браузере.</p></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
+  <div class="reader-topbar" id="readerTopbar">
+    <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
+    <div class="reader-heading"><h2 id="modalTitle"></h2><span class="reader-subheading" id="chapterLabel"></span></div>
+    <button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-expanded="false">Aa</button>
+  </div>
+  <div class="eyebrow" id="modalGenre" hidden></div><div class="detail" id="modalAuthor" hidden></div>
+  <div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦА 1</span></div><div class="reader" id="reader" tabindex="0" aria-label="Текст книги. Используйте стрелки или Page Up и Page Down для перелистывания."></div><div class="book-page-number" id="bookPageNumber">1</div></div>
+  <div class="reader-settings" id="readerSettings" aria-label="Настройки чтения" hidden>
+    <span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button>
+    <span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select>
+    <label for="readerTheme">Тема</label><select id="readerTheme" aria-label="Тема оформления"><option value="sepia">Сепия</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
+  </div>
+  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button" id="nextChapter" type="button" aria-label="Следующая часть">→</button></div>
+  <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
+</div></div>
 <script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
 
@@ -1844,11 +1951,15 @@ let readerBodyTop = 0;
 let readerPreviousFocus = null;
 
 
-function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing}}catch{return defaults}}
-function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing}
-function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current?getCurrentReadingOffset():null;applyReaderSettings();if(current)paginateCurrentChapter(savedOffset)}
-document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));
+function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7',theme:'sepia'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing,theme:['sepia','light','dark'].includes(String(saved.theme))?String(saved.theme):defaults.theme}}catch{return defaults}}
+function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme}
+function changeReaderSetting(key,value){const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
+document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));document.querySelector('#readerTheme')?.addEventListener('change',event=>changeReaderSetting('theme',event.target.value));
 
+let readerChromeTimer=null;
+function setReaderChromeVisible(visible,autoHide=false){const modal=document.querySelector('#modal');if(!modal)return;document.body.classList.toggle('reader-chrome-hidden',!visible);if(readerChromeTimer)clearTimeout(readerChromeTimer);const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!visible&&panel){panel.hidden=true;if(toggle)toggle.setAttribute('aria-expanded','false')}if(visible&&autoHide&&!panel?.hidden){return}if(visible&&autoHide)readerChromeTimer=setTimeout(()=>setReaderChromeVisible(false),3200)}
+function toggleReaderChrome(){setReaderChromeVisible(document.body.classList.contains('reader-chrome-hidden'))}
+document.querySelector('#readerMenuToggle')?.addEventListener('click',()=>{const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!panel)return;panel.hidden=!panel.hidden;toggle?.setAttribute('aria-expanded',String(!panel.hidden));setReaderChromeVisible(true,!panel.hidden?false:true)});
 function openReadingSpace() {
   const modal = document.querySelector("#modal");
   readerPreviousFocus = document.activeElement;
@@ -1859,6 +1970,7 @@ function openReadingSpace() {
   modal.classList.add('open');
   modal.style.touchAction = "none";
   modal.scrollTop = 0;
+  setReaderChromeVisible(true,true);
   document.querySelector("#reader")?.focus({ preventScroll: true });
 }
 
@@ -1866,6 +1978,8 @@ function closeReadingSpace() {
   const modal = document.querySelector('#modal');
   if (!modal || !modal.classList.contains('open')) return;
   saveReadingProgress();
+  if(readerChromeTimer)clearTimeout(readerChromeTimer);
+  document.body.classList.remove('reader-chrome-hidden');
   modal.classList.remove('open');
   modal.style.touchAction = '';
   document.body.classList.remove('reader-open');
@@ -2014,6 +2128,8 @@ function renderReadingPage(animate = true) {
   reader.textContent = readingPages[readingPageIndex] || '';
   if (pageLabel) pageLabel.textContent = `СТР. ${readingPageIndex + 1} / ${readingPages.length}`;
   if (pageNumber) pageNumber.textContent = String(readingPageIndex + 1);
+  const status=document.querySelector('#readerPageStatus');
+  if(status)status.textContent=`СТР. ${readingPageIndex+1} / ${readingPages.length}`;
   if (animate) {
     const sheet = document.querySelector('#pageTurnSheet');
     if (sheet) {
@@ -2231,6 +2347,7 @@ bookPageArea.addEventListener('pointerup', e => {
   const edgeWidth = Math.max(56, Math.min(96, rect.width * 0.18));
   if (e.clientX - rect.left <= edgeWidth) turnReadingPage(-1);
   else if (rect.right - e.clientX <= edgeWidth) turnReadingPage(1);
+  else toggleReaderChrome();
 }, { passive: true });
 bookPageArea.addEventListener('pointercancel', () => { edgeTapStart = null; }, { passive: true });
 
@@ -2344,7 +2461,8 @@ async function importLibraryBackup(file) {
   const settings = data.readerSettings && typeof data.readerSettings === 'object' ? data.readerSettings : {};
   const readerSettings = {
     fontSize: Number.isFinite(Number(settings.fontSize)) ? Math.max(14, Math.min(24, Number(settings.fontSize))) : 17,
-    lineSpacing: ['1.45', '1.7', '1.95'].includes(String(settings.lineSpacing)) ? String(settings.lineSpacing) : '1.7'
+    lineSpacing: ['1.45', '1.7', '1.95'].includes(String(settings.lineSpacing)) ? String(settings.lineSpacing) : '1.7',
+    theme: ['sepia', 'light', 'dark'].includes(String(settings.theme)) ? String(settings.theme) : 'sepia'
   };
 
   // Validate everything before writing so malformed files never partially replace data.
