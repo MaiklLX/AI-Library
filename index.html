@@ -1958,7 +1958,7 @@ document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSe
 
 let readerChromeTimer=null;
 function setReaderChromeVisible(visible,autoHide=false){const modal=document.querySelector('#modal');if(!modal)return;document.body.classList.toggle('reader-chrome-hidden',!visible);if(readerChromeTimer)clearTimeout(readerChromeTimer);const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!visible&&panel){panel.hidden=true;if(toggle)toggle.setAttribute('aria-expanded','false')}if(visible&&autoHide&&!panel?.hidden){return}if(visible&&autoHide)readerChromeTimer=setTimeout(()=>setReaderChromeVisible(false),3200)}
-function toggleReaderChrome(){setReaderChromeVisible(document.body.classList.contains('reader-chrome-hidden'))}
+function toggleReaderChrome(){const visible=document.body.classList.contains('reader-chrome-hidden');setReaderChromeVisible(visible,visible)}
 document.querySelector('#readerMenuToggle')?.addEventListener('click',()=>{const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!panel)return;panel.hidden=!panel.hidden;toggle?.setAttribute('aria-expanded',String(!panel.hidden));setReaderChromeVisible(true,panel.hidden)});
 function openReadingSpace() {
   const modal = document.querySelector("#modal");
