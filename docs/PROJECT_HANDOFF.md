@@ -143,3 +143,16 @@ The current `main` branch already contains a substantial offline-book foundation
 6. Consider Capacitor/native packaging only after the PWA and offline experience are stable.
 
 This is a source-code and mocked-workflow checkpoint, not proof of physical-device behavior. Continue to distinguish automated checks, source inspection, and real-device testing.
+
+## Community system planning checkpoint (2026-10-31)
+
+- PR #39 merged: Offline Engine handoff documentation corrected and audited. Merge commit: `ae47ba6419432a118aaf553a75d7c013d9484197`.
+- Main GitHub Pages deployment for Offline metadata-only update checks succeeded: run `41123103982`, commit `e00e2124552b2eab0f1b5bd5442b085dac0f5ed7`.
+- PR #40 merged: `docs/COMMUNITY_SYSTEM_SPEC.md` records the approved community product plan. Merge commit: `94ed1821c8308ae80bf16ea74c6c4efafbaf60b3`.
+- Agreed product: optional AI Library ID with unique nickname + password; guests retain public reading and downloads; daily contest features one book from one genre; one authenticated vote per account per contest day; positive and negative votes (+1/-1); permanent lifetime book rating and immutable vote history; daily contest results remain separate from lifetime rating.
+- Reader Points/coins are separate from book rating. Server-authoritative append-only ledger; exclusive-book unlocks create durable account entitlements that survive device changes and local-download removal.
+- Social actions require internet; offline reading and downloaded books remain independent and must not be blocked by account state.
+- Critical discovery: the `AI-Library` GitHub repository contains no Worker source, Wrangler configuration, or D1 migration/schema files. The frontend calls `https://ai-library-generator.bymaikl.workers.dev/books`. Do not implement speculative endpoints or modify live API until the Worker source/deployment repository and existing D1 schema are located and audited.
+- PR #40 validation passed: run `41128288334`; documentation-only.
+- Next exact action: locate the source repository/deployment project for `ai-library-generator`, inspect its routes, D1 binding/schema, secrets, CORS and usage metrics, then design versioned migrations and tests. Keep current generation endpoints unchanged.
+- No community feature has been implemented or deployed yet. No real-device offline test has been confirmed.
