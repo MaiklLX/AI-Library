@@ -111,4 +111,13 @@ assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*retur
 assert.match(html, /requestAnimationFrame\(\(\)=>\{\s*sheet\.classList\.add\(direction>0\?'flip-forward':'flip-back'\)/, "Page-turn animation must start on a committed animation frame");
 assert.match(html, /hasRightPage=spread&&readingPageIndex\+1<readingPages\.length/, "The last odd page must not display a phantom right-page number");
 
+
+assert.match(html, /reader-crisp-page-turn-v35/, "Reader must use the crisp non-3D page transition");
+assert.match(html, /readerPageIndex=Math\.floor\(readingPageIndex\/2\)\*2/, "Desktop page index must align to the left page of a spread");
+assert.match(html, /const hasRightPage=spread&&readingPageIndex\+1<totalPages/, "Right-page numbering must be conditional on a real page");
+assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
+assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
+assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
+assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v35['"]/, "Reader animation cache must be refreshed");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
