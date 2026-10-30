@@ -278,3 +278,15 @@ Last maintained: 2026-10-30.
 
 - A second CI run showed the escaped regular-expression delimiters were still over-escaped by the file-update string. Replaced both reduced-motion assertions with literal `includes()` checks, avoiding regex parsing entirely.
 - Validator fix commit: `79333f0ba5fe13efd0c29a03909257252fd1ed78`. Re-check CI and deployment on the final handover commit.
+
+## Signature star ambient light refinement (2026-10-30)
+
+- Follow-up to the initial metallic shimmer, based on device feedback: the sheen was visible but too restrained, and the loop reset was noticeable.
+- Replaced the isolated style layer with `ai-library-star-sheen-v2` in `index.html`.
+- Header logo now combines a warmer radial core, layered gold glow, four subtle ambient points and a diagonal highlight that stays invisible at the exact same transform/opacity at the start and end of its 10.8-second cycle.
+- The home-hero star now has a slowly rotating elliptical orbit, four softly pulsing light particles and a more expressive gold glow. The metallic gradient is held static so it no longer jumps back to its initial position on each cycle.
+- Motion remains CSS-only, low-frequency and non-flashing. All new logo/star motion and pseudo-elements respect `prefers-reduced-motion: reduce`.
+- Service Worker app-shell cache bumped from `v55` to `v56`; `scripts/validate.mjs` checks the new layer, animations, seamless logo-sheen endpoints, reduced-motion handling and cache version.
+- No reader code, page navigation, touch handling, book content, storage, downloads or user data were changed.
+- This is a source-level refinement; verify the visual intensity and layering on desktop and mobile after deployment.
+- Latest feature implementation is on `main`; CI and Pages deployment must be checked on the final handover commit before calling it published.
