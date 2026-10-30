@@ -208,13 +208,13 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v54['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v55['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v54['"]/, "Book action update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v55['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /PUBLISHED_CATALOG_STATE_KEY/, "Catalog update state key is missing");
 assert.match(html, /function getCatalogMetadataSnapshot\(catalog\)/, "Catalog metadata snapshot helper is missing");
@@ -224,13 +224,13 @@ assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is miss
 assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
 assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
 assert.match(html, /Тексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v54['"]/, "Catalog update notice must use the refreshed app-shell cache");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v55['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
 assert.match(html, /Full book JSON is fetched only on explicit read\/download/, "Book content loading policy is missing");
 assert.match(html, /async function openBookById\(id\)[\s\S]*?fetch\(book\.contentPath, \{ cache: 'no-cache' \}\)/, "Published book text must load on demand when opening a book");
 assert.match(html, /metadataOnly: true,[\s\S]*?chapters: \[\]/, "Catalog fallback must not retain full book text in local metadata cache");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v54['"]/, "Lazy book loading update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v55['"]/, "Lazy book loading update must use the current cache version");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
 
@@ -238,3 +238,9 @@ console.log(`AI Library release validation passed: ${scripts.length} inline scri
 assert.match(html, /catalog-single-book-balance-v1/, "Single-book catalog balance styles are missing");
 assert.match(html, /#books\.grid:has\(> \.book:only-child\)/, "A one-book catalog must use a centered, constrained card column");
 assert.match(html, /grid-template-columns: minmax\(0, min\(100%, 360px\)\)/, "The single catalog card must remain responsive without overflowing");
+
+
+assert.match(html, /ai-library-star-sheen-v1/, "Signature star shimmer layer is missing");
+assert.match(html, /@keyframes aiLogoSheen/, "Logo metallic highlight animation is missing");
+assert.match(html, /@keyframes aiHeroStarSheen/, "Hero star metallic gradient animation is missing");
+assert.match(html, /prefers-reduced-motion: reduce[\\s\\S]*?\.hero \.spark/, "Signature star animations must respect reduced-motion preferences");
