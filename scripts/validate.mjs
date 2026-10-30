@@ -197,4 +197,11 @@ assert.match(html, /const surface=isDesktopReaderSpread\(\)\?bookSpreadArea:book
 assert.match(html, /if\(start\.pointerType!=='mouse'\)toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
 assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
 
+
+assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial visual token layer is missing");
+assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
+assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
+assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v50['"]/, "Visual app-shell update must use the current cache version");
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
