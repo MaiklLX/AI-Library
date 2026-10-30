@@ -118,4 +118,19 @@ assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
 assert.match(serviceWorker, /CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*['"]v35['"]/, "Reader animation cache must be refreshed");
 
+
+assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
+assert.match(html, /function formatReaderPageStatus\(state,totalPages\)/, "Reader status must be formatted from the canonical page state");
+assert.match(html, /reader-paper-light-turn-v36/, "Crisp paper-light page-turn layer is missing");
+assert.match(html, /The text itself is never[\s\S]{0,100}transformed/, "Page-turn animation must keep the text untransformed");
+assert.match(html, /body\.reader-open #bookPage\.reader-turn-out-back::after/, "Single-page backward paper-light animation selector is missing");
+const pageStateMatch = html.match(/function getReaderPageState\(index,totalPages,spread\)\{[\s\S]*?\n\}/);
+assert.ok(pageStateMatch, "Could not isolate page-state helper for boundary tests");
+const getPageState = new Function(`${pageStateMatch[0]}; return getReaderPageState;`)();
+assert.deepEqual(getPageState(0, 8, true), { startIndex: 0, leftPage: 1, rightPage: 2 });
+assert.deepEqual(getPageState(2, 8, true), { startIndex: 2, leftPage: 3, rightPage: 4 });
+assert.deepEqual(getPageState(7, 7, true), { startIndex: 6, leftPage: 7, rightPage: null });
+assert.deepEqual(getPageState(6, 7, false), { startIndex: 6, leftPage: 7, rightPage: null });
+assert.deepEqual(getPageState(99, 7, true), { startIndex: 6, leftPage: 7, rightPage: null });
+
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
