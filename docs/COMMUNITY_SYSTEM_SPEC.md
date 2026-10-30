@@ -71,7 +71,9 @@ The user-facing book creator is retained as a core product feature and becomes t
 - A user can create and edit a book as a personal draft.
 - Drafts are private to their author until they explicitly submit them for publication.
 - Before submission, the creator should offer a preview and basic completeness/format validation (title, author attribution, description, genre, cover, chapter structure and readable content).
-- A publication submission may require a clearly displayed coin fee. The exact fee, refund rules, moderation process and whether the fee is charged on submission or approval must be finalized before implementation.
+- Publication in the shared library is paid by the author in coins; this is an agreed product rule, not an optional possibility. The exact fee amount and any size-based pricing remain undecided.
+- Show the exact fee before the action and require the author's explicit confirmation before debiting the balance. Do not charge for private drafting, preview, local saving or export.
+- The rejection/refund policy, moderation workflow and timing of final settlement still need to be specified before implementation. A rejected manuscript should not silently consume the author's publication fee.
 - Published books are attributed to their creator and become eligible for community ratings and selected competitions.
 - Publishing must not silently replace or delete the author's local draft. A published copy and a personal working draft have distinct lifecycle states.
 - Add reporting/moderation and clear content, copyright, plagiarism and safety rules before opening publication to all users.
