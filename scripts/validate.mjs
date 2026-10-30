@@ -8,6 +8,7 @@ const html = readFileSync(resolve(root, "index.html"), "utf8");
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
+const libraryStore = readFileSync(resolve(root, "src/platform/library-store.js"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
@@ -41,6 +42,18 @@ assert.match(serviceWorker, /['"]\.\/src\/platform\/runtime\.js['"]/, "Platform 
 assert.match(platformRuntime, /const DB_NAME = ['"]ai-library-platform['"]/, "Platform storage database is missing");
 assert.match(platformRuntime, /books: 'books',[\s\S]*metadata: 'metadata',[\s\S]*downloads: 'downloads'/, "Platform storage collections are incomplete");
 assert.match(platformRuntime, /transaction\.oncomplete/, "IndexedDB writes must resolve only after transaction completion");
+assert.match(html, /<script src=["']\.\/src\/platform\/library-store\.js["']><\/script>/, "Library storage adapter must load after the platform runtime");
+assert.match(serviceWorker, /['"]\.\/src\/platform\/library-store\.js['"]/, "Library storage adapter must be cached for offline startup");
+assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expose book retrieval");
+assert.match(libraryStore, /async saveBook\(/, "Library storage adapter must expose book persistence");
+assert.match(libraryStore, /async getMetadata\(/, "Library storage adapter must expose metadata retrieval");
+assert.match(libraryStore, /async setDownload\(/, "Library storage adapter must expose download-state persistence");
+assert.doesNotMatch(libraryStore, /localStorage\.clear|localStorage\.removeItem|PERSONAL_BOOKS_KEY/, "Platform storage adapter must not migrate or clear legacy browser data");
+try {
+  new Function(libraryStore);
+} catch (error) {
+  throw new Error(`Library storage adapter has a syntax error: ${error.message}`);
+}
 try {
   new Function(platformRuntime);
 } catch (error) {
