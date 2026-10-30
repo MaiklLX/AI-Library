@@ -2614,6 +2614,37 @@ document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{cons
 let readerChromeTimer=null;
 function setReaderChromeVisible(visible,autoHide=false){const modal=document.querySelector('#modal');if(!modal)return;document.body.classList.toggle('reader-chrome-hidden',!visible);if(readerChromeTimer)clearTimeout(readerChromeTimer);const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!visible&&panel){panel.hidden=true;if(toggle)toggle.setAttribute('aria-expanded','false')}if(visible&&autoHide&&!panel?.hidden){return}if(visible&&autoHide)readerChromeTimer=setTimeout(()=>setReaderChromeVisible(false),3200)}
 function toggleReaderChrome(){const visible=document.body.classList.contains('reader-chrome-hidden');setReaderChromeVisible(visible,visible)}
+// Desktop: reveal reader controls when the pointer approaches the top or bottom edge.
+const readerHoverModal=document.querySelector('#modal');
+let readerHoverHideTimer=null;
+const readerHoverEnabled=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if(readerHoverModal&&readerHoverEnabled){
+  const readerHoverEdge=64;
+  const readerHoverChromeSelector='.reader-topbar,.reader-bottombar,.reader-settings';
+  readerHoverModal.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse'||!document.body.classList.contains('reader-open'))return;
+    const rect=readerHoverModal.getBoundingClientRect();
+    const inEdge=event.clientY-rect.top<=readerHoverEdge||rect.bottom-event.clientY<=readerHoverEdge;
+    const inChrome=!!event.target.closest?.(readerHoverChromeSelector);
+    if(inEdge||inChrome){
+      if(readerHoverHideTimer){clearTimeout(readerHoverHideTimer);readerHoverHideTimer=null;}
+      setReaderChromeVisible(true);
+    }else if(!readerHoverHideTimer){
+      readerHoverHideTimer=setTimeout(()=>{
+        readerHoverHideTimer=null;
+        setReaderChromeVisible(false);
+      },650);
+    }
+  },{passive:true});
+  readerHoverModal.addEventListener('pointerleave',event=>{
+    if(event.pointerType!=='mouse')return;
+    if(readerHoverHideTimer)clearTimeout(readerHoverHideTimer);
+    readerHoverHideTimer=setTimeout(()=>{
+      readerHoverHideTimer=null;
+      setReaderChromeVisible(false);
+    },350);
+  },{passive:true});
+}
 document.querySelector('#readerMenuToggle')?.addEventListener('click',()=>{const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!panel)return;panel.hidden=!panel.hidden;toggle?.setAttribute('aria-expanded',String(!panel.hidden));setReaderChromeVisible(true,panel.hidden)});
 function openReadingSpace() {
   const modal = document.querySelector("#modal");
@@ -2998,7 +3029,7 @@ bookPageArea.addEventListener('pointerup', e => {
   if (!start || start.id !== e.pointerId || !readingModal.classList.contains('open') || !current) return;
   if (Date.now() - start.time > 650 || Math.abs(e.clientX - start.x) > 12 || Math.abs(e.clientY - start.y) > 12) return;
   if (window.getSelection()?.toString()) return;
-  if (e.pointerType === 'mouse') { toggleReaderChrome(); return; }
+  if (e.pointerType === 'mouse') return;
   const rect = bookPageArea.getBoundingClientRect();
   if (!rect.width || e.clientX < rect.left || e.clientX > rect.right) return;
   const edgeWidth = Math.max(56, Math.min(96, rect.width * 0.18));
