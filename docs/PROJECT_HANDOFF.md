@@ -101,6 +101,45 @@ Required capabilities:
 - Before a chat ends or approaches its limit, update this document and leave a concise handoff summary in the conversation.
 - Never describe a feature as tested on a physical device unless the user or a verified test has confirmed it.
 
-## State at this checkpoint
+## Audited implementation baseline (2026-10-31)
 
-This checkpoint records the agreed product direction and recovery protocol. It does **not** assert that offline book downloads, PWA installation, or native packaging are already implemented. The next implementation step should begin with an audit of the current `main` branch to locate the existing book model, reader loading path, persistence layer, service worker, and manifest. Then propose a minimal offline-first implementation plan based on the actual code.
+The current `main` branch already contains a substantial offline-book foundation. Do not rebuild it from scratch.
+
+### Existing offline implementation
+- `src/platform/runtime.js`: cross-platform detection and IndexedDB database `ai-library-platform`, with `books`, `metadata`, and `downloads` stores.
+- `src/platform/library-store.js`: domain adapter for durable book, metadata, and download records.
+- `src/platform/download-manager.js`: validates published book JSON, downloads complete book content on explicit user action, stores it in IndexedDB, restores ready downloads after restart, supports removal, storage estimates, and explicit persistent-storage requests.
+- The replacement flow validates the new book before one IndexedDB record write, preserving the previous ready copy when fetching or validation fails.
+- `index.html`: personal library has a dedicated **Доступно офлайн** shelf, download/remove/update actions, and merges locally downloaded published books with catalog metadata.
+- `content/catalog.json`: metadata-only catalog; full book text is fetched on explicit read or download, not during ordinary catalog startup.
+- `sw.js`: offline app-shell cache and network-first catalog/book requests with cached fallback. Current cache version after PR #38 is `v57`.
+- Manifest currently declares standalone display, but installation and offline behavior still require real-device validation.
+
+### Latest offline reliability milestone
+- PR #38 — [metadata-only offline update checks](https://github.com/MaiklLX/AI-Library/pull/38), merged to `main`.
+- Merge commit: `e00e2124552b2eab0f1b5bd5442b085dac0f5ed7`.
+- Download records now retain `catalogRevision`.
+- Checking for a new edition compares local and catalog revision metadata only; it does not fetch the full book body.
+- Full book content is fetched only after the reader chooses to update/download.
+- A downloaded book body whose revision does not match the catalog is rejected before storage, preserving the previous offline copy.
+- Published catalog revisions are validated against the matching book JSON revision.
+- PR validation passed on head SHA `f0a8e007676412faa30fcdfffb5c31ce34fbd396` (run [41122923081](https://github.com/MaiklLX/AI-Library/actions/runs/41122923081)).
+- Main-branch validation and Pages deployment were queued after merge; verify their final results before calling this deployed.
+
+### Known limitations / unverified items
+- No physical Android or iPhone test has been confirmed in this checkpoint.
+- Safari Add to Home Screen and standalone launch must be tested on an actual iPhone.
+- Browser storage can be evicted, particularly on iOS; persistent-storage requests are best-effort, not a guarantee.
+- Test interrupted/failed downloads, storage pressure, missing IndexedDB records, offline app relaunch, and update rollback on devices.
+- Shared server-generated books and local personal books must remain separate; do not silently imply all shared books are downloaded.
+
+## Updated next steps
+
+1. Verify the main-branch validation and GitHub Pages deployment for merge commit `e00e2124552b2eab0f1b5bd5442b085dac0f5ed7`.
+2. Perform a focused offline regression pass: download a published book, close/reopen the app, enable airplane mode, open and page through the book, verify progress, then reconnect and check for a revision update.
+3. Audit the reader's local-first resolution path and failure messaging without changing pagination/gesture code unnecessarily.
+4. Test PWA installation and standalone launch on Android and iPhone Safari, including safe areas and storage behavior.
+5. Improve the offline library UI only where real testing reveals gaps (download progress, retry, storage usage, missing-copy recovery).
+6. Consider Capacitor/native packaging only after the PWA and offline experience are stable.
+
+This is a source-code and mocked-workflow checkpoint, not proof of physical-device behavior. Continue to distinguish automated checks, source inspection, and real-device testing.
