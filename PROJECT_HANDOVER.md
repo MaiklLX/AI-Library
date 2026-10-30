@@ -174,7 +174,7 @@ Current observed visual foundation in `index.html`:
 - No card flip logic, click handlers, download manager behavior, reader code, book data, or storage was changed.
 - Service Worker cache bumped from `v50` to `v51`; validator checks were added for the new layer and minimum touch target.
 - Implementation commits: `c373874979a26c2eb87c061c57f7cfa59b875a63`, `d449c0e2f23e054865b4a9e135ef2f4db111266c`, `3cc228f9b6b61d9ec56a3eebeedd1b3e0f11d210`.
-- CI/deploy for this fix: pending verification.
+- The first CI attempt exposed a stale validator assertion still expecting cache `v50`; corrected it to `v51` in commit `2d0a509a24148ed9ed2b05a8db6be7f95b7793cc`. The final CI/deploy run for this corrected state is pending verification.
 - Next: verify CI and Pages deployment, then user should test card flip and both buttons on an actual phone; adjust further only from observed behavior.
 
 ---
