@@ -7,6 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
+const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
