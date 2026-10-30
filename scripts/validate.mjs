@@ -43,7 +43,9 @@ assert.match(html, /id="importLibraryData"/, "Personal data import control is mi
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
-assert.match(html, /data-read="\$\{esc\(b\.id\)\}"/, "Book IDs from imported data must be escaped in HTML attributes");
+assert.match(html, /data-book-id="\x27\+esc\(book\.id\)\+\x27"/, "Book card IDs from imported data must be escaped in HTML attributes");
+assert.match(html, /data-fav="\x27\+esc\(book\.id\)\+\x27"/, "Favorite button IDs from imported data must be escaped in HTML attributes");
+assert.match(html, /data-read="\x27\+esc\(book\.id\)\+\x27"/, "Read button IDs from imported data must be escaped in HTML attributes");
 const publishedCatalogPath = resolve(root, "content/catalog.json");
 assert.ok(existsSync(publishedCatalogPath), "Published books catalog is missing");
 const publishedCatalog = JSON.parse(readFileSync(publishedCatalogPath, "utf8"));
