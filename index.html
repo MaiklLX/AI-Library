@@ -2240,6 +2240,34 @@ body.reader-open .book-page-right.is-empty .book-running-head { visibility:hidde
   body.reader-open .book-spread>.book-page.book-flip-sheet { will-change:auto; }
 }
 </style>
+
+<style id="reader-crisp-page-turn-v35">
+/* Restrained book-like turn: move the paper subtly, never warp text in 3D. */
+body.reader-open #bookSpread,
+body.reader-open #bookPage { transform:translateZ(0); }
+body.reader-open #bookSpread.reader-turn-out-forward>.book-page,
+body.reader-open #bookPage.reader-turn-out-forward { opacity:.45; transform:translate3d(-7px,0,0); }
+body.reader-open #bookSpread.reader-turn-out-back>.book-page,
+body.reader-open #bookPage.reader-turn-out-back { opacity:.45; transform:translate3d(7px,0,0); }
+body.reader-open #bookSpread.reader-turn-in-forward>.book-page,
+body.reader-open #bookPage.reader-turn-in-forward { animation:readerPaperEnterForward .24s cubic-bezier(.2,.7,.25,1) both; }
+body.reader-open #bookSpread.reader-turn-in-back>.book-page,
+body.reader-open #bookPage.reader-turn-in-back { animation:readerPaperEnterBack .24s cubic-bezier(.2,.7,.25,1) both; }
+body.reader-open #bookSpread>.book-page,
+body.reader-open #bookPage { transition:opacity .12s ease,transform .12s ease; }
+@keyframes readerPaperEnterForward {
+  from {opacity:.45;transform:translate3d(7px,0,0);filter:drop-shadow(-5px 0 5px #0001)}
+  to {opacity:1;transform:translate3d(0,0,0);filter:none}
+}
+@keyframes readerPaperEnterBack {
+  from {opacity:.45;transform:translate3d(-7px,0,0);filter:drop-shadow(5px 0 5px #0001)}
+  to {opacity:1;transform:translate3d(0,0,0);filter:none}
+}
+@media(prefers-reduced-motion:reduce){
+ body.reader-open #bookSpread>.book-page,body.reader-open #bookPage{transition:none!important;animation:none!important}
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -2966,81 +2994,81 @@ function paginateCurrentChapter(preserveOffset = null) {
   renderReadingPage(false);
 }
 function renderReadingPage(animate = true) {
-  const reader = document.querySelector('#reader');
-  const page = document.querySelector('#bookPage');
-  const pageLabel = document.querySelector('#bookPageLabel');
-  const pageNumber = document.querySelector('#bookPageNumber');
-  if (!reader || !page) return;
+  const reader=document.querySelector('#reader');
+  const page=document.querySelector('#bookPage');
+  if(!reader||!page)return;
 
   const spread=isDesktopReaderSpread();
+  const totalPages=Math.max(1,readingPages.length);
+  // The desktop index always points to the left page of a spread.
+  readingPageIndex=Math.max(0,Math.min(readingPageIndex,totalPages-1));
+  if(spread)readingPageIndex=Math.floor(readingPageIndex/2)*2;
+
   const rightPage=document.querySelector('#bookPageRight');
   const rightReader=document.querySelector('#readerRight');
+  const pageLabel=document.querySelector('#bookPageLabel');
+  const pageNumber=document.querySelector('#bookPageNumber');
   const rightLabel=document.querySelector('#bookPageLabelRight');
   const rightNumber=document.querySelector('#bookPageNumberRight');
+
+  const leftPageNumber=readingPageIndex+1;
+  const hasRightPage=spread&&readingPageIndex+1<totalPages;
+  const rightPageNumber=hasRightPage?readingPageIndex+2:null;
+
   reader.textContent=readingPages[readingPageIndex]||'';
-  if(rightReader)rightReader.textContent=spread?(readingPages[readingPageIndex+1]||''):'';
-  const pageEnd=Math.min(readingPages.length,readingPageIndex+(spread?2:1));
-  if(pageLabel)pageLabel.textContent=spread?`СТРАНИЦЫ ${readingPageIndex+1}–${pageEnd}`:`СТР. ${readingPageIndex+1} / ${readingPages.length}`;
-  if(pageNumber)pageNumber.textContent=String(readingPageIndex+1);
-  const hasRightPage=spread&&readingPageIndex+1<readingPages.length;
-  if(rightLabel){rightLabel.textContent=hasRightPage?`СТР. ${readingPageIndex+2}`:'';rightLabel.hidden=!hasRightPage;}
-  if(rightNumber){rightNumber.textContent=hasRightPage?String(readingPageIndex+2):'';rightNumber.hidden=!hasRightPage;}
-  if(rightPage){rightPage.dataset.theme=document.querySelector('#bookPage')?.dataset.theme||'sepia';rightPage.classList.toggle('is-empty',!hasRightPage);}
+  if(rightReader)rightReader.textContent=hasRightPage?(readingPages[readingPageIndex+1]||''):'';
+  if(pageLabel)pageLabel.textContent=spread
+    ?(hasRightPage?`СТРАНИЦЫ ${leftPageNumber}–${rightPageNumber}`:`СТРАНИЦА ${leftPageNumber}`)
+    :`СТРАНИЦА ${leftPageNumber}`;
+  if(pageNumber)pageNumber.textContent=String(leftPageNumber);
+  if(rightLabel){rightLabel.textContent=rightPageNumber? `СТР. ${rightPageNumber}`:'';rightLabel.hidden=!hasRightPage;}
+  if(rightNumber){rightNumber.textContent=rightPageNumber?String(rightPageNumber):'';rightNumber.hidden=!hasRightPage;}
+  if(rightPage){rightPage.dataset.theme=page.dataset.theme||'sepia';rightPage.classList.toggle('is-empty',!hasRightPage);rightPage.setAttribute('aria-hidden',String(!hasRightPage));}
+
   const status=document.querySelector('#readerPageStatus');
-  if(status)status.textContent=spread?`СТР. ${readingPageIndex+1}–${pageEnd} / ${readingPages.length}`:`СТР. ${readingPageIndex+1} / ${readingPages.length}`;
-  if (animate) {
-    const sheet = document.querySelector('#pageTurnSheet');
-    if (sheet) {
-      sheet.classList.remove('turning-forward', 'turning-back');
-      sheet.style.visibility = 'visible';
-      sheet.style.opacity = '1';
-      void sheet.offsetWidth;
-      sheet.classList.add(window.__aiLibraryTurnDirection === 'back' ? 'turning-back' : 'turning-forward');
-      window.clearTimeout(window.__aiLibraryTurnTimer);
-      window.__aiLibraryTurnTimer = window.setTimeout(() => {
-        sheet.classList.remove('turning-forward', 'turning-back');
-        sheet.style.visibility = 'hidden';
-        sheet.style.opacity = '0';
-      }, 720);
-    }
-    page.classList.remove('turn-forward', 'turn-back');
+  if(status){
+    const visibleEnd=rightPageNumber||leftPageNumber;
+    status.textContent=spread
+      ?`СТР. ${leftPageNumber}${hasRightPage?'–'+visibleEnd:''} / ${totalPages}`
+      :`СТР. ${leftPageNumber} / ${totalPages}`;
   }
-  reader.scrollTop = 0;
+  reader.scrollTop=0;
+  if(animate){
+    // Retain compatibility with the legacy page-turn sheet without forcing
+    // layout or reflow on every turn.
+    const sheet=document.querySelector('#pageTurnSheet');
+    if(sheet)sheet.style.visibility='hidden';
+  }
   saveReadingProgress();
 }
 
-function animateBookPageTurn(direction, afterTurn) {
+let readerTurnInProgress=false;
+function animateBookPageTurn(direction,afterTurn){
+  if(readerTurnInProgress)return;
+  readerTurnInProgress=true;
   const spread=isDesktopReaderSpread();
-  const page=document.querySelector(spread?(direction>0?'#bookPageRight':'#bookPage'):'#bookPage');
-  if(!page){afterTurn();return;}
-  const sheet=page.cloneNode(true);
-  sheet.removeAttribute('id');
-  sheet.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-  sheet.classList.remove('turn-forward','turn-back','is-empty');
-  sheet.classList.add('book-flip-sheet');
-  if(spread)sheet.classList.add('spread-turn-sheet');
-  sheet.setAttribute('aria-hidden','true');
-  const host=spread?document.querySelector('#bookSpread'):page;
-  if(!host){afterTurn();return;}
-  host.appendChild(sheet);
-
-  let finished=false;
-  const cleanup=()=>{
-    if(finished)return;
-    finished=true;
-    sheet.remove();
-  };
-  sheet.addEventListener('animationend',cleanup,{once:true});
-  window.setTimeout(cleanup,900);
-
-  // Force the initial transform to be committed before starting the turn.
-  // Then update the underlying spread on the next frame, so Chromium-based
-  // browsers can paint the outgoing page before the new text replaces it.
-  void sheet.offsetWidth;
-  requestAnimationFrame(()=>{
-    sheet.classList.add(direction>0?'flip-forward':'flip-back');
-    requestAnimationFrame(afterTurn);
-  });
+  const host=spread?document.querySelector('#bookSpread'):document.querySelector('#bookPage');
+  if(!host){readerTurnInProgress=false;afterTurn();return;}
+  const outClass=direction>0?'reader-turn-out-forward':'reader-turn-out-back';
+  const inClass=direction>0?'reader-turn-in-forward':'reader-turn-in-back';
+  host.classList.remove('reader-turn-out-forward','reader-turn-out-back','reader-turn-in-forward','reader-turn-in-back');
+  // A short 2D transition keeps glyphs sharp: the paper moves, never rotates.
+  void host.offsetWidth;
+  host.classList.add(outClass);
+  window.setTimeout(()=>{
+    try{afterTurn();}finally{
+      host.classList.remove(outClass);
+      host.classList.add(inClass);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        host.classList.remove(inClass);
+        readerTurnInProgress=false;
+      }));
+      window.setTimeout(()=>{
+        host.classList.remove(inClass);
+        readerTurnInProgress=false;
+      },360);
+    }
+  },125);
 }
 
 function turnReadingPage(direction) {
