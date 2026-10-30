@@ -219,7 +219,7 @@ assert.match(html, /checkCatalogMetadataUpdate\(catalog\)/, "Catalog metadata up
 assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is missing");
 assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
 assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
-assert.match(html, /Tексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
+assert.match(html, /Тексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v53['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
