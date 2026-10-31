@@ -37,14 +37,18 @@
     }
   }
   function readSnapshot(existing = null) {
+    const readCategory = name => {
+      const value = readJson(KEYS[name], DEFAULTS[name]);
+      return isValidValue(name, value) ? value : DEFAULTS[name];
+    };
     return {
       migrationVersion: 1, source: 'localStorage-compatibility-bridge',
       migratedAt: existing?.migratedAt || new Date().toISOString(),
       synchronizedAt: new Date().toISOString(),
-      personalBooks: readJson(KEYS.personalBooks, DEFAULTS.personalBooks),
-      favorites: readJson(KEYS.favorites, DEFAULTS.favorites),
-      progress: readJson(KEYS.progress, DEFAULTS.progress),
-      readerSettings: readJson(KEYS.readerSettings, DEFAULTS.readerSettings)
+      personalBooks: readCategory('personalBooks'),
+      favorites: readCategory('favorites'),
+      progress: readCategory('progress'),
+      readerSettings: readCategory('readerSettings')
     };
   }
   function migrate() {
