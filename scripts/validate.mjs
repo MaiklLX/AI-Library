@@ -245,6 +245,11 @@ assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v58['"]/, "Lazy book loadin
 
 assert.equal(seriesManifest.id, "ty-v-moih-planah", "Series manifest ID is incorrect");
 assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly six volumes");
+assert.ok(seriesManifest.volumes.every(volume => typeof volume.bookId === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.bookId)), "Every series volume must define a valid bookId");
+assert.equal(new Set(seriesManifest.volumes.map(volume => volume.bookId)).size, 6, "Series book IDs must be unique");
+assert.match(seriesPage, /progress\[\x27published-\x27\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must use the actual published book ID");
+assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must deep-link to the reader");
+assert.match(html, /new URLSearchParams\(window\.location\.search\)\.get\(\x27book\x27\)/, "Reader must support direct book links from the series page");
 assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
 assert.equal(seriesManifest.volumes[0].status, "prerelease", "The first volume must remain in prerelease");
 assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
