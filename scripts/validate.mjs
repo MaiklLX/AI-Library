@@ -435,6 +435,17 @@ assert.equal(scheduledBookOne.seriesVolume, 1, "Volume I must retain its series 
 assert.equal(scheduledBookOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I JSON and series must share the same release timestamp");
 
 // Scheduled series volumes unlock from their release timestamps; no manual status edit is required.
+
+const expectedReleaseSchedule = [
+  "2026-11-02T18:00:00+03:00",
+  "2026-11-09T18:00:00+03:00",
+  "2026-11-16T18:00:00+03:00",
+  "2026-11-23T18:00:00+03:00",
+  "2026-11-30T18:00:00+03:00",
+  "2026-12-07T18:00:00+03:00"
+];
+assert.deepEqual(seriesManifest.volumes.map(volume => volume.releaseAt), expectedReleaseSchedule, "All six volume release timestamps must remain on the approved weekly 18:00 Moscow schedule");
+
 const plannedVolumes = seriesManifest.volumes.filter(volume => volume.status === "planned");
 assert.ok(plannedVolumes.length > 0, "The series must include scheduled future volumes");
 for (const volume of plannedVolumes) {
