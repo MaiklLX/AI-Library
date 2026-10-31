@@ -145,6 +145,13 @@ assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes mu
 assert.match(html, /data-book-id="\x27\+esc\(book\.id\)\+\x27"/, "Book card IDs from imported data must be escaped in HTML attributes");
 assert.match(html, /data-fav="\x27\+esc\(book\.id\)\+\x27"/, "Favorite button IDs from imported data must be escaped in HTML attributes");
 assert.match(html, /data-read="\x27\+esc\(book\.id\)\+\x27"/, "Read button IDs from imported data must be escaped in HTML attributes");
+assert.match(html, /id="bookDetailPage"/, "Dedicated book detail page surface is missing");
+assert.match(html, /function openBookDetails\(id, updateUrl = true\)/, "Book detail route renderer is missing");
+assert.match(html, /searchParams\.set\('book', String\(id\)\)/, "Book detail URLs must be shareable and directly addressable");
+assert.match(html, /searchParams\.get\('book'\)/, "Book detail deep links must be restored on startup");
+assert.match(html, /data-book-details=/, "Catalog book cards must link to their detail page");
+assert.match(html, /data-detail-read=/, "Book detail page must expose the read action");
+assert.match(html, /data-detail-download=/, "Book detail page must expose the offline download action");
 const publishedCatalogPath = resolve(root, "content/catalog.json");
 assert.ok(existsSync(publishedCatalogPath), "Published books catalog is missing");
 const publishedCatalog = JSON.parse(readFileSync(publishedCatalogPath, "utf8"));
