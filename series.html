@@ -63,25 +63,20 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 @media(max-width:540px){.topbar{min-height:62px;margin:0 -10px;padding:10px;gap:8px}.back-link{min-height:40px;padding:0 10px;font-size:12px}.top{font-size:9px;letter-spacing:.13em;text-align:right}}
 </style>
 
-<script id="ai-library-scroll-policy-v1">
-/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+<script id="ai-library-scroll-policy-v2">
+/* Every document navigation starts at the top, including normal links and BFCache returns.
+   Same-document anchor controls remain untouched because they do not trigger pageshow. */
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  const navigation = performance.getEntriesByType('navigation')[0];
-  if (navigation?.type === 'reload' && location.hash) {
-    history.replaceState(history.state, '', location.pathname + location.search);
-  }
-  window.addEventListener('pageshow', event => {
-    if (event.persisted || navigation?.type === 'reload') {
-      requestAnimationFrame(() => window.scrollTo(0, 0));
-    }
+  window.addEventListener('pageshow', () => {
+    requestAnimationFrame(() => window.scrollTo(0, 0));
   });
 })();
 </script>
 </head>
 <body>
 <main class="wrap">
-<div class="topbar"><a class="back-link" href="./index.html#catalog" aria-label="Вернуться в библиотеку"><span aria-hidden="true">←</span> Вернуться в библиотеку</a><div class="top">AI Library <span aria-hidden="true">/</span> Специальное издание</div></div>
+<div class="topbar"><a class="back-link" href="./index.html" aria-label="Вернуться в библиотеку"><span aria-hidden="true">←</span> Вернуться в библиотеку</a><div class="top">AI Library <span aria-hidden="true">/</span> Специальное издание</div></div>
 <section class="hero" aria-labelledby="seriesTitle">
 <div class="hero-copy">
 <div class="eyebrow">Завершённый роман · 18+</div>
