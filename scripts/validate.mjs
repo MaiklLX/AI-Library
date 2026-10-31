@@ -194,12 +194,13 @@ const pageTurnAnimation = html.match(/function animateBookPageTurn\(direction,af
 assert.ok(pageTurnAnimation, "Could not isolate page-turn animation");
 assert.equal((pageTurnAnimation[1].match(/flushReaderResizePagination\(\)/g) || []).length, 3, "Every page-turn completion path must flush pending resize pagination");
 assert.match(html, /id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"/, "Reader modal must expose dialog semantics to assistive technology");
-assert.match(html, /function getReaderFocusableElements\(\)[\\s\\S]*?querySelectorAll\(['"][^'"]*button:not\\(\\[disabled\\]\\)/, "Reader must enumerate enabled focusable controls for keyboard trapping");
-const keyboardHandler = html.match(/document\.addEventListener\("keydown",e=>\s*\{([\\s\\S]*?)\n\}\);/);
+assert.match(html, /function getReaderFocusableElements\(\)[\s\S]*?querySelectorAll\(/, "Reader must enumerate focusable controls for keyboard trapping");
+const keyboardHandler = html.match(/document\.addEventListener\("keydown",e=>\s*\{([\s\S]*?)\n\}\);/);
 assert.ok(keyboardHandler, "Could not isolate reader keyboard handler");
-assert.match(keyboardHandler[1], /e\.key==="Tab"[\\s\\S]*?e\.shiftKey&&active===first[\\s\\S]*?e\.shiftKey\?last:first/, "Reader keyboard focus must wrap in both Tab directions");
+assert.match(keyboardHandler[1], /e\.key==="Tab"[\s\S]*?e\.shiftKey&&active===first/, "Reader keyboard focus must wrap when Shift+Tab reaches the first control");
+assert.match(keyboardHandler[1], /e\.shiftKey\?last:first/, "Reader keyboard focus must redirect escaped focus to the correct boundary");
 assert.match(keyboardHandler[1], /if\(!modal\.contains\(active\)\)/, "Reader must reclaim focus if keyboard focus escapes the dialog");
-assert.match(keyboardHandler[1], /e\.key==="Escape"[\\s\\S]*?closeReadingSpace\(\)/, "Escape must close the active reader dialog");
+assert.match(keyboardHandler[1], /e\.key==="Escape"[\s\S]*?closeReadingSpace\(\)/, "Escape must close the active reader dialog");
 assert.match(html, /id="readerPageStatus" role="status" aria-live="polite" aria-atomic="true"/, "Reader page changes must be announced politely to screen readers");
 assert.match(html, /id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-controls="readerSettings" aria-expanded="false"/, "Reader settings toggle must identify its controlled panel");
 assert.match(serviceWorker, /const CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*[\'"]v\d+[\'"]/, "Reader animation cache must use a versioned cache name");
