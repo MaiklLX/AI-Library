@@ -285,7 +285,7 @@ assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly 
 assert.ok(seriesManifest.volumes.every(volume => typeof volume.bookId === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.bookId)), "Every series volume must define a valid bookId");
 assert.equal(new Set(seriesManifest.volumes.map(volume => volume.bookId)).size, 6, "Series book IDs must be unique");
 assert.equal(seriesManifest.volumes[0].bookId, seriesManifest.volumes[0].premiereBookId, "Volume one must preserve the existing premiere book ID");
-assert.match(html, /target\.status === [\x27"]prerelease[\x27"]/, "Direct reader links must not bypass prerelease access");
+assert.match(html, /!target \|\| isBookReleaseLocked\(target\)/, "Direct reader links must enforce the same scheduled-release guard as the reader");
 assert.match(html, /await loadDownloadedBooks\(\)[\s\S]*?new URLSearchParams\(window\.location\.search\)/, "Direct reader links must resolve after published and offline books load");
 assert.match(seriesPage, /progress\[\x27published-\x27\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must use the actual published book ID");
 assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must deep-link to the reader");
