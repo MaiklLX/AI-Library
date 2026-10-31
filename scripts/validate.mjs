@@ -311,9 +311,9 @@ assert.doesNotMatch(openBookByIdSource[1], /Автоматическая пол�
 assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,180}?if \(opened\) \{[\s\S]{0,180}?history\.replaceState/, "Direct reader links must be preserved when a book cannot be opened");
 
 
-const publishedNormalizer = html.match(/function normalizePublishedBook\\(book\\) \\{([\\s\\S]*?)\\n\\}/);
+const publishedNormalizer = html.match(/function normalizePublishedBook\(book\) \{([\s\S]*?)\n\}/);
 assert.ok(publishedNormalizer, "Could not isolate published-book metadata normalization");
-assert.match(publishedNormalizer[1], /\\.\\.\\.book/, "Published-book normalization must preserve source metadata");
+assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
 const normalizeFixture = new Function("book", `${publishedNormalizer[0]}; return normalizePublishedBook(book);`);
 const seriesFixture = {
   id: "fixture-volume-six",
@@ -330,7 +330,7 @@ assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalizat
 const metadataFixture = normalizeFixture({ ...seriesFixture, metadataOnly: true, chapters: [] });
 assert.equal(metadataFixture.seriesId, "ty-v-moih-planah", "Metadata-only catalog records must retain seriesId");
 assert.equal(metadataFixture.seriesVolume, 6, "Metadata-only catalog records must retain seriesVolume");
-assert.match(html, /const loaded = catalog\\.books\\.map\\(entry =>[\\s\\S]*?normalizePublishedBook\\(\\{ \\.\\.\\.entry, metadataOnly: true \\}\\)/, "Published catalog metadata must pass through the series-aware normalizer");
-assert.match(html, /const loadedBook = normalizePublishedBook\\(\\{ \\.\\.\\.source, contentPath: book\\.contentPath \\}\\)[\\s\\S]*?Object\\.assign\\(book, loadedBook, \\{ metadataOnly: false \\}\\)/, "Loaded book content must preserve series metadata on the active book record");
-assert.match(html, /function openBook\\(id\\) \\{[\\s\\S]*?current = getAllBooks\\(\\)\\.find\\(b => String\\(b\\.id\\) === String\\(id\\)\\)/, "Reader must use the normalized book record, including its series metadata");
-assert.match(html, /current\\?\\.seriesId===["']ty-v-moih-planah["'][\\s\\S]*?showSeriesCompletion\\(\\)/, "Final-chapter completion must be gated by the active book's series metadata");
+assert.match(html, /const loaded = catalog\.books\.map\(entry =>[\s\S]*?normalizePublishedBook\(\{ \.\.\.entry, metadataOnly: true \}\)/, "Published catalog metadata must pass through the series-aware normalizer");
+assert.match(html, /const loadedBook = normalizePublishedBook\(\{ \.\.\.source, contentPath: book\.contentPath \}\)[\s\S]*?Object\.assign\(book, loadedBook, \{ metadataOnly: false \}\)/, "Loaded book content must preserve series metadata on the active book record");
+assert.match(html, /function openBook\(id\) \{[\s\S]*?current = getAllBooks\(\)\.find\(b => String\(b\.id\) === String\(id\)\)/, "Reader must use the normalized book record, including its series metadata");
+assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["'][\s\S]*?showSeriesCompletion\(\)/, "Final-chapter completion must be gated by the active book's series metadata");
