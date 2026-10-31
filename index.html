@@ -4424,15 +4424,25 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
   }
 });
 
+// Render immediately from the synchronous browser cache, then recover missing/corrupt
+// personal records from IndexedDB and refresh personal-book UI only when recovery changed it.
 loadPersonalBooks();
-// Copy legacy browser data to IndexedDB without changing the synchronous UI or old keys.
-window.AILibraryPersonalStateMigration?.migrate().catch(error => {
-  console.warn('AI Library: personal-state migration will retry on the next launch.', error);
-});
 syncGenreFilters();
 render();
 loadPublishedBooks().finally(loadDownloadedBooks);
 updateContinueReadingButton();
+
+window.AILibraryPersonalStateMigration?.restore().then(result => {
+  if (result.restored.length) {
+    loadPersonalBooks();
+    syncGenreFilters();
+    render();
+    updateContinueReadingButton();
+    console.info('AI Library: personal data restored from local durable storage:', result.restored);
+  }
+}).catch(error => {
+  console.warn('AI Library: personal-state recovery will retry on the next launch.', error);
+});
 
 </script>
 <script>
