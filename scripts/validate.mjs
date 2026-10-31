@@ -196,7 +196,7 @@ assert.match(html, /window\.addEventListener\('resize', scheduleReaderResizePagi
 const pageTurnAnimation = html.match(/function animateBookPageTurn\(direction,afterTurn\)\s*\{([\s\S]*?)\n\}/);
 assert.ok(pageTurnAnimation, "Could not isolate page-turn animation");
 assert.equal((pageTurnAnimation[1].match(/flushReaderResizePagination\(\)/g) || []).length, 3, "Every page-turn completion path must flush pending resize pagination");
-assert.match(html, /id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"/, "Reader modal must expose dialog semantics to assistive technology");
+assert.match(html, /id="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalTitle"/, "Reader modal must expose dialog semantics to assistive technology");
 assert.match(html, /function getReaderFocusableElements\(\)[\s\S]*?querySelectorAll\(/, "Reader must enumerate focusable controls for keyboard trapping");
 const keyboardHandler = html.match(/document\.addEventListener\("keydown",e=>\s*\{([\s\S]*?)\n\}\);/);
 assert.ok(keyboardHandler, "Could not isolate reader keyboard handler");
