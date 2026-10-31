@@ -261,3 +261,15 @@ Do not implement frontend registration against a speculative endpoint.
 - When a refund is granted, the paid entitlement may be revoked, subject to mandatory consumer rights and any applicable exception. Do not revoke a separate permanent free-acquisition entitlement that predates the paid offer.
 - The purchase, entitlement, author pending credit, platform commission, and any later refund/reversal must be represented by server-authoritative, auditable, transactionally consistent records. No client-side balance changes.
 - Exact dispute handling, evidence review, exceptional cases, and legal implementation details must be finalized before launch. No live refund or settlement behavior is implemented by this documentation change.
+
+
+### Refund cost allocation by cause (approved product rule, 2026-10-31)
+
+- Every refund must be assigned a recorded cause after review: platform fault, author/content fault, or duplicate/technical payment operation. The classification and supporting evidence must be auditable.
+- **Platform fault:** when AI Library caused the failed or unusable EPUB delivery or failed to provide paid access, AI Library bears the refund cost. The author's 80% share is not clawed back solely because of a platform-caused failure; any pending author credit remains payable under the normal settlement rules unless a separate author fault is established.
+- **Author/content fault:** when the refund is justified by an author-controlled defect or failure, reverse the author's 80% share attributable to that purchase. If it is still pending, cancel the pending credit; if already settled, record a separate compensating debit/receivable against the author's coin account. Do not silently edit the original ledger entry or take the balance below zero without recording the resulting recoverable amount.
+- If the author has insufficient available coins, record the unrecovered amount as a transparent negative adjustment/debt and offset it against future author earnings. Do not hide the debt or silently discard it. The precise limits, notice and appeal procedure remain to be designed before launch.
+- **Duplicate charge:** reverse only the duplicate payment transaction. It must not create an author credit or commission, and it must not reverse or affect the separate original successful purchase.
+- A refund/reversal must never be applied twice. Use an idempotency key and immutable compensating ledger entries linked to the exact purchase and refund case.
+- The refund case must record who/what caused the failure, evidence/reason, decision timestamp, amounts allocated to author/platform, entitlement action, and any outstanding recovery amount.
+- These are approved product allocation rules, not live implementation. Mandatory consumer rights and legal review take precedence; disputed fault classification, author notice/appeal, and negative-balance limits must be specified before launch.
