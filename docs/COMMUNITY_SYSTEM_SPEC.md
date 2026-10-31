@@ -88,6 +88,57 @@ Keep these systems distinct:
 
 Competition rewards should be awarded once, after the competition closes and the final result is server-verified. Rank-based XP can reward authors whose books place in the daily "Book of the Day" competition or other explicitly defined rating events. Replays, duplicate settlement jobs, self-voting, vote manipulation and multiple accounts must not create duplicate rewards. Store reward events in an auditable ledger with unique idempotency keys. Publish the reward table and status thresholds before launch; do not invent balances or grant XP from client-side UI events.
 
+### Draft reward economy and creator ranks (proposal, not yet approved)
+
+The following is a balanced starting proposal for product review. Values are illustrative and must not be wired into production until explicitly approved.
+
+#### Coins: spendable currency
+
+- Give a new verified account a one-time welcome grant (proposal: **25 coins**) so a new author can try the publication flow without first grinding activity.
+- Keep the publication fee visible before confirmation. Consider one simple base fee at launch rather than complicated per-chapter pricing; decide the exact amount after estimating moderation and storage costs.
+- Coins may be earned through a small set of capped, verifiable contributions: accepted creator challenges, approved community contributions, and verified contest placements.
+- Do **not** award coins for opening the app, refreshing pages, raw reading minutes, repeated clicks, or casting a positive/negative vote. These are too easy to automate or manipulate.
+- Do not make daily login streaks the main source of currency. The system should reward quality and contribution, not compulsive attendance.
+- Every grant, reward, debit, refund and administrative adjustment must create an immutable ledger entry with a unique idempotency key. The server calculates amounts and enforces caps.
+- Show a clear transaction history: date, reason, amount, and resulting balance. Never allow a client to submit its own reward amount.
+
+#### Author XP: non-spendable progression
+
+Proposed XP events:
+- First book approved for publication: **+40 XP**, once per author.
+- Additional approved book: **+20 XP**, subject to a reasonable anti-spam cooldown/quality gate.
+- Daily contest placement: **1st +100 XP, 2nd +60 XP, 3rd +30 XP** after verified settlement.
+- Monthly/community special contest: separately announced reward table; do not silently multiply daily rewards.
+- No XP for voting, logging in, opening a book, or submitting an unreviewed manuscript.
+- XP is never spent, transferred, purchased, or removed for ordinary activity. Fraudulent awards may be reversed only through an auditable administrative correction.
+
+#### Proposed profile ranks
+
+| Rank | Lifetime author XP | Meaning |
+|---|---:|---|
+| Reader | 0 | Default community identity |
+| New Author | 40 | First approved publication |
+| Author | 150 | Consistent contribution |
+| Established Author | 400 | Several quality contributions |
+| Recognized Author | 900 | Strong community results |
+| Master Author | 1,800 | Sustained high-quality work |
+| Legend | 3,500 | Exceptional long-term contribution |
+
+- Rank thresholds use lifetime XP and never fall when XP is spent (XP is not spendable).
+- A contest win can accelerate progress, but cannot be bought with coins.
+- Keep rank names and thresholds configurable server-side so balancing does not require a frontend rewrite.
+- Cosmetic profile frames, badges and author-page presentation are suitable rank rewards. Avoid pay-to-win voting power, extra votes, or rating multipliers.
+
+#### Anti-abuse and fairness
+
+- Award XP and coin rewards only after server-side verification and one-time settlement.
+- Exclude self-votes; detect suspicious vote clusters and repeated account/device patterns without treating one signal as automatic proof.
+- Use minimum eligible vote counts and deterministic tie-breakers for contest placements.
+- Apply publication cooldowns and quality checks; do not grant repeat first-publication rewards.
+- Do not let a paid publication fee guarantee acceptance, positive reviews, XP or a rank.
+- Provide an accessible path for new authors to earn enough coins; publication must not become an opaque paywall.
+- Publish all prices, reward values, contest rules and refund conditions before users commit coins.
+
 ### Competition model — design refinement required
 
 The earlier single-featured-book daily contest is not sufficient by itself to determine a ranked winner among multiple authors. The competition design must be refined to define:
