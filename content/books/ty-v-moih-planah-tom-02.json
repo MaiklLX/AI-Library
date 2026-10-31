@@ -10,7 +10,7 @@
   "symbol": "♡",
   "length": 122,
   "language": "ru",
-  "status": "draft",
+  "status": "scheduled",
   "ageRating": "18+",
   "themes": [
     "доверие",
@@ -101,5 +101,6 @@
   "seriesVolume": 2,
   "revision": "web-candidate-1",
   "sourceWorkingCopyBlobSha": "daf2488f0cf56838078b56f932448d8122f90c76",
-  "sourceCheckpoint": "cdfcdf824e084d8f36d487ee3a7b253669048d85"
+  "sourceCheckpoint": "cdfcdf824e084d8f36d487ee3a7b253669048d85",
+  "releaseAt": "2026-11-09T18:00:00+03:00"
 }
