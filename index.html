@@ -3317,6 +3317,24 @@ async function openBookById(id) {
   }
 
   if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
+      String(book.id).startsWith('published-')) {
+    // Resolve a saved copy first. This also covers a quick tap before startup
+    // restoration has finished and allows the reader to open without a network.
+    try {
+      const records = await window.AILibraryDownloadManager?.load?.() || [];
+      const saved = records.find(record => String(record.id) === String(book.id));
+      if (saved?.book) {
+        const localBook = normalizePublishedBook(saved.book);
+        if (localBook && localBook.id === book.id && localBook.chapters.length) {
+          Object.assign(book, localBook, { metadataOnly: false, offlineReady: true });
+        }
+      }
+    } catch (error) {
+      console.warn('Не удалось прочитать локальную копию книги:', error);
+    }
+  }
+
+  if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
       String(book.id).startsWith('published-') && book.contentPath) {
     try {
       const response = await fetch(book.contentPath, { cache: 'no-cache' });
@@ -3329,7 +3347,7 @@ async function openBookById(id) {
       Object.assign(book, loadedBook, { metadataOnly: false });
     } catch (error) {
       console.warn('Не удалось загрузить текст книги:', error);
-      alert('Не удалось загрузить книгу. Проверьте подключение к интернету или скачайте её заранее для чтения офлайн.');
+      alert('Не удалось открыть книгу. Если она сохранена на этом устройстве, проверьте раздел «Мои загрузки». Иначе подключитесь к интернету и скачайте её заранее.');
       return;
     }
   }
