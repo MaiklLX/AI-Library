@@ -135,7 +135,7 @@ Proposed XP events:
 - Exclude self-votes; detect suspicious vote clusters and repeated account/device patterns without treating one signal as automatic proof.
 - Use minimum eligible vote counts and deterministic tie-breakers for contest placements.
 - Apply publication cooldowns and quality checks; do not grant repeat first-publication rewards.
-- Do not let a paid publication fee guarantee acceptance, positive reviews, XP or a rank.
+- Publication is free in the initial release; no payment or coin balance may guarantee acceptance, positive reviews, XP or a rank.
 - Keep author onboarding accessible: publication is free and must not become an opaque or indirect coin paywall.
 - Publish all prices, reward values, contest rules and refund conditions before users commit coins.
 
