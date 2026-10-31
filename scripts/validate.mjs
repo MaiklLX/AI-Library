@@ -284,14 +284,15 @@ for (const volume of seriesManifest.volumes.filter(item => item.status === "publ
 assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly six volumes");
 assert.ok(seriesManifest.volumes.every(volume => typeof volume.bookId === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.bookId)), "Every series volume must define a valid bookId");
 assert.equal(new Set(seriesManifest.volumes.map(volume => volume.bookId)).size, 6, "Series book IDs must be unique");
-assert.equal(seriesManifest.volumes[0].bookId, seriesManifest.volumes[0].premiereBookId, "Volume one must preserve the existing premiere book ID");
+assert.equal(seriesManifest.volumes[0].premiereBookId, premiereSeriesBook.id, "Volume one must preserve the separate prerelease teaser ID");
+assert.notEqual(seriesManifest.volumes[0].bookId, seriesManifest.volumes[0].premiereBookId, "Volume one reader ID must be separate from the prerelease teaser ID");
 assert.match(html, /!target \|\| isBookReleaseLocked\(target\)/, "Direct reader links must enforce the same scheduled-release guard as the reader");
 assert.match(html, /await loadDownloadedBooks\(\)[\s\S]*?new URLSearchParams\(window\.location\.search\)/, "Direct reader links must resolve after published and offline books load");
 assert.match(seriesPage, /progress\[\x27published-\x27\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must use the actual published book ID");
 assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must deep-link to the reader");
 assert.match(html, /new URLSearchParams\(window\.location\.search\)\.get\(\x27book\x27\)/, "Reader must support direct book links from the series page");
 assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
-assert.equal(seriesManifest.volumes[0].status, "prerelease", "The first volume must remain in prerelease");
+assert.equal(seriesManifest.volumes[0].status, "planned", "Volume one must be scheduled for automatic reader release");
 assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
 assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
 assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
@@ -415,6 +416,23 @@ assert.ok(continueReadingSource, "Could not isolate continue-reading action");
 assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\)\)/, "Continue-reading must ignore progress records for unavailable books");
 assert.match(continueReadingSource[1], /btn\.onclick = \(\) => openBookById\(book\.id\)/, "Continue-reading must use the guarded book-opening workflow");
 
+
+
+const scheduledVolumeOne = seriesManifest.volumes.find(volume => Number(volume.number) === 1);
+assert.equal(scheduledVolumeOne.releaseAt, "2026-11-02T18:00:00+03:00", "Volume I release timestamp must remain the approved Moscow-time schedule");
+const scheduledCatalogEntryOne = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah-tom-01");
+assert.ok(scheduledCatalogEntryOne, "Volume I must be pre-registered in the reader catalog");
+assert.equal(scheduledCatalogEntryOne.status, "scheduled", "Volume I must remain time-gated before release");
+assert.equal(scheduledCatalogEntryOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I reader catalog and series card must share the same release timestamp");
+assert.equal(scheduledCatalogEntryOne.chapterCount, 16, "Volume I must expose all 16 chapters");
+assert.equal(scheduledCatalogEntryOne.metadataOnly, true, "Volume I catalog record must not embed chapter text");
+assert.equal(scheduledCatalogEntryOne.path, "./content/books/ty-v-moih-planah-tom-01.json", "Volume I reader file path must be canonical");
+const scheduledBookOne = JSON.parse(readFileSync(resolve(root, scheduledCatalogEntryOne.path), "utf8"));
+assert.equal(scheduledBookOne.status, "scheduled", "Volume I book JSON must be scheduled, not published early");
+assert.equal(scheduledBookOne.chapters.length, 16, "Volume I book JSON must contain all 16 chapters");
+assert.equal(scheduledBookOne.seriesId, seriesManifest.id, "Volume I must retain its series ID");
+assert.equal(scheduledBookOne.seriesVolume, 1, "Volume I must retain its series number");
+assert.equal(scheduledBookOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I JSON and series must share the same release timestamp");
 
 // Scheduled series volumes unlock from their release timestamps; no manual status edit is required.
 const plannedVolumes = seriesManifest.volumes.filter(volume => volume.status === "planned");
