@@ -38,8 +38,8 @@ Draft PR: [#72](https://github.com/MaiklLX/AI-Library/pull/72)
 - Независимые проверки структуры и расписания: 16/16 пройдены.
 - Временные границы: 18/18 (за секунду до / ровно в момент / после каждой из шести дат).
 - Встроенные скрипты `index.html` и `series.html`, Service Worker и валидатор синтаксически проверены.
-- GitHub Actions `Validate AI Library`: **success** на актуальном PR head `684dc094cac624d09c6dbb2be5b78107c562cee8`.
-- PR #72: clean/mergeable; оставлен Draft.
+- GitHub Actions `Validate AI Library`: **success** на PR head `8834cdf0cc52d6c15861c1491f90e0835d16c7c8` (run [#41245648282](https://github.com/MaiklLX/AI-Library/actions/runs/41245648282), 1 ноября 2026).
+- PR #72: open, clean/mergeable; оставлен Draft. Production `main` остаётся на базовом SHA `c94498d26f6cddce13d729b40584054c25d0a66f`; кандидат опережает его на 13 коммитов и не отстаёт.
 
 ## Ограничения
 
