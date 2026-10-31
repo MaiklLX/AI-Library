@@ -24,7 +24,8 @@
       "bookId": "ty-v-moih-planah-tom-01",
       "cover": "./content/books/ty-v-moih-planah-tom-01-cover.svg",
       "releaseAt": "2026-11-02T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "premiereBookId": "ty-v-moih-planah"
     },
     {
       "id": "ty-v-moih-planah-tom-02",
