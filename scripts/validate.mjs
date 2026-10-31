@@ -273,6 +273,8 @@ assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "pla
 assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
 assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
 assert.match(seriesPage, /content\/series\/ty-v-moih-planah\.json/, "Series page must load its manifest");
+assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
+
 assert.match(seriesPage, /premiere\.html\?book=/, "Prerelease volume must link to the existing premiere page");
 assert.match(html, /function showSeriesCompletion\(/, "Reader series completion panel is missing");
 assert.ok(html.includes("Завершить роман") && html.includes("К следующему тому") && html.includes("aria-label"), "Series completion button must expose the correct accessible label");
