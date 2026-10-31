@@ -67,8 +67,11 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 /* Start document views at the top; preserve deliberate in-page anchor navigation. */
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const navigation = performance.getEntriesByType('navigation')[0];
+  if (navigation?.type === 'reload' && location.hash) {
+    history.replaceState(history.state, '', location.pathname + location.search);
+  }
   window.addEventListener('pageshow', event => {
-    const navigation = performance.getEntriesByType('navigation')[0];
     if (event.persisted || navigation?.type === 'reload') {
       requestAnimationFrame(() => window.scrollTo(0, 0));
     }
@@ -178,7 +181,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   });
  }
  tick();window.setInterval(tick,1000);
- const navigation=performance.getEntriesByType('navigation')[0];if(location.hash&&navigation?.type!=='reload'){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+ if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
 })();
 </script>
 </body>
