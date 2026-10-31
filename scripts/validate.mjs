@@ -348,3 +348,11 @@ assert.match(html, /const loaded = catalog\.books\.map\(entry =>[\s\S]*?normaliz
 assert.match(html, /const loadedBook = normalizePublishedBook\(\{ \.\.\.source, contentPath: book\.contentPath \}\)[\s\S]*?Object\.assign\(book, loadedBook, \{ metadataOnly: false \}\)/, "Loaded book content must preserve series metadata on the active book record");
 assert.match(html, /function openBook\(id\) \{[\s\S]*?current = getAllBooks\(\)\.find\(b => String\(b\.id\) === String\(id\)\)/, "Reader must use the normalized book record, including its series metadata");
 assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["'][\s\S]*?showSeriesCompletion\(\)/, "Final-chapter completion must be gated by the active book's series metadata");
+
+
+const showPartSource = html.match(/function showPart\\(\\) \\{([\\s\\S]*?)\\n\\}/);
+assert.ok(showPartSource, "Reader chapter renderer is missing");
+assert.match(showPartSource[1], /getElementById\\(["']seriesCompletionPanel["']\\)[\\s\\S]*?completionPanel\\.hidden=true/, "Navigating to another chapter must hide the series completion panel");
+const nextChapterHandler = html.match(/document\\.querySelector\\(["']#nextChapter["']\\)\\.onclick=\\(\\)=>\\{([\\s\\S]*?)\\};document\\.querySelector\\(["']#closeModal["']\\)/);
+assert.ok(nextChapterHandler, "Next-chapter handler is missing");
+assert.match(nextChapterHandler[1], /part<current\\.chapters\\.length-1[\\s\\S]*?part\\+\\+[\\s\\S]*?else if\\(current\\?\\.seriesId===["']ty-v-moih-planah["']\\)\\{showSeriesCompletion\\(\\)\\}/, "Series completion must appear only after the final chapter");
