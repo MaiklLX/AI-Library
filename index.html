@@ -2972,6 +2972,28 @@ header nav .site-nav-actions .nav-action:focus-visible{outline:2px solid #ead09a
 @media(max-width:380px){header nav .site-nav-actions{gap:4px}header nav .site-nav-actions .nav-action{font-size:9px}}
 @media(prefers-reduced-motion:reduce){header nav .site-nav-actions .nav-action,header nav .site-nav-actions .nav-action::before,header nav .site-nav-actions .nav-action svg{transition:none}header nav .site-nav-actions .nav-action:hover{transform:none}}
 </style>
+
+<style id="library-card-layout-and-nav-v1">
+/* Keep book-back content in its own vertical flow when a reading meter is present. */
+#books .book-back{min-width:0;overflow:hidden}
+#books .book-back>*{position:relative;z-index:1;min-width:0;flex-shrink:0}
+#books .book-back h3{position:relative;z-index:2;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;flex:0 0 auto;min-height:0;max-height:calc(4 * 1.2em);margin:0 0 8px;padding:1px 0 3px;line-height:1.2;overflow:hidden;overflow-wrap:anywhere;word-break:normal}
+#books .book-back .author{flex:0 0 auto;overflow-wrap:anywhere}
+#books .book-back .desc{flex:1 1 auto;min-height:36px;overflow:auto}
+#books .book-back .meta{flex:0 0 auto}
+#books .book-back .reading-progress{position:relative;z-index:2;flex:0 0 auto;min-width:0;margin:8px 0 0;padding:7px 0 0;border-top:1px solid #ffffff16}
+#books .book-back .reading-progress-label{display:flex;justify-content:space-between;gap:8px;min-width:0;white-space:nowrap}
+#books .book-back .reading-progress-label span{min-width:0}
+#books .book-back .reading-progress-track{position:relative;flex:0 0 5px}
+#books .book-back-actions{position:relative;z-index:2;flex:0 0 auto}
+/* The three navigation actions share the complete free width of the header evenly. */
+header nav{width:100%;gap:clamp(14px,3vw,36px)}
+header nav .brand{flex:0 0 auto}
+header nav .site-nav-actions{width:auto;max-width:none;flex:1 1 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;min-width:0}
+header nav .site-nav-actions .nav-action{width:100%;min-width:0;min-height:48px;padding-inline:8px}
+@media(max-width:680px){header nav{gap:9px}header nav .brand{flex:1 1 100%}header nav .site-nav-actions{width:100%;flex:1 1 100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}header nav .site-nav-actions .nav-action{min-height:53px;padding-inline:4px}}
+@media(prefers-reduced-motion:reduce){#books .book-back .reading-progress-fill{transition:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
