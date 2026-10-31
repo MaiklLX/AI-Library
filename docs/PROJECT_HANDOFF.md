@@ -186,3 +186,15 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The fallback uses the same font-size setting path and existing 14–24 px bounds; Pointer Events remain for other platforms, with a guard against duplicate handling while the touch fallback is active.
 - PR #47 is a draft, unmerged, and not deployed. Automated validation and manual iPhone/iPad verification are pending.
 - Manual acceptance checks: pinch out/in changes only reader font size; text reflows without losing reading position; one-finger page turns and edge taps still work; no accidental browser-level zoom; desktop and Android behavior remains unchanged.
+
+
+## Authentication architecture checkpoint (2026-10-31)
+
+- Added `backend/worker-v2/AUTHENTICATION_DESIGN.md` and linked it from the API roadmap.
+- Design uses Google Authorization Code flow on the Worker with state, nonce and PKCE; minimum scopes are `openid email profile`; Google's stable `sub` is the provider identity.
+- Email OTP is server-generated, short-lived, single-use, rate-limited and stored only as a hash; proposed initial policy is 10-minute expiry, 60-second resend cooldown and five verification attempts per challenge.
+- Important hosting constraint: current GitHub Pages origin and a future `workers.dev` API are cross-site. Do not assume third-party cookies will work reliably, especially in iOS Safari. Do not ship long-lived bearer tokens in localStorage as a shortcut.
+- Proposed production topology: app and API on sibling HTTPS hostnames under one owned registrable domain, with a host-only HttpOnly/Secure/SameSite=Lax session cookie and CSRF protection.
+- Email delivery: prefer Cloudflare Email Sending if the user has an owned domain onboarded in Cloudflare; otherwise use Resend with its API key stored as a Worker secret. Provider not selected/configured yet.
+- No auth endpoints, D1 schema, bindings, secrets, custom domain or deployment have been added. PR #45 remains draft/unmerged.
+- Next blocker to resolve: confirm whether the user owns a domain and whether it is managed in Cloudflare; then choose app hosting and email delivery provider before implementing auth.
