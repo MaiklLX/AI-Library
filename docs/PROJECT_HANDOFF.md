@@ -257,3 +257,11 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Extended static validation to guard the responsive detail layout and reduced-motion rule.
 - Latest CI run 41214206161 passed all checks, including static validation, Service Worker fallbacks, personal-state migration and offline download integrity.
 - Real-device visual and touch testing remains outstanding; branch remains draft and undeployed.
+
+### Six-volume pre-release banner checkpoint (2026-10-31)
+- The existing AI Library closed-premiere slot now presents «Ты в моих планах» as a six-volume series rather than a single standalone book.
+- content/catalog.json records volumeCount: 6 and the series subtitle; the existing novel cover, synopsis, age rating and planned release metadata are preserved.
+- The homepage premiere card now uses a premium dark-blue / warm-gold editorial treatment, a front cover with five visible companion spines (six volumes total), an explicit “6 томов · единая история” marker, and series-focused copy.
+- The original premiere destination and closed-text behavior remain intact. The card is responsive; mobile rules restore the series count, tagline, metadata and CTA that older compact-prerelease styles had hidden.
+- Service Worker app-shell cache advanced to v64; static validation now asserts the novel's six-volume metadata and the series banner elements.
+- Automated CI is pending for the new head. No physical-device visual check has been performed. PR #48 remains draft, open, unmerged and undeployed.
