@@ -214,3 +214,17 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Current working branch: `product/creator-progression-economy`; current review PR: [#43](https://github.com/MaiklLX/AI-Library/pull/43), still open and not merged at the time of this checkpoint.
 - Files to keep synchronized: `docs/COMMUNITY_SYSTEM_SPEC.md` and this handoff document. PR body should summarize the approved policy.
 - Next exact action: continue product review of unresolved dispute/evidence workflow and mandatory consumer-rights handling; separately locate/audit the external Cloudflare Worker source and D1 schema before any live wallet implementation. Do not merge PR #43 until remaining provisional rules are reviewed.
+
+
+## Refund cost-allocation decision checkpoint (2026-10-31)
+
+- Product owner approved cause-based allocation for refunds:
+  - **Platform fault:** AI Library bears the refund cost; do not claw back the author's 80% share solely for a platform-caused delivery/access failure.
+  - **Author/content fault:** cancel the author's pending 80% credit, or if already settled create a separate compensating debit/receivable against the author's coin account.
+  - **Insufficient author balance:** transparently record the unrecovered amount and offset it against future author earnings; never silently erase it or conceal a negative adjustment. Limits, notice and appeal process remain open.
+  - **Duplicate charge:** reverse only the duplicate transaction; do not credit the author for it and do not affect the original successful purchase.
+- Refund cause, evidence, decision time, author/platform allocation, entitlement action and any outstanding recovery must be auditable. All reversals remain idempotent and use compensating ledger entries; never mutate the original purchase record.
+- This decision supplements the previously approved 7-calendar-day pending author settlement and objective-cause refund policy. It does not change statutory consumer rights.
+- Documentation only: no frontend, Worker, D1 schema, wallet or live refund/settlement behavior changed.
+- Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and unmerged.
+- Next: specify dispute intake, evidence review, author notification/appeal, negative-balance limits and exceptional cases; audit the actual Cloudflare Worker and D1 source before implementation.
