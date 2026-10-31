@@ -454,7 +454,7 @@ assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
 assert.ok(html.includes("aiLibraryWavePageForward 1.12s"),
   "The paper wave must use a slower, smoother 1.12 second animation");
 assert.match(html, /clip-path:polygon\(0 0,100% 0,97% 17%/,
-  "The turning page must develop a rolling, wave-shaped edge");
+assert.ok(html.includes("clip-path:polygon(0 0,100% 0,97% 15%"),
 assert.match(html, /aiLibraryWavePaperShadow/,
   "The wave must use a soft moving paper shadow");
 assert.ok(!html.includes("aiLibraryPaperEdgeLight") && !html.includes("rgba(255,255,255,.46)"),
