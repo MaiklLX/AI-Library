@@ -62,7 +62,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
 <body>
 <main class="lab">
  <div class="top"><div class="brand">AI LIBRARY</div><a class="back" href="./index.html">← Вернуться в библиотеку</a></div>
- <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Потяни за верхний или нижний угол листа, чтобы перелистнуть его, или воспользуйся кнопками.</p></header>
+ <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Вперёд тяни за правый угол к левому краю. Назад — за левый угол к правому. Можно также воспользоваться кнопками.</p></header>
  <div id="loadNotice" class="notice" role="status">Не удалось загрузить движок перелистывания. Проверь подключение к интернету и обнови страницу.</div>
  <section class="stage" aria-label="Тестовая книга">
   <div class="book-frame"><div id="flipBook">
@@ -127,6 +127,16 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
     pageFlip.on('init', event => update(event.data.page));
     pageFlip.on('changeOrientation', () => requestAnimationFrame(() => pageFlip.update()));
     pageFlip.loadFromHTML(pages);
+    // StPageFlip 2.0.7 uses x=10 in viewport coordinates for flipPrev().
+    // On a centered book this can fall outside the book and prevent the curl.
+    // Correct only the start point; the library still renders the native page curl.
+    pageFlip.flipPrev = corner => {
+      const bounds = pageFlip.getBoundsRect();
+      pageFlip.flipController.flip({
+        x: bounds.left + 10,
+        y: corner === 'top' ? 1 : bounds.height - 2
+      });
+    };
     previous.addEventListener('click', () => pageFlip.flipPrev('bottom'));
     next.addEventListener('click', () => pageFlip.flipNext('bottom'));
     window.addEventListener('resize', () => pageFlip.update(), { passive: true });
