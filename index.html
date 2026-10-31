@@ -2973,6 +2973,53 @@ body.reader-open #pageTurnSheet.flip-back {
 .book-detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
 .book-detail-offline{margin-top:18px;color:#aaa59a;font-size:12px}
 @media(max-width:650px){#bookDetailPage{inset:64px 0 0;padding:18px 16px 36px}.book-detail-layout{grid-template-columns:minmax(0,1fr);gap:22px}.book-detail-cover{width:min(66%,250px);margin:0 auto}.book-detail-copy{padding:0}.book-detail-copy h1{font-size:36px}.book-detail-actions>*{flex:1 1 100%;min-height:48px}}
+
+/* Book detail visual refinement */
+#bookDetailPage{background:
+ radial-gradient(ellipse at 16% 12%,rgba(181,139,66,.17),transparent 34%),
+ radial-gradient(ellipse at 88% 72%,rgba(92,67,112,.13),transparent 36%),
+ #0d0d0e}
+.book-detail-inner{max-width:1120px}
+.book-detail-back{display:inline-flex;align-items:center;gap:8px;background:#ffffff08;border-color:#ffffff20;color:#e9e2d2;transition:background .2s,border-color .2s,transform .2s}
+.book-detail-back:hover{background:#ffffff12;border-color:#c9a85d;transform:translateX(-2px)}
+.book-detail-layout{grid-template-columns:minmax(250px,370px) minmax(0,1fr);gap:clamp(34px,6vw,78px);align-items:center}
+.book-detail-cover{position:relative;width:100%;aspect-ratio:2/2.85;border:1px solid rgba(219,183,112,.48);border-radius:7px 17px 17px 7px;background:linear-gradient(145deg,#47351e,#17151a 72%);box-shadow:18px 22px 55px #0009, inset 5px 0 10px #fff1;isolation:isolate}
+.book-detail-cover:before{content:"";position:absolute;z-index:2;inset:0 auto 0 12px;width:1px;background:linear-gradient(transparent,#ffffff35 18%,#0008 50%,#ffffff24 82%,transparent);pointer-events:none}
+.book-detail-cover:after{content:"";position:absolute;z-index:2;inset:10px;border:1px solid #ffffff20;border-radius:3px;pointer-events:none}
+.book-detail-cover img{display:block;position:relative;z-index:1}
+.book-detail-cover .symbol{font-size:clamp(90px,12vw,150px);text-shadow:0 8px 32px #0009}
+.book-detail-copy{position:relative;padding:clamp(22px,3.8vw,42px);border:1px solid #ffffff16;border-radius:18px;background:linear-gradient(145deg,#ffffff0c,#ffffff04);box-shadow:0 22px 70px #0003}
+.book-detail-kicker{display:flex;align-items:center;gap:10px}
+.book-detail-kicker:before{content:"";width:24px;height:1px;background:var(--gold)}
+.book-detail-copy h1{letter-spacing:-.035em;text-wrap:balance;margin:16px 0 10px}
+.book-detail-author{display:flex;align-items:center;gap:9px;color:#e0c991;font-size:15px;margin-bottom:24px}
+.book-detail-author:before{content:"АВТОР";font-size:9px;letter-spacing:.16em;color:#8d877b;font-weight:800}
+.book-detail-description{max-width:650px;font-size:15px;line-height:1.85;color:#d0cbc1}
+.book-detail-meta{padding-top:20px;border-top:1px solid #ffffff15;margin:25px 0 0}
+.book-detail-meta span{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-color:#ffffff18;background:#08080838;color:#ddd5c5}
+.book-detail-progress{padding:17px 18px;border:1px solid #ffffff16;border-radius:12px;background:#08080835}
+.book-detail-progress .reading-progress-label{display:flex;justify-content:space-between;gap:12px;color:#d8d0bf;font-size:12px}
+.book-detail-progress-track{height:5px;background:#ffffff1c}
+.book-detail-progress-fill{background:linear-gradient(90deg,#a77c36,#f0d18a);box-shadow:0 0 14px #d9b66d66}
+.book-detail-actions{margin-top:26px;align-items:stretch}
+.book-detail-actions .btn{min-height:48px;padding:12px 18px;transition:transform .2s,filter .2s,border-color .2s}
+.book-detail-actions .btn:hover{transform:translateY(-2px);filter:brightness(1.08);border-color:#d9b66d}
+.book-detail-actions .btn.primary{box-shadow:0 8px 26px #d9b66d25}
+.book-detail-offline{display:flex;align-items:center;gap:8px;line-height:1.6;margin-top:18px;color:#aaa596}
+.book-detail-offline:before{content:"";width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#8aab83;box-shadow:0 0 10px #8aab8366}
+@media(max-width:760px){
+ #bookDetailPage{inset:64px 0 0}
+ .book-detail-layout{grid-template-columns:minmax(0,1fr);gap:25px;align-items:start}
+ .book-detail-cover{width:min(65%,280px);margin:4px auto 0;box-shadow:10px 16px 40px #0009}
+ .book-detail-copy{padding:23px 20px;border-radius:15px}
+ .book-detail-copy h1{font-size:clamp(32px,8vw,43px)}
+ .book-detail-author{margin-bottom:18px}
+ .book-detail-meta{margin-top:19px;padding-top:16px}
+ .book-detail-actions{display:grid;grid-template-columns:1fr}
+ .book-detail-actions>*{width:100%;min-height:50px}
+}
+@media(prefers-reduced-motion:reduce){.book-detail-back,.book-detail-actions .btn{transition:none}}
+
 </style>
 </head>
 <body>
