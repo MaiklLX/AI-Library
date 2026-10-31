@@ -3417,7 +3417,7 @@ function closeBookDetails(updateUrl = true) {
   if (updateUrl) {
     const url = new URL(location.href);
     url.searchParams.delete('book');
-    history.pushState({}, '', url);
+    history.replaceState({}, '', url);
   }
 }
 document.querySelector('#bookDetailBack')?.addEventListener('click', () => closeBookDetails());
@@ -3425,7 +3425,7 @@ document.querySelector('#bookDetailPage')?.addEventListener('click', event => {
   const read = event.target.closest('[data-detail-read]');
   if (read) { const id = read.dataset.detailRead; closeBookDetails(); openBookById(id); return; }
   const download = event.target.closest('[data-detail-download]');
-  if (download) handleBookDownload(download);
+  if (download) { const id = download.dataset.detailDownload; handleBookDownload(download).then(() => openBookDetails(id, false)); }
 });
 window.addEventListener('popstate', () => {
   const id = new URL(location.href).searchParams.get('book');
