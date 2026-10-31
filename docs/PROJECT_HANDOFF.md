@@ -203,3 +203,14 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Work on dedicated branches and draft PRs. Keep `main` and production unchanged until the user explicitly approves merge/deployment.
 - Do not claim physical-device validation unless it was actually performed.
 - Keep the economy/authentication/backend work documented and recoverable; do not spend implementation effort on it until the user reprioritizes it.
+
+
+### Offline shell hardening checkpoint (2026-10-31)
+- Service Worker upgraded from cache `v57` to `v58` on the offline-first branch.
+- Navigation now falls back to the cached app shell when the network returns a non-success response as well as when fetch rejects.
+- Cache writes are best-effort: quota/storage errors no longer discard a successful online response.
+- Catalog/book network-first requests now fall back to their cached response on non-success HTTP responses, not only network exceptions.
+- Existing IndexedDB book downloads remain separate from the app-shell cache.
+- Validation script cache-version assertions were updated from v57 to v58.
+- GitHub Actions validation for head commit `71b2321993a6be61642dabdc57dcf5fa3219379c` completed successfully (run `41197803280`).
+- This is source/CI validation only. No browser, airplane-mode, Android, iOS or installed-PWA manual test has yet been performed. Do not claim physical-device validation.
