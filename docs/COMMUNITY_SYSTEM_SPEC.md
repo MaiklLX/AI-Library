@@ -248,3 +248,16 @@ Do not implement frontend registration against a speculative endpoint.
 - Do not charge for private drafts, previews, local saving, or an author's own draft export. Do not impose a blanket export fee on free/public-domain catalogue books without a separately approved policy.
 - Generate a standards-compliant EPUB within the application/backend, including metadata, cover, chapter navigation and valid package structure; validate the resulting archive before offering it.
 - No EPUB purchase or wallet UI should be wired to localStorage or a speculative API. Implementation requires an audited Worker source/schema, transactional ledger support, and server-side entitlement checks.
+
+
+### EPUB refunds, reversals and author settlement (approved product rule, 2026-10-31)
+
+- Refunds are eligible for objective transaction/delivery failures, including a duplicate charge, a failed or unusable EPUB delivery caused by the platform, or a paid purchase for which the reader did not receive the promised access.
+- A reader simply changing their mind after successful delivery is not, by itself, an automatic platform refund reason. This rule must never override mandatory statutory consumer rights or other applicable legal obligations.
+- Author revenue (80% of a paid purchase) is first recorded as **pending** rather than immediately spendable.
+- The pending author amount becomes available **7 calendar days after the successful purchase**, provided no substantiated refund, reversal, or dispute is open. This is a product settlement delay, not a statement of the reader's statutory refund period.
+- The platform's 20% commission and the author's 80% share must remain traceable to the original purchase. Refund/reversal processing must create compensating ledger entries; never edit or erase the original transaction.
+- A refund for one purchase must be idempotent: repeated requests, retries, or concurrent processing must not issue multiple refunds or reverse the same author/platform amounts more than once.
+- When a refund is granted, the paid entitlement may be revoked, subject to mandatory consumer rights and any applicable exception. Do not revoke a separate permanent free-acquisition entitlement that predates the paid offer.
+- The purchase, entitlement, author pending credit, platform commission, and any later refund/reversal must be represented by server-authoritative, auditable, transactionally consistent records. No client-side balance changes.
+- Exact dispute handling, evidence review, exceptional cases, and legal implementation details must be finalized before launch. No live refund or settlement behavior is implemented by this documentation change.
