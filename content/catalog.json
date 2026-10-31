@@ -81,6 +81,26 @@
         "добрый финал"
       ],
       "countdownDate": "2026-11-01T18:00:00+03:00"
+    },
+    {
+      "id": "ty-v-moih-planah-tom-02",
+      "path": "./content/books/ty-v-moih-planah-tom-02.json",
+      "metadataOnly": true,
+      "chapterCount": 18,
+      "title": "Внутренний маршрут",
+      "subtitle": "Том II · главы 17–34",
+      "author": "AI Library",
+      "genre": "Современный роман 18+ · романтический детектив",
+      "description": "Временные карточки, журналы доступа и документы хранения ведут Веру всё глубже во внутреннюю систему архива. Один предмет получает несколько обозначений, но ни одно из них ещё не объясняет, кто действительно отвечал за его движение.",
+      "tag": "СКОРО · ТОМ II",
+      "cls": "romance",
+      "symbol": "Ⅱ",
+      "length": 95,
+      "language": "ru",
+      "status": "scheduled",
+      "releaseAt": "2026-11-09T18:00:00+03:00",
+      "cover": "./content/books/ty-v-moih-planah-tom-02-cover.svg",
+      "revision": "1.0"
     }
   ]
 }
