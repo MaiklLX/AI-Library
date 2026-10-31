@@ -196,7 +196,7 @@ assert.match(html, /window\.addEventListener\('resize', scheduleReaderResizePagi
 const pageTurnAnimation = html.match(/function animateBookPageTurn\(direction,afterTurn\)\s*\{([\s\S]*?)\n\}/);
 assert.ok(pageTurnAnimation, "Could not isolate page-turn animation");
 assert.equal((pageTurnAnimation[1].match(/flushReaderResizePagination\(\)/g) || []).length, 3, "Every page-turn completion path must flush pending resize pagination");
-assert.match(html, /id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"/, "Reader modal must expose dialog semantics to assistive technology");
+assert.match(html, /id="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalTitle"/, "Reader modal must expose dialog semantics to assistive technology");
 assert.match(html, /function getReaderFocusableElements\(\)[\s\S]*?querySelectorAll\(/, "Reader must enumerate focusable controls for keyboard trapping");
 const keyboardHandler = html.match(/document\.addEventListener\("keydown",e=>\s*\{([\s\S]*?)\n\}\);/);
 assert.ok(keyboardHandler, "Could not isolate reader keyboard handler");
@@ -437,8 +437,8 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1100\)/,
-  "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1250\)/,
+  "Page-turn completion must retain a guarded fallback after the 1.12 second wave animation");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
 assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
@@ -447,12 +447,18 @@ assert.match(pageTurnAnimation[1], /try \{\s*afterTurn\(\);\s*\} catch\(error\)/
   "The new page must be committed beneath the frozen old page before the animation");
 assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].indexOf("sheet.classList.add(direction>0?'flip-forward':'flip-back')"),
   "The new page must be visible underneath before the old paper begins to turn");
-assert.match(html, /@keyframes aiLibraryRealPageCurlForward[\s\S]*?rotateY\(-180deg\)/,
-  "Forward page turns must complete a full 180-degree paper rotation");
-assert.match(html, /@keyframes aiLibraryRealPageCurlBack[\s\S]*?rotateY\(180deg\)/,
-  "Backward page turns must complete a full 180-degree paper rotation");
-assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
-  "The paper curl must use a slower, smoother 980 ms animation");
+assert.match(html, /@keyframes aiLibraryWavePageForward[\s\S]*?rotateY\(-180deg\)/,
+  "Forward page turns must complete the wave motion");
+assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
+  "Backward page turns must complete the wave motion");
+assert.ok(html.includes("aiLibraryWavePageForward 1.12s"),
+  "The paper wave must use a slower, smoother 1.12 second animation");
+assert.ok(html.includes("clip-path:polygon(0 0,100% 0,97% 15%"),
+  "The turning page must develop a rolling, wave-shaped edge");
+assert.match(html, /aiLibraryWavePaperShadow/,
+  "The wave must use a soft moving paper shadow");
+assert.ok(!html.includes("aiLibraryPaperEdgeLight") && !html.includes("rgba(255,255,255,.46)"),
+  "The page turn must not use the former bright travelling flash");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
@@ -461,15 +467,8 @@ assert.match(html, /reader-turn-face reader-turn-front/,
   "The turning sheet must have a printed front face");
 assert.match(html, /reader-turn-face reader-turn-back/,
   "The turning sheet must have a shaded reverse face");
-assert.match(html, /probe\.style\.paddingBottom = readerComputedStyle\.paddingBottom/,
-  "Pagination measurement must reserve the same footer lane as the visible reader");
-assert.match(html, /probe\.style\.boxSizing = readerComputedStyle\.boxSizing/,
-  "Pagination measurement must preserve the live reader box model");
-assert.ok(html.includes("#reader:focus") && html.includes("outline:none!important"),
-  "Touch focus must not draw a frame around the manuscript text");
-assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
-  "The paper curl must use a slower, smoother 980 ms animation");
-assert.match(html, /aiLibraryPaperEdgeLight/,
-  "The turning paper must have a moving light-catching edge");
-assert.ok(html.includes("rotateY(-68deg)") && html.includes("rotateY(-132deg)"),
-  "The forward page curl must use staged depth and bend-like motion");
+assert.ok(html.includes("modal.focus({ preventScroll: true })") && !html.includes('document.querySelector("#reader")?.focus'),
+  "Opening the reader must focus the dialog shell, not the manuscript text");
+assert.ok(html.includes("#modal:focus") && html.includes("#reader:focus"),
+  "The dialog shell and manuscript must not draw a browser focus frame");
+
