@@ -493,7 +493,7 @@ assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flip
 assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");
 assert.match(flipLab, /yRatio > 0\.12 && yRatio < 0\.88/, "Side-edge tap zones must leave the page corners available for manual dragging");
 
-const mainReaderSource = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const mainReaderSource = html;
 assert.ok(mainReaderSource.includes('reader-pageflip-integration-v1'), 'Main reader must include the progressive StPageFlip integration layer');
 assert.ok(mainReaderSource.includes('readerFlipMount'), 'Main reader must provide an isolated StPageFlip mount');
 assert.ok(mainReaderSource.includes('updateFromHtml(pages)'), 'Main reader must refresh page-flip pages after pagination changes');
