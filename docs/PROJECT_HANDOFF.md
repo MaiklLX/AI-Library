@@ -228,3 +228,16 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Documentation only: no frontend, Worker, D1 schema, wallet or live refund/settlement behavior changed.
 - Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and unmerged.
 - Next: specify dispute intake, evidence review, author notification/appeal, negative-balance limits and exceptional cases; audit the actual Cloudflare Worker and D1 source before implementation.
+
+## Dispute workflow decision checkpoint (2026-10-31)
+
+- Product owner approved a purchase-scoped dispute workflow: reader opens a case against a specific paid purchase, selects a reason, describes the issue and may attach evidence; each case has a unique ID and auditable status history.
+- Author receives the case details and can respond with evidence or propose corrective re-delivery. Initial service targets: 5 calendar days for author response; 3–5 business days for platform review once ready; 7 calendar days for either party to appeal. These are internal targets only and never restrict statutory consumer rights.
+- The platform records a reasoned decision and outcome (refund, no refund, corrected re-delivery, or justified partial compensation). Appeals should be reviewed at a second level/different moderator where practical; preserve the full decision history.
+- A dispute affects only the relevant purchase and, where applicable, only its pending author share. Do not freeze unrelated author earnings or automatically revoke access merely because a complaint was opened.
+- Refunds and author-share adjustments require a registered platform decision linked to the case. The only automatic exception is a mechanically confirmed duplicate charge: reverse only the duplicate transaction, never credit the author for it, and leave the original successful purchase untouched. Ambiguous cases require human review.
+- Every financial adjustment remains idempotent and auditable through compensating ledger entries; preserve original transactions. Record evidence references, decision-maker, timestamps, allocation, entitlement action and any outstanding recovery.
+- Mandatory consumer rights override internal workflow targets and product rules; legal review remains required before launch.
+- Documentation only: no frontend, Worker, D1 schema, wallet, purchase or refund implementation was changed.
+- Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and must not be merged until remaining open items are reviewed.
+- Next: specify evidence retention/access controls, abuse handling, author negative-balance limits and exceptional cases; locate and audit the deployed Cloudflare Worker and D1 schema before implementing financial operations.
