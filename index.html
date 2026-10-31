@@ -3001,7 +3001,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
     <div class="reader-heading"><h2 id="modalTitle"></h2><span class="reader-subheading" id="chapterLabel"></span></div>
-    <button class="reader-icon-button reader-theme-toggle" id="readerThemeToggle" type="button" aria-label="Переключить на тёмную тему" title="Переключить тему"><span id="readerThemeIcon" aria-hidden="true">☾</span></button><button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-expanded="false">Aa</button>
+    <button class="reader-icon-button reader-theme-toggle" id="readerThemeToggle" type="button" aria-label="Переключить на тёмную тему" title="Переключить тему"><span id="readerThemeIcon" aria-hidden="true">☾</span></button><button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-controls="readerSettings" aria-expanded="false">Aa</button>
   </div>
   <div class="eyebrow" id="modalGenre" hidden></div><div class="detail" id="modalAuthor" hidden></div>
   <div class="book-spread" id="bookSpread">
@@ -3013,7 +3013,7 @@ body.reader-open #pageTurnSheet.flip-back {
     <span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select>
     <label for="readerTheme">Тема</label><select id="readerTheme" aria-label="Тема оформления"><option value="sepia">Сепия</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
   </div>
-  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
+  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus" role="status" aria-live="polite" aria-atomic="true">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
   <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
 </div></div>
 <script src="./src/platform/runtime.js"></script>
@@ -4198,10 +4198,27 @@ function showSeriesCompletion(){
   const link=panel.querySelector("#seriesCompletionLink");link.href="./series.html#volume-"+String(finalVolume?6:volume+1).padStart(2,"0");link.textContent=finalVolume?"Вернуться к серии":"Посмотреть следующий том";
   panel.hidden=false;panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 }
-document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
+document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});
+function getReaderFocusableElements(){
   const modal=document.querySelector("#modal");
-  if(e.key==="Escape"){if(modal.classList.contains("open"))closeReadingSpace();return;}
-  if(!modal.classList.contains("open")||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+  if(!modal)return [];
+  return Array.from(modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(element=>!element.hidden&&element.getAttribute("aria-hidden")!=="true"&&element.getClientRects().length>0);
+}
+document.addEventListener("keydown",e=>{
+  const modal=document.querySelector("#modal");
+  if(!modal?.classList.contains("open"))return;
+  if(e.key==="Escape"){e.preventDefault();closeReadingSpace();return;}
+  if(e.key==="Tab"){
+    const focusable=getReaderFocusableElements();
+    if(!focusable.length){e.preventDefault();document.querySelector("#closeModal")?.focus({preventScroll:true});return;}
+    const first=focusable[0],last=focusable[focusable.length-1],active=document.activeElement;
+    if(!modal.contains(active)){e.preventDefault();(e.shiftKey?last:first).focus();return;}
+    if(e.shiftKey&&active===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&active===last){e.preventDefault();first.focus();}
+    return;
+  }
+  if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
   if(e.target.closest("input,textarea,select,button,[contenteditable=true]"))return;
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
