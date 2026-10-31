@@ -32,7 +32,7 @@ Production `main` и GitHub Pages не изменялись.
 ## Фактические веб-файлы в ветке-кандидате
 
 - Том I: `content/books/ty-v-moih-planah-tom-01.json`, 16 глав, 25 498 слов; releaseAt совпадает с манифестом.
-- Том II: `content/books/ty-v-moih-planah-tom-02.json`, 18 глав; releaseAt совпадает с манифестом.
+- Том II: `content/books/ty-v-moih-planah-tom-02.json`, 18 глав, статус `scheduled` в JSON и каталоге; releaseAt совпадает с манифестом.
 
 ## Остальные тома
 
