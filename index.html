@@ -4233,13 +4233,59 @@ let readerPinchStartDistance = 0;
 let readerPinchStartFontSize = 17;
 let readerPinchLastFontSize = 17;
 let readerPinchActive = false;
+// iOS standalone Safari/PWA can be inconsistent with multi-touch Pointer Events.
+// Keep a Touch Events fallback so pinch-to-resize remains available on iPhone/iPad.
+let readerTouchPinchActive = false;
+let readerTouchPinchStartDistance = 0;
+let readerTouchPinchStartFontSize = 17;
+let readerTouchPinchLastFontSize = 17;
+const getReaderTouchPinchDistance = touches => {
+  if (!touches || touches.length < 2) return 0;
+  return Math.hypot(
+    touches[0].clientX - touches[1].clientX,
+    touches[0].clientY - touches[1].clientY
+  );
+};
+const updateReaderTouchPinch = touches => {
+  const distance = getReaderTouchPinchDistance(touches);
+  if (!distance || !readerTouchPinchStartDistance) return;
+  const delta = Math.round((distance - readerTouchPinchStartDistance) / 18);
+  const nextSize = Math.max(14, Math.min(24, readerTouchPinchStartFontSize + delta));
+  if (nextSize !== readerTouchPinchLastFontSize) {
+    readerTouchPinchLastFontSize = nextSize;
+    changeReaderSetting('fontSize', nextSize);
+  }
+};
+bookPageArea.addEventListener('touchstart', e => {
+  if (!readingModal.classList.contains('open') || e.touches.length < 2) return;
+  readerTouchPinchActive = true;
+  readerTouchPinchStartDistance = getReaderTouchPinchDistance(e.touches);
+  readerTouchPinchStartFontSize = getReaderSettings().fontSize;
+  readerTouchPinchLastFontSize = readerTouchPinchStartFontSize;
+  readerPinchPointers.clear();
+  readerPinchActive = false;
+  edgeTapStart = null;
+  resetReaderSwipe();
+}, {capture:true,passive:true});
+bookPageArea.addEventListener('touchmove', e => {
+  if (!readerTouchPinchActive || e.touches.length < 2) return;
+  if (e.cancelable) e.preventDefault();
+  updateReaderTouchPinch(e.touches);
+}, {capture:true,passive:false});
+const finishReaderTouchPinch = e => {
+  if (e.touches && e.touches.length >= 2) return;
+  readerTouchPinchActive = false;
+  readerTouchPinchStartDistance = 0;
+};
+bookPageArea.addEventListener('touchend', finishReaderTouchPinch, {capture:true,passive:true});
+bookPageArea.addEventListener('touchcancel', finishReaderTouchPinch, {capture:true,passive:true});
 const getReaderPinchDistance = () => {
   const points = [...readerPinchPointers.values()];
   if (points.length < 2) return 0;
   return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
 };
 bookPageArea.addEventListener('pointerdown', e => {
-  if (!readingModal.classList.contains('open') || e.pointerType !== 'touch') return;
+  if (readerTouchPinchActive || !readingModal.classList.contains('open') || e.pointerType !== 'touch') return;
   readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(readerPinchPointers.size===2){
     readerPinchActive=true;
@@ -4251,7 +4297,7 @@ bookPageArea.addEventListener('pointerdown', e => {
   }
 }, {capture:true,passive:true});
 bookPageArea.addEventListener('pointermove', e => {
-  if(!readerPinchPointers.has(e.pointerId))return;
+  if(readerTouchPinchActive || !readerPinchPointers.has(e.pointerId))return;
   readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(!readerPinchActive||readerPinchPointers.size<2)return;
   if(e.cancelable)e.preventDefault();
