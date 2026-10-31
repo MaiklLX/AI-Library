@@ -22,8 +22,7 @@ const store = {
   async setPersonalState(snapshot) { stored = { ...snapshot }; writes += 1; return stored; }
 };
 const window = { AILibraryStore: store };
-vm.runInNewContext(source, { window, localStorage, console, Date, Object, Array, JSON, Set });
-
+vm.runInNewContext(source, { window, localStorage, console, Date, Object, Array, JSON });
 const first = await window.AILibraryPersonalStateMigration.migrate();
 assert.equal(first.migrated, true);
 assert.equal(first.personalBooks, 1);
@@ -36,16 +35,16 @@ assert.deepEqual(JSON.parse(JSON.stringify(stored.readerSettings)), { fontSize: 
 localStorage.setItem("ai-library-favs", JSON.stringify(["book-b", "book-c"]));
 localStorage.setItem("ai-library-progress", JSON.stringify({ "book-b": { part: 2, page: 8 } }));
 localStorage.setItem("unrelated-key", "leave-me-alone");
-const flushed = await window.AILibraryPersonalStateMigration.flush();
-assert.equal(flushed.synced, true);
+await window.AILibraryPersonalStateMigration.sync();
+const flush = await window.AILibraryPersonalStateMigration.flush();
+assert.equal(flush.synced, true);
 assert.deepEqual(JSON.parse(JSON.stringify(stored.favorites)), ["book-b", "book-c"]);
 assert.deepEqual(JSON.parse(JSON.stringify(stored.progress)), { "book-b": { part: 2, page: 8 } });
 assert.equal(legacy.get("unrelated-key"), "leave-me-alone");
-assert.equal(legacy.size, 5, "Original and unrelated localStorage keys must remain untouched");
+assert.equal(legacy.size, 5, "Original and unrelated localStorage keys must remain intact");
 
 const second = await window.AILibraryPersonalStateMigration.migrate();
 assert.equal(second.migrated, false);
 assert.equal(second.alreadyMigrated, true);
-assert.equal(writes, 2, "Only initial migration and one batched durable snapshot should be written");
-
-console.log("Personal-state tests passed: migration, write-through sync, idempotence and legacy-data preservation.");
+assert.equal(writes, 2, "Initial migration and one durable snapshot should be persisted");
+console.log("Personal-state tests passed: migration, explicit sync, idempotence and legacy-data preservation.");
