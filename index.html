@@ -4619,12 +4619,32 @@ loadPublishedBooks().finally(async () => {
   const requestedBook = new URLSearchParams(window.location.search).get('book');
   if (!requestedBook) return;
   const target = getAllBooks().find(book => String(book.id) === requestedBook);
-  if (!target || isBookReleaseLocked(target)) return;
+  if (!target || isBookReleaseLocked(target)) {
+    document.documentElement.classList.remove('reader-launch-pending');
+    return;
+  }
   const opened = await openBookById(requestedBook);
   if (opened) {
     window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  } else {
+    document.documentElement.classList.remove('reader-launch-pending');
   }
 });
+let scheduledReleaseSnapshot = '';
+function refreshScheduledReleaseVisibility() {
+  const snapshot = getAllBooks()
+    .filter(book => book.status === 'scheduled')
+    .map(book => String(book.id) + ':' + (isBookReleaseLocked(book) ? 'locked' : 'open'))
+    .sort()
+    .join('|');
+  if (snapshot === scheduledReleaseSnapshot) return;
+  scheduledReleaseSnapshot = snapshot;
+  syncGenreFilters();
+  render();
+  updateContinueReadingButton();
+}
+window.setInterval(refreshScheduledReleaseVisibility, 1000);
+
 updateContinueReadingButton();
 
 </script>
