@@ -3068,6 +3068,31 @@ body.reader-open #pageTurnSheet.flip-back {
 @media(max-width:380px){.premiere-series-stack{transform:scale(.68)}.premiere-series-art{min-height:238px}.premiere-series-card{padding:16px}.premiere-series-card .premiere-copy h3{font-size:31px}}
 @media(prefers-reduced-motion:reduce){.premiere-series-front,.premiere-series-spine{transition:none!important}}
 </style>
+
+<style id="editorial-catalog-shelves-v1">
+.editorial-shelves{display:grid;gap:30px;margin:0 0 56px}
+.editorial-shelves[hidden]{display:none!important}
+.editorial-shelf{position:relative;min-width:0;padding:25px;border:1px solid #ffffff16;border-radius:18px;background:linear-gradient(135deg,#1b1b19,#141414 76%);box-shadow:0 16px 42px #0003;overflow:hidden}
+.editorial-shelf:before{content:"";position:absolute;right:-100px;top:-160px;width:300px;height:300px;border:1px solid #d9b66d18;border-radius:50%;box-shadow:0 0 0 24px #d9b66d05,0 0 0 48px #d9b66d04;pointer-events:none}
+.editorial-shelf-heading{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:19px}
+.editorial-shelf-heading .eyebrow{font-size:9px}
+.editorial-shelf-heading h2{font:500 clamp(26px,3vw,34px)/1.15 Georgia,serif;margin:7px 0 0;letter-spacing:-.025em}
+.editorial-shelf-heading>span{color:#a99b7d;font-size:9px;letter-spacing:.14em;white-space:nowrap}
+.editorial-shelf-track{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,390px),1fr));gap:14px}
+.editorial-book{display:grid;grid-template-columns:112px minmax(0,1fr);gap:18px;min-width:0;padding:13px;border:1px solid #ffffff12;border-radius:13px;background:linear-gradient(125deg,#ffffff07,#00000012);transition:border-color .2s,transform .2s}
+.editorial-book:hover{transform:translateY(-3px);border-color:#d9b66d66}
+.editorial-book-cover{position:relative;min-height:158px;overflow:hidden;border:1px solid #d9b66d55;border-radius:5px 9px 9px 5px;background:linear-gradient(145deg,#253b4c,#11151b);box-shadow:7px 9px 18px #0008}
+.editorial-book-cover img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover}
+.editorial-book-cover>span{height:100%;display:grid;place-items:center;color:#e6cc8d;font:42px Georgia,serif}
+.editorial-book-copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.editorial-book-genre{color:#d9b66d;font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.editorial-book-copy h3{font:500 22px/1.2 Georgia,serif;margin:6px 0}
+.editorial-book-copy p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#b8b1a5;font-size:12px;line-height:1.65;margin:0 0 12px}
+.editorial-book-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.editorial-book-actions .btn{min-height:38px;padding:8px 11px;font-size:11px}
+@media(max-width:560px){.editorial-shelf{padding:17px 13px}.editorial-shelf-heading{align-items:flex-start;flex-direction:column;gap:6px}.editorial-shelf-track{grid-template-columns:minmax(0,1fr)}.editorial-book{grid-template-columns:86px minmax(0,1fr);gap:12px;padding:9px}.editorial-book-cover{min-height:132px}.editorial-book-copy h3{font-size:18px}.editorial-book-copy p{-webkit-line-clamp:3;font-size:11px}.editorial-book-actions{gap:6px}.editorial-book-actions .btn{min-height:40px;padding:8px 9px}}
+@media(prefers-reduced-motion:reduce){.editorial-book{transition:none}.editorial-book:hover{transform:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3095,7 +3120,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="my-library-heading"><div><div class="eyebrow">ТВОЯ ЛИЧНАЯ КОЛЛЕКЦИЯ</div><h2 id="myLibraryTitle">Моя библиотека</h2><p>Личные книги и истории, к которым ты уже возвращался.</p></div><a class="btn library-catalog-link" href="#catalog">Открыть каталог →</a></div>
   <div class="library-stats"><div><strong id="myLibraryPersonalCount">0</strong><span>личных книг</span></div><div><strong id="myLibraryProgressCount">0</strong><span>книг с прогрессом</span></div><div><strong id="myLibraryFavoritesCount">0</strong><span>в избранном</span></div></div>
   <div class="library-shelves">
-    <section class="library-shelf"><div class="library-shelf-heading"><h3>Недавно читали</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
+    <section class="library-shelf"><div class="library-shelf-heading"><h3>Продолжить чтение</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Мои личные книги</h3><span>СОЗДАННЫЕ И СОХРАНЁННЫЕ</span></div><div class="library-book-list" id="myLibraryPersonalBooks" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Доступно офлайн</h3><span>ХРАНИТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></div><div class="library-storage-tools"><p id="myLibraryStorageStatus" aria-live="polite">Проверяем состояние хранилища…</p><button class="btn" id="requestStoragePersistence" type="button">Защитить офлайн-книги</button></div><div class="library-book-list" id="myLibraryDownloads" aria-live="polite"></div></section>
   </div>
@@ -3108,6 +3133,7 @@ body.reader-open #pageTurnSheet.flip-back {
   </div>
   <div id="prereleaseStage" class="premiere-stage" aria-live="polite"></div>
 </section>
+<section id="editorialShelves" class="editorial-shelves" aria-label="Редакционные подборки" hidden></section>
 <section id="catalog" aria-labelledby="catalogTitle"><div class="sectionhead"><div class="eyebrow">ТВОЯ СЛЕДУЮЩАЯ ИСТОРИЯ</div><h2 id="catalogTitle">Каталог библиотеки</h2><p id="catalogSummary" aria-live="polite">Выбери книгу — и пусть реальность подождёт.</p></div><div class="toolbar"><input id="search" class="search" type="search" autocomplete="off" placeholder="⌕  Поиск по названию, жанру или описанию…" aria-label="Поиск книг">
 <select id="sort" aria-label="Сортировка">
   <option value="featured">Рекомендуем</option>
@@ -3545,6 +3571,21 @@ function syncGenreFilters(){
   });
   root.querySelectorAll("[data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre===genre));
 }
+function renderEditorialShelves(){
+  const root=document.querySelector("#editorialShelves");
+  if(!root)return;
+  const available=getAllBooks().filter(book=>book.status!=="prerelease"&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));
+  const editorial=available.filter(book=>book.editorialPick===true);
+  const arrivals=available.filter(book=>typeof book.publishedAt==="string"&&Number.isFinite(Date.parse(book.publishedAt))).sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt)).slice(0,6);
+  const shelf=(title,kicker,books)=>books.length?'<section class="editorial-shelf"><div class="editorial-shelf-heading"><div><div class="eyebrow">'+kicker+'</div><h2>'+title+'</h2></div><span>'+books.length+' '+(books.length===1?'КНИГА':'КНИГИ')+'</span></div><div class="editorial-shelf-track">'+books.map(book=>{
+    const cover=book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span aria-hidden="true">'+esc(book.symbol||'✦')+'</span>';
+    return '<article class="editorial-book"><div class="editorial-book-cover">'+cover+'</div><div class="editorial-book-copy"><span class="editorial-book-genre">'+esc(book.genre||'Книга')+'</span><h3>'+esc(book.title)+'</h3><p>'+esc(book.desc||book.description||'Открой эту историю в AI Library.')+'</p><div class="editorial-book-actions"><button class="btn primary" type="button" data-read="'+esc(book.id)+'">Читать →</button><button class="btn" type="button" data-book-details="'+esc(book.id)+'">О книге</button></div></div></article>';
+  }).join('')+'</div></section>':'';
+  const sections=shelf("Выбор редакции","РЕКОМЕНДАЦИЯ AI LIBRARY",editorial)+shelf("Новые поступления","ПОСЛЕДНИЕ ОФИЦИАЛЬНЫЕ РЕЛИЗЫ",arrivals);
+  root.innerHTML=sections;
+  root.hidden=!sections;
+}
+
 function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
@@ -3618,7 +3659,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderEditorialShelves();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
