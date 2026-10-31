@@ -183,6 +183,16 @@ assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, 
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
+const resizeScheduler = html.match(/function scheduleReaderResizePagination\(\)\s*\{([\s\S]*?)\n\}/);
+assert.ok(resizeScheduler, "Could not isolate reader resize scheduler");
+assert.match(resizeScheduler[1], /window\.setTimeout\([\s\S]*?120/, "Reader resize pagination must be debounced");
+assert.match(resizeScheduler[1], /if\(readerTurnInProgress\)return/, "Reader resize pagination must wait for an active page-turn animation");
+assert.match(resizeScheduler[1], /getCurrentReadingOffset\(\)[\s\S]*?paginateCurrentChapter\(preserveOffset\)/, "Reader resize pagination must preserve the current text offset");
+assert.match(html, /function flushReaderResizePagination\(\)[\s\S]*?if\(readerResizePending\)scheduleReaderResizePagination\(\)/, "Pending resize pagination must be resumed after page-turn animation");
+assert.match(html, /window\.addEventListener\('resize', scheduleReaderResizePagination[\s\S]*?window\.addEventListener\('orientationchange', scheduleReaderResizePagination/, "Viewport resize and device rotation must share the debounced pagination path");
+const pageTurnAnimation = html.match(/function animateBookPageTurn\(direction,afterTurn\)\s*\{([\s\S]*?)\n\}/);
+assert.ok(pageTurnAnimation, "Could not isolate page-turn animation");
+assert.equal((pageTurnAnimation[1].match(/flushReaderResizePagination\(\)/g) || []).length, 3, "Every page-turn completion path must flush pending resize pagination");
 assert.match(serviceWorker, /const CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*[\'"]v\d+[\'"]/, "Reader animation cache must use a versioned cache name");
 
 
