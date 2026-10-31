@@ -439,5 +439,25 @@ assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',o
   "Page-turn completion must remove its animation listener");
 assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,820\)/,
   "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
-assert.match(pageTurnAnimation[1], /try \{ afterTurn\(\); \}\s*finally \{/,
-  "Page content must still commit while cleanup is guaranteed");
+assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
+  "The turning paper must carry a frozen copy of the printed page");
+assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
+  "The turning paper must render front and reverse faces");
+assert.match(pageTurnAnimation[1], /try \{\s*afterTurn\(\);\s*\} catch\(error\)/,
+  "The new page must be committed beneath the frozen old page before the animation");
+assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].indexOf("sheet.classList.add(direction>0?'flip-forward':'flip-back')"),
+  "The new page must be visible underneath before the old paper begins to turn");
+assert.match(html, /@keyframes aiLibraryRealPageFlipForward[\s\S]*?rotateY\(-180deg\)/,
+  "Forward page turns must complete a full 180-degree paper rotation");
+assert.match(html, /@keyframes aiLibraryRealPageFlipBack[\s\S]*?rotateY\(180deg\)/,
+  "Backward page turns must complete a full 180-degree paper rotation");
+assert.match(html, /aiLibraryRealPageFlipForward \.72s/,
+  "The realistic paper turn must use the 720 ms motion timing");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
+  "Page-edge taps must suppress accidental text selection on pointer down");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
+  "Page-edge taps must work across the full paper area, not only the text column");
+assert.match(html, /reader-turn-face reader-turn-front/,
+  "The turning sheet must have a printed front face");
+assert.match(html, /reader-turn-face reader-turn-back/,
+  "The turning sheet must have a shaded reverse face");
