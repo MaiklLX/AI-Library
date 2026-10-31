@@ -292,7 +292,7 @@ assert.match(seriesPage, /progress\[\x27published-\x27\+\(volume\.bookId\|\|volu
 assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must deep-link to the reader");
 assert.match(html, /new URLSearchParams\(window\.location\.search\)\.get\(\x27book\x27\)/, "Reader must support direct book links from the series page");
 assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
-assert.equal(seriesManifest.volumes[0].status, "prerelease", "The first volume must remain in prerelease");
+assert.equal(seriesManifest.volumes[0].status, "planned", "Volume one must be scheduled for automatic reader release");
 assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
 assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
 assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
@@ -426,7 +426,7 @@ assert.ok(openReadingSpace, "Could not isolate the reader-opening transition");
 assert.match(openReadingSpace[1], /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "Opening the reader must release the direct-launch mask");
 assert.match(html, /if \(!target \|\| target\.status === 'prerelease'\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
-  "Unavailable or prerelease direct links must release the launch mask");
+  "Unavailable, prerelease or not-yet-released scheduled direct links must release the launch mask");
 assert.match(html, /if \(opened\) \{[\s\S]*?\} else \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "A failed direct book open must release the launch mask");
 
