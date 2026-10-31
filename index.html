@@ -3043,18 +3043,19 @@ header nav .site-nav-actions .nav-action{
 })();
 </script>
 
-<style id="real-paper-page-turn-v41">
-/* A real paper turn: the printed face bends through depth while its moving edge catches light. */
+<style id="real-paper-page-turn-v42">
+/* Paper wave turn: the page travels as a soft rolling sheet, not a flashing card. */
 body.reader-open #pageTurnSheet {
   overflow:visible!important;
   padding:0!important;
   border:0!important;
-  border-radius:5px!important;
+  border-radius:4px!important;
   background:transparent!important;
   box-shadow:none!important;
-  perspective:1900px;
+  perspective:1800px;
   transform-style:preserve-3d;
   -webkit-transform-style:preserve-3d;
+  will-change:transform,clip-path;
 }
 body.reader-open #pageTurnSheet .reader-turn-face {
   position:absolute;
@@ -3063,8 +3064,8 @@ body.reader-open #pageTurnSheet .reader-turn-face {
   flex-direction:column;
   box-sizing:border-box;
   padding:clamp(14px,2.2vh,25px) clamp(16px,3vw,38px) 30px;
-  border:1px solid rgba(130,105,67,.22);
-  border-radius:5px;
+  border:1px solid rgba(130,105,67,.16);
+  border-radius:4px;
   overflow:hidden;
   transform-style:preserve-3d;
   backface-visibility:hidden;
@@ -3072,14 +3073,17 @@ body.reader-open #pageTurnSheet .reader-turn-face {
 }
 body.reader-open #pageTurnSheet .reader-turn-front {
   z-index:2;
-  background:linear-gradient(108deg,rgba(255,255,255,.82),rgba(255,255,255,.18) 38%,rgba(103,79,42,.1) 76%),linear-gradient(135deg,#fbf7ed 0%,#f1e7d1 100%);
-  box-shadow:inset -14px 0 24px rgba(76,57,28,.13),0 8px 24px rgba(0,0,0,.16);
+  background:#f5eedf;
+  box-shadow:inset -8px 0 18px rgba(76,57,28,.075),0 5px 18px rgba(0,0,0,.12);
+}
+body.reader-open #pageTurnSheet[data-theme="sepia"] .reader-turn-front {
+  background:linear-gradient(90deg,#f8f2e5 0%,#f4ecd9 72%,#eee3ce 100%);
 }
 body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-front {
-  background:linear-gradient(108deg,#fff 0%,#f7f7f7 52%,#e6e6e6 100%);
+  background:linear-gradient(90deg,#fff 0%,#fafafa 72%,#eeeeee 100%);
 }
 body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-front {
-  background:linear-gradient(108deg,#292c32 0%,#202329 58%,#171a1f 100%);
+  background:linear-gradient(90deg,#292c32 0%,#22252b 72%,#1b1e23 100%);
 }
 body.reader-open #pageTurnSheet .reader-turn-front .book-running-head {flex:0 0 auto;}
 body.reader-open #pageTurnSheet .reader-turn-front .reader {
@@ -3093,60 +3097,72 @@ body.reader-open #pageTurnSheet .reader-turn-front .book-page-number {
   position:absolute!important;
   bottom:9px!important;
 }
+/* A quiet, soft paper shadow follows the curved edge. No white flare or travelling light stripe. */
 body.reader-open #pageTurnSheet .reader-turn-front::after {
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
   opacity:0;
-  background:linear-gradient(100deg,transparent 48%,rgba(255,255,255,.46) 72%,rgba(48,35,18,.22) 100%);
-  box-shadow:inset -22px 0 28px rgba(65,46,20,.14);
+  background:linear-gradient(90deg,transparent 66%,rgba(45,34,19,.10) 86%,rgba(35,27,18,.22) 100%);
+  box-shadow:inset -18px 0 22px rgba(40,30,18,.10);
 }
 body.reader-open #pageTurnSheet .reader-turn-back {
   z-index:1;
   transform:rotateY(180deg);
-  background:linear-gradient(105deg,#e6dcc7 0%,#f8f2e6 48%,#d9ccb4 100%);
-  box-shadow:inset 12px 0 22px rgba(60,43,20,.13);
+  background:linear-gradient(90deg,#e4dac7 0%,#f4eddf 48%,#ddd1bc 100%);
+  box-shadow:inset 10px 0 18px rgba(60,43,20,.10);
 }
-body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-back {background:linear-gradient(105deg,#dedede,#fafafa 48%,#e4e4e4);}
-body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-back {background:linear-gradient(105deg,#171a1f,#292c32 48%,#1c1f24);}
+body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-back {background:linear-gradient(90deg,#e7e7e7,#fafafa 48%,#e2e2e2);}
+body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-back {background:linear-gradient(90deg,#171a1f,#292c32 48%,#1c1f24);}
 body.reader-open #pageTurnSheet.flip-forward {
   visibility:visible!important;
   transform-origin:left center!important;
-  -webkit-animation:aiLibraryRealPageCurlForward .98s cubic-bezier(.22,.68,.18,1) both!important;
-  animation:aiLibraryRealPageCurlForward .98s cubic-bezier(.22,.68,.18,1) both!important;
+  -webkit-animation:aiLibraryWavePageForward 1.12s cubic-bezier(.2,.72,.22,1) both!important;
+  animation:aiLibraryWavePageForward 1.12s cubic-bezier(.2,.72,.22,1) both!important;
 }
 body.reader-open #pageTurnSheet.flip-back {
   visibility:visible!important;
   transform-origin:right center!important;
-  -webkit-animation:aiLibraryRealPageCurlBack .98s cubic-bezier(.22,.68,.18,1) both!important;
-  animation:aiLibraryRealPageCurlBack .98s cubic-bezier(.22,.68,.18,1) both!important;
+  -webkit-animation:aiLibraryWavePageBack 1.12s cubic-bezier(.2,.72,.22,1) both!important;
+  animation:aiLibraryWavePageBack 1.12s cubic-bezier(.2,.72,.22,1) both!important;
 }
 body.reader-open #pageTurnSheet.flip-forward .reader-turn-front::after,
 body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
-  animation:aiLibraryPaperEdgeLight .98s ease-in-out both;
+  animation:aiLibraryWavePaperShadow 1.12s ease-in-out both;
 }
-@keyframes aiLibraryPaperEdgeLight {
+@keyframes aiLibraryWavePaperShadow {
   0%,100%{opacity:0}
-  28%,62%{opacity:.9}
+  30%,58%{opacity:.78}
 }
-@keyframes aiLibraryRealPageCurlForward {
-  0%{transform:translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);filter:brightness(1)}
-  18%{transform:translate3d(0,-2px,8px) rotateY(-22deg) rotateZ(-.7deg) scaleX(.99);filter:brightness(.98)}
-  42%{transform:translate3d(0,-4px,18px) rotateY(-68deg) rotateZ(-2deg) scaleX(.955);filter:brightness(.88);box-shadow:-30px 0 42px rgba(0,0,0,.24)}
-  68%{transform:translate3d(0,-2px,9px) rotateY(-132deg) rotateZ(-1deg) scaleX(.985);filter:brightness(.82);box-shadow:-18px 0 30px rgba(0,0,0,.18)}
-  100%{transform:translateZ(0) rotateY(-180deg) rotateZ(0deg) scaleX(1);filter:brightness(.76);box-shadow:-5px 0 12px rgba(0,0,0,.08)}
+@keyframes aiLibraryWavePageForward {
+  0%{transform:translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  18%{transform:translate3d(1px,-2px,9px) rotateY(-17deg) rotateZ(-.7deg) skewY(-1.2deg) scaleX(.99);clip-path:polygon(0 0,100% 0,97% 17%,100% 34%,97% 51%,100% 68%,97% 84%,100% 100%,0 100%);box-shadow:-10px 5px 18px rgba(0,0,0,.12)}
+  42%{transform:translate3d(2px,-4px,17px) rotateY(-54deg) rotateZ(-1.8deg) skewY(-2deg) scaleX(.95);clip-path:polygon(0 0,98% 0,92% 15%,99% 31%,93% 48%,99% 65%,92% 82%,98% 100%,0 100%);box-shadow:-24px 7px 30px rgba(0,0,0,.2)}
+  64%{transform:translate3d(1px,-2px,12px) rotateY(-112deg) rotateZ(-1deg) skewY(1.5deg) scaleX(.93);clip-path:polygon(0 0,96% 0,91% 18%,97% 36%,90% 53%,97% 70%,91% 87%,96% 100%,0 100%);box-shadow:-20px 5px 26px rgba(0,0,0,.17)}
+  84%{transform:translate3d(0,0,5px) rotateY(-157deg) rotateZ(.4deg) skewY(.6deg) scaleX(.98);clip-path:polygon(0 0,99% 0,96% 20%,99% 40%,96% 60%,99% 80%,98% 100%,0 100%);box-shadow:-8px 2px 14px rgba(0,0,0,.1)}
+  100%{transform:translate3d(0,0,0) rotateY(-180deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);box-shadow:-2px 1px 5px rgba(0,0,0,.04)}
 }
-@keyframes aiLibraryRealPageCurlBack {
-  0%{transform:translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);filter:brightness(1)}
-  18%{transform:translate3d(0,-2px,8px) rotateY(22deg) rotateZ(.7deg) scaleX(.99);filter:brightness(.98)}
-  42%{transform:translate3d(0,-4px,18px) rotateY(68deg) rotateZ(2deg) scaleX(.955);filter:brightness(.88);box-shadow:30px 0 42px rgba(0,0,0,.24)}
-  68%{transform:translate3d(0,-2px,9px) rotateY(132deg) rotateZ(1deg) scaleX(.985);filter:brightness(.82);box-shadow:18px 0 30px rgba(0,0,0,.18)}
-  100%{transform:translateZ(0) rotateY(180deg) rotateZ(0deg) scaleX(1);filter:brightness(.76);box-shadow:5px 0 12px rgba(0,0,0,.08)}
+@keyframes aiLibraryWavePageBack {
+  0%{transform:translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  18%{transform:translate3d(-1px,-2px,9px) rotateY(17deg) rotateZ(.7deg) skewY(1.2deg) scaleX(.99);clip-path:polygon(0 0,100% 0,100% 100%,3% 84%,0 68%,3% 51%,0 34%,3% 17%);box-shadow:10px 5px 18px rgba(0,0,0,.12)}
+  42%{transform:translate3d(-2px,-4px,17px) rotateY(54deg) rotateZ(1.8deg) skewY(2deg) scaleX(.95);clip-path:polygon(2% 0,100% 0,100% 100%,2% 100%,8% 82%,1% 65%,7% 48%,1% 31%,8% 15%);box-shadow:24px 7px 30px rgba(0,0,0,.2)}
+  64%{transform:translate3d(-1px,-2px,12px) rotateY(112deg) rotateZ(1deg) skewY(-1.5deg) scaleX(.93);clip-path:polygon(4% 0,100% 0,100% 100%,4% 100%,9% 87%,3% 70%,10% 53%,3% 36%,9% 18%);box-shadow:20px 5px 26px rgba(0,0,0,.17)}
+  84%{transform:translate3d(0,0,5px) rotateY(157deg) rotateZ(-.4deg) skewY(-.6deg) scaleX(.98);clip-path:polygon(1% 0,100% 0,100% 100%,2% 100%,4% 80%,1% 60%,4% 40%,1% 20%);box-shadow:8px 2px 14px rgba(0,0,0,.1)}
+  100%{transform:translate3d(0,0,0) rotateY(180deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);box-shadow:2px 1px 5px rgba(0,0,0,.04)}
 }
 @media(prefers-reduced-motion:reduce) {
   body.reader-open #pageTurnSheet.flip-forward,
   body.reader-open #pageTurnSheet.flip-back { -webkit-animation-duration:.01ms!important;animation-duration:.01ms!important; }
+}
+body.reader-open #modal:focus {
+  outline:none!important;
+  box-shadow:none!important;
+}
+body.reader-open #reader:focus,
+body.reader-open #readerRight:focus {
+  outline:none!important;
+  box-shadow:none!important;
 }
 @media(hover:none) and (pointer:coarse) {
   body.reader-open #bookSpread,
@@ -3154,11 +3170,6 @@ body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
   body.reader-open #reader,
   body.reader-open #readerRight {
     -webkit-tap-highlight-color:transparent!important;
-  }
-  body.reader-open #reader:focus,
-  body.reader-open #readerRight:focus {
-    outline:none!important;
-    box-shadow:none!important;
   }
   body.reader-open #reader {
     -webkit-user-select:text;
@@ -3218,7 +3229,7 @@ body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и открывай новые истории по мере их официального выхода.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
+<div class="modal" id="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
     <div class="reader-heading"><h2 id="modalTitle"></h2><span class="reader-subheading" id="chapterLabel"></span></div>
@@ -3867,7 +3878,10 @@ function openReadingSpace() {
   modal.style.touchAction = "none";
   modal.scrollTop = 0;
   setReaderChromeVisible(true,true);
-  document.querySelector("#reader")?.focus({ preventScroll: true });
+  // Keep initial dialog focus on the dialog shell, not the manuscript surface.
+  // Focusing the tabindex=0 reader causes mobile browsers to draw a first-touch text/focus frame.
+  modal.setAttribute("tabindex", "-1");
+  modal.focus({ preventScroll: true });
 }
 
 function closeReadingSpace() {
