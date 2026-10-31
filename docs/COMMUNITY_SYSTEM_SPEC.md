@@ -71,9 +71,9 @@ The user-facing book creator is retained as a core product feature and becomes t
 - A user can create and edit a book as a personal draft.
 - Drafts are private to their author until they explicitly submit them for publication.
 - Before submission, the creator should offer a preview and basic completeness/format validation (title, author attribution, description, genre, cover, chapter structure and readable content).
-- Publication in the shared library is paid by the author in coins; this is an agreed product rule, not an optional possibility. The exact fee amount and any size-based pricing remain undecided.
-- Show the exact fee before the action and require the author's explicit confirmation before debiting the balance. Do not charge for private drafting, preview, local saving or export.
-- The rejection/refund policy, moderation workflow and timing of final settlement still need to be specified before implementation. A rejected manuscript should not silently consume the author's publication fee.
+- **Initial release: publication in the shared library is free. Do not charge a coin fee, commission or other payment for publication.** This is an explicit product decision approved on 2026-10-31.
+- Private drafting, editing, preview, local saving, export and publication are all free in the initial release. Coins and XP must not become a hidden publication gate.
+- Moderation and rejection handling still require clear rules before opening publication broadly; rejection must never destroy or silently replace the author's private draft.
 - Published books are attributed to their creator and become eligible for community ratings and selected competitions.
 - Publishing must not silently replace or delete the author's local draft. A published copy and a personal working draft have distinct lifecycle states.
 - Add reporting/moderation and clear content, copyright, plagiarism and safety rules before opening publication to all users.
@@ -81,7 +81,7 @@ The user-facing book creator is retained as a core product feature and becomes t
 ### Creator progression, XP and status
 
 Keep these systems distinct:
-- **Coins** are a spendable economy: publication fees and future exclusive unlocks.
+- **Coins** are an internal spendable community currency for explicitly approved rewards and future community features. They do not pay for publication in the initial release.
 - **Book rating** is community feedback and remains cumulative.
 - **Author XP** measures verified creator achievements and competition results; it is not spendable.
 - **User status/rank** is a progression label unlocked by XP thresholds and/or explicitly defined achievements.
@@ -95,7 +95,7 @@ The following is a balanced starting proposal for product review. Values are ill
 #### Coins: spendable currency
 
 - Give a new verified account a one-time welcome grant (proposal: **25 coins**) so a new author can try the publication flow without first grinding activity.
-- Keep the publication fee visible before confirmation. Consider one simple base fee at launch rather than complicated per-chapter pricing; decide the exact amount after estimating moderation and storage costs.
+- Do not charge for publication in the initial release. Any future coin sinks or paid features require a separate product decision and must not be introduced as a publication fee by implication.
 - Coins may be earned through a small set of capped, verifiable contributions: accepted creator challenges, approved community contributions, and verified contest placements.
 - Do **not** award coins for opening the app, refreshing pages, raw reading minutes, repeated clicks, or casting a positive/negative vote. These are too easy to automate or manipulate.
 - Do not make daily login streaks the main source of currency. The system should reward quality and contribution, not compulsive attendance.
@@ -136,7 +136,7 @@ Proposed XP events:
 - Use minimum eligible vote counts and deterministic tie-breakers for contest placements.
 - Apply publication cooldowns and quality checks; do not grant repeat first-publication rewards.
 - Do not let a paid publication fee guarantee acceptance, positive reviews, XP or a rank.
-- Provide an accessible path for new authors to earn enough coins; publication must not become an opaque paywall.
+- Keep author onboarding accessible: publication is free and must not become an opaque or indirect coin paywall.
 - Publish all prices, reward values, contest rules and refund conditions before users commit coins.
 
 ### Competition model — design refinement required
