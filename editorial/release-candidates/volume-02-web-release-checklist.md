@@ -4,7 +4,7 @@
 
 - Ветка: `editorial/volume-02-web-release-candidate`
 - Файл книги: `content/books/ty-v-moih-planah-tom-02.json`
-- Blob SHA файла: `399389ac87497e88056e8c78816a06ab97d31c6a`
+- Blob SHA файла на текущей версии: `0e905f680a7676a587cf3059df7eca9295906e3d`
 - Исходный коммит сборки: `31f0edd0f0fd6a19fdd2736db9ab11a19b5e4fa3`
 - Источник: рабочая копия рукописи, blob SHA `daf2488f0cf56838078b56f932448d8122f90c76`
 - Состав: 18 глав, 17–34; 24 211 слов.
