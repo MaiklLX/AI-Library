@@ -275,6 +275,10 @@ assert.match(completionSource[1], /\.\/series\.html#volume-/, "Completion must r
 assert.match(seriesPage, /if\(volume\.status==='prerelease'&&volume\.premiereBookId\)/, "Prerelease cards must link only to the existing premiere page");
 assert.match(seriesPage, /else if\(volume\.status==='published'\)/, "Only published volumes may expose a reading link");
 assert.match(seriesPage, /action\.setAttribute\('aria-disabled','true'\)/, "Planned volumes must remain non-interactive");
+
+assert.match(seriesPage, /const canNavigate=\(volume\.status==='prerelease'&&volume\.premiereBookId\)\|\|volume\.status==='published'/, "Only prerelease and published cards may be navigable");
+assert.match(seriesPage, /document\.createElement\(canNavigate\?'a':'span'\)/, "Planned volume actions must not be rendered as links");
+assert.doesNotMatch(seriesPage, /action\.href='#'/, "Planned volume actions must not contain a clickable placeholder URL");
 assert.match(seriesPage, /progress\['published-'\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must be keyed by the actual book ID");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v59["']/, "Series presentation must use the refreshed app-shell cache");
 assert.ok(serviceWorker.includes("url.pathname.includes('/content/series/')"), "Series manifest must use network-first caching");
