@@ -239,4 +239,4 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Hardened first-run migration so syntactically valid but structurally invalid legacy JSON is normalized to safe defaults before it reaches IndexedDB.
 - Expanded tests for malformed first-run values and normalized VM-returned arrays in strict assertions.
 - Follow-up commits: `0a4c758b`, `39094cb1`, `fd16e7eb`. Latest branch head: `fd16e7eb565ea8a46e7b8addf630ebc2b99143a6`.
-- The corrected head currently has no reported GitHub Actions run/status yet. Do not mark CI green until a new run completes.
+- Corrected recovery implementation and test suite passed GitHub Actions run `41200880018` (run 344) on commit `ccfcdcce23e20591d5a588c618898a2e03108c93`; static validation, four Service Worker scenarios, and the personal-state recovery suite all passed.
