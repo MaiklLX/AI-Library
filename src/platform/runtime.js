@@ -6,11 +6,12 @@
   'use strict';
 
   const DB_NAME = 'ai-library-platform';
-  const DB_VERSION = 1;
+  const DB_VERSION = 2;
   const STORES = Object.freeze({
     books: 'books',
     metadata: 'metadata',
-    downloads: 'downloads'
+    downloads: 'downloads',
+    personalState: 'personalState'
   });
 
   const userAgent = navigator.userAgent || '';
