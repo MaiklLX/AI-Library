@@ -2943,12 +2943,15 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
-</head>
+<style id="series-reader-completion-v1">
+.series-completion-panel{margin:10px 0 4px;padding:16px;border:1px solid rgba(216,185,120,.48);border-radius:12px;background:linear-gradient(145deg,#24211b,#17171b);color:#eee7d8;text-align:center}.series-completion-panel[hidden]{display:none}.series-completion-panel h2{font:500 23px/1.15 Georgia,serif;margin:0 0 8px;color:#e3c98f}.series-completion-panel p{max-width:560px;margin:0 auto 14px;color:#c4bcae;font-size:13px}.series-completion-link,.series-completion-close{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin:4px;padding:0 15px;border:1px solid #d8b978;border-radius:8px;background:transparent;color:#e2c88f;text-decoration:none;font:inherit;font-size:13px;cursor:pointer}.series-completion-close{border-color:rgba(216,185,120,.28);color:#c4bcae}@media(max-width:540px){.series-completion-panel{padding:12px}.series-completion-panel h2{font-size:20px}}
+</style></head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
 <button class="pill nav-action" id="myLibraryToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11.5A2.5 2.5 0 0 1 19 7v13H7a2 2 0 0 1-2-2V4.5Z"/><path d="M7 17.5h12M8.5 8h7M8.5 11.5h7"/></svg><span>Моя библиотека</span></button>
 <button class="pill nav-action" id="favoritesToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.2-8.8 10.1-8.8 10.1S3.2 14 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg><span>Избранное</span></button>
 <button class="pill nav-action active" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/></svg><span>Каталог</span></button>
+<a class="pill nav-action" href="./series.html"><span>Ты в моих планах · 6 томов</span></a>
 <a class="pill nav-action" href="./book-creator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a2.8 2.8 0 0 0-4-4L4.2 15.1 4 20Z"/><path d="M13 6.5 17.5 11"/></svg><span>Создать книгу</span></a>
 </div></nav></div></header>
 <div id="catalogUpdateNotice" class="catalog-update-notice" role="status" aria-live="polite" hidden>
@@ -2999,7 +3002,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
     <div class="reader-heading"><h2 id="modalTitle"></h2><span class="reader-subheading" id="chapterLabel"></span></div>
-    <button class="reader-icon-button reader-theme-toggle" id="readerThemeToggle" type="button" aria-label="Переключить на тёмную тему" title="Переключить тему"><span id="readerThemeIcon" aria-hidden="true">☾</span></button><button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-expanded="false">Aa</button>
+    <button class="reader-icon-button reader-theme-toggle" id="readerThemeToggle" type="button" aria-label="Переключить на тёмную тему" title="Переключить тему"><span id="readerThemeIcon" aria-hidden="true">☾</span></button><button class="reader-icon-button" id="readerMenuToggle" type="button" aria-label="Настройки чтения" aria-controls="readerSettings" aria-expanded="false">Aa</button>
   </div>
   <div class="eyebrow" id="modalGenre" hidden></div><div class="detail" id="modalAuthor" hidden></div>
   <div class="book-spread" id="bookSpread">
@@ -3011,7 +3014,7 @@ body.reader-open #pageTurnSheet.flip-back {
     <span class="reader-settings-divider"></span><label for="lineSpacing">Интервал</label><select id="lineSpacing" aria-label="Межстрочный интервал"><option value="1.45">Компактный</option><option value="1.7">Обычный</option><option value="1.95">Свободный</option></select>
     <label for="readerTheme">Тема</label><select id="readerTheme" aria-label="Тема оформления"><option value="sepia">Сепия</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select>
   </div>
-  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
+  <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus" role="status" aria-live="polite" aria-atomic="true">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
   <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
 </div></div>
 <script src="./src/platform/runtime.js"></script>
@@ -3269,11 +3272,11 @@ async function loadSharedBooks() {
 
 async function openBookById(id) {
   const book = getAllBooks().find(item => String(item.id) === String(id));
-  if (!book) return;
+  if (!book) return false;
 
   if (book.status === 'prerelease') {
-    alert('«Автоматическая полночь» находится в пререлизе. Чтение откроется после официального релиза.');
-    return;
+    alert('«' + (book.title || 'Книга') + '» находится в пререлизе. Чтение откроется после официального релиза.');
+    return false;
   }
 
   if (String(book.id).startsWith('shared-')) {
@@ -3296,15 +3299,17 @@ async function openBookById(id) {
       );
       try { localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks)); } catch {}
       openBook(book.id);
+      return true;
     } catch (error) {
       console.warn('Не удалось обновить общую книгу из сети:', error);
       if (Array.isArray(book.chapters) && book.chapters.length) {
         openBook(book.id);
+        return true;
       } else {
         alert('Не удалось загрузить общую книгу. Проверьте подключение к интернету и попробуйте ещё раз.');
       }
     }
-    return;
+    return false;
   }
 
   if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
@@ -3321,16 +3326,17 @@ async function openBookById(id) {
     } catch (error) {
       console.warn('Не удалось загрузить текст книги:', error);
       alert('Не удалось загрузить книгу. Проверьте подключение к интернету или скачайте её заранее для чтения офлайн.');
-      return;
+      return false;
     }
   }
 
   if (!Array.isArray(book.chapters) || !book.chapters.length) {
     alert('В этой книге пока нет доступных глав.');
-    return;
+    return false;
   }
 
   openBook(book.id);
+  return true;
 }
 
 
@@ -3874,12 +3880,34 @@ function renderReadingPage(animate = true) {
 }
 
 let readerTurnInProgress=false;
+let readerResizeTimer=null;
+let readerResizePending=false;
+function scheduleReaderResizePagination(){
+  if(!current||!document.querySelector('#modal')?.classList.contains('open'))return;
+  readerResizePending=true;
+  if(readerResizeTimer)window.clearTimeout(readerResizeTimer);
+  readerResizeTimer=window.setTimeout(()=>{
+    readerResizeTimer=null;
+    if(!current||!document.querySelector('#modal')?.classList.contains('open')){
+      readerResizePending=false;
+      return;
+    }
+    // Wait until the current page-turn callback has committed its new index.
+    if(readerTurnInProgress)return;
+    const preserveOffset=getCurrentReadingOffset();
+    readerResizePending=false;
+    paginateCurrentChapter(preserveOffset);
+  },120);
+}
+function flushReaderResizePagination(){
+  if(readerResizePending)scheduleReaderResizePagination();
+}
 function animateBookPageTurn(direction,afterTurn){
   if(readerTurnInProgress)return;
   readerTurnInProgress=true;
   const spread=isDesktopReaderSpread();
   const host=spread?document.querySelector('#bookSpread'):document.querySelector('#bookPage');
-  if(!host){readerTurnInProgress=false;afterTurn();return;}
+  if(!host){readerTurnInProgress=false;afterTurn();flushReaderResizePagination();return;}
   host.classList.remove('reader-turn-out-forward','reader-turn-out-back','reader-turn-in-forward','reader-turn-in-back');
   if (!spread) {
     const sheet=document.querySelector('#pageTurnSheet');
@@ -3894,6 +3922,7 @@ function animateBookPageTurn(direction,afterTurn){
           sheet.classList.remove('flip-forward','flip-back');
           sheet.style.visibility='hidden';
           readerTurnInProgress=false;
+          flushReaderResizePagination();
         }
       },340);
       return;
@@ -3909,6 +3938,7 @@ function animateBookPageTurn(direction,afterTurn){
       window.setTimeout(()=>{
         host.classList.remove(inClass);
         readerTurnInProgress=false;
+        flushReaderResizePagination();
       },150);
     }
   },105);
@@ -3950,6 +3980,8 @@ function turnReadingPage(direction) {
 
 function showPart() {
   if (!current) return;
+  const completionPanel=document.getElementById("seriesCompletionPanel");
+  if(completionPanel) completionPanel.hidden=true;
 
   document.querySelector('#modalGenre').textContent =
     current.genre;
@@ -3976,9 +4008,9 @@ function showPart() {
 
   document.querySelector('#nextChapter').innerHTML =
     part === current.chapters.length - 1
-      ? 'Закрыть чтение <span aria-hidden="true">×</span>'
+      ? (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : 'Закрыть чтение <span aria-hidden="true">×</span>')
       : 'Следующая часть <span aria-hidden="true">→</span>';
-  document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? 'Закрыть чтение' : 'Следующая часть');
+  document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : "Закрыть чтение") : "Следующая часть");
 
   saveReadingProgress();
 }
@@ -4155,10 +4187,39 @@ function renderMyLibrary(){
 document.querySelector('#myLibraryToggle')?.addEventListener('click',()=>document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'}));
 document.querySelector('#myLibrary')?.addEventListener('click',event=>{const update=event.target.closest('[data-library-check-update]');if(update){handleOfflineUpdateCheck(update);return;}const remove=event.target.closest('[data-library-remove-download]');if(remove){removeOfflineDownload(remove.dataset.libraryRemoveDownload);return;}const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
 
-document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
+function showSeriesCompletion(){
+  const volume=Number(current?.seriesVolume)||0;
+  const dialog=document.querySelector("#modal .dialog");
+  if(!dialog||!current?.seriesId||volume<1||volume>6){closeReadingSpace();return;}
+  let panel=document.getElementById("seriesCompletionPanel");
+  if(!panel){panel=document.createElement("section");panel.id="seriesCompletionPanel";panel.className="series-completion-panel";panel.setAttribute("role","status");panel.setAttribute("aria-live","polite");const heading=document.createElement("h2");heading.id="seriesCompletionTitle";const copy=document.createElement("p");copy.id="seriesCompletionCopy";const link=document.createElement("a");link.id="seriesCompletionLink";link.className="series-completion-link";const close=document.createElement("button");close.type="button";close.className="series-completion-close";close.textContent="Вернуться в библиотеку";close.addEventListener("click",closeReadingSpace);panel.append(heading,copy,link,close);dialog.appendChild(panel);}
+  const finalVolume=volume===6;
+  panel.querySelector("#seriesCompletionTitle").textContent=finalVolume?"Вы завершили роман":"Том завершён";
+  panel.querySelector("#seriesCompletionCopy").textContent=finalVolume?"Это последняя часть истории. Спасибо, что прошли этот путь.":"Следующая часть романа находится на странице серии. Там указан её актуальный статус; закрытый том не откроется до официальной публикации.";
+  const link=panel.querySelector("#seriesCompletionLink");link.href="./series.html#volume-"+String(finalVolume?6:volume+1).padStart(2,"0");link.textContent=finalVolume?"Вернуться к серии":"Посмотреть следующий том";
+  panel.hidden=false;panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+}
+document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});
+function getReaderFocusableElements(){
   const modal=document.querySelector("#modal");
-  if(e.key==="Escape"){if(modal.classList.contains("open"))closeReadingSpace();return;}
-  if(!modal.classList.contains("open")||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+  if(!modal)return [];
+  return Array.from(modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(element=>!element.hidden&&element.getAttribute("aria-hidden")!=="true"&&element.getClientRects().length>0);
+}
+document.addEventListener("keydown",e=>{
+  const modal=document.querySelector("#modal");
+  if(!modal?.classList.contains("open"))return;
+  if(e.key==="Escape"){e.preventDefault();closeReadingSpace();return;}
+  if(e.key==="Tab"){
+    const focusable=getReaderFocusableElements();
+    if(!focusable.length){e.preventDefault();document.querySelector("#closeModal")?.focus({preventScroll:true});return;}
+    const first=focusable[0],last=focusable[focusable.length-1],active=document.activeElement;
+    if(!modal.contains(active)){e.preventDefault();(e.shiftKey?last:first).focus();return;}
+    if(e.shiftKey&&active===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&active===last){e.preventDefault();first.focus();}
+    return;
+  }
+  if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
   if(e.target.closest("input,textarea,select,button,[contenteditable=true]"))return;
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
@@ -4292,10 +4353,8 @@ document.querySelector('#bookPage').addEventListener('wheel', e => {
   }
 }, { passive: true });
 
-window.addEventListener('resize', () => {
-  if (!current || !document.querySelector('#modal').classList.contains('open')) return;
-  paginateCurrentChapter(getCurrentReadingOffset());
-}, { passive: true });
+window.addEventListener('resize', scheduleReaderResizePagination, { passive: true });
+window.addEventListener('orientationchange', scheduleReaderResizePagination, { passive: true });
 
 
 /* AI Library Release — резервное копирование личных данных */
@@ -4422,7 +4481,17 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
 loadPersonalBooks();
 syncGenreFilters();
 render();
-loadPublishedBooks().finally(loadDownloadedBooks);
+loadPublishedBooks().finally(async () => {
+  await loadDownloadedBooks();
+  const requestedBook = new URLSearchParams(window.location.search).get('book');
+  if (!requestedBook) return;
+  const target = getAllBooks().find(book => String(book.id) === requestedBook);
+  if (!target || target.status === 'prerelease') return;
+  const opened = await openBookById(requestedBook);
+  if (opened) {
+    window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  }
+});
 updateContinueReadingButton();
 
 </script>
