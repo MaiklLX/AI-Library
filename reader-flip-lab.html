@@ -62,7 +62,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
 <body>
 <main class="lab">
  <div class="top"><div class="brand">AI LIBRARY</div><a class="back" href="./index.html">← Вернуться в библиотеку</a></div>
- <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Вперёд тяни за правый угол к левому краю. Назад — за левый угол к правому. Можно также воспользоваться кнопками.</p></header>
+ <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Касайся правого края для перехода вперёд, левого — назад. Или потяни за угол и веди лист пальцем.</p></header>
  <div id="loadNotice" class="notice" role="status">Не удалось загрузить движок перелистывания. Проверь подключение к интернету и обнови страницу.</div>
  <section class="stage" aria-label="Тестовая книга">
   <div class="book-frame"><div id="flipBook">
@@ -77,7 +77,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
   </div></div>
  </section>
  <div class="controls"><button class="control" id="prevPage" type="button" disabled>← Назад</button><span class="status" id="pageStatus" aria-live="polite">Загрузка книги…</span><button class="control primary" id="nextPage" type="button" disabled>Вперёд →</button></div>
- <p class="hint">На телефоне попробуй потянуть за угол листа. Проверь движение вперёд и назад, а также ощущение толщины и тени.</p>
+ <p class="hint">На телефоне проверь оба жеста: короткое касание левого или правого края и протягивание листа за угол. В обоих случаях должна срабатывать анимация бумаги.</p>
  <div class="footnote">Тестовый движок StPageFlip · оригинальная читалка пока не изменена</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
@@ -121,7 +121,8 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
       swipeDistance: 26,
       clickEventForward: true,
       useMouseEvents: true,
-      disableFlipByClick: true
+      disableFlipByClick: true,
+      showPageCorners: true
     });
     pageFlip.on('flip', event => update(event.data));
     pageFlip.on('init', event => update(event.data.page));
@@ -137,6 +138,40 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
         y: corner === 'top' ? 1 : bounds.height - 2
       });
     };
+    // Side-edge taps trigger the same native curl animation as the buttons.
+    // Keep the upper/lower corner zones free for direct drag gestures.
+    let edgeTapStart = null;
+    host.addEventListener('pointerdown', event => {
+      if (!event.isPrimary || event.button > 0) return;
+      const bounds = pageFlip.getBoundsRect();
+      const x = event.clientX - bounds.left;
+      const y = event.clientY - bounds.top;
+      const xRatio = x / bounds.width;
+      const yRatio = y / bounds.height;
+      const side = xRatio <= 0.2 ? 'left' : xRatio >= 0.8 ? 'right' : null;
+      edgeTapStart = side && yRatio > 0.12 && yRatio < 0.88
+        ? { pointerId: event.pointerId, x: event.clientX, y: event.clientY, time: performance.now(), side }
+        : null;
+    }, true);
+    host.addEventListener('pointerup', event => {
+      const start = edgeTapStart;
+      edgeTapStart = null;
+      if (!start || start.pointerId !== event.pointerId) return;
+      if (performance.now() - start.time > 360) return;
+      if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 7) return;
+      const current = pageFlip.getCurrentPageIndex();
+      const last = pageFlip.getPageCount() - 1;
+      if (start.side === 'left' && current > 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        pageFlip.flipPrev('bottom');
+      } else if (start.side === 'right' && current < last) {
+        event.preventDefault();
+        event.stopPropagation();
+        pageFlip.flipNext('bottom');
+      }
+    }, true);
+    host.addEventListener('pointercancel', () => { edgeTapStart = null; }, true);
     previous.addEventListener('click', () => pageFlip.flipPrev('bottom'));
     next.addEventListener('click', () => pageFlip.flipNext('bottom'));
     window.addEventListener('resize', () => pageFlip.update(), { passive: true });
