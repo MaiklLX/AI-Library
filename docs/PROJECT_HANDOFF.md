@@ -232,3 +232,11 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Service Worker app-shell cache bumped to v61 for the updated recovery module.
 - This restores data in the same browser profile/origin when IndexedDB is available. It is not cross-device synchronization and cannot recover data if both localStorage and IndexedDB have been cleared/evicted.
 - Automated CI result pending. No physical-device/offline test has been performed.
+
+
+### Recovery test follow-up (2026-10-31)
+- First CI attempt for recovery commit `d89f5db` passed static validation and all four Service Worker tests, then exposed a Node VM cross-realm array assertion in the new recovery test (test harness issue, not an application assertion).
+- Hardened first-run migration so syntactically valid but structurally invalid legacy JSON is normalized to safe defaults before it reaches IndexedDB.
+- Expanded tests for malformed first-run values and normalized VM-returned arrays in strict assertions.
+- Follow-up commits: `0a4c758b`, `39094cb1`, `fd16e7eb`. Latest branch head: `fd16e7eb565ea8a46e7b8addf630ebc2b99143a6`.
+- The corrected head currently has no reported GitHub Actions run/status yet. Do not mark CI green until a new run completes.
