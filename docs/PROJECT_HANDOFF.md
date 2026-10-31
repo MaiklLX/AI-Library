@@ -161,16 +161,15 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 ## Product direction update — community-authored library (2026-10-31)
 
 - The user has decided to stop automatic/background generation of public-catalogue books because the current generated results are incomplete and do not meet the desired quality bar.
-- The existing user-facing book creator is explicitly retained and should be treated as a core feature, not removed.
-- Target lifecycle: private author draft → preview/completeness checks → explicit publication by the author for a clearly displayed coin fee → attributed public book → eligibility for ratings and competitions. The author-paid coin fee is confirmed; exact amount, moderation and refund/settlement rules remain open.
-- Require explicit author confirmation before any coin debit. Private drafting, preview, local save and export remain free.
-- Add a creator progression system: competition placements award verified author XP; XP/achievements unlock profile statuses. Coins remain a separate spendable currency; XP/status are non-spendable progression.
-- Competition scoring needs refinement before implementation. A daily shortlist/ranked competition is likely needed if the product is to award top-place rewards; preserve lifetime book rating separately from daily event results.
+- The existing user-facing book creator is retained as a core feature.
+- Approved first-stage author lifecycle: private draft → preview/completeness checks → explicit author publication → attributed public book, with **free publication**.
+- Creating, editing, previewing, locally saving, exporting and publishing an author's own book are free in the first stage. No publication fee, coin debit, commission or paid gate.
+- Coins and XP are community progression systems, not payment for publishing. XP is non-spendable; starter coins have no cash value or cash-out.
+- The paid EPUB market, purchases, author revenue share/settlement, refunds, disputes/appeals and related financial moderation tooling are deferred until real community activity justifies them.
 - Do not delete existing catalogue books or personal drafts. Do not remove the user-initiated generation path if it powers the book creator.
-- The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
-- No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
-- Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
-
+- The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. Inspect the Worker source before changing scheduled behavior or generation routes.
+- No application code, Worker code, catalogue records, or user data were changed by this product-direction checkpoint.
+- Next: continue the creator workflow and community progression in isolated branches; keep production stable and preserve local-first author drafts until server-side sync is deliberately designed.
 
 ## Authentication decision — 2026-10-31
 
@@ -178,3 +177,12 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - This is a design decision only; no OAuth credentials, email provider, auth endpoints, sessions, D1 schema, or secrets have been configured.
 - Before implementation, settle callback URLs, email delivery provider, secure session model, CSRF, OTP expiry/attempt limits, account recovery, and account deletion/export.
 - Keep secrets server-side. Do not connect API v2 to production or alter the legacy Worker.
+
+
+## iOS reader pinch-zoom checkpoint (2026-10-31)
+
+- User reported that two-finger font-size adjustment does not work in the iOS Safari-installed web app.
+- Source inspection found the reader's existing pinch-to-resize logic relies on Pointer Events. Added a Touch Events fallback in isolated PR #47: https://github.com/MaiklLX/AI-Library/pull/47.
+- The fallback uses the same font-size setting path and existing 14–24 px bounds; Pointer Events remain for other platforms, with a guard against duplicate handling while the touch fallback is active.
+- PR #47 is a draft, unmerged, and not deployed. Automated validation and manual iPhone/iPad verification are pending.
+- Manual acceptance checks: pinch out/in changes only reader font size; text reflows without losing reading position; one-finger page turns and edge taps still work; no accidental browser-level zoom; desktop and Android behavior remains unchanged.
