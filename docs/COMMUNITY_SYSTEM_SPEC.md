@@ -71,9 +71,9 @@ The user-facing book creator is retained as a core product feature and becomes t
 - A user can create and edit a book as a personal draft.
 - Drafts are private to their author until they explicitly submit them for publication.
 - Before submission, the creator should offer a preview and basic completeness/format validation (title, author attribution, description, genre, cover, chapter structure and readable content).
-- Publication in the shared library is paid by the author in coins; this is an agreed product rule, not an optional possibility. The exact fee amount and any size-based pricing remain undecided.
-- Show the exact fee before the action and require the author's explicit confirmation before debiting the balance. Do not charge for private drafting, preview, local saving or export.
-- The rejection/refund policy, moderation workflow and timing of final settlement still need to be specified before implementation. A rejected manuscript should not silently consume the author's publication fee.
+- **Initial release: publication in the shared library is free. Do not charge a coin fee, commission or other payment for publication.** This is an explicit product decision approved on 2026-10-31.
+- Private drafting, editing, preview, local saving, export and publication are all free in the initial release. Coins and XP must not become a hidden publication gate.
+- Moderation and rejection handling still require clear rules before opening publication broadly; rejection must never destroy or silently replace the author's private draft.
 - Published books are attributed to their creator and become eligible for community ratings and selected competitions.
 - Publishing must not silently replace or delete the author's local draft. A published copy and a personal working draft have distinct lifecycle states.
 - Add reporting/moderation and clear content, copyright, plagiarism and safety rules before opening publication to all users.
@@ -81,12 +81,63 @@ The user-facing book creator is retained as a core product feature and becomes t
 ### Creator progression, XP and status
 
 Keep these systems distinct:
-- **Coins** are a spendable economy: publication fees and future exclusive unlocks.
+- **Coins** are an internal spendable community currency for explicitly approved rewards and future community features. They do not pay for publication in the initial release.
 - **Book rating** is community feedback and remains cumulative.
 - **Author XP** measures verified creator achievements and competition results; it is not spendable.
 - **User status/rank** is a progression label unlocked by XP thresholds and/or explicitly defined achievements.
 
 Competition rewards should be awarded once, after the competition closes and the final result is server-verified. Rank-based XP can reward authors whose books place in the daily "Book of the Day" competition or other explicitly defined rating events. Replays, duplicate settlement jobs, self-voting, vote manipulation and multiple accounts must not create duplicate rewards. Store reward events in an auditable ledger with unique idempotency keys. Publish the reward table and status thresholds before launch; do not invent balances or grant XP from client-side UI events.
+
+### Draft reward economy and creator ranks (proposal, not yet approved)
+
+The following is a balanced starting proposal for product review. Values are illustrative and must not be wired into production until explicitly approved.
+
+#### Coins: spendable currency
+
+- Give a new verified account a one-time welcome grant (proposal: **25 coins**) so a new author can try the publication flow without first grinding activity.
+- Do not charge for publication in the initial release. Any future coin sinks or paid features require a separate product decision and must not be introduced as a publication fee by implication.
+- Coins may be earned through a small set of capped, verifiable contributions: accepted creator challenges, approved community contributions, and verified contest placements.
+- Do **not** award coins for opening the app, refreshing pages, raw reading minutes, repeated clicks, or casting a positive/negative vote. These are too easy to automate or manipulate.
+- Do not make daily login streaks the main source of currency. The system should reward quality and contribution, not compulsive attendance.
+- Every grant, reward, debit, refund and administrative adjustment must create an immutable ledger entry with a unique idempotency key. The server calculates amounts and enforces caps.
+- Show a clear transaction history: date, reason, amount, and resulting balance. Never allow a client to submit its own reward amount.
+
+#### Author XP: non-spendable progression
+
+Proposed XP events:
+- First book approved for publication: **+40 XP**, once per author.
+- Additional approved book: **+20 XP**, subject to a reasonable anti-spam cooldown/quality gate.
+- Daily contest placement: **1st +100 XP, 2nd +60 XP, 3rd +30 XP** after verified settlement.
+- Monthly/community special contest: separately announced reward table; do not silently multiply daily rewards.
+- No XP for voting, logging in, opening a book, or submitting an unreviewed manuscript.
+- XP is never spent, transferred, purchased, or removed for ordinary activity. Fraudulent awards may be reversed only through an auditable administrative correction.
+
+#### Proposed profile ranks
+
+| Rank | Lifetime author XP | Meaning |
+|---|---:|---|
+| Reader | 0 | Default community identity |
+| New Author | 40 | First approved publication |
+| Author | 150 | Consistent contribution |
+| Established Author | 400 | Several quality contributions |
+| Recognized Author | 900 | Strong community results |
+| Master Author | 1,800 | Sustained high-quality work |
+| Legend | 3,500 | Exceptional long-term contribution |
+
+- Rank thresholds use lifetime XP and never fall when XP is spent (XP is not spendable).
+- A contest win can accelerate progress, but cannot be bought with coins.
+- Keep rank names and thresholds configurable server-side so balancing does not require a frontend rewrite.
+- Cosmetic profile frames, badges and author-page presentation are suitable rank rewards. Avoid pay-to-win voting power, extra votes, or rating multipliers.
+
+#### Anti-abuse and fairness
+
+- Award XP and coin rewards only after server-side verification and one-time settlement.
+- Exclude self-votes; detect suspicious vote clusters and repeated account/device patterns without treating one signal as automatic proof.
+- Use minimum eligible vote counts and deterministic tie-breakers for contest placements.
+- Apply publication cooldowns and quality checks; do not grant repeat first-publication rewards.
+- Publication is free in the initial release; no payment or coin balance may guarantee acceptance, positive reviews, XP or a rank.
+- Keep author onboarding accessible: publication is free and must not become an opaque or indirect coin paywall.
+- Publish all prices, reward values, contest rules and refund conditions before users commit coins.
 
 ### Competition model — design refinement required
 
@@ -180,3 +231,131 @@ Do not implement frontend registration against a speculative endpoint.
 - An unlock cannot debit twice or grant an entitlement without a matching debit.
 - Private account data never enters public caches or static catalogue files.
 - Existing generation, catalogue, reader, and offline-download flows pass regression tests.
+
+
+### Paid EPUB export and creator revenue share (approved product rule)
+
+- A published community book may offer an optional downloadable EPUB export. The export action should live in the book's secondary-actions menu so the main catalogue card remains uncluttered.
+- Authors choose either a **free EPUB** or one of three fixed paid price tiers: **3, 5, or 10 coins**. Arbitrary custom prices are not supported in the initial model.
+- A free EPUB download creates no coin debit, author credit, or platform commission. It remains available without mandatory registration. Once a reader has acquired the free edition, that entitlement is permanent: it survives the author later switching the offer to paid, device changes, and removal of the local download. The reader can re-download it without charge through their account when signed in; guest readers retain their original file or guest acquisition claim where supported. A later price applies only to readers who have not previously acquired the book.
+- For each first successful purchase, distribute **80% of the coin price to the book's author** and retain **20% as the AI Library platform commission**. This 80/20 split is approved product direction.
+- Examples: at 3 coins, author receives 2.4 and AI Library 0.6; at 5 coins, author receives 4 and AI Library 1; at 10 coins, author receives 8 and AI Library 2. Use decimal-safe integer subunits or another exact representation; do not use imprecise floating-point arithmetic for ledger balances.
+- The purchase confirmation must show the total price and the author/platform split before the user confirms.
+- A successful purchase creates a durable account entitlement. Re-downloading the same EPUB is free and must not debit the reader or credit the author/platform again.
+- Debit, entitlement creation, author credit and platform commission must settle atomically on the server with a unique idempotency key. The browser must never calculate or mutate authoritative balances.
+- Keep author earnings and platform commission visible in auditable transaction history. Refunds/reversals, moderation removal, and settlement timing must have explicit rules before launch.
+- Coins are an internal AI Library currency. This rule does **not** promise cash payouts or bank withdrawals; any future cash-out feature requires a separate product, legal, tax, and payment design.
+- Do not charge for private drafts, previews, local saving, or an author's own draft export. Do not impose a blanket export fee on free/public-domain catalogue books without a separately approved policy.
+- Generate a standards-compliant EPUB within the application/backend, including metadata, cover, chapter navigation and valid package structure; validate the resulting archive before offering it.
+- No EPUB purchase or wallet UI should be wired to localStorage or a speculative API. Implementation requires an audited Worker source/schema, transactional ledger support, and server-side entitlement checks.
+
+
+### EPUB refunds, reversals and author settlement (approved product rule, 2026-10-31)
+
+- Refunds are eligible for objective transaction/delivery failures, including a duplicate charge, a failed or unusable EPUB delivery caused by the platform, or a paid purchase for which the reader did not receive the promised access.
+- A reader simply changing their mind after successful delivery is not, by itself, an automatic platform refund reason. This rule must never override mandatory statutory consumer rights or other applicable legal obligations.
+- Author revenue (80% of a paid purchase) is first recorded as **pending** rather than immediately spendable.
+- The pending author amount becomes available **7 calendar days after the successful purchase**, provided no substantiated refund, reversal, or dispute is open. This is a product settlement delay, not a statement of the reader's statutory refund period.
+- The platform's 20% commission and the author's 80% share must remain traceable to the original purchase. Refund/reversal processing must create compensating ledger entries; never edit or erase the original transaction.
+- A refund for one purchase must be idempotent: repeated requests, retries, or concurrent processing must not issue multiple refunds or reverse the same author/platform amounts more than once.
+- When a refund is granted, the paid entitlement may be revoked, subject to mandatory consumer rights and any applicable exception. Do not revoke a separate permanent free-acquisition entitlement that predates the paid offer.
+- The purchase, entitlement, author pending credit, platform commission, and any later refund/reversal must be represented by server-authoritative, auditable, transactionally consistent records. No client-side balance changes.
+- Exact dispute handling, evidence review, exceptional cases, and legal implementation details must be finalized before launch. No live refund or settlement behavior is implemented by this documentation change.
+
+
+### Refund cost allocation by cause (approved product rule, 2026-10-31)
+
+- Every refund must be assigned a recorded cause after review: platform fault, author/content fault, or duplicate/technical payment operation. The classification and supporting evidence must be auditable.
+- **Platform fault:** when AI Library caused the failed or unusable EPUB delivery or failed to provide paid access, AI Library bears the refund cost. The author's 80% share is not clawed back solely because of a platform-caused failure; any pending author credit remains payable under the normal settlement rules unless a separate author fault is established.
+- **Author/content fault:** when the refund is justified by an author-controlled defect or failure, reverse the author's 80% share attributable to that purchase. If it is still pending, cancel the pending credit; if already settled, record a separate compensating debit/receivable against the author's coin account. Do not silently edit the original ledger entry or take the balance below zero without recording the resulting recoverable amount.
+- If the author has insufficient available coins, record the unrecovered amount as a transparent negative adjustment/debt and offset it against future author earnings. Do not hide the debt or silently discard it. The precise limits, notice and appeal procedure remain to be designed before launch.
+- **Duplicate charge:** reverse only the duplicate payment transaction. It must not create an author credit or commission, and it must not reverse or affect the separate original successful purchase.
+- A refund/reversal must never be applied twice. Use an idempotency key and immutable compensating ledger entries linked to the exact purchase and refund case.
+- The refund case must record who/what caused the failure, evidence/reason, decision timestamp, amounts allocated to author/platform, entitlement action, and any outstanding recovery amount.
+- These are approved product allocation rules, not live implementation. Mandatory consumer rights and legal review take precedence; disputed fault classification, author notice/appeal, and negative-balance limits must be specified before launch.
+
+## Dispute review and appeal workflow (approved product policy, 2026-10-31)
+
+- A reader can open a report from a specific paid purchase. The intake captures a structured reason, description, purchase reference, and optional supporting evidence (for example, screenshots or a relevant file).
+- Initial reason categories: duplicate charge; EPUB failed to download; EPUB is corrupted/unusable; paid access was not provided; material mismatch with the book description; other.
+- Every case receives a unique ID and an auditable status history. Suggested statuses: new, awaiting author response, under platform review, decision issued, appeal, closed.
+- A dispute is scoped to the affected purchase. Do not freeze the author's whole wallet or unrelated earnings. If the disputed author share is still pending, only that share may remain pending while the case is reviewed.
+- Notify the author with the case ID, reason, reader's description/evidence, and response deadline. The author may respond with an explanation, evidence, or a corrective re-delivery proposal.
+- Proposed service target: 5 calendar days for the author's response. No response is not an automatic admission of fault; the platform may decide using the available evidence and must record its reasoning.
+- A platform moderator reviews purchase and entitlement records, delivery/download diagnostics where available, EPUB integrity, listing description, reader evidence, and the author's response. Proposed review target: 3–5 business days after the case is ready for review.
+- A decision must record the reason and evidence considered and select an outcome: refund, no refund, corrected re-delivery, or (only where supported and justified) partial compensation. Notify both parties with a concise explanation.
+- Both reader and author may appeal within a proposed 7 calendar days, supplying new evidence or identifying a review error. A different moderator or second review level should handle the appeal where practical. Preserve the original decision and append the appeal outcome; never overwrite the audit history.
+- Refunds and author-share adjustments require a registered platform decision tied to the case. The only proposed automatic exception is a mechanically confirmed duplicate charge: the system may reverse only the duplicate transaction when ledger evidence proves it is an extra charge for the same purchase. It must not credit the author for the duplicate or affect the original successful purchase. Ambiguous cases go to human review.
+- All wallet effects use idempotent compensating ledger entries. Preserve original purchase and ledger records. Record the case ID, reason classification, evidence references, decision-maker, timestamps, amounts allocated to author/platform, entitlement action, and any outstanding author recovery.
+- Do not automatically revoke a paid entitlement merely because a complaint was opened. Entitlement changes occur only after a valid decision and remain subject to mandatory consumer rights. A prior permanent free-acquisition entitlement is never revoked by a later paid-price change or a dispute about a separate paid acquisition.
+- These internal targets do not limit mandatory statutory consumer rights or external dispute deadlines. Legal review is required before launch.
+- The 5-day author response, 3–5-business-day review, and 7-day appeal windows are approved initial product service targets; they are not waivers or restrictions of legal rights.
+
+## Author debt recovery, sales restriction and appeal (approved product policy, 2026-10-31)
+
+- An author debt may arise only from a final, documented decision that attributes a refund/reversal to author-controlled fault or content fault. Platform-caused failures, duplicate charges, unresolved complaints, and unsubstantiated allegations must not create author debt.
+- Notify the author promptly when a proposed recovery is recorded. The notice must identify the purchase, dispute/case ID, reason, evidence summary, amount, calculation, and appeal deadline. Every debt and repayment movement must be visible in the author's financial history and linked to the underlying case.
+- The author has **7 calendar days** to appeal the debt decision. While a timely appeal is under review, the disputed amount must not be collected from future earnings or treated as finally recoverable. Preserve the original decision and append the appeal outcome to the audit history. Mandatory consumer rights and legal deadlines always take precedence.
+- After the decision becomes final, recover the debt by allocating **50% of future author earnings** to repayment until the outstanding amount is cleared. This means 50% of the author's share (the 80% creator portion), not 50% of the reader's gross purchase price. The remaining 50% of each future author earning is released to the author under the normal seven-calendar-day pending settlement rule, provided no other valid hold applies.
+- Apply recovery only to future author earnings and only up to the outstanding debt. Use exact integer subunits/decimal-safe arithmetic; do not use floating-point calculations. Each recovery is a separate, idempotent, auditable ledger entry linked to the debt case. Never rewrite or delete the original purchase or earning entries.
+- When the confirmed outstanding author debt reaches **10 coins or more**, temporarily suspend the author's ability to create new paid sales until the debt is cleared or the restriction is changed through a documented review. The threshold is a restriction trigger, not a maximum debt amount and not permission for automatic confiscation.
+- The restriction must not remove already-purchased books from readers, revoke unrelated entitlements, delete the author's books or drafts, or block reading, editing, local saving, and export of personal drafts. Free publication may continue unless a separate content/moderation rule applies.
+- Notify the author when the threshold restriction starts and when it is lifted. Re-enable paid sales automatically once the confirmed debt is fully repaid, unless a separate documented restriction remains.
+- Do not freeze the author's entire wallet or unrelated balances. Do not offset unrelated coin rewards or balances under this rule; recovery is limited to the approved 50% share of future author earnings.
+- No debt may be created for a platform fault, duplicate transaction, mere complaint, or unreviewed allegation. If the refund allocation is later overturned, post a compensating ledger correction and remove the associated restriction/recovery as appropriate.
+- These are approved product rules, not implemented wallet behavior. Before launch, complete legal review and define evidence retention/access controls, abuse handling, and exceptional-case procedures.
+
+
+
+## Evidence privacy, retention and anti-abuse controls (approved product policy, 2026-10-31)
+
+### Evidence intake and minimization
+- A dispute is tied to one specific purchase. Accept only evidence relevant to the selected reason: screenshots (JPEG/PNG/WebP), PDF documents, EPUB integrity metadata/checksums, delivery/download logs, purchase and entitlement events, book metadata/description, and the author's response.
+- Prefer SHA-256 checksums, file metadata and narrow technical excerpts over uploading or retaining a complete EPUB when those are sufficient to investigate.
+- Collect the minimum personal data necessary. Do not expose a reader's unrelated account details or private information to the author; provide only the information needed to respond to the claim.
+- Evidence files must be checked by actual MIME/content signature, not filename extension alone. Reject HTML, SVG, executables, archives and unsupported formats. Apply bounded upload size/count, quarantine and malware scanning before staff preview. Never serve evidence from a public URL.
+
+### Approved storage limits
+- Keep evidence files in private object storage, not in D1. D1 stores only case/file identifiers, object key, checksum, detected MIME type, byte size, timestamps, access metadata and case relationship.
+- Maximum size: **5 MB per file**.
+- Maximum count: **3 files per dispute case**.
+- Delete evidence attachments **90 days after case closure**, unless an active appeal, legal hold, statutory retention duty or other documented legal requirement requires continued preservation. The retention clock must be extended only for the relevant material and documented reason.
+- Retain evidence-access audit logs for **6 months**. Financial/accounting records and the minimum case/decision record follow separately applicable statutory retention requirements; do not apply the 90-day attachment rule to required financial records.
+- At expiry, securely delete attachments and remove or anonymize associated file metadata where legally permitted. Preserve the minimum case/decision and financial audit trail required for accountability and law.
+- These are approved product retention targets, subject to jurisdiction-specific legal review before launch.
+
+### Access control and transport
+- Enforce role- and case-scoped access: reader sees their own submission; author sees only materials necessary to answer; case reviewer sees the case evidence; appeal reviewer receives access for the appeal; restricted security/support access requires a documented operational purpose.
+- Encrypt evidence in transit and at rest. Use short-lived signed URLs (proposed default: 5 minutes) and never expose object-store credentials or permanent public links.
+- Log every evidence view, download, export, permission change and deletion with actor, case/file reference, action, timestamp and outcome. Do not log passwords, session tokens or unnecessary personal content.
+- Apply least privilege, bounded payloads, upload rate limits and safe error messages. D1 stores references and compact metadata only; file bytes stay in object storage to keep database and Worker workloads bounded.
+
+### Abuse handling and fairness
+- Detect duplicate case submissions, repeated identical evidence, unusual claim frequency and suspicious account/device/payment patterns as review signals. A shared IP/device or a single anomaly is not proof of fraud.
+- Use rate limits and human review for ambiguous patterns. Do not automatically reject a complaint, create author debt, withhold unrelated earnings, or punish an author solely because an anti-abuse signal fired.
+- Protect both readers and authors from retaliation. Preserve the normal notice, response, reasoned decision and appeal process; restrict evidence access to the minimum necessary.
+- Evidence retention, access, deletion and any legal hold must be auditable. Mandatory consumer, privacy and accounting obligations override internal retention targets.
+
+These controls are product policy, not implemented storage or dispute functionality. Select and verify the actual object-storage service, malware-scanning path, access policy and legal retention schedule during backend discovery before launch.
+
+
+## Release sequencing decision — internal market deferred (2026-10-31)
+
+The product owner approved a staged rollout. Designing the future internal EPUB market and its dispute/refund safeguards does **not** mean launching those features in the first public release.
+
+### Initial release priorities
+1. Launch the community foundation: coins, XP, achievements and progression, with server-authoritative rewards and clear separation between spendable coins and non-spendable XP.
+2. Make user-authored book creation a core, usable flow: private drafts, editing, preview, export and explicit publication workflow, while preserving guest reading and existing reader behavior.
+3. Grow the reader/author community and validate real usage before introducing paid transactions.
+
+### Deferred market phase
+- Paid EPUB offers and purchases using coins.
+- Author revenue share and settlement.
+- Refunds, purchase disputes, appeals and author-debt recovery.
+- Evidence storage/retention, anti-abuse controls and the moderator/admin console.
+
+The market specifications may be prepared and reviewed in advance so that the architecture is coherent, but these features must remain **out of the initial release** and must not be exposed as active purchase, payout or dispute functionality. Revisit launch readiness only after the product has a meaningful audience and observed usage justifies the added operational and legal complexity.
+
+Coins in the initial community release are an internal product currency for explicitly approved community/creator actions; do not imply cash value, cash-out, or that paid EPUB trading is already available. Preserve architectural separation so a later market can be added without rewriting the initial coin/XP foundation.
+
+This is a product rollout decision, not an implementation claim. No frontend, Worker, D1 schema, wallet, purchase, refund or moderation code was changed by recording it.
