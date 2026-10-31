@@ -3021,6 +3021,53 @@ body.reader-open #pageTurnSheet.flip-back {
 @media(prefers-reduced-motion:reduce){.book-detail-back,.book-detail-actions .btn{transition:none}}
 
 </style>
+
+<style id="six-volume-prerelease-series-v1">
+/* Six-volume pre-release presentation — premium series treatment */
+.premiere-series-card{grid-template-columns:minmax(290px,.94fr) minmax(0,1.06fr);gap:clamp(26px,4vw,58px);padding:clamp(24px,4vw,48px);background:radial-gradient(ellipse at 22% 48%,#36516a38,transparent 42%),linear-gradient(118deg,#111820 0%,#171716 52%,#211a13 100%);border-color:#c6a45f99}
+.premiere-series-card:before{background:radial-gradient(ellipse at 18% 45%,#7895a51c,transparent 46%),radial-gradient(ellipse at 100% 0%,#d9b66d15,transparent 48%)}
+.premiere-series-art{min-height:350px}
+.premiere-series-stack{position:relative;width:min(100%,390px);height:310px;isolation:isolate;filter:drop-shadow(0 24px 24px #0008)}
+.premiere-series-spines{position:absolute;right:2%;bottom:24px;display:flex;align-items:flex-end;height:250px;padding-left:110px}
+.premiere-series-spine{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:39px;height:calc(218px + (var(--spine-index)*3px));margin-left:-2px;padding:15px 4px 12px;border:1px solid #b9965c88;border-radius:2px 5px 5px 2px;background:linear-gradient(90deg,#090d13,#253443 38%,#10151d 100%);box-shadow:inset 3px 0 5px #ffffff12,5px 8px 12px #0008;transform:perspective(600px) rotateY(-10deg) translateY(calc(var(--spine-index)*-2px));color:#e7cc91}
+.premiere-series-spine:before{content:"";position:absolute;inset:8px 4px;border:1px solid #d9b66d35;pointer-events:none}
+.premiere-series-spine b{font:500 18px Georgia,serif;text-shadow:0 0 12px #d9b66d55}
+.premiere-series-spine small{writing-mode:vertical-rl;transform:rotate(180deg);max-height:145px;overflow:hidden;color:#c8b68e;font:9px/1.2 Georgia,serif;letter-spacing:.08em;text-align:center}
+.premiere-series-front{position:absolute;z-index:3;left:4%;bottom:22px;width:178px;height:264px;aspect-ratio:auto;transform:perspective(850px) rotateY(-13deg);box-shadow:16px 22px 38px #000c,-5px 0 0 #d9b66d28,0 0 30px #d9b66d13}
+.premiere-series-front:before{inset:10px}
+.premiere-series-front img{object-fit:cover}
+.premiere-series-card:hover .premiere-series-front{transform:perspective(850px) rotateY(-5deg) translateY(-5px)}
+.premiere-series-art .premiere-orbit{width:310px;border-color:#9bb6c34a}
+.premiere-series-art .premiere-orbit:before{border-color:#d9b66d55}
+.premiere-series-art .premiere-stamp{left:auto;right:0;top:4%;width:88px;height:88px;display:flex;flex-direction:column;gap:1px;transform:rotate(8deg);font-size:8px;background:linear-gradient(145deg,#282216f5,#121316f5);border-color:#e1c17a}
+.premiere-stamp strong{font:500 29px Georgia,serif;line-height:1;color:#f0d89d}
+.premiere-stamp span{font-size:7px;letter-spacing:.12em;line-height:1.4}
+.premiere-series-card .premiere-copy h3{font-size:clamp(34px,4vw,50px);line-height:1.06}
+.premiere-series-card .premiere-kicker{letter-spacing:.16em}
+.premiere-series-card .premiere-volume-chip{background:linear-gradient(110deg,#d9b66d25,#d9b66d0c);border-color:#d9b66d77;color:#f0d89d;font-weight:750}
+.premiere-series-card .premiere-description{max-width:610px}
+.premiere-series-card .premiere-open{min-height:48px;padding:13px 20px;box-shadow:0 8px 28px #d9b66d25}
+@media(max-width:900px){.premiere-series-card{grid-template-columns:minmax(240px,.85fr) minmax(0,1.15fr);gap:22px}.premiere-series-stack{transform:scale(.9);transform-origin:center}.premiere-series-art{min-height:320px}}
+@media(max-width:700px){
+ .premiere-series-card{grid-template-columns:minmax(0,1fr);gap:6px;padding:20px}
+ .premiere-series-art{min-height:270px}
+ .premiere-series-stack{height:250px;transform:scale(.78);transform-origin:center}
+ .premiere-series-spines{bottom:16px;height:215px}
+ .premiere-series-front{width:150px;height:224px;bottom:16px}
+ .premiere-series-art .premiere-stamp{display:flex!important;right:calc(50% - 142px);top:1%;width:70px;height:70px}
+ .premiere-series-art .premiere-stamp strong{font-size:23px}
+ .premiere-series-card .premiere-copy h3{font-size:36px}
+ .premiere-series-card .premiere-kicker{display:flex!important;font-size:9px}
+ .premiere-series-card .premiere-tagline{display:block!important;font-size:17px;margin-bottom:12px}
+ .premiere-series-card .premiere-description,.premiere-series-card .premiere-meta,.premiere-series-card .premiere-editor-note{display:block!important}
+ .premiere-series-card .premiere-meta{display:flex!important;gap:7px;margin-bottom:16px}
+ .premiere-series-card .premiere-locked{display:flex!important}
+ .premiere-series-card .premiere-locked .lock{display:inline!important}
+ .premiere-series-card .premiere-open{display:inline-flex!important;min-height:44px!important;margin-top:12px}
+}
+@media(max-width:380px){.premiere-series-stack{transform:scale(.68)}.premiere-series-art{min-height:238px}.premiere-series-card{padding:16px}.premiere-series-card .premiere-copy h3{font-size:31px}}
+@media(prefers-reduced-motion:reduce){.premiere-series-front,.premiere-series-spine{transition:none!important}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3506,10 +3553,15 @@ function renderPrereleaseShowcase(){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
   }
-  root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
-    <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div><div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
-    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
-  </article>`).join('');
+  const romanVolumes=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+  root.innerHTML=upcoming.map(book=>{
+    const volumeCount=Math.max(1,Math.min(12,Number(book.volumeCount)||1));
+    const volumeSpines=romanVolumes.slice(1,volumeCount).map((roman,index)=>'<span class="premiere-series-spine" style="--spine-index:'+index+'"><b>'+roman+'</b><small>'+esc(book.title)+'</small></span>').join('');
+    return `<article class="premiere-card premiere-series-card" data-volume-count="${volumeCount}">
+      <div class="premiere-art premiere-series-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-series-stack" role="img" aria-label="${esc(book.title)} — серия из ${volumeCount} томов"><div class="premiere-series-spines" aria-hidden="true">${volumeSpines}</div><div class="premiere-book-cover premiere-series-front">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div></div><div class="premiere-stamp"><strong>${volumeCount}</strong><span>ТОМОВ<br>ОДНА ИСТОРИЯ</span></div></div>
+      <div class="premiere-copy"><div class="premiere-kicker">МНОГОТОМНЫЙ РОМАН · ${volumeCount} ТОМОВ</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span class="premiere-volume-chip">✦ ${volumeCount} томов · единая история</span><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст всех томов откроется по плану официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
+    </article>`;
+  }).join('');
 }
 
 function renderBookCard(book){
