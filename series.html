@@ -144,11 +144,10 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   countdown.append(cLabel,units,ended);
   const row=document.createElement('div');row.className='status';
   const state=document.createElement('span');state.className='state';state.textContent=statusLabels[volume.status]||'Статус уточняется';
-  const canNavigate=(volume.status==='prerelease'&&volume.premiereBookId)||volume.status==='published';
-  const action=document.createElement(canNavigate?'a':'span');action.className='action';
+  const action=document.createElement('a');action.className='action';
   if(volume.status==='prerelease'&&volume.premiereBookId){action.href='./premiere.html?book='+encodeURIComponent(volume.premiereBookId);action.textContent='О премьере';}
   else if(volume.status==='published'){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
-  else{action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
+  else{action.removeAttribute('href');action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
   row.append(state,action);
   const note=document.createElement('div');note.className='volume-note';note.textContent='Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';body.appendChild(progressLabel);}
@@ -156,18 +155,20 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const isFirstVolume=Number(volume.number)===1;
   const annotationTimer={release,annotation,isFirstVolume,isPublished:volume.status==='published'};
   if(!isFirstVolume&&volume.status!=='published')annotation.classList.add('is-locked');
-  timers.push({release,unitNodes,units,ended,annotationTimer});
+  timers.push({release,unitNodes,units,ended,annotationTimer,volume,pill,state,action});
  });
  function tick(){
   const now=Date.now();
   timers.forEach(timer=>{
    const gate=timer.annotationTimer;
-   const reveal=gate.isFirstVolume||gate.isPublished||(gate.release&&!Number.isNaN(gate.release.getTime())&&gate.release.getTime()-now<=48*60*60*1000);
+   const timeReached=timer.release&&!Number.isNaN(timer.release.getTime())&&now>=timer.release.getTime();
+   const isPublished=gate.isPublished||(timer.volume.status==='planned'&&timeReached);
+   const reveal=gate.isFirstVolume||isPublished||(gate.release&&!Number.isNaN(gate.release.getTime())&&gate.release.getTime()-now<=48*60*60*1000);
    if(reveal){gate.annotation.classList.remove('is-locked');gate.annotation.classList.add('is-revealed');}
    else{gate.annotation.classList.add('is-locked');gate.annotation.classList.remove('is-revealed');}
    if(!timer.release||Number.isNaN(timer.release.getTime()))return;
    let remaining=timer.release.getTime()-now;
-   if(remaining<=0){timer.units.hidden=true;timer.ended.hidden=false;timer.ended.textContent='Плановая дата наступила. Доступ откроется после отдельной публикации тома.';return;}
+   if(remaining<=0){timer.units.hidden=true;timer.ended.hidden=false;timer.ended.textContent=isPublished?'Том вышел — чтение открыто.':'Дата наступила, статус релиза уточняется.';if(isPublished){timer.pill.textContent='Опубликован';timer.state.textContent='ДОСТУПЕН';timer.action.href='./index.html?book='+encodeURIComponent('published-'+(timer.volume.bookId||timer.volume.id));timer.action.removeAttribute('aria-disabled');timer.action.textContent='Читать том';}return;}
    const days=Math.floor(remaining/86400000);remaining%=86400000;
    const hours=Math.floor(remaining/3600000);remaining%=3600000;
    const minutes=Math.floor(remaining/60000);remaining%=60000;
