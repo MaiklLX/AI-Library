@@ -80,6 +80,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   {id:'ty-v-moih-planah-tom-05',number:5,title:'Открыто',chapters:{from:67,to:80},status:'planned',bookId:'ty-v-moih-planah-tom-05',cover:'./content/books/ty-v-moih-planah-tom-05-cover.svg',releaseAt:'2026-11-30T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-06',number:6,title:'То, что можно доказать',chapters:{from:81,to:93},status:'planned',bookId:'ty-v-moih-planah-tom-06',cover:'./content/books/ty-v-moih-planah-tom-06-cover.svg',releaseAt:'2026-12-07T18:00:00+03:00'}
  ];
+ let progress={};try{progress=JSON.parse(localStorage.getItem('ai-library-progress')||'{}')||{};}catch{}
  let volumes=fallback;
  try{
   const response=await fetch('./content/series/ty-v-moih-planah.json',{cache:'no-cache'});
@@ -122,6 +123,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   else{action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
   row.append(state,action);
   const note=document.createElement('div');note.className='volume-note';note.textContent='Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
+  const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';body.appendChild(progressLabel);}
   body.append(topline,title,desc,range,countdown,row,note);card.append(coverWrap,body);list.appendChild(card);
   if(release&&!Number.isNaN(release.getTime()))timers.push({release,unitNodes,units,ended});
  });
