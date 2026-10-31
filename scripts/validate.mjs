@@ -438,6 +438,7 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
 assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1100\)/,
+  "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
 assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
