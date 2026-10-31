@@ -170,3 +170,36 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+
+## Product direction reset — offline-first library (2026-10-31)
+
+The user has reprioritized the product. This section supersedes earlier creator-economy rollout assumptions where they conflict.
+
+### Current product focus
+- Prioritize a complete, polished AI Library website and cross-platform app experience (desktop, Android, iOS/PWA).
+- Prioritize reliable offline use: app shell, local book downloads, offline reading after app restart, local reading progress/settings/favorites/bookmarks, storage visibility and safe recovery.
+- The repository already contains an offline foundation: IndexedDB stores in `src/platform/runtime.js`, `src/platform/library-store.js`, and `src/platform/download-manager.js`; an offline shelf in `index.html`; and a Service Worker app shell/network fallback in `sw.js`. Audit and strengthen these components rather than rebuilding them.
+- The current Service Worker cache version on main is `v57`. Review cache invalidation and app-shell assets carefully when making future changes.
+- The first implementation step is to hide the public “Создать книгу” navigation action. Keep `book-creator.html` and its local-first implementation in the repository for future use; do not delete drafts, exports, or editor code. This is a navigation change, not a claim that the creator route is removed or secured.
+- The project team will curate and add catalogue books, covers, descriptions and editorial content manually for now.
+
+### Deferred, not cancelled
+- Google OAuth and email OTP authentication.
+- Coins, bonuses, XP, ranks, achievements, public author progression and community economy.
+- User-facing self-service book creation/publication rollout.
+- Backend v2 expansion and custom-domain/email-provider decisions.
+- Preserve the design documents and open PRs as reference material. Do not merge or deploy them as part of the current offline-first milestone.
+
+### Working priorities
+1. Hide the creator CTA without disturbing catalogue, favorites or personal library navigation.
+2. Audit and test the existing offline download lifecycle, including interrupted downloads, failed validation, update rollback, missing local data and storage-pressure messaging.
+3. Verify that a downloaded book opens and remains readable after closing/reopening the installed app in airplane mode.
+4. Preserve the reader's touch/page-turn behavior, pinch font resizing, cross-chapter page numbering, and desktop/Android behavior.
+5. Improve installation guidance and platform-specific polish; evaluate native wrappers only after the PWA experience is reliable.
+6. Populate and quality-check the catalogue with editorially curated books.
+
+### Release discipline
+- Work on dedicated branches and draft PRs. Keep `main` and production unchanged until the user explicitly approves merge/deployment.
+- Do not claim physical-device validation unless it was actually performed.
+- Keep the economy/authentication/backend work documented and recoverable; do not spend implementation effort on it until the user reprioritizes it.
