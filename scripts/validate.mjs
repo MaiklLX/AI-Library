@@ -284,14 +284,15 @@ for (const volume of seriesManifest.volumes.filter(item => item.status === "publ
 assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly six volumes");
 assert.ok(seriesManifest.volumes.every(volume => typeof volume.bookId === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.bookId)), "Every series volume must define a valid bookId");
 assert.equal(new Set(seriesManifest.volumes.map(volume => volume.bookId)).size, 6, "Series book IDs must be unique");
-assert.equal(seriesManifest.volumes[0].bookId, seriesManifest.volumes[0].premiereBookId, "Volume one must preserve the existing premiere book ID");
+assert.equal(seriesManifest.volumes[0].premiereBookId, premiereSeriesBook.id, "Volume one must preserve the separate prerelease teaser ID");
+assert.notEqual(seriesManifest.volumes[0].bookId, seriesManifest.volumes[0].premiereBookId, "Volume one reader ID must be separate from the prerelease teaser ID");
 assert.match(html, /target\.status === [\x27"]prerelease[\x27"]/, "Direct reader links must not bypass prerelease access");
 assert.match(html, /await loadDownloadedBooks\(\)[\s\S]*?new URLSearchParams\(window\.location\.search\)/, "Direct reader links must resolve after published and offline books load");
 assert.match(seriesPage, /progress\[\x27published-\x27\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must use the actual published book ID");
 assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must deep-link to the reader");
 assert.match(html, /new URLSearchParams\(window\.location\.search\)\.get\(\x27book\x27\)/, "Reader must support direct book links from the series page");
 assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
-assert.equal(seriesManifest.volumes[0].status, "prerelease", "The first volume must remain in prerelease");
+assert.equal(seriesManifest.volumes[0].status, "planned", "Volume one must be scheduled for automatic reader release");
 assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
 assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
 assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
@@ -424,7 +425,7 @@ const openReadingSpace = html.match(/function openReadingSpace\(\)\s*\{([\s\S]*?
 assert.ok(openReadingSpace, "Could not isolate the reader-opening transition");
 assert.match(openReadingSpace[1], /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "Opening the reader must release the direct-launch mask");
-assert.match(html, /if \(!target \|\| target\.status === 'prerelease'\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
+assert.match(html, /if \(!target \|\| isBookReleaseLocked\(target\)\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "Unavailable or prerelease direct links must release the launch mask");
 assert.match(html, /if \(opened\) \{[\s\S]*?\} else \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "A failed direct book open must release the launch mask");
@@ -473,3 +474,56 @@ assert.match(html, /aiLibraryPaperEdgeLight/,
   "The turning paper must have a moving light-catching edge");
 assert.ok(html.includes("rotateY(-68deg)") && html.includes("rotateY(-132deg)"),
   "The forward page curl must use staged depth and bend-like motion");
+
+
+
+const expectedReleaseSchedule = [
+  "2026-11-02T18:00:00+03:00",
+  "2026-11-09T18:00:00+03:00",
+  "2026-11-16T18:00:00+03:00",
+  "2026-11-23T18:00:00+03:00",
+  "2026-11-30T18:00:00+03:00",
+  "2026-12-07T18:00:00+03:00"
+];
+assert.deepEqual(seriesManifest.volumes.map(volume => volume.releaseAt), expectedReleaseSchedule, "All six volume release timestamps must remain on the approved weekly 18:00 Moscow schedule");
+const scheduledVolumeOne = seriesManifest.volumes.find(volume => Number(volume.number) === 1);
+const scheduledCatalogEntryOne = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah-tom-01");
+assert.ok(scheduledCatalogEntryOne, "Volume I must be pre-registered in the reader catalog");
+assert.equal(scheduledCatalogEntryOne.status, "scheduled", "Volume I catalog entry must be scheduled");
+assert.equal(scheduledCatalogEntryOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I catalog and series release timestamps must match");
+assert.equal(scheduledCatalogEntryOne.chapterCount, 16, "Volume I must expose all 16 chapters");
+const scheduledBookOne = JSON.parse(readFileSync(resolve(root, scheduledCatalogEntryOne.path), "utf8"));
+assert.equal(scheduledBookOne.status, "scheduled", "Volume I book JSON must be scheduled");
+assert.equal(scheduledBookOne.chapters.length, 16, "Volume I JSON must contain all 16 chapters");
+assert.equal(scheduledBookOne.seriesId, seriesManifest.id, "Volume I series ID is incorrect");
+assert.equal(scheduledBookOne.seriesVolume, 1, "Volume I series number is incorrect");
+assert.equal(scheduledBookOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I JSON release timestamp must match series");
+const scheduledVolumeTwo = seriesManifest.volumes.find(volume => Number(volume.number) === 2);
+const scheduledCatalogEntryTwo = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah-tom-02");
+assert.ok(scheduledCatalogEntryTwo, "Volume II must be pre-registered in the reader catalog");
+assert.equal(scheduledCatalogEntryTwo.status, "scheduled", "Volume II catalog entry must be scheduled");
+assert.equal(scheduledCatalogEntryTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II catalog and series release timestamps must match");
+assert.equal(scheduledCatalogEntryTwo.chapterCount, 18, "Volume II must expose all 18 chapters");
+const scheduledBookTwo = JSON.parse(readFileSync(resolve(root, scheduledCatalogEntryTwo.path), "utf8"));
+assert.equal(scheduledBookTwo.status, "scheduled", "Volume II book JSON must be scheduled");
+assert.equal(scheduledBookTwo.chapters.length, 18, "Volume II JSON must contain all 18 chapters");
+assert.equal(scheduledBookTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II JSON release timestamp must match series");
+assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
+assert.match(html, /Date\.now\(\) < releaseTime/, "Scheduled release guard must compare the current time to releaseAt");
+assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
+assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
+assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh when a release time passes");
+assert.match(seriesPage, /timer\.volume\.status==='planned'&&timeReached&&timer\.hasReaderEntry/, "Series cards must require the scheduled time and a ready full-text entry");
+assert.match(seriesPage, /entry\.releaseAt===volume\.releaseAt/, "Scheduled reader entry must match the series release timestamp");
+const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s\S]*?\n\}/);
+assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
+const releaseGuardFactory = new Function("Clock", releaseGuardMatch[0].replace(/\bDate\b/g, "Clock") + "; return isBookReleaseLocked;");
+for (const releaseAt of expectedReleaseSchedule) {
+  const beforeClock = { now: () => Date.parse(releaseAt) - 1000, parse: Date.parse };
+  const releaseClock = { now: () => Date.parse(releaseAt), parse: Date.parse };
+  const afterClock = { now: () => Date.parse(releaseAt) + 1000, parse: Date.parse };
+  assert.equal(releaseGuardFactory(beforeClock)({ status: "scheduled", releaseAt }), true, "Volume must remain locked one second before " + releaseAt);
+  assert.equal(releaseGuardFactory(releaseClock)({ status: "scheduled", releaseAt }), false, "Volume must unlock exactly at " + releaseAt);
+  assert.equal(releaseGuardFactory(afterClock)({ status: "scheduled", releaseAt }), false, "Volume must remain unlocked after " + releaseAt);
+}
+
