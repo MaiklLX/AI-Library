@@ -160,3 +160,36 @@ GitHub Actions run №396 на commit `1cce5bfd6070f278a3daf1062c9a97c47ab0d9c5`
 GitHub Actions run №402 (`41226810354`) на commit `fd7d570e8b8375dcd87c77fbd76a248716dc2188` завершился `success`; job `validate` и шаг `node scripts/validate.mjs` — success. Ссылка: https://github.com/MaiklLX/AI-Library/actions/runs/41226810354.
 
 Текущие SHA: `series.html` — `bb4ddb2e2e3e6e19211d1d993a830d580d0848fd`; `scripts/validate.mjs` — `34d9963194ef3eb39ca94f28b6e7147eaaa84bdf`. До записи этого дополнения ветка опережает `main` на 40 коммитов и не отстаёт.
+## 12. Метаданные серии в читалке и защита завершения томов (31.10.2026)
+
+Проверен путь метаданных от JSON книги до активной записи current в читалке. normalizePublishedBook() сохраняет исходные поля через ...book; загрузка метаданных каталога и последующая подстановка полного текста также сохраняют поля книги. Именно активная запись используется openBook() и обработчиком завершения последней главы.
+
+Чтобы завершение первого тома корректно распознавалось как часть шеститомника, в content/books/ty-v-moih-planah.json добавлены только два служебных поля:
+- seriesId: "ty-v-moih-planah";
+- seriesVolume: 1.
+
+Статус книги остался prerelease, массив глав остался пустым. Текст романа, доступ к премьере и публичный каталог не менялись.
+
+В scripts/validate.mjs добавлены проверки:
+- реальное выполнение изолированной функции нормализации на тестовой опубликованной книге;
+- сохранение seriesId и seriesVolume как для полного текста, так и для metadata-only записи;
+- передача метаданных каталога и загруженного JSON в активную запись читалки;
+- наличие правильных метаданных у текущего первого тома при сохранении prerelease;
+- обязательное наличие seriesId и номера тома у каждого тома серии после перевода его в published и добавления в каталог.
+
+GitHub Actions run №411: 41227223464, commit 1da9a0b95f9c7b77d06f46ee980c16d6e49a66e0, job validate и шаг Validate HTML scripts, manifest and local assets — success.
+Ссылка: https://github.com/MaiklLX/AI-Library/actions/runs/41227223464.
+
+Дополнительный run №407 (41227136864) на commit 0f80ed24c1b52c6ff89ba2695ca688c01f410b3b также завершился success; он проверял fixture-based нормализацию series metadata.
+
+Контрольные SHA перед записью этого дополнения:
+- scripts/validate.mjs: c81a911c1b0011c61076f64c442b1030449a1718;
+- content/books/ty-v-moih-planah.json: 634e3cac647c32650eccd57cbc0c6c1864d0aed6;
+- index.html: 7372d04db46c989a5dfb54e4acf33b11f47c8366;
+- series.html: bb4ddb2e2e3e6e19211d1d993a830d580d0848fd;
+- content/series/ty-v-moih-planah.json: b6899a74c5fc46963d10562a04fcfbf2316642f1;
+- sw.js: ec8399235feb5e0effbb53d73fa011f462bfb968.
+
+Рабочая ветка перед записью этого дополнения: 45 коммитов впереди main, 0 позади. PR #49 остаётся открытым draft, не объединён. main и Pages deployment не затронуты.
+
+Важное ограничение: для томов II–VI соответствующие JSON-файлы должны получить собственные seriesId и seriesVolume до публикации. Теперь валидатор не позволит пометить такой том как published без этих полей. Ручное тестирование мобильной/десктопной читалки всё ещё не выполнено.
