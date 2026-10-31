@@ -49,7 +49,7 @@ assert.equal(original.writes, 2);
 
 const restart = createHarness({}, original.stored);
 const restored = await restart.api.restore();
-assert.deepEqual(restored.restored.sort(), ["favorites", "personalBooks", "progress", "readerSettings"]);
+assert.deepEqual(Array.from(restored.restored).sort(), ["favorites", "personalBooks", "progress", "readerSettings"]);
 assert.deepEqual(JSON.parse(restart.legacy.get("ai-library-personal-books")), [{ id: "draft-1", title: "Моя книга", chapters: ["Текст"] }]);
 assert.deepEqual(JSON.parse(restart.legacy.get("ai-library-favs")), ["book-b", "book-c"]);
 assert.deepEqual(JSON.parse(restart.legacy.get("ai-library-progress")), { "book-b": { part: 2, page: 8 } });
@@ -82,4 +82,19 @@ const safe = await corrupt.api.restore();
 assert.deepEqual(safe.restored, []);
 assert.equal(safe.skipped.length, 4);
 assert.equal(corrupt.legacy.size, 0);
+
+// First-ever migration must normalize valid JSON with the wrong data shape as well.
+const firstBootCorrupt = createHarness({
+  "ai-library-personal-books": JSON.stringify({ wrong: "shape" }),
+  "ai-library-favs": JSON.stringify("not-an-array"),
+  "ai-library-progress": JSON.stringify([]),
+  "ai-library-reader-settings": JSON.stringify(null)
+});
+await firstBootCorrupt.api.migrate();
+assert.deepEqual(firstBootCorrupt.stored.personalBooks, []);
+assert.deepEqual(firstBootCorrupt.stored.favorites, []);
+assert.deepEqual(firstBootCorrupt.stored.progress, {});
+assert.deepEqual(firstBootCorrupt.stored.readerSettings, { fontSize: 17, lineSpacing: "1.7", theme: "sepia" });
+const firstBootRepair = await firstBootCorrupt.api.restore();
+assert.equal(firstBootRepair.restored.length, 4);
 console.log("Personal-state tests passed: migration, sync, restart recovery, malformed data, newer local state and corrupted snapshots.");
