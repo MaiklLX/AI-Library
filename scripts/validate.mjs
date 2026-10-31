@@ -240,7 +240,7 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v61['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v62['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
