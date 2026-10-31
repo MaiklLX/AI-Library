@@ -4235,7 +4235,7 @@ function animateBookPageTurn(direction,afterTurn){
       }
       sheet.classList.add(direction>0?'flip-forward':'flip-back');
       // Fallback for browsers that occasionally omit animationend in background tabs.
-      window.setTimeout(finishTurn,1100);
+      window.setTimeout(finishTurn,1250);
       return;
     }
   }
