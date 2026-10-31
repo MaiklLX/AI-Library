@@ -3,7 +3,7 @@
 Ветка-кандидат: `editorial/volume-02-web-release-candidate`  
 Production `main` и GitHub Pages не изменялись.
 
-Текущий HEAD ветки-кандидата после обновления чек-листа: `9e768823a4f3657377f2b0ec08f4993df71adb7a`.
+Текущий HEAD ветки-кандидата после исправления теста часов: `1e974e11d739d740818ded2abefba8bde57a7d69`.
 
 ## Расписание
 
