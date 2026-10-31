@@ -470,3 +470,15 @@ assert.match(seriesPage, /Number\(entry\.chapterCount\)>0/, "Series cards must n
 assert.match(seriesPage, /entry\.status==='scheduled'&&entry\.releaseAt===volume\.releaseAt/, "Scheduled reader entry must match the series release timestamp");
 assert.match(seriesPage, /Том вышел — чтение открыто\./, "Series countdown must announce automatic reader availability");
 assert.doesNotMatch(seriesPage, /Доступ откроется после отдельной публикации/, "Series countdown must not require a separate manual publication after the timer");
+
+const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s\S]*?\n\}/);
+assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
+const releaseGuardFactory = new Function("Clock", releaseGuardMatch[0] + "; return isBookReleaseLocked;");
+for (const releaseAt of expectedReleaseSchedule) {
+  const beforeClock = { now: () => Date.parse(releaseAt) - 1000, parse: Date.parse };
+  const releaseClock = { now: () => Date.parse(releaseAt), parse: Date.parse };
+  const afterClock = { now: () => Date.parse(releaseAt) + 1000, parse: Date.parse };
+  assert.equal(releaseGuardFactory(beforeClock)({ status: "scheduled", releaseAt }), true, `Volume scheduled for ${releaseAt} must remain locked one second before release`);
+  assert.equal(releaseGuardFactory(releaseClock)({ status: "scheduled", releaseAt }), false, `Volume scheduled for ${releaseAt} must unlock exactly at release time`);
+  assert.equal(releaseGuardFactory(afterClock)({ status: "scheduled", releaseAt }), false, `Volume scheduled for ${releaseAt} must remain unlocked after release`);
+}
