@@ -38,9 +38,9 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
-assert.match(html, /readerArea\\.style\\.touchAction = ['"]pan-y['"]/, "Reader must reserve pinch gestures for its own font scaling");
-assert.match(html, /readerUsesTouchPinch[\\s\\S]*?addEventListener\\('touchstart'/, "Touch devices must support native touch-event pinch scaling");
-assert.match(html, /addEventListener\\('touchmove',[\\s\\S]*?e\\.preventDefault\\(\\)/, "Reader pinch must prevent Safari from taking over the gesture");
+assert.match(html, /readerArea\.style\.touchAction = ['"]pan-y['"]/, "Reader must reserve pinch gestures for its own font scaling");
+assert.match(html, /readerUsesTouchPinch[\s\S]*?addEventListener\('touchstart'/, "Touch devices must support native touch-event pinch scaling");
+assert.match(html, /addEventListener\('touchmove',[\s\S]*?e\.preventDefault\(\)/, "Reader pinch must prevent Safari from taking over the gesture");
 assert.match(html, /<script src=["']\.\/src\/platform\/runtime\.js["']><\/script>/, "Cross-platform runtime must load before the main application");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/runtime\.js['"]/, "Platform runtime must be included in the offline app shell");
 assert.match(platformRuntime, /const DB_NAME = ['"]ai-library-platform['"]/, "Platform storage database is missing");
