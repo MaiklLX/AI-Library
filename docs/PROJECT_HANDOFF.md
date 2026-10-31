@@ -188,5 +188,5 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - A repeat download of an already purchased EPUB is free and creates no second debit or credit.
 - Show price and split before confirmation; settle reader debit, author credit, platform commission and entitlement atomically on the server with idempotency protection.
 - Coins are internal platform currency; no cash withdrawal or real-money payout is promised.
-- Final EPUB price/pricing controls, refund policy, and settlement timing remain undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
+- Approved EPUB price tiers: **3, 5, or 10 coins**, selected by the author; arbitrary custom prices are not part of the initial model. Whether to offer a free EPUB option, plus refund policy and settlement timing, remains undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
 - No code or live wallet behavior has been implemented. Real purchases wait for Worker source/schema discovery and server-side transactional ledger support.
