@@ -100,7 +100,7 @@
       "status": "scheduled",
       "releaseAt": "2026-11-09T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-02-cover.svg",
-      "revision": "1.0"
+      "revision": "web-candidate-1"
     }
   ]
 }
