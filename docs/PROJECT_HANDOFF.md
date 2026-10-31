@@ -281,3 +281,12 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Keep the market specification as future-phase design only. Do not expose purchase, payout or dispute functionality in the first release.
 - This is a product sequencing decision only. No application/backend code or live financial behavior has been implemented by this checkpoint.
 - PR #43 remains a documentation-only proposal and must remain open/unmerged until separately approved.
+
+## Follow-up audit — creator flow and test deployment (2026-10-31)
+
+- Re-inspected `book-creator.html` on `main` (blob SHA `475ec15b536ba44ca866df40ecb422de8b3cf9ae`). The current creator is a local-first tool: drafts/books are stored in browser `localStorage`, can be edited, previewed, imported/exported, and prepared as a catalogue package. The “Подготовить для каталога” action explicitly creates a package; it does not publish a book to the shared library.
+- Existing personal books do not sync between devices. Preserve this current local draft workflow while designing authenticated publication as a separate, explicit next capability.
+- The accessible GitHub repositories for the connected account were inspected; no `ai-library-generator` Worker source repository was found. The public app repository still contains no Worker source, Wrangler configuration or D1 schema. **Do not implement server-authoritative coins, XP rewards, user accounts or publication endpoints until the actual Worker project/schema is located and audited.**
+- PR #43 remains open and unmerged. Its latest documentation commit is `861349b8190e3b671801dc079ec027fa914840ec`; the PR validation workflow completed successfully for this head.
+- Deployment workflow inspection confirms GitHub Pages deploys only on pushes to `main`; pull requests run validation but do not receive a Pages preview URL. Do not use the production Pages site as a test deployment. A separate preview host/workflow must be designed without overwriting production.
+- Next exact action: locate the Cloudflare Worker project (including any separate GitHub account/repository or Cloudflare source export), then inspect its routes, D1 schema, authentication and scheduled jobs. In parallel, plan a safe PR preview route. No application code or live Worker behavior was changed in this checkpoint.
