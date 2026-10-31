@@ -52,6 +52,19 @@ header{border-bottom:1px solid #ffffff18;background:#101010e8}.nav{min-height:68
   #printBook .print-body{font-size:12pt;line-height:1.65;white-space:pre-wrap;text-align:justify}
 }
 .editor-meta .cover-choice{display:flex;align-items:center;gap:8px;grid-column:1/-1}.editor-meta select{background:#111;border:1px solid #403a30;border-radius:8px;padding:10px;color:var(--text)}.editor-publish{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.editor-save-state{font-size:12px;color:var(--muted);min-height:18px}.editor-save-state.saved{color:#7fca9b}.book-preview[hidden]{display:none}.book-preview{display:grid;grid-template-columns:minmax(110px,170px) 1fr;gap:14px;padding:14px;margin:12px 0;border:1px solid #ffffff20;border-radius:12px;background:#111}.book-cover{position:relative;aspect-ratio:2/3;border-radius:7px;padding:12px 9px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;box-shadow:0 12px 28px #0008;color:#fff;overflow:hidden}.book-cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px}.book-cover .cover-kicker,.book-cover strong,.book-cover small{position:relative;z-index:1}.book-cover .cover-kicker{font-size:9px;letter-spacing:.2em}.book-cover strong{font-family:Georgia,serif;font-size:clamp(16px,3vw,25px);line-height:1.1;overflow-wrap:anywhere}.book-cover small{font-size:11px}.cover-midnight{background:radial-gradient(circle at 50% 35%,#4a526b,#111827 70%)}.cover-forest{background:radial-gradient(circle at 50% 30%,#587c66,#142b25 72%)}.cover-rose{background:radial-gradient(circle at 50% 30%,#b87e86,#492b39 75%)}.cover-ivory{background:linear-gradient(145deg,#f2e7ce,#bca77e);color:#302719}.book-preview ol{padding-left:20px;color:var(--muted);font-size:12px;max-height:180px;overflow:auto}.book-preview .preview-desc{font-size:13px;color:var(--muted);line-height:1.5}.editor-extra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 12px}.editor-extra textarea{width:100%;min-height:68px;background:#111;border:1px solid #403a30;border-radius:9px;padding:9px;color:var(--text)}.editor-extra .full{grid-column:1/-1}.cover-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px;border:1px dashed #78603a;border-radius:9px}.cover-upload input{max-width:100%}.preview-reader{grid-column:1/-1;border-top:1px solid #ffffff18;padding-top:12px;color:#e9e1d3}.preview-reader h4{font:500 20px Georgia,serif;margin:0 0 8px}.preview-reader p{white-space:pre-wrap;line-height:1.7;font:15px/1.7 Georgia,serif;margin:0;max-height:220px;overflow:auto}@media(max-width:560px){.editor-extra{grid-template-columns:1fr}.editor-extra .full{grid-column:auto}}@media(max-width:560px){.book-preview{grid-template-columns:95px 1fr;gap:10px;padding:9px}.book-cover{padding:8px 6px}.book-cover strong{font-size:15px}}</style>
+
+<script id="ai-library-scroll-policy-v1">
+/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', event => {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (event.persisted || navigation?.type === 'reload') {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
+  });
+})();
+</script>
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="./index.html"><span class="logo">✦</span><span>AI LIBRARY<small>АВТОРСКАЯ МАСТЕРСКАЯ</small></span></a><a class="btn" href="./index.html">← В библиотеку</a></div></header>
