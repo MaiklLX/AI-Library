@@ -2953,6 +2953,25 @@ body.reader-open #pageTurnSheet.flip-back {
 #books .series-collection-card .book-back-actions .read{display:flex;align-items:center;justify-content:center;text-decoration:none}
 @media(max-width:680px){#books .series-collection-card .cover-progress{left:7px;bottom:7px;min-height:26px;padding:4px 7px;font-size:9px}}
 </style>
+
+<style id="premium-home-navigation-v1">
+/* Premium editorial navigation: warm metallic edge, dark glass and restrained light. */
+header{background:linear-gradient(180deg,rgba(16,16,16,.96),rgba(16,16,16,.88));border-bottom:1px solid rgba(217,182,109,.16);box-shadow:0 10px 32px rgba(0,0,0,.2)}
+header nav .site-nav-actions{width:min(100%,620px);grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+header nav .site-nav-actions .nav-action{position:relative;isolation:isolate;overflow:hidden;min-height:46px;padding:0 15px;border:1px solid rgba(217,182,109,.28);border-radius:13px;background:linear-gradient(145deg,rgba(44,39,30,.92),rgba(25,24,21,.96));color:#d8d0bf;box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 5px 16px rgba(0,0,0,.18);font-weight:650;letter-spacing:.015em;transition:transform .24s ease,border-color .24s ease,color .24s ease,background .24s ease,box-shadow .24s ease}
+header nav .site-nav-actions .nav-action::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;background:linear-gradient(112deg,transparent 12%,rgba(234,208,154,.13) 48%,transparent 78%);transform:translateX(-110%);transition:transform .65s ease,opacity .25s ease}
+header nav .site-nav-actions .nav-action svg{color:#c6a96c;transition:color .24s ease,transform .24s ease}
+header nav .site-nav-actions .nav-action:hover{transform:translateY(-2px);border-color:rgba(234,208,154,.72);color:#f4e5bd;background:linear-gradient(145deg,rgba(64,52,33,.96),rgba(29,27,22,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 24px rgba(0,0,0,.28),0 0 22px rgba(217,182,109,.09)}
+header nav .site-nav-actions .nav-action:hover::before{opacity:1;transform:translateX(110%)}
+header nav .site-nav-actions .nav-action:hover svg{color:#f0d99b;transform:translateY(-1px)}
+header nav .site-nav-actions .nav-action.active{border-color:#b18c4b;background:linear-gradient(135deg,rgba(87,67,35,.98),rgba(43,35,24,.98) 58%,rgba(31,29,24,.98));color:#f4dfae;box-shadow:inset 0 1px 0 rgba(255,239,196,.15),0 5px 18px rgba(0,0,0,.22),0 0 0 1px rgba(217,182,109,.08)}
+header nav .site-nav-actions .nav-action.active svg{color:#f0d99b}
+header nav .site-nav-actions .nav-action.active::after{content:"";position:absolute;left:19%;right:19%;bottom:0;height:1px;background:linear-gradient(90deg,transparent,#ead09a,transparent);opacity:.8}
+header nav .site-nav-actions .nav-action:focus-visible{outline:2px solid #ead09a;outline-offset:3px;box-shadow:0 0 0 5px rgba(217,182,109,.13)}
+@media(max-width:680px){header nav .site-nav-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}header nav .site-nav-actions .nav-action{min-height:53px;padding:5px 3px;border-radius:11px;font-size:clamp(9px,2.7vw,11px)}}
+@media(max-width:380px){header nav .site-nav-actions{gap:4px}header nav .site-nav-actions .nav-action{font-size:9px}}
+@media(prefers-reduced-motion:reduce){header nav .site-nav-actions .nav-action,header nav .site-nav-actions .nav-action::before,header nav .site-nav-actions .nav-action svg{transition:none}header nav .site-nav-actions .nav-action:hover{transform:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
