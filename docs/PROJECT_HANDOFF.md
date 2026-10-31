@@ -249,3 +249,11 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Responsive layout includes a stacked mobile composition. Service Worker app-shell cache advanced to v63.
 - Automated validator checks detail markup, route restoration and read/download actions. CI run 41213857724 passed static validation, Service Worker fallback tests, personal-state migration tests and offline download integrity tests.
 - This is automated source validation only; no physical-device, mobile browser or airplane-mode UI test has been performed.
+
+### Book detail visual refinement checkpoint (2026-10-31)
+- Refined the book detail presentation into a more editorial layout: framed book-cover treatment, clearer title/author hierarchy, genre marker, readable description panel, compact metadata chips, and a more legible progress block.
+- Desktop layout uses a balanced cover/content composition; mobile layout stacks the cover and information panel with full-width actions.
+- Added hover/focus-friendly transitions and respects `prefers-reduced-motion`.
+- Extended static validation to guard the responsive detail layout and reduced-motion rule.
+- Latest CI run 41214206161 passed all checks, including static validation, Service Worker fallbacks, personal-state migration and offline download integrity.
+- Real-device visual and touch testing remains outstanding; branch remains draft and undeployed.
