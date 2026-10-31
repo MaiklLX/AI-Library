@@ -75,7 +75,7 @@ const mismatch = makeHarness({
     "./content/books/winter-city.json": { body: validBook }
   }
 });
-await assert.rejects(() => mismatch.api.download("winter-city"), /редакция загруженного текста не совпадает/);
+await assert.rejects(() => mismatch.api.download("winter-city"), /редакция загруженного текста не совпадает/i);
 assert.deepEqual(mismatch.records.get(oldRecord.id), oldRecord);
 
 // Update checks inspect catalog metadata only; they must not fetch the full text.
