@@ -28,6 +28,13 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 .state-pill{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#d8c69f;border:1px solid rgba(215,185,123,.28);border-radius:99px;padding:5px 8px;white-space:nowrap}
 .volume h3{font:500 clamp(22px,2vw,27px)/1.1 Georgia,serif;margin:0 0 11px;min-height:2.2em}
 .volume p{color:#c1bbb1;font-size:13px;line-height:1.62;margin:0 0 17px}
+.annotation-wrap{position:relative;margin:0 0 17px}
+.annotation-wrap p{margin:0}
+.annotation-wrap.is-locked p{filter:blur(5px);opacity:.62;user-select:none;transition:filter .7s ease,opacity .7s ease}
+.annotation-wrap.is-locked:after{content:"АННОТАЦИЯ ОТКРОЕТСЯ ЗА 48 ЧАСОВ ДО ВЫПУСКА";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px;border:1px solid rgba(215,185,123,.16);border-radius:8px;background:linear-gradient(110deg,#17171dd9,#17171d9c);color:#d8c69f;font-size:9px;line-height:1.5;letter-spacing:.12em;text-align:center;text-shadow:0 2px 8px #000;pointer-events:none}
+.annotation-wrap.is-revealed p{filter:none;opacity:1}
+@media(prefers-reduced-motion:reduce){.annotation-wrap p{transition:none}}
+
 .range{font-size:10px;letter-spacing:.13em;color:#928b80}
 .countdown{margin:18px 0 15px;padding:13px 12px 11px;border:1px solid rgba(215,185,123,.17);border-radius:10px;background:linear-gradient(120deg,#d8b9780b,#fff0)}
 .countdown-label{display:flex;justify-content:space-between;gap:8px;color:#b7a782;font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
@@ -98,7 +105,9 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const num=document.createElement('span');num.className='num';num.textContent='ТОМ '+String(volume.number).padStart(2,'0');
   const pill=document.createElement('span');pill.className='state-pill';pill.textContent=statusLabels[volume.status]||'Статус уточняется';topline.append(num,pill);
   const title=document.createElement('h3');title.textContent=volume.title;
+  const annotation=document.createElement('div');annotation.className='annotation-wrap';
   const desc=document.createElement('p');desc.textContent=volume.description||('Главы '+volume.chapters.from+'–'+volume.chapters.to+'.');
+  annotation.appendChild(desc);
   const range=document.createElement('div');range.className='range';range.textContent='ГЛАВЫ '+volume.chapters.from+'—'+volume.chapters.to;
   const countdown=document.createElement('div');countdown.className='countdown';
   const cLabel=document.createElement('div');cLabel.className='countdown-label';
@@ -124,12 +133,20 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   row.append(state,action);
   const note=document.createElement('div');note.className='volume-note';note.textContent='Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';body.appendChild(progressLabel);}
-  body.append(topline,title,desc,range,countdown,row,note);card.append(coverWrap,body);list.appendChild(card);
-  if(release&&!Number.isNaN(release.getTime()))timers.push({release,unitNodes,units,ended});
+  body.append(topline,title,annotation,range,countdown,row,note);card.append(coverWrap,body);list.appendChild(card);
+  const isFirstVolume=Number(volume.number)===1;
+  const annotationTimer={release,annotation,isFirstVolume,isPublished:volume.status==='published'};
+  if(!isFirstVolume&&volume.status!=='published')annotation.classList.add('is-locked');
+  timers.push({release,unitNodes,units,ended,annotationTimer});
  });
  function tick(){
   const now=Date.now();
   timers.forEach(timer=>{
+   const gate=timer.annotationTimer;
+   const reveal=gate.isFirstVolume||gate.isPublished||(gate.release&&!Number.isNaN(gate.release.getTime())&&gate.release.getTime()-now<=48*60*60*1000);
+   if(reveal){gate.annotation.classList.remove('is-locked');gate.annotation.classList.add('is-revealed');}
+   else{gate.annotation.classList.add('is-locked');gate.annotation.classList.remove('is-revealed');}
+   if(!timer.release||Number.isNaN(timer.release.getTime()))return;
    let remaining=timer.release.getTime()-now;
    if(remaining<=0){timer.units.hidden=true;timer.ended.hidden=false;timer.ended.textContent='Плановая дата наступила. Доступ откроется после отдельной публикации тома.';return;}
    const days=Math.floor(remaining/86400000);remaining%=86400000;
