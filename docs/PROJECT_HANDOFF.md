@@ -256,3 +256,17 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and unmerged.
 - Next: define evidence retention/access controls, abuse handling, exceptional cases and legal review; audit the deployed Cloudflare Worker and D1 schema before live financial implementation.
 
+
+
+## Evidence privacy, retention and anti-abuse decision checkpoint (2026-10-31)
+
+- Product owner approved dispute evidence limits: **90 days after case closure** for attachments; **5 MB maximum per file**; **3 files maximum per case**; evidence-access audit logs retained **6 months**.
+- Active appeals, legal holds, statutory duties or documented legal requirements pause deletion only for relevant evidence. Financial/accounting records and the minimum case decision/audit trail follow separate applicable legal retention requirements; the 90-day attachment rule must not delete required financial records.
+- Evidence belongs in private object storage, not D1. D1 holds compact references and metadata (case/file ID, object key, checksum, detected MIME type, size, timestamps and case link). Prefer checksums and narrow log excerpts over retaining a full EPUB.
+- Accept relevant screenshots (JPEG/PNG/WebP), PDFs, EPUB integrity metadata/checksums, delivery/purchase/entitlement logs, book metadata and author responses. Validate actual MIME/content signatures; reject HTML, SVG, executables, archives and unsupported formats. Quarantine and scan attachments before staff preview; no public evidence URLs.
+- Enforce case- and role-scoped access; authors receive only what is necessary to respond. Encrypt in transit/at rest, use short-lived signed URLs (proposed 5-minute default), and audit every view/download/export/permission change/deletion.
+- Anti-abuse signals include duplicate cases/evidence, unusual claim frequency and suspicious account/device/payment patterns. Signals trigger rate limits or human review, not automatic fraud findings, complaint rejection, author debt or unrelated earnings holds. Preserve notice, response, reasoned decision and appeal rights.
+- These are approved product policy targets, not implemented code. Legal review and selection/testing of object storage, malware scanning and access controls remain prerequisites.
+- Documentation-only checkpoint: no Worker, D1 schema, object storage, wallet, dispute UI, purchase/refund behavior or user data changed.
+- PR #43 remains open and unmerged; branch: product/creator-progression-economy. Do not merge without the product owner's separate approval.
+- Next: complete legal/privacy review of retention and evidence handling; then continue backend source discovery and architecture planning before any live financial or dispute implementation.
