@@ -337,3 +337,25 @@ Do not implement frontend registration against a speculative endpoint.
 - Evidence retention, access, deletion and any legal hold must be auditable. Mandatory consumer, privacy and accounting obligations override internal retention targets.
 
 These controls are product policy, not implemented storage or dispute functionality. Select and verify the actual object-storage service, malware-scanning path, access policy and legal retention schedule during backend discovery before launch.
+
+
+## Release sequencing decision — internal market deferred (2026-10-31)
+
+The product owner approved a staged rollout. Designing the future internal EPUB market and its dispute/refund safeguards does **not** mean launching those features in the first public release.
+
+### Initial release priorities
+1. Launch the community foundation: coins, XP, achievements and progression, with server-authoritative rewards and clear separation between spendable coins and non-spendable XP.
+2. Make user-authored book creation a core, usable flow: private drafts, editing, preview, export and explicit publication workflow, while preserving guest reading and existing reader behavior.
+3. Grow the reader/author community and validate real usage before introducing paid transactions.
+
+### Deferred market phase
+- Paid EPUB offers and purchases using coins.
+- Author revenue share and settlement.
+- Refunds, purchase disputes, appeals and author-debt recovery.
+- Evidence storage/retention, anti-abuse controls and the moderator/admin console.
+
+The market specifications may be prepared and reviewed in advance so that the architecture is coherent, but these features must remain **out of the initial release** and must not be exposed as active purchase, payout or dispute functionality. Revisit launch readiness only after the product has a meaningful audience and observed usage justifies the added operational and legal complexity.
+
+Coins in the initial community release are an internal product currency for explicitly approved community/creator actions; do not imply cash value, cash-out, or that paid EPUB trading is already available. Preserve architectural separation so a later market can be added without rewriting the initial coin/XP foundation.
+
+This is a product rollout decision, not an implementation claim. No frontend, Worker, D1 schema, wallet, purchase, refund or moderation code was changed by recording it.
