@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v58';
+const CACHE_NAME = CACHE_PREFIX + 'v59';
 const APP_SHELL = ['./', './index.html', './series.html', './premiere.html', './book-creator.html', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js', './src/platform/download-manager.js'];
 
 self.addEventListener('install', event => {
@@ -54,7 +54,8 @@ self.addEventListener('fetch', event => {
 
   // Published catalog and book files use network-first so new commits appear promptly.
   if (url.pathname.endsWith('/content/catalog.json') ||
-      url.pathname.includes('/content/books/')) {
+      url.pathname.includes('/content/books/') ||
+      url.pathname.includes('/content/series/')) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       try {
