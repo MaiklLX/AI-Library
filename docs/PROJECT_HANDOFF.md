@@ -222,3 +222,13 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Added the test script to `.github/workflows/validate.yml` after the static project validator.
 - GitHub Actions run `41197940751` passed for commit `7577bfe0aa29bc43430a4452cc662dc0935706e8`; both static validation and all four Service Worker scenarios passed.
 - These are automated logic tests, not real-device/PWA offline verification.
+
+
+### IndexedDB personal-state recovery checkpoint (2026-10-31)
+- Added `restore()` to `src/platform/personal-state-migration.js`: after the versioned migration check it reads the durable IndexedDB snapshot and restores only missing or malformed localStorage categories (personal books, favorites, progress, reader settings).
+- Valid localStorage values are always preserved; the restore path does not clear or remove keys. Each snapshot category is shape-checked before it is written.
+- Startup still renders immediately from synchronous local data, then performs recovery and refreshes personal-book UI only when records were restored.
+- Expanded `scripts/test-personal-state-migration.mjs` to cover cleared-storage restart recovery, preservation of valid newer local values, repair of malformed individual keys, and rejection of a corrupted snapshot.
+- Service Worker app-shell cache bumped to v61 for the updated recovery module.
+- This restores data in the same browser profile/origin when IndexedDB is available. It is not cross-device synchronization and cannot recover data if both localStorage and IndexedDB have been cleared/evicted.
+- Automated CI result pending. No physical-device/offline test has been performed.
