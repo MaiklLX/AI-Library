@@ -11,17 +11,18 @@ const legacy = new Map([
 ]);
 const localStorage = {
   getItem(key) { return legacy.has(key) ? legacy.get(key) : null; },
+  setItem(key, value) { legacy.set(String(key), String(value)); },
   removeItem() { throw new Error("Migration must not remove legacy keys"); },
-  setItem() { throw new Error("Migration must not rewrite legacy keys"); },
   clear() { throw new Error("Migration must not clear legacy data"); }
 };
 let stored = null;
+let writes = 0;
 const store = {
   async getPersonalState() { return stored; },
-  async setPersonalState(snapshot) { stored = { ...snapshot }; return stored; }
+  async setPersonalState(snapshot) { stored = { ...snapshot }; writes += 1; return stored; }
 };
 const window = { AILibraryStore: store };
-vm.runInNewContext(source, { window, localStorage, console, Date, Object, Array, JSON });
+vm.runInNewContext(source, { window, localStorage, console, Date, Object, Array, JSON, Set });
 
 const first = await window.AILibraryPersonalStateMigration.migrate();
 assert.equal(first.migrated, true);
@@ -32,10 +33,19 @@ assert.equal(stored.personalBooks[0].title, "Моя книга");
 assert.deepEqual(JSON.parse(JSON.stringify(stored.progress)), { "book-a": { part: 1, page: 4 } });
 assert.deepEqual(JSON.parse(JSON.stringify(stored.readerSettings)), { fontSize: 19, lineSpacing: "1.8" });
 
+localStorage.setItem("ai-library-favs", JSON.stringify(["book-b", "book-c"]));
+localStorage.setItem("ai-library-progress", JSON.stringify({ "book-b": { part: 2, page: 8 } }));
+localStorage.setItem("unrelated-key", "leave-me-alone");
+const flushed = await window.AILibraryPersonalStateMigration.flush();
+assert.equal(flushed.synced, true);
+assert.deepEqual(JSON.parse(JSON.stringify(stored.favorites)), ["book-b", "book-c"]);
+assert.deepEqual(JSON.parse(JSON.stringify(stored.progress)), { "book-b": { part: 2, page: 8 } });
+assert.equal(legacy.get("unrelated-key"), "leave-me-alone");
+assert.equal(legacy.size, 5, "Original and unrelated localStorage keys must remain untouched");
+
 const second = await window.AILibraryPersonalStateMigration.migrate();
 assert.equal(second.migrated, false);
 assert.equal(second.alreadyMigrated, true);
-assert.equal(stored.personalBooks.length, 1);
-assert.equal(legacy.size, 4, "Original localStorage keys must remain untouched");
+assert.equal(writes, 2, "Only initial migration and one batched durable snapshot should be written");
 
-console.log("Personal-state migration tests passed: copy, idempotence, and legacy-data preservation.");
+console.log("Personal-state tests passed: migration, write-through sync, idempotence and legacy-data preservation.");
