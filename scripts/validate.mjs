@@ -414,3 +414,28 @@ const continueReadingSource = html.match(/function updateContinueReadingButton\(
 assert.ok(continueReadingSource, "Could not isolate continue-reading action");
 assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\)\)/, "Continue-reading must ignore progress records for unavailable books");
 assert.match(continueReadingSource[1], /btn\.onclick = \(\) => openBookById\(book\.id\)/, "Continue-reading must use the guarded book-opening workflow");
+
+
+// Scheduled series volumes unlock from their release timestamps; no manual status edit is required.
+const plannedVolumes = seriesManifest.volumes.filter(volume => volume.status === "planned");
+assert.ok(plannedVolumes.length > 0, "The series must include scheduled future volumes");
+for (const volume of plannedVolumes) {
+  assert.ok(typeof volume.releaseAt === "string" && Number.isFinite(Date.parse(volume.releaseAt)), `Planned volume ${volume.number} must have a valid releaseAt timestamp`);
+}
+const scheduledVolumeTwo = seriesManifest.volumes.find(volume => Number(volume.number) === 2);
+assert.equal(scheduledVolumeTwo.releaseAt, "2026-11-09T18:00:00+03:00", "Volume II release timestamp must remain the approved Moscow-time schedule");
+const scheduledCatalogEntry = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah-tom-02");
+assert.ok(scheduledCatalogEntry, "Scheduled volume II must be pre-registered in the reader catalog");
+assert.equal(scheduledCatalogEntry.status, "scheduled", "Volume II must remain time-gated before release");
+assert.equal(scheduledCatalogEntry.releaseAt, scheduledVolumeTwo.releaseAt, "Reader catalog and series card must share the same release timestamp");
+assert.equal(scheduledCatalogEntry.chapterCount, 18, "Scheduled volume II must expose the correct chapter count");
+assert.equal(scheduledCatalogEntry.metadataOnly, true, "Scheduled catalog entry must not embed chapter text");
+assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
+assert.match(html, /Date\.now\(\) < releaseTime/, "Scheduled release guard must compare the current time to releaseAt");
+assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
+assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
+assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh visibility when a release time passes");
+assert.match(html, /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/, "A locked direct reader link must return to the library instead of leaving a blank page");
+assert.match(seriesPage, /timer\.volume\.status==='planned'&&timeReached/, "Series cards must switch planned volumes to released state at the scheduled time");
+assert.match(seriesPage, /Том вышел — чтение открыто\./, "Series countdown must announce automatic reader availability");
+assert.doesNotMatch(seriesPage, /Доступ откроется после отдельной публикации/, "Series countdown must not require a separate manual publication after the timer");
