@@ -5,6 +5,8 @@ import assert from "node:assert/strict";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
+const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
+const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
@@ -239,6 +241,20 @@ assert.match(html, /Full book JSON is fetched only on explicit read\/download/, 
 assert.match(html, /async function openBookById\(id\)[\s\S]*?fetch\(book\.contentPath, \{ cache: 'no-cache' \}\)/, "Published book text must load on demand when opening a book");
 assert.match(html, /metadataOnly: true,[\s\S]*?chapters: \[\]/, "Catalog fallback must not retain full book text in local metadata cache");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Lazy book loading update must use the current cache version");
+
+
+assert.equal(seriesManifest.id, "ty-v-moih-planah", "Series manifest ID is incorrect");
+assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly six volumes");
+assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
+assert.equal(seriesManifest.volumes[0].status, "prerelease", "The first volume must remain in prerelease");
+assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
+assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
+assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
+assert.match(seriesPage, /content\/series\/ty-v-moih-planah\.json/, "Series page must load its manifest");
+assert.match(seriesPage, /premiere\.html\?book=/, "Prerelease volume must link to the existing premiere page");
+assert.match(html, /function showSeriesCompletion\(/, "Reader series completion panel is missing");
+assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["']/, "Reader must route series completion to the series page");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v58["']/, "Series presentation must use the refreshed app-shell cache");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
 
