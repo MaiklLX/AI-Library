@@ -350,9 +350,15 @@ assert.match(html, /function openBook\(id\) \{[\s\S]*?current = getAllBooks\(\)\
 assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["'][\s\S]*?showSeriesCompletion\(\)/, "Final-chapter completion must be gated by the active book's series metadata");
 
 
-const showPartSource = html.match(/function showPart\(\) \{([\s\S]*?)\n\}/);
-assert.ok(showPartSource, "Reader chapter renderer is missing");
-assert.match(showPartSource[1], /getElementById\(["']seriesCompletionPanel["']\)[\s\S]*?completionPanel\.hidden=true/, "Navigating to another chapter must hide the series completion panel");
-const nextChapterHandler = html.match(/document\.querySelector\(["']#nextChapter["']\)\.onclick=\(\)=>\{([\s\S]*?)\};document\.querySelector\(["']#closeModal["']\)/);
-assert.ok(nextChapterHandler, "Next-chapter handler is missing");
-assert.match(nextChapterHandler[1], /part<current\.chapters\.length-1[\s\S]*?part\+\+[\s\S]*?else if\(current\?\.seriesId===["']ty-v-moih-planah["']\)\{showSeriesCompletion\(\)\}/, "Series completion must appear only after the final chapter");
+const showPartStart = html.indexOf("function showPart() {");
+assert.ok(showPartStart >= 0, "Reader chapter renderer is missing");
+const showPartEnd = html.indexOf("\n}", showPartStart);
+assert.ok(showPartEnd > showPartStart, "Could not isolate reader chapter renderer");
+const showPartSource = html.slice(showPartStart, showPartEnd);
+assert.match(showPartSource, /getElementById\(["']seriesCompletionPanel["']\)[\s\S]*?completionPanel\.hidden=true/, "Navigating to another chapter must hide the series completion panel");
+const nextChapterStart = html.indexOf("document.querySelector(\"#nextChapter\").onclick=");
+assert.ok(nextChapterStart >= 0, "Next-chapter handler is missing");
+const nextChapterEnd = html.indexOf("document.querySelector(\"#closeModal\").onclick", nextChapterStart);
+assert.ok(nextChapterEnd > nextChapterStart, "Could not isolate next-chapter handler");
+const nextChapterHandler = html.slice(nextChapterStart, nextChapterEnd);
+assert.match(nextChapterHandler, /part<current\.chapters\.length-1[\s\S]*?part\+\+[\s\S]*?else if\(current\?\.seriesId===["']ty-v-moih-planah["']\)\{showSeriesCompletion\(\)\}/, "Series completion must appear only after the final chapter");
