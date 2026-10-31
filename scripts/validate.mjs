@@ -473,7 +473,7 @@ assert.doesNotMatch(seriesPage, /Доступ откроется после от
 
 const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s\S]*?\n\}/);
 assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
-const releaseGuardFactory = new Function("Clock", releaseGuardMatch[0] + "; return isBookReleaseLocked;");
+const releaseGuardFactory = new Function("Clock", releaseGuardMatch[0].replace(/\\bDate\\b/g, "Clock") + "; return isBookReleaseLocked;");
 for (const releaseAt of expectedReleaseSchedule) {
   const beforeClock = { now: () => Date.parse(releaseAt) - 1000, parse: Date.parse };
   const releaseClock = { now: () => Date.parse(releaseAt), parse: Date.parse };
