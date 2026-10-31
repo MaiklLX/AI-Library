@@ -4436,7 +4436,15 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
 loadPersonalBooks();
 syncGenreFilters();
 render();
-loadPublishedBooks().finally(loadDownloadedBooks);
+loadPublishedBooks().finally(async () => {
+  await loadDownloadedBooks();
+  const requestedBook = new URLSearchParams(window.location.search).get('book');
+  if (!requestedBook) return;
+  const target = getAllBooks().find(book => String(book.id) === requestedBook);
+  if (!target || target.status === 'prerelease') return;
+  await openBookById(requestedBook);
+  window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+});
 updateContinueReadingButton();
 
 </script>
