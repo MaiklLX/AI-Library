@@ -3857,7 +3857,7 @@ let readerPreviousFocus = null;
 
 function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7',theme:'sepia'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing,theme:['sepia','light','dark'].includes(String(saved.theme))?String(saved.theme):defaults.theme}}catch{return defaults}}
 function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const rightReader=document.querySelector('#readerRight');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');const rightPage=document.querySelector('#bookPageRight');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(rightReader){rightReader.style.fontSize=settings.fontSize+'px';rightReader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme;if(rightPage)rightPage.dataset.theme=settings.theme;const themeIcon=document.querySelector('#readerThemeIcon');const themeButton=document.querySelector('#readerThemeToggle');if(themeIcon)themeIcon.textContent=settings.theme==='dark'?'☀':'☾';if(themeButton){const nextTheme=settings.theme==='dark'?'светлую':'тёмную';themeButton.setAttribute('aria-label',`Переключить на ${nextTheme} тему`);themeButton.title=`Переключить на ${nextTheme} тему`}}
-function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
+function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset);else if(current&&key==='theme')renderReadingPage(false)}
 document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));document.querySelector('#readerTheme')?.addEventListener('change',event=>changeReaderSetting('theme',event.target.value));
 document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{const theme=getReaderSettings().theme;changeReaderSetting('theme',theme==='dark'?'light':'dark');});
 
@@ -4288,33 +4288,58 @@ function animateBookPageTurn(direction,afterTurn){
 }
 
 
+
 let readerPageFlip=null;
 let readerFlipEventSync=false;
 let readerFlipEdgeStart=null;
-function escapeReaderFlipText(value){
- return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+let readerFlipPageMap=[];
+function collectReaderFlipPageData(){
+ const savedPart=part,savedPages=readingPages,savedIndex=readingPageIndex;
+ const result=[];
+ try{
+  for(let chapterIndex=0;chapterIndex<(current?.chapters?.length||0);chapterIndex++){
+   part=chapterIndex;
+   paginateCurrentChapter(null,chapterIndex,false);
+   for(let localIndex=0;localIndex<readingPages.length;localIndex++){
+    result.push({chapterIndex,localIndex,text:readingPages[localIndex]||'',pageNumber:result.length+1});
+   }
+  }
+ }finally{part=savedPart;readingPages=savedPages;readingPageIndex=savedIndex}
+ readerFlipPageMap=result;
+ return result;
 }
 function createReaderFlipPages(){
  const theme=getReaderSettings().theme;
- const pages=[];
- for(let index=0;index<readingPages.length;index++){
-  const page=document.createElement('article');
-  page.className='reader-flip-page';
-  page.dataset.theme=theme;
+ const settings=getReaderSettings();
+ return collectReaderFlipPageData().map(item=>{
+  const page=document.createElement('article');page.className='reader-flip-page';page.dataset.theme=theme;
   const inner=document.createElement('div');inner.className='reader-flip-inner';
   const head=document.createElement('div');head.className='reader-flip-head';
   const brand=document.createElement('span');brand.textContent='AI LIBRARY';
-  const chapter=document.createElement('span');chapter.textContent='ЧАСТЬ '+(part+1);
+  const chapter=document.createElement('span');chapter.textContent='ЧАСТЬ '+(item.chapterIndex+1);
   head.append(brand,chapter);
-  const copy=document.createElement('div');copy.className='reader-flip-copy';copy.textContent=readingPages[index]||'';const readerSettings=getReaderSettings();copy.style.fontSize=readerSettings.fontSize+'px';copy.style.lineHeight=readerSettings.lineSpacing;
-  const foot=document.createElement('footer');foot.className='reader-flip-foot';foot.textContent=String(getBookPageNumber(part,index));
-  inner.append(head,copy,foot);page.appendChild(inner);pages.push(page);
- }
- return pages;
+  const copy=document.createElement('div');copy.className='reader-flip-copy';copy.textContent=item.text;
+  copy.style.fontSize=settings.fontSize+'px';copy.style.lineHeight=settings.lineSpacing;
+  const foot=document.createElement('footer');foot.className='reader-flip-foot';foot.textContent=String(item.pageNumber);
+  inner.append(head,copy,foot);page.appendChild(inner);return page;
+ });
+}
+function getReaderFlipGlobalIndex(chapterIndex=part,localIndex=readingPageIndex){
+ const found=readerFlipPageMap.findIndex(item=>item.chapterIndex===chapterIndex&&item.localIndex===localIndex);
+ return found>=0?found:0;
 }
 function alignReaderFlipIndex(index){
- const bounded=Math.max(0,Math.min(Number(index)||0,Math.max(0,readingPages.length-1)));
+ const total=Math.max(1,readerFlipPageMap.length);
+ const bounded=Math.max(0,Math.min(Number(index)||0,total-1));
  return isDesktopReaderSpread()?Math.floor(bounded/2)*2:bounded;
+}
+function syncReaderFlipLocation(index){
+ const location=readerFlipPageMap[alignReaderFlipIndex(index)];
+ if(!location)return;
+ if(part!==location.chapterIndex){part=location.chapterIndex;showPart();}
+ readingPageIndex=location.localIndex;
+ renderReadingPage(false);
+ updateReaderFlipStatus();
 }
 function updateReaderFlipStatus(){
  const state=getReaderPageState(readingPageIndex,Math.max(1,readingPages.length),isDesktopReaderSpread());
@@ -4329,6 +4354,7 @@ function ensureReaderFlipEngine(){
  if(!host||!window.St?.PageFlip||!readingPages.length)return false;
  const pages=createReaderFlipPages();
  try{
+  const targetIndex=alignReaderFlipIndex(getReaderFlipGlobalIndex());
   if(!readerPageFlip){
    readerPageFlip=new St.PageFlip(host,{
     width:420,height:640,size:'stretch',minWidth:260,maxWidth:640,minHeight:360,maxHeight:900,
@@ -4337,23 +4363,19 @@ function ensureReaderFlipEngine(){
     useMouseEvents:true,disableFlipByClick:true,showPageCorners:true
    });
    readerPageFlip.on('flip',event=>{
-    const next=alignReaderFlipIndex(event.data);
-    readingPageIndex=next;
     readerFlipEventSync=true;
-    try{renderReadingPage(false);updateReaderFlipStatus()}finally{readerFlipEventSync=false}
+    try{syncReaderFlipLocation(event.data)}finally{readerFlipEventSync=false}
    });
    readerPageFlip.on('changeOrientation',()=>{
     requestAnimationFrame(()=>{
      if(!readerPageFlip)return;
      const next=alignReaderFlipIndex(readerPageFlip.getCurrentPageIndex());
-     readingPageIndex=next;
      if(next!==readerPageFlip.getCurrentPageIndex())readerPageFlip.turnToPage(next);
      readerFlipEventSync=true;
-     try{renderReadingPage(false);updateReaderFlipStatus()}finally{readerFlipEventSync=false}
+     try{syncReaderFlipLocation(next)}finally{readerFlipEventSync=false}
     });
    });
    readerPageFlip.loadFromHTML(pages);
-   // Correct upstream's previous-page start point for a centered book viewport.
    const nativeFlipPrev=readerPageFlip.flipPrev.bind(readerPageFlip);
    readerPageFlip.flipPrev=corner=>{
     const bounds=readerPageFlip.getBoundsRect();
@@ -4371,13 +4393,14 @@ function ensureReaderFlipEngine(){
    host.addEventListener('pointerup',event=>{
     const start=readerFlipEdgeStart;readerFlipEdgeStart=null;
     if(!start||start.pointerId!==event.pointerId||Date.now()-start.time>360||Math.hypot(event.clientX-start.x,event.clientY-start.y)>7)return;
-    if(start.side==='left'&&readingPageIndex>0)readerPageFlip.flipPrev('bottom');
-    else if(start.side==='right'&&readingPageIndex<readingPages.length-1)readerPageFlip.flipNext('bottom');
+    const currentIndex=readerPageFlip.getCurrentPageIndex();
+    if(start.side==='left'&&currentIndex>0)readerPageFlip.flipPrev('bottom');
+    else if(start.side==='right'&&currentIndex<readerPageFlip.getPageCount()-1)readerPageFlip.flipNext('bottom');
    },{passive:true});
    host.addEventListener('pointercancel',()=>{readerFlipEdgeStart=null},{passive:true});
   }else{
    readerPageFlip.updateFromHtml(pages);
-   readerPageFlip.turnToPage(alignReaderFlipIndex(readingPageIndex));
+   readerPageFlip.turnToPage(targetIndex);
   }
   document.body.classList.add('reader-flip-enabled');
   return true;
@@ -4389,43 +4412,35 @@ function ensureReaderFlipEngine(){
 }
 
 function turnReadingPage(direction) {
-  if (!document.querySelector('#modal').classList.contains('open')) return false;
-  const pageStep=isDesktopReaderSpread()?2:1;
-  const target=readingPageIndex+direction*pageStep;
-  if(readerPageFlip&&document.body.classList.contains('reader-flip-enabled')){
-    if(target>=0&&target<readingPages.length){
-      if(direction>0)readerPageFlip.flipNext('bottom');else readerPageFlip.flipPrev('bottom');
-      return true;
-    }
-  }
-  if(target>=0&&target<readingPages.length){
-    animateBookPageTurn(direction, () => {
-      readingPageIndex = target;
-      renderReadingPage(false);
-    });
-    return true;
-  }
-  // На последней странице главы переход вперёд перелистывает к следующей части.
-  if (direction > 0 && part < (current?.chapters?.length || 0) - 1) {
-    animateBookPageTurn(direction, () => {
-      window.__aiLibraryTurnDirection = 'forward';
-      part++;
-      showPart();
-    });
-    return true;
-  }
-  // На первой странице главы переход назад перелистывает к предыдущей части.
-  if (direction < 0 && part > 0) {
-    animateBookPageTurn(direction, () => {
-      window.__aiLibraryTurnDirection = 'back';
-      part--;
-      showPart();
-      readingPageIndex = isDesktopReaderSpread() ? Math.max(0,Math.floor((readingPages.length-1)/2)*2) : Math.max(0,readingPages.length-1);
-      renderReadingPage(false);
-    });
-    return true;
+ if(!document.querySelector('#modal').classList.contains('open'))return false;
+ if(readerPageFlip&&document.body.classList.contains('reader-flip-enabled')){
+  const step=isDesktopReaderSpread()?2:1;
+  const target=readerPageFlip.getCurrentPageIndex()+direction*step;
+  if(target>=0&&target<readerPageFlip.getPageCount()){
+   if(direction>0)readerPageFlip.flipNext('bottom');else readerPageFlip.flipPrev('bottom');
+   return true;
   }
   return false;
+ }
+ const pageStep=isDesktopReaderSpread()?2:1;
+ const target=readingPageIndex+direction*pageStep;
+ if(target>=0&&target<readingPages.length){
+  animateBookPageTurn(direction,()=>{readingPageIndex=target;renderReadingPage(false)});
+  return true;
+ }
+ if(direction>0&&part<(current?.chapters?.length||0)-1){
+  animateBookPageTurn(direction,()=>{window.__aiLibraryTurnDirection='forward';part++;showPart()});
+  return true;
+ }
+ if(direction<0&&part>0){
+  animateBookPageTurn(direction,()=>{
+   window.__aiLibraryTurnDirection='back';part--;showPart();
+   readingPageIndex=isDesktopReaderSpread()?Math.max(0,Math.floor((readingPages.length-1)/2)*2):Math.max(0,readingPages.length-1);
+   renderReadingPage(false);
+  });
+  return true;
+ }
+ return false;
 }
 
 function showPart() {
