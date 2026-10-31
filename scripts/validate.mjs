@@ -414,3 +414,30 @@ const continueReadingSource = html.match(/function updateContinueReadingButton\(
 assert.ok(continueReadingSource, "Could not isolate continue-reading action");
 assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\)\)/, "Continue-reading must ignore progress records for unavailable books");
 assert.match(continueReadingSource[1], /btn\.onclick = \(\) => openBookById\(book\.id\)/, "Continue-reading must use the guarded book-opening workflow");
+
+// Regression guards for the direct reader launch and synchronized page-turn fix.
+assert.match(html, /if\(new URLSearchParams\(location\.search\)\.has\('book'\)\)document\.documentElement\.classList\.add\('reader-launch-pending'\)/,
+  "Direct book links must hide the catalog before the first paint");
+assert.match(html, /html\.reader-launch-pending body>\*\{visibility:hidden!important\}html\.reader-launch-pending body>#modal\{visibility:visible!important\}/,
+  "The direct-launch mask must keep the reader modal visible");
+const openReadingSpace = html.match(/function openReadingSpace\(\)\s*\{([\s\S]*?)\n\}/);
+assert.ok(openReadingSpace, "Could not isolate the reader-opening transition");
+assert.match(openReadingSpace[1], /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
+  "Opening the reader must release the direct-launch mask");
+assert.match(html, /if \(!target \|\| target\.status === 'prerelease'\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
+  "Unavailable or prerelease direct links must release the launch mask");
+assert.match(html, /if \(opened\) \{[\s\S]*?\} else \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
+  "A failed direct book open must release the launch mask");
+
+assert.match(pageTurnAnimation[1], /sheet\.addEventListener\('animationend',onAnimationEnd\)/,
+  "The animated page sheet must finish on its actual animationend event");
+assert.match(pageTurnAnimation[1], /event\.target===sheet/,
+  "Nested animation events must not prematurely finish a page turn");
+assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
+  "Page-turn completion must be idempotent when the event and fallback both fire");
+assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
+  "Page-turn completion must remove its animation listener");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,820\)/,
+  "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
+assert.match(pageTurnAnimation[1], /try \{ afterTurn\(\); \}\s*finally \{/,
+  "Page content must still commit while cleanup is guaranteed");
