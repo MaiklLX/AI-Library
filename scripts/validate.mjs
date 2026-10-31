@@ -289,6 +289,6 @@ const openBookByIdSource = html.match(/async function openBookById\(id\) \{([\s\
 assert.ok(openBookByIdSource, "Could not isolate the reader book-opening workflow");
 assert.match(openBookByIdSource[1], /return true;/, "Reader book opening must report successful completion");
 assert.match(openBookByIdSource[1], /return false;/, "Reader book opening must report failed or blocked completion");
-assert.match(openBookByIdSource[1], /book\\.title[\\s\\S]*пререлиз/, "Prerelease notices must use the current book title");
+assert.match(openBookByIdSource[1], /book\.title[\s\S]*пререлиз/, "Prerelease notices must use the current book title");
 assert.doesNotMatch(openBookByIdSource[1], /Автоматическая полночь/, "Prerelease notices must not name an unrelated book");
 assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,180}?if \(opened\) \{[\s\S]{0,180}?history\.replaceState/, "Direct reader links must be preserved when a book cannot be opened");
