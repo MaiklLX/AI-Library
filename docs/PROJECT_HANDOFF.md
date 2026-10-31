@@ -272,4 +272,4 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - A «Новые поступления» shelf is data-driven and appears only when a published book has a real publishedAt timestamp. The current catalog does not yet contain such a timestamp, so no book is falsely presented as a new release.
 - The personal-library shelf label now says «Продолжить чтение» and continues to use actual saved reading progress.
 - Editorial shelf actions are wired to the existing reader and book-detail flows. Service Worker app-shell cache advanced to v65; static validation checks the shelf data rules and actions.
-- CI for the latest head is pending. No real-device visual or touch test has been performed. PR #48 remains draft, open, unmerged and undeployed.
+- CI run 41218128979 passed on head cbe1afb75ba1c52e2c13080d2f77234c73cb70a4: static validation, Service Worker fallback tests, personal-state migration tests and offline download integrity tests all succeeded. No real-device visual or touch test has been performed. PR #48 remains draft, open, unmerged and undeployed.
