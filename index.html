@@ -3507,7 +3507,7 @@ function renderBookCard(book){
  '<h3>'+esc(book.title)+'</h3><div class="author">'+esc(book.author||'AI Library')+'</div><p class="desc">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p>'+
  '<div class="meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>Полное издание · бесплатно</span></div>'+
  (read>0?'<div class="reading-progress"><div class="reading-progress-label"><span>'+(completed?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+
- '<div class="book-back-actions"><a class="btn read" href="./book.html?book='+encodeURIComponent(book.id)+'">Подробнее о книге　→</a>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
+ '<div class="book-back-actions"><a class="btn read" data-read="'+esc(book.id)+'" href="./book.html?book='+encodeURIComponent(book.id)+'">Подробнее о книге　→</a>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
 }
 
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
@@ -3588,7 +3588,7 @@ document.querySelector("#books").addEventListener("click",e=>{
   }
 
   const readButton = e.target.closest('[data-read]');
-  if (readButton) openBookById(readButton.dataset.read);
+  if (readButton && readButton.tagName !== 'A') openBookById(readButton.dataset.read);
 });
 
 /* AI Library 0.8 — сохранение прогресса чтения */
