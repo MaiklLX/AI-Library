@@ -81,6 +81,46 @@
         "добрый финал"
       ],
       "countdownDate": "2026-11-01T18:00:00+03:00"
+    },
+    {
+      "id": "ty-v-moih-planah-tom-01",
+      "path": "./content/books/ty-v-moih-planah-tom-01.json",
+      "metadataOnly": true,
+      "chapterCount": 16,
+      "title": "Тишина между щелчками",
+      "subtitle": "Том I · главы 1–16",
+      "author": "AI Library",
+      "genre": "Современный роман 18+ · романтический детектив",
+      "description": "Вера Соколова получает повреждённую запись, связанную с исчезновением Марины — сестры Ильи Воронцова. Три металлических щелчка и двадцать три минуты тишины становятся началом поиска, в котором воспоминаниям предстоит выдержать проверку документами.",
+      "tag": "СКОРО · ТОМ I",
+      "cls": "romance",
+      "symbol": "Ⅰ",
+      "length": 164,
+      "language": "ru",
+      "status": "scheduled",
+      "releaseAt": "2026-11-02T18:00:00+03:00",
+      "cover": "./content/books/ty-v-moih-planah-tom-01-cover.svg",
+      "revision": "web-candidate-1"
+    },
+    {
+      "id": "ty-v-moih-planah-tom-02",
+      "path": "./content/books/ty-v-moih-planah-tom-02.json",
+      "metadataOnly": true,
+      "chapterCount": 18,
+      "title": "Внутренний маршрут",
+      "subtitle": "Том II · главы 17–34",
+      "author": "AI Library",
+      "genre": "Современный роман 18+ · романтический детектив",
+      "description": "Временные карточки, журналы доступа и документы хранения ведут Веру всё глубже во внутреннюю систему архива. Один предмет получает несколько обозначений, но ни одно из них ещё не объясняет, кто действительно отвечал за его движение.",
+      "tag": "ТОМ II · 18+",
+      "cls": "romance",
+      "symbol": "♡",
+      "length": 122,
+      "language": "ru",
+      "status": "scheduled",
+      "releaseAt": "2026-11-09T18:00:00+03:00",
+      "cover": "./content/books/ty-v-moih-planah-tom-02-cover.svg",
+      "revision": "web-candidate-1"
     }
   ]
 }
