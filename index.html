@@ -3280,7 +3280,7 @@ body.reader-open #bookPageRight .book-page-number{text-align:left}
 <script src="./src/platform/runtime.js"></script>
 <script src="./src/platform/library-store.js"></script>
 <script src="./src/platform/download-manager.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
 <script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
 
@@ -4306,7 +4306,7 @@ function createReaderFlipPages(){
   const brand=document.createElement('span');brand.textContent='AI LIBRARY';
   const chapter=document.createElement('span');chapter.textContent='ЧАСТЬ '+(part+1);
   head.append(brand,chapter);
-  const copy=document.createElement('div');copy.className='reader-flip-copy';copy.textContent=readingPages[index]||'';
+  const copy=document.createElement('div');copy.className='reader-flip-copy';copy.textContent=readingPages[index]||'';const readerSettings=getReaderSettings();copy.style.fontSize=readerSettings.fontSize+'px';copy.style.lineHeight=readerSettings.lineSpacing;
   const foot=document.createElement('footer');foot.className='reader-flip-foot';foot.textContent=String(getBookPageNumber(part,index));
   inner.append(head,copy,foot);page.appendChild(inner);pages.push(page);
  }
