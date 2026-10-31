@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<meta name="description" content="Презентация книги в AI Library — аннотация, детали издания и переход к чтению.">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<title>Книга · AI Library</title>
+<style>
+:root{color-scheme:dark;--bg:#101010;--gold:#d9b66d;--text:#f4f0e7;--muted:#b6afa1;--panel:#181715}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 72% 14%,#59432355,transparent 36%),radial-gradient(ellipse at 15% 70%,#29221a66,transparent 45%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#e5c77f .7px,transparent .7px);background-size:31px 31px;mask-image:linear-gradient(90deg,transparent,#000 45%,#000)}
+a{color:inherit}.wrap{width:min(1160px,calc(100% - 40px));margin:auto;position:relative;z-index:1}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff18;position:relative;z-index:2;padding:0 max(20px,calc((100vw - 1160px)/2));backdrop-filter:blur(14px);background:#101010b8}
+.brand{display:flex;align-items:center;gap:11px;font-size:13px;letter-spacing:.16em;font-weight:800;text-decoration:none}.logo{width:38px;height:38px;border:1px solid var(--gold);border-radius:11px;display:grid;place-items:center;color:var(--gold);font-size:22px}
+.back{color:#d7c9a9;text-decoration:none;font-size:13px;border:1px solid #ffffff24;border-radius:999px;padding:9px 14px}
+main{padding:clamp(30px,5vw,68px) 0 76px}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:.22em;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:10px}.eyebrow:after{content:"";width:34px;height:1px;background:linear-gradient(90deg,#d9b66d99,transparent)}
+.layout{display:grid;grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr);gap:clamp(34px,6vw,82px);align-items:start}
+.visual{position:sticky;top:34px;min-height:570px;display:grid;place-items:center;isolation:isolate;perspective:1200px}
+.visual:before{content:"";position:absolute;width:min(530px,110%);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#d9b66d20 0,#a9783018 32%,transparent 70%);filter:blur(10px);z-index:-1}
+.halo{position:absolute;width:min(440px,95%);aspect-ratio:1;border-radius:50%;border:1px solid #d9b66d38;box-shadow:0 0 0 25px #d9b66d05,0 0 0 60px #d9b66d04,inset 0 0 80px #d9b66d08;animation:rotate 52s linear infinite}.halo:before,.halo:after{content:"";position:absolute;inset:12%;border:1px dashed #d9b66d48;border-radius:50%;animation:rotate 35s linear infinite reverse}.halo:after{inset:26%;border-style:solid;border-color:#d9b66d30}
+.cover{position:relative;width:min(300px,72%);aspect-ratio:2/3;border:1px solid #e4c77988;border-radius:4px 12px 12px 4px;overflow:hidden;background:linear-gradient(145deg,#41321e,#121212 75%);box-shadow:26px 32px 80px #000d,-5px 0 0 #d9b66d22;transform:perspective(1000px) rotateY(-8deg);animation:coverIn .9s both}
+.cover:after{content:"";position:absolute;inset:14px;border:1px solid #e6cc8d66;pointer-events:none}.cover img{display:block;width:100%;height:100%;object-fit:cover}.symbol{position:absolute;inset:0;display:grid;place-items:center;color:#e6cc8d;font:100px Georgia,serif;text-shadow:0 0 34px #d9b66d66}
+.seal{position:absolute;z-index:2;top:13%;left:calc(50% + 70px);width:88px;height:88px;border:1px solid #d9b66d99;border-radius:50%;display:grid;place-items:center;text-align:center;color:#e5c77f;font-size:9px;letter-spacing:.12em;line-height:1.5;background:#17140fe8;transform:rotate(11deg);box-shadow:0 10px 30px #0008}
+.content{min-width:0;animation:fadeIn .8s .1s both}.title{font:500 clamp(38px,5.4vw,66px)/1.06 Georgia,serif;letter-spacing:-.04em;margin:15px 0 10px;text-wrap:balance}.subtitle{font:italic clamp(18px,2.2vw,23px)/1.5 Georgia,serif;color:#f0d89d;margin:0 0 17px}.byline{color:var(--gold);font-size:13px;margin:0 0 23px}
+.synopsis{color:#d0c8bb;font-size:clamp(16px,1.45vw,18px);line-height:1.95;max-width:720px;white-space:pre-line;margin:0 0 25px}
+.facts{display:flex;gap:9px;flex-wrap:wrap;margin:24px 0}.fact{border:1px solid #d9b66d32;background:#d9b66d0a;color:#d4c39b;border-radius:999px;padding:8px 12px;font-size:11px}
+.section{margin-top:30px;padding-top:23px;border-top:1px solid #ffffff18}.section h2{font:500 23px Georgia,serif;margin:0 0 14px;color:#f0d89d}.note{margin:0;padding:15px 18px;border-left:2px solid #d9b66d88;background:#d9b66d08;color:#d6cbb4;font:italic 15px/1.8 Georgia,serif}.themes{display:flex;gap:9px;flex-wrap:wrap}.themes span{padding:7px 11px;border:1px solid #ffffff20;border-radius:999px;color:#c9c0b1;font-size:12px;background:#ffffff05}
+.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:32px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 19px;border:1px solid #ffffff28;border-radius:10px;text-decoration:none;font:650 13px system-ui;background:#211f1b;transition:.2s;cursor:pointer}.btn:hover{transform:translateY(-2px);border-color:var(--gold)}.btn.primary{background:var(--gold);color:#17130b;border-color:var(--gold);box-shadow:0 8px 24px #d9b66d18}.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.state{min-height:60vh;display:grid;place-items:center;text-align:center}.state h1{font:500 clamp(34px,5vw,54px) Georgia,serif}.state p{color:var(--muted);max-width:550px}.hidden{display:none!important}footer{border-top:1px solid #ffffff18;color:#827b70;padding:24px 0;font-size:12px}
+@keyframes rotate{to{transform:rotate(360deg)}}@keyframes coverIn{from{opacity:0;transform:perspective(1000px) rotateY(-16deg) translateY(18px)}to{opacity:1;transform:perspective(1000px) rotateY(-8deg) translateY(0)}}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){header{height:66px;padding:0 15px}.wrap{width:calc(100% - 30px)}main{padding-top:24px}.layout{grid-template-columns:1fr;gap:15px}.visual{position:relative;top:auto;min-height:340px;order:0}.halo{width:min(320px,92vw)}.cover{width:185px}.seal{left:calc(50% + 42px);top:6%;width:74px;height:74px;font-size:8px}.content{order:1}.title{font-size:clamp(37px,10vw,54px)}.synopsis{font-size:15px;line-height:1.85}.facts{margin:18px 0}.actions{margin-top:25px}.actions .btn{flex:1 1 180px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="./index.html"><span class="logo">✧</span><span>AI LIBRARY<small style="display:block;font-size:9px;letter-spacing:.2em;color:#aaa59a;font-weight:500">БИБЛИОТЕКА НОВЫХ МИРОВ</small></span></a><a class="back" href="./index.html#catalog">← В библиотеку</a></header>
+<main class="wrap">
+<section id="loading" class="state"><div><div class="eyebrow">✦ AI LIBRARY · BOOK PRESENTATION</div><h1>Готовим презентацию книги…</h1><p>Собираем обложку, аннотацию и детали издания.</p></div></section>
+<section id="missing" class="state hidden"><div><div class="eyebrow">КНИГА НЕ НАЙДЕНА</div><h1>Эта история пока недоступна</h1><p>Возможно, книга была удалена или ссылка устарела.</p><a class="btn primary" href="./index.html#catalog">Вернуться в библиотеку</a></div></section>
+<section id="show" class="layout hidden" aria-live="polite">
+<div class="visual"><div class="halo" aria-hidden="true"></div><div class="cover" id="cover"><span class="symbol" id="symbol">✦</span></div><div class="seal" id="seal">AI<br>LIBRARY</div></div>
+<div class="content"><div class="eyebrow" id="kicker">✦ ПРЕЗЕНТАЦИЯ КНИГИ</div><h1 class="title" id="title"></h1><p class="subtitle hidden" id="subtitle"></p><div class="byline" id="byline"></div><p class="synopsis" id="synopsis"></p><div class="facts" id="facts"></div><section class="section hidden" id="noteSection"><h2>От редакции</h2><blockquote class="note" id="note"></blockquote></section><section class="section hidden" id="themesSection"><h2>Темы и атмосфера</h2><div class="themes" id="themes"></div></section><div class="actions"><a class="btn primary" id="readButton" href="#">Читать книгу　→</a><button class="btn hidden" id="downloadButton" type="button">↓ Скачать для офлайн-чтения</button><a class="btn" href="./index.html#catalog">← В библиотеку</a></div><p id="actionStatus" style="min-height:24px;color:#b8ad98;font-size:12px;margin-top:12px" role="status" aria-live="polite"></p></div>
+</section>
+</main><footer><div class="wrap">✦ AI LIBRARY — каждая книга открывает новый мир.</div></footer>
+<script src="./src/platform/runtime.js"></script>
+<script src="./src/platform/library-store.js"></script>
+<script src="./src/platform/download-manager.js"></script>
+<script>
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const params=new URLSearchParams(location.search);
+const requestedId=(params.get('book')||'').trim();
+const showMissing=()=>{document.querySelector('#loading').classList.add('hidden');document.querySelector('#show').classList.add('hidden');document.querySelector('#missing').classList.remove('hidden')};
+function detectGenre(book){const explicit=String(book.cls||'').toLowerCase();if(['fantasy','detective','romance','horror','adventure','scifi'].includes(explicit))return explicit;const source=[book.genre,book.title,book.subtitle,...(Array.isArray(book.themes)?book.themes:[])].filter(Boolean).join(' ').toLowerCase();if(/фэнтези|магия|волшеб|дракон/.test(source))return'fantasy';if(/детектив|триллер|расследован|нуар/.test(source))return'detective';if(/романтик|любов|отношени/.test(source))return'romance';if(/ужас|хоррор|кошмар/.test(source))return'horror';if(/приключ|путешеств|экспедиц/.test(source))return'adventure';if(/научн.*фантаст|космос|киберпанк|робот|искусственн.*интеллект/.test(source))return'scifi';return'default'}
+function validCover(value){return typeof value==='string'&&((value.startsWith('./content/books/')&&value.endsWith('.svg')&&!value.includes('..'))||/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(value))}
+function renderBook(book){
+ document.body.dataset.genre=detectGenre(book);
+ const title=book.title||'Новая история';
+ document.title=title+' · AI Library';
+ document.querySelector('meta[name="description"]').content=String(book.description||book.desc||'Презентация книги в AI Library').slice(0,300);
+ document.querySelector('#title').textContent=title;
+ const subtitle=document.querySelector('#subtitle');subtitle.textContent=book.subtitle||book.tagline||'';subtitle.classList.toggle('hidden',!subtitle.textContent);
+ document.querySelector('#byline').textContent=(book.author||'AI Library')+' · '+(book.genre||'Литература');
+ document.querySelector('#synopsis').textContent=book.description||book.desc||'Аннотация этой книги скоро появится.';
+ const facts=[book.ageRating?'🔞 '+book.ageRating:'✦ Полное издание',Number(book.chapterCount)>0?Number(book.chapterCount)+' глав':'Количество глав уточняется',Number(book.wordCount)>0?Number(book.wordCount).toLocaleString('ru-RU')+' слов':(Number(book.length)>0?Number(book.length)+' мин чтения':'Время чтения уточняется'),book.language==='ru'?'Русский язык':'AI Library'];
+ document.querySelector('#facts').innerHTML=facts.map(item=>'<span class="fact">'+esc(item)+'</span>').join('');
+ const note=book.editorialNote||book.editorNote||'';if(note){document.querySelector('#note').textContent=note;document.querySelector('#noteSection').classList.remove('hidden')}
+ const themes=Array.isArray(book.themes)?book.themes.filter(Boolean):[];if(themes.length){document.querySelector('#themes').innerHTML=themes.map(item=>'<span>'+esc(item)+'</span>').join('');document.querySelector('#themesSection').classList.remove('hidden')}
+ document.querySelector('#symbol').textContent=book.symbol||'✦';
+ if(validCover(book.cover)){const img=document.createElement('img');img.src=book.cover;img.alt='Обложка книги «'+title+'»';img.onload=()=>document.querySelector('#symbol').classList.add('hidden');document.querySelector('#cover').appendChild(img)}
+ const id=String(book.id||requestedId);document.querySelector('#readButton').href='./index.html?book='+encodeURIComponent(id)+'#catalog';
+ const downloadable=id.startsWith('published-')&&book.status==='published';const download=document.querySelector('#downloadButton');download.classList.toggle('hidden',!downloadable);
+ if(downloadable){download.dataset.downloadBook=id;download.addEventListener('click',async()=>{download.disabled=true;download.textContent='Проверяем и сохраняем…';try{await window.AILibraryDownloadManager.download(id);download.textContent='✓ Книга сохранена офлайн';document.querySelector('#actionStatus').textContent='Теперь книгу можно читать без подключения к интернету.'}catch(error){download.disabled=false;download.textContent='Повторить загрузку';document.querySelector('#actionStatus').textContent=error.message||'Не удалось сохранить книгу. Попробуйте ещё раз.'}})}
+ document.querySelector('#loading').classList.add('hidden');document.querySelector('#show').classList.remove('hidden');
+}
+async function init(){
+ if(!requestedId){showMissing();return}
+ try{
+  let book=null;
+  const personal=JSON.parse(localStorage.getItem('ai-library-personal-books')||'[]');if(Array.isArray(personal))book=personal.find(item=>String(item.id)===requestedId)||null;
+  if(!book){const shared=JSON.parse(localStorage.getItem('ai-library-shared-books-cache')||'[]');if(Array.isArray(shared))book=shared.find(item=>String(item.id)===requestedId)||null}
+  if(!book&&requestedId.startsWith('published-')){
+   const rawId=requestedId.slice(10);
+   const cached=JSON.parse(localStorage.getItem('ai-library-published-books-cache')||'[]');if(Array.isArray(cached))book=cached.find(item=>String(item.id)===requestedId)||null;
+   if(!book){const response=await fetch('./content/catalog.json',{cache:'no-store'});if(!response.ok)throw new Error('catalog');const catalog=await response.json();const entry=(catalog.books||[]).find(item=>String(item.id)===rawId);if(entry)book={...entry,id:requestedId,desc:entry.description||entry.desc||''}}
+   if(!book)throw new Error('missing');
+  }
+  if(!book)throw new Error('missing');
+  renderBook(book);
+ }catch(error){console.warn('Не удалось подготовить презентацию книги:',error);showMissing()}
+}
+init();
+</script>
+</body></html>
