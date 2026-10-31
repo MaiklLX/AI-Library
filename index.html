@@ -2902,6 +2902,47 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+
+<style id="ios-home-navigation-single-row-v1">
+/* Keep all four home navigation actions on one row on compact iPhones. */
+@media (max-width: 680px) {
+  header nav .site-nav-actions {
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    align-items: stretch;
+  }
+  header nav .site-nav-actions .nav-action {
+    display: flex;
+    min-width: 0;
+    min-height: 54px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 5px 2px;
+    font-size: 10px;
+    line-height: 1.1;
+    white-space: normal;
+    text-align: center;
+  }
+  header nav .site-nav-actions .nav-action svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+  }
+  header nav .site-nav-actions .nav-action span {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 380px) {
+  header nav .site-nav-actions { gap: 4px !important; }
+  header nav .site-nav-actions .nav-action { font-size: 9px; }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
