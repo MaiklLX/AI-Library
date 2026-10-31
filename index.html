@@ -3274,7 +3274,7 @@ async function openBookById(id) {
   if (!book) return false;
 
   if (book.status === 'prerelease') {
-    alert('«Автоматическая полночь» находится в пререлизе. Чтение откроется после официального релиза.');
+    alert('«' + (book.title || 'Книга') + '» находится в пререлизе. Чтение откроется после официального релиза.');
     return false;
   }
 
