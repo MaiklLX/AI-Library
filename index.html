@@ -3182,7 +3182,7 @@ function getCatalogMetadataSnapshot(catalog) {
     id:String(book.id||''),title:String(book.title||''),author:String(book.author||''),
     genre:String(book.genre||''),status:String(book.status||''),revision:String(book.revision||''),
     chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
-    releaseDate:String(book.releaseDate||'')
+    releaseDate:String(book.releaseDate||''),releaseAt:String(book.releaseAt||'')
   })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
 }
 function checkCatalogMetadataUpdate(catalog) {
