@@ -2994,6 +2994,19 @@ header nav .site-nav-actions .nav-action{width:100%;min-width:0;min-height:48px;
 @media(max-width:680px){header nav{gap:9px}header nav .brand{flex:1 1 100%}header nav .site-nav-actions{width:100%;flex:1 1 100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}header nav .site-nav-actions .nav-action{min-height:53px;padding-inline:4px}}
 @media(prefers-reduced-motion:reduce){#books .book-back .reading-progress-fill{transition:none}}
 </style>
+
+<script id="ai-library-scroll-policy-v1">
+/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', event => {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (event.persisted || navigation?.type === 'reload') {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
+  });
+})();
+</script>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
