@@ -65,6 +65,7 @@ a{color:inherit}.wrap{width:min(1120px,calc(100% - 36px));margin:auto}.top{paddi
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';card.appendChild(progressLabel);}
   row.append(state,action);card.append(num,title,desc,range,row);list.appendChild(card);
  });
+ if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
 })();
 </script>
 </body>
