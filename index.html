@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>if(new URLSearchParams(location.search).has('book'))document.documentElement.classList.add('reader-launch-pending');</script>
 <meta name="theme-color" content="#111111">
 <meta name="description" content="AI Library — бесплатная цифровая библиотека историй. Открывай фантастику, фэнтези и детективы, знакомься с закрытыми премьерами и следи за новыми релизами.">
 <meta name="color-scheme" content="dark">
@@ -16,6 +17,7 @@
 <title>AI Library — библиотека новых миров</title>
 <style>
 :root{--bg:#101010;--panel:#191919;--gold:#d9b66d;--text:#f4f0e7;--muted:#aaa59a;--line:#34312a}
+html.reader-launch-pending body>*{visibility:hidden!important}html.reader-launch-pending body>#modal{visibility:visible!important}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#33291a,transparent 38%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:1200px;margin:auto;padding:0 22px}
 header{position:sticky;top:0;z-index:5;background:#101010e8;backdrop-filter:blur(12px);border-bottom:1px solid #ffffff16}
@@ -3730,6 +3732,7 @@ if(readerHoverModal&&readerHoverEnabled){
 }
 document.querySelector('#readerMenuToggle')?.addEventListener('click',()=>{const panel=document.querySelector('#readerSettings');const toggle=document.querySelector('#readerMenuToggle');if(!panel)return;panel.hidden=!panel.hidden;toggle?.setAttribute('aria-expanded',String(!panel.hidden));setReaderChromeVisible(true,panel.hidden)});
 function openReadingSpace() {
+  document.documentElement.classList.remove('reader-launch-pending');
   const modal = document.querySelector("#modal");
   readerPreviousFocus = document.activeElement;
   readerScrollRestore = window.scrollY || window.pageYOffset || 0;
@@ -4039,15 +4042,23 @@ function animateBookPageTurn(direction,afterTurn){
       sheet.classList.remove('flip-forward','flip-back');
       void sheet.offsetWidth;
       sheet.classList.add(direction>0?'flip-forward':'flip-back');
-      window.setTimeout(()=>{
+      let finished=false;
+      const finishTurn=()=>{
+        if(finished)return;
+        finished=true;
         try { afterTurn(); }
         finally {
+          sheet.removeEventListener('animationend',onAnimationEnd);
           sheet.classList.remove('flip-forward','flip-back');
           sheet.style.visibility='hidden';
           readerTurnInProgress=false;
           flushReaderResizePagination();
         }
-      },340);
+      };
+      const onAnimationEnd=event=>{if(event.target===sheet)finishTurn();};
+      sheet.addEventListener('animationend',onAnimationEnd);
+      // Fallback for browsers that occasionally omit animationend in background tabs.
+      window.setTimeout(finishTurn,820);
       return;
     }
   }
@@ -4609,10 +4620,15 @@ loadPublishedBooks().finally(async () => {
   const requestedBook = new URLSearchParams(window.location.search).get('book');
   if (!requestedBook) return;
   const target = getAllBooks().find(book => String(book.id) === requestedBook);
-  if (!target || target.status === 'prerelease') return;
+  if (!target || target.status === 'prerelease') {
+    document.documentElement.classList.remove('reader-launch-pending');
+    return;
+  }
   const opened = await openBookById(requestedBook);
   if (opened) {
     window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  } else {
+    document.documentElement.classList.remove('reader-launch-pending');
   }
 });
 updateContinueReadingButton();
