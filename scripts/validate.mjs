@@ -263,6 +263,19 @@ assert.match(seriesPage, /premiere\.html\?book=/, "Prerelease volume must link t
 assert.match(html, /function showSeriesCompletion\(/, "Reader series completion panel is missing");
 assert.ok(html.includes("Завершить роман") && html.includes("К следующему тому") && html.includes("aria-label"), "Series completion button must expose the correct accessible label");
 assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["']/, "Reader must route series completion to the series page");
+
+const completionSource = html.match(/function showSeriesCompletion\(\)\{([\s\S]*?)\n\}/);
+assert.ok(completionSource, "Series completion panel is missing");
+assert.match(completionSource[1], /role/, "Series completion panel must expose a status role");
+assert.match(completionSource[1], /aria-live/, "Series completion panel must announce updates to assistive technology");
+assert.match(completionSource[1], /const finalVolume=volume===6/, "The final volume must be handled separately");
+assert.match(completionSource[1], /finalVolume\?6:volume\+1/, "Earlier volumes must point to the next volume, while the final volume must not create volume seven");
+assert.match(completionSource[1], /finalVolume\?"Вернуться к серии":"Посмотреть следующий том"/, "Completion action must reflect whether the reader finished the series");
+assert.match(completionSource[1], /\.\/series\.html#volume-/, "Completion must route through the series page rather than bypassing volume access status");
+assert.match(seriesPage, /if\(volume\.status==='prerelease'&&volume\.premiereBookId\)/, "Prerelease cards must link only to the existing premiere page");
+assert.match(seriesPage, /else if\(volume\.status==='published'\)/, "Only published volumes may expose a reading link");
+assert.match(seriesPage, /action\.setAttribute\('aria-disabled','true'\)/, "Planned volumes must remain non-interactive");
+assert.match(seriesPage, /progress\['published-'\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must be keyed by the actual book ID");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v59["']/, "Series presentation must use the refreshed app-shell cache");
 assert.ok(serviceWorker.includes("url.pathname.includes('/content/series/')"), "Series manifest must use network-first caching");
 
