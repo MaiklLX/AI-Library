@@ -7,6 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
 const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
+const premiereSeriesBook = JSON.parse(readFileSync(resolve(root, "content/books/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
@@ -244,6 +245,19 @@ assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v59['"]/, "Lazy book loadin
 
 
 assert.equal(seriesManifest.id, "ty-v-moih-planah", "Series manifest ID is incorrect");
+
+assert.equal(premiereSeriesBook.status, "prerelease", "The premiere book must remain prerelease");
+assert.equal(premiereSeriesBook.seriesId, seriesManifest.id, "The premiere book must carry its series ID");
+assert.equal(premiereSeriesBook.seriesVolume, 1, "The premiere book must carry its volume number");
+assert.ok(!Array.isArray(premiereSeriesBook.chapters) || premiereSeriesBook.chapters.length === 0, "The prerelease book must not expose chapter content");
+for (const volume of seriesManifest.volumes.filter(item => item.status === "published")) {
+  const catalogEntry = publishedCatalog.books.find(entry => entry.id === volume.bookId);
+  assert.ok(catalogEntry, `Published series volume is missing from the public catalog: ${volume.bookId}`);
+  const publishedSeriesBook = JSON.parse(readFileSync(resolve(root, catalogEntry.path), "utf8"));
+  assert.equal(publishedSeriesBook.seriesId, seriesManifest.id, `Published series volume has an incorrect seriesId: ${volume.bookId}`);
+  assert.equal(publishedSeriesBook.seriesVolume, volume.number, `Published series volume has an incorrect seriesVolume: ${volume.bookId}`);
+}
+
 assert.equal(seriesManifest.volumes.length, 6, "The series must contain exactly six volumes");
 assert.ok(seriesManifest.volumes.every(volume => typeof volume.bookId === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.bookId)), "Every series volume must define a valid bookId");
 assert.equal(new Set(seriesManifest.volumes.map(volume => volume.bookId)).size, 6, "Series book IDs must be unique");
