@@ -68,6 +68,8 @@ assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expo
 assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\']><\/script>/, "Offline download manager must load after the storage adapter");
 assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
+assert.ok(existsSync(resolve(root, "scripts/test-download-manager.mjs")), "Offline download integrity tests are missing");
+assert.match(downloadManager, /await store\.setDownload\(record\)/, "Validated offline book must be persisted as a single record");
 assert.match(downloadManager, /async function checkForUpdate\(/, "Offline books must support non-destructive update checks");
 assert.match(downloadManager, /catalogRevision: String\(entry\.revision \|\| book\.revision \|\| ''\)/, "Offline downloads must remember the catalog revision");
 assert.match(downloadManager, /if \(entry\.revision && String\(book\.revision \|\| ''\) !== String\(entry\.revision\)\)/, "Offline downloads must reject a text body whose revision differs from the catalog");
