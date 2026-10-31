@@ -1036,6 +1036,7 @@ textarea {
 .premiere-book-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .premiere-book-cover .symbol{font:clamp(54px,8vw,82px) Georgia,serif;color:#e6cc8d;text-shadow:0 0 28px #d9b66d66}
 .premiere-stamp{position:absolute;z-index:2;left:calc(50% + 62px);top:12%;display:grid;place-items:center;width:78px;height:78px;border:1px solid #d9b66d88;border-radius:50%;background:#17140fe8;color:#e5c77f;font-size:9px;letter-spacing:.13em;text-align:center;line-height:1.5;transform:rotate(12deg);box-shadow:0 8px 24px #0006}
+.premiere-stamp-new{border-color:#9fc7a8aa;background:radial-gradient(circle at 35% 30%,#284c38f2,#14271df2);color:#d8f2dc;font-size:12px;font-weight:900;letter-spacing:.16em;text-shadow:0 0 12px #9fe0ad55;box-shadow:0 8px 26px #0007,0 0 24px #75c78a22}
 .premiere-copy{position:relative;z-index:1;min-width:0}
 .premiere-kicker{display:flex;align-items:center;gap:10px;color:#e0c17a;font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
 .premiere-kicker:before{content:"";width:24px;height:1px;background:var(--gold)}
@@ -3362,7 +3363,7 @@ function syncGenreFilters(){
   });
   root.querySelectorAll("[data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre===genre));
 }
-function renderPrereleaseShowcase(){
+async function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
   const upcoming=getAllBooks().filter(book=>book.status==="prerelease");
@@ -3370,8 +3371,23 @@ function renderPrereleaseShowcase(){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
   }
+  // The stamp follows the actual publication status of volume I, not its countdown date.
+  let firstVolumePublished=false;
+  if(upcoming.some(book=>book.id==="ty-v-moih-planah")){
+    try{
+      const response=await fetch("./content/series/ty-v-moih-planah.json",{cache:"no-cache"});
+      if(response.ok){
+        const series=await response.json();
+        firstVolumePublished=series.volumes?.some(volume=>Number(volume.number)===1&&volume.status==="published")===true;
+      }
+    }catch(error){console.warn("Не удалось проверить статус первого тома:",error);}
+  }
+  if(!root.isConnected)return;
+  const stamp=firstVolumePublished
+    ? '<div class="premiere-stamp premiere-stamp-new" aria-label="Новинка">НОВИНКА</div>'
+    : '<div class="premiere-stamp" aria-label="Закрытый пререлиз">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>';
   root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
-    <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div><div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
+    <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${book.id==="ty-v-moih-planah"?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
     <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./series.html">Открыть роман · 6 томов　↗</a></div>
   </article>`).join('');
 }
