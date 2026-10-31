@@ -1,0 +1,31 @@
+name: Validate AI Library API v2
+
+on:
+  push:
+    branches: ["backend/worker-v2-foundation"]
+    paths:
+      - "backend/worker-v2/**"
+      - ".github/workflows/worker-v2.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "backend/worker-v2/**"
+      - ".github/workflows/worker-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/worker-v2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run check
+      - run: npm test
