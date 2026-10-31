@@ -265,3 +265,11 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - The original premiere destination and closed-text behavior remain intact. The card is responsive; mobile rules restore the series count, tagline, metadata and CTA that older compact-prerelease styles had hidden.
 - Service Worker app-shell cache advanced to v64; static validation now asserts the novel's six-volume metadata and the series banner elements.
 - Automated CI is pending for the new head. No physical-device visual check has been performed. PR #48 remains draft, open, unmerged and undeployed.
+
+### Editorial catalog shelves checkpoint (2026-10-31)
+- Added a responsive editorial shelf area between the pre-release showcase and the searchable catalog.
+- Published catalog metadata explicitly marks «Автоматическая полночь» as an editorial pick; the UI does not invent popularity, ratings or reader counts.
+- A «Новые поступления» shelf is data-driven and appears only when a published book has a real publishedAt timestamp. The current catalog does not yet contain such a timestamp, so no book is falsely presented as a new release.
+- The personal-library shelf label now says «Продолжить чтение» and continues to use actual saved reading progress.
+- Editorial shelf actions are wired to the existing reader and book-detail flows. Service Worker app-shell cache advanced to v65; static validation checks the shelf data rules and actions.
+- CI for the latest head is pending. No real-device visual or touch test has been performed. PR #48 remains draft, open, unmerged and undeployed.
