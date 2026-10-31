@@ -214,3 +214,11 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Validation script cache-version assertions were updated from v57 to v58.
 - GitHub Actions validation for head commit `71b2321993a6be61642dabdc57dcf5fa3219379c` completed successfully (run `41197803280`).
 - This is source/CI validation only. No browser, airplane-mode, Android, iOS or installed-PWA manual test has yet been performed. Do not claim physical-device validation.
+
+
+### Service Worker regression tests (2026-10-31)
+- Added `scripts/test-service-worker.mjs` using Node's built-in test primitives and a mocked Cache API/fetch environment.
+- Four regression scenarios cover navigation fallback after HTTP 503, offline navigation fallback, successful online navigation despite cache-write quota failure, and cached catalog fallback after HTTP 503.
+- Added the test script to `.github/workflows/validate.yml` after the static project validator.
+- GitHub Actions run `41197940751` passed for commit `7577bfe0aa29bc43430a4452cc662dc0935706e8`; both static validation and all four Service Worker scenarios passed.
+- These are automated logic tests, not real-device/PWA offline verification.
