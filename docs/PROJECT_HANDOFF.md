@@ -179,3 +179,14 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Anti-abuse requirements: server-side reward verification, idempotent settlement, self-vote exclusion, contest minimum vote thresholds, auditable ledger, visible prices and refund rules.
 - No frontend, Worker, D1 schema, catalogue or user data changed.
 - Next: review and adjust the proposed numbers/rank names with the product owner; then refine contest shortlist, tie-breaks, minimum vote count, fee/refund timing and moderation policy before implementation.
+
+
+## EPUB creator revenue-share decision (2026-10-31)
+
+- Product owner approved an **80% author / 20% AI Library** split for each first paid EPUB purchase.
+- Illustrative price: 3 coins → 2.4 coins credited to the author and 0.6 coins retained by the platform.
+- A repeat download of an already purchased EPUB is free and creates no second debit or credit.
+- Show price and split before confirmation; settle reader debit, author credit, platform commission and entitlement atomically on the server with idempotency protection.
+- Coins are internal platform currency; no cash withdrawal or real-money payout is promised.
+- Final EPUB price/pricing controls, refund policy, and settlement timing remain undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
+- No code or live wallet behavior has been implemented. Real purchases wait for Worker source/schema discovery and server-side transactional ledger support.
