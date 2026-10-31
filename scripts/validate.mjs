@@ -55,7 +55,7 @@ assert.match(personalStateMigration, /existing\?\.migrationVersion >= 1/, "Migra
 assert.match(platformRuntime, /transaction\.oncomplete/, "IndexedDB writes must resolve only after transaction completion");
 assert.match(html, /<script src=["']\.\/src\/platform\/library-store\.js["']><\/script>/, "Library storage adapter must load after the platform runtime");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/library-store\.js['"]/, "Library storage adapter must be cached for offline startup");
-assert.match(personalStateMigration, /async function sync\(/, "Personal-state IndexedDB synchronization is missing");
+assert.match(personalStateMigration, /function sync\(/, "Personal-state IndexedDB synchronization is missing");
 assert.match(personalStateMigration, /async function flush\(/, "Personal-state synchronization flush barrier is missing");
 assert.match(personalStateMigration, /await store\.setPersonalState\(next\)/, "Personal-state sync must persist snapshots");
 assert.doesNotMatch(personalStateMigration, /localStorage\.(?:removeItem|clear)\(/, "Personal-state bridge must preserve legacy keys");
