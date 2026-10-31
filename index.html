@@ -2945,13 +2945,20 @@ body.reader-open #pageTurnSheet.flip-back {
 
 <style id="series-reader-completion-v1">
 .series-completion-panel{margin:10px 0 4px;padding:16px;border:1px solid rgba(216,185,120,.48);border-radius:12px;background:linear-gradient(145deg,#24211b,#17171b);color:#eee7d8;text-align:center}.series-completion-panel[hidden]{display:none}.series-completion-panel h2{font:500 23px/1.15 Georgia,serif;margin:0 0 8px;color:#e3c98f}.series-completion-panel p{max-width:560px;margin:0 auto 14px;color:#c4bcae;font-size:13px}.series-completion-link,.series-completion-close{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin:4px;padding:0 15px;border:1px solid #d8b978;border-radius:8px;background:transparent;color:#e2c88f;text-decoration:none;font:inherit;font-size:13px;cursor:pointer}.series-completion-close{border-color:rgba(216,185,120,.28);color:#c4bcae}@media(max-width:540px){.series-completion-panel{padding:12px}.series-completion-panel h2{font-size:20px}}
-</style></head>
+</style>
+<style id="series-collection-card-v1">
+#books .series-collection-card .cover-progress{left:10px;right:auto;bottom:10px;display:inline-flex;align-items:center;gap:6px;min-height:29px;padding:5px 9px;border:1px solid #e5c77988;border-radius:999px;background:#111d;color:#f5dfaa;font:700 10px/1 system-ui,sans-serif;box-shadow:0 4px 14px #0006;backdrop-filter:blur(8px)}
+#books .series-collection-card .book-back{border-color:#b18c4b;background:radial-gradient(ellipse at 100% 0%,#d9b66d1b,transparent 48%),linear-gradient(155deg,#292319,#151515 78%)}
+#books .series-collection-card .book-back-actions .read{display:flex;align-items:center;justify-content:center;text-decoration:none}
+@media(max-width:680px){#books .series-collection-card .cover-progress{left:7px;bottom:7px;min-height:26px;padding:4px 7px;font-size:9px}}
+</style>
+</head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
 <button class="pill nav-action" id="myLibraryToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11.5A2.5 2.5 0 0 1 19 7v13H7a2 2 0 0 1-2-2V4.5Z"/><path d="M7 17.5h12M8.5 8h7M8.5 11.5h7"/></svg><span>Моя библиотека</span></button>
 <button class="pill nav-action" id="favoritesToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.2-8.8 10.1-8.8 10.1S3.2 14 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg><span>Избранное</span></button>
 <button class="pill nav-action active" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/></svg><span>Каталог</span></button>
-<a class="pill nav-action" href="./series.html"><span>Ты в моих планах · 6 томов</span></a>
+
 <a class="pill nav-action" href="./book-creator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a2.8 2.8 0 0 0-4-4L4.2 15.1 4 20Z"/><path d="M13 6.5 17.5 11"/></svg><span>Создать книгу</span></a>
 </div></nav></div></header>
 <div id="catalogUpdateNotice" class="catalog-update-notice" role="status" aria-live="polite" hidden>
@@ -2965,7 +2972,7 @@ body.reader-open #pageTurnSheet.flip-back {
 <button class="btn hero-action" id="randomBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg><span>Удиви меня</span></button>
 </div>
 <div class="stats" aria-label="О библиотеке">
-<div><strong id="catalogCount">0</strong><span>книг в каталоге</span></div>
+<div><strong id="catalogCount">0</strong><span>книг и сборников в каталоге</span></div>
 <div><strong>✦</strong><span>редакционный отбор</span></div>
 <div><strong>0 ₽</strong><span>доступ к чтению</span></div>
 </div></div><div class="art"><i class="cosmic-halo" aria-hidden="true"></i><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
@@ -3366,8 +3373,22 @@ function renderPrereleaseShowcase(){
   }
   root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
     <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div><div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
-    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
+    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./series.html">Открыть роман · 6 томов　↗</a></div>
   </article>`).join('');
+}
+
+
+function renderSeriesCollectionCard(){
+ const title='Ты в моих планах';
+ const description='Один завершённый роман, собранный в шесть последовательных томов. Единая история, сквозная нумерация глав 1–93 и отдельная страница с составом всей серии и графиком выхода.';
+ return '<article class="book series-collection-card" data-book-card data-series-collection>'+
+ '<div class="book-flip-inner">'+
+ '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о сборнике: '+title+'" aria-expanded="false">'+
+ '<span class="cover romance has-cover"><img class="cover-art" src="./content/books/ty-v-moih-planah-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">СБОРНИК · 6 ТОМОВ</span><span class="cover-progress"><span aria-hidden="true">✦</span><span>93 главы</span></span></span></div>'+
+ '<div class="book-face book-back"><div class="book-back-top"><span class="book-back-label">ЕДИНОЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<h3>'+title+'</h3><div class="author">AI LIBRARY · РОМАН В ШЕСТИ ТОМАХ</div><p class="desc">'+description+'</p>'+
+ '<div class="meta"><span>6 томов · 93 главы</span><span>Романтический детектив · 18+</span></div>'+
+ '<div class="book-back-actions"><a class="btn read" href="./series.html">Открыть сборник　→</a></div></div></div></article>';
 }
 
 function renderBookCard(book){
@@ -3423,7 +3444,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','6 томов','93 главы','романтический детектив'];const showSeriesCollection=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Детектив")&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(seriesCard?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+seriesCard;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
