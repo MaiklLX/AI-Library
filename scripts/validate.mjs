@@ -9,6 +9,7 @@ const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), 
 const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
 const libraryStore = readFileSync(resolve(root, "src/platform/library-store.js"), "utf8");
+const personalStateMigration = readFileSync(resolve(root, "src/platform/personal-state-migration.js"), "utf8");
 const downloadManager = readFileSync(resolve(root, "src/platform/download-manager.js"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
@@ -41,14 +42,34 @@ assert.match(html, /serviceWorker\.register/, "Service worker registration is mi
 assert.match(html, /<script src=["']\.\/src\/platform\/runtime\.js["']><\/script>/, "Cross-platform runtime must load before the main application");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/runtime\.js['"]/, "Platform runtime must be included in the offline app shell");
 assert.match(platformRuntime, /const DB_NAME = ['"]ai-library-platform['"]/, "Platform storage database is missing");
-assert.match(platformRuntime, /books: 'books',[\s\S]*metadata: 'metadata',[\s\S]*downloads: 'downloads'/, "Platform storage collections are incomplete");
+assert.match(platformRuntime, /const DB_VERSION = 2;/, "Personal-state storage schema must be upgraded");
+assert.match(platformRuntime, /personalState: 'personalState'/, "Durable personal-state collection is missing");
+assert.match(libraryStore, /async getPersonalState\(/, "Personal-state retrieval is missing");
+assert.match(libraryStore, /async setPersonalState\(/, "Personal-state persistence is missing");
+assert.match(html, /src\/platform\/personal-state-migration\.js/, "Migration module must load in the app");
+assert.match(serviceWorker, /src\/platform\/personal-state-migration\.js/, "Migration module must be cached offline");
+assert.match(personalStateMigration, /localStorage\.getItem/, "Migration must read legacy browser data");
+assert.doesNotMatch(personalStateMigration, /localStorage\.(?:removeItem|clear)\s*\(/, "Recovery must preserve legacy keys");
+assert.match(personalStateMigration, /async function restore\(\)/, "IndexedDB personal-state recovery is missing");
+assert.match(personalStateMigration, /if \(currentValid\)/, "Recovery must preserve valid local data");
+assert.match(personalStateMigration, /migrationVersion: 1/, "Migration must be versioned");
+assert.match(personalStateMigration, /existing\?\.migrationVersion >= 1/, "Migration must be idempotent");
 assert.match(platformRuntime, /transaction\.oncomplete/, "IndexedDB writes must resolve only after transaction completion");
 assert.match(html, /<script src=["']\.\/src\/platform\/library-store\.js["']><\/script>/, "Library storage adapter must load after the platform runtime");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/library-store\.js['"]/, "Library storage adapter must be cached for offline startup");
+assert.match(personalStateMigration, /function sync\(/, "Personal-state IndexedDB synchronization is missing");
+assert.match(personalStateMigration, /async function flush\(/, "Personal-state synchronization flush barrier is missing");
+assert.match(personalStateMigration, /await store\.setPersonalState\(next\)/, "Personal-state sync must persist snapshots");
+assert.doesNotMatch(personalStateMigration, /localStorage\.(?:removeItem|clear)\(/, "Personal-state bridge must preserve legacy keys");
+assert.match(html, /AILibraryPersonalStateMigration\?\.sync\(\)/, "Personal-data save operations must call the durable sync bridge");
+assert.match(html, /await window\.AILibraryPersonalStateMigration\?\.sync\(\)/, "Backup restore must wait for durable state synchronization");
+
 assert.match(libraryStore, /async getBook\(/, "Library storage adapter must expose book retrieval");
 assert.match(html, /<script src=["\']\.\/src\/platform\/download-manager\.js["\']><\/script>/, "Offline download manager must load after the storage adapter");
 assert.match(serviceWorker, /[\']\.\/src\/platform\/download-manager\.js[\']/, "Offline download manager must be cached in the app shell");
 assert.match(downloadManager, /async function download\(/, "Offline download manager must expose a download workflow");
+assert.ok(existsSync(resolve(root, "scripts/test-download-manager.mjs")), "Offline download integrity tests are missing");
+assert.match(downloadManager, /await store\.setDownload\(record\)/, "Validated offline book must be persisted as a single record");
 assert.match(downloadManager, /async function checkForUpdate\(/, "Offline books must support non-destructive update checks");
 assert.match(downloadManager, /catalogRevision: String\(entry\.revision \|\| book\.revision \|\| ''\)/, "Offline downloads must remember the catalog revision");
 assert.match(downloadManager, /if \(entry\.revision && String\(book\.revision \|\| ''\) !== String\(entry\.revision\)\)/, "Offline downloads must reject a text body whose revision differs from the catalog");
@@ -68,6 +89,11 @@ assert.match(downloadManager, /validateBook\(book, rawId\)/, "Offline downloads 
 assert.match(downloadManager, /await store\.setDownload\(record\)/, "Offline book content and ready status must be persisted together");
 assert.match(libraryStore, /async getDownloads\(/, "Library storage adapter must expose download collection retrieval");
 assert.match(html, /data-download-book=/, "Published catalog cards must expose offline download actions");
+assert.match(html, /data-offline-status=/, "Published cards must clearly show whether a book is available offline");
+assert.match(html, /AILibraryDownloadManager\?\.load\?\.\(\)/, "Reader must check a local book copy before requesting network content");
+assert.ok(html.indexOf("const saved = records.find(record => String(record.id) === String(book.id))") < html.indexOf("const response = await fetch(book.contentPath"), "Reader must prefer a saved offline copy over network content");
+assert.match(html, /data-manage-download=/, "Already downloaded books must link to local download management");
+assert.match(html, /Сохранена на этом устройстве/, "Offline-ready state must be visible in the catalog");
 assert.match(html, /id="my-library-desktop-grid-v2"/, "Personal library responsive grid refinement is missing");
 assert.match(html, /#myLibrary \.library-shelf:last-child\s*\{\s*grid-column:1 \/ -1;/, "Offline shelf must use the full desktop/tablet row");
 assert.match(html, /#myLibrary #myLibraryDownloads\s*\{\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\);\s*\}/, "Downloaded books must use a balanced two-column wide layout");
@@ -83,7 +109,7 @@ assert.match(html, /id="myLibrary"/, "Personal library section is missing");
 assert.match(html, /id="myLibraryToggle"/, "Personal library navigation control is missing");
 assert.match(html, /function renderMyLibrary\(/, "Personal library renderer is missing");
 assert.match(html, /data-library-read=/, "Personal library book actions are missing");
-assert.match(html, /renderPrereleaseShowcase\(\);renderMyLibrary\(\)/, "Personal library must refresh with catalog rendering");
+assert.match(html, /renderPrereleaseShowcase\(\);renderEditorialShelves\(\);renderMyLibrary\(\)/, "Premiere, editorial shelves and personal library must refresh with catalog rendering");
 assert.doesNotMatch(libraryStore, /localStorage\.clear|localStorage\.removeItem|PERSONAL_BOOKS_KEY/, "Platform storage adapter must not migrate or clear legacy browser data");
 try {
   new Function(libraryStore);
@@ -119,6 +145,13 @@ assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes mu
 assert.match(html, /data-book-id="\x27\+esc\(book\.id\)\+\x27"/, "Book card IDs from imported data must be escaped in HTML attributes");
 assert.match(html, /data-fav="\x27\+esc\(book\.id\)\+\x27"/, "Favorite button IDs from imported data must be escaped in HTML attributes");
 assert.match(html, /data-read="\x27\+esc\(book\.id\)\+\x27"/, "Read button IDs from imported data must be escaped in HTML attributes");
+assert.match(html, /id="bookDetailPage"/, "Dedicated book detail page surface is missing");
+assert.match(html, /function openBookDetails\(id, updateUrl = true\)/, "Book detail route renderer is missing");
+assert.match(html, /searchParams\.set\('book', String\(id\)\)/, "Book detail URLs must be shareable and directly addressable");
+assert.match(html, /searchParams\.get\('book'\)/, "Book detail deep links must be restored on startup");
+assert.match(html, /data-book-details=/, "Catalog book cards must link to their detail page");
+assert.match(html, /data-detail-read=/, "Book detail page must expose the read action");
+assert.match(html, /data-detail-download=/, "Book detail page must expose the offline download action");
 const publishedCatalogPath = resolve(root, "content/catalog.json");
 assert.ok(existsSync(publishedCatalogPath), "Published books catalog is missing");
 const publishedCatalog = JSON.parse(readFileSync(publishedCatalogPath, "utf8"));
@@ -146,6 +179,18 @@ for (const entry of publishedCatalog.books) {
     assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
   }
 }
+const sixVolumeNovel = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah");
+assert.ok(sixVolumeNovel, "The pre-release novel must remain in the published metadata catalog");
+assert.equal(sixVolumeNovel.volumeCount, 6, "The novel pre-release must be identified as a six-volume series");
+assert.match(html, /six-volume-prerelease-series-v1/, "The six-volume premium premiere design layer is missing");
+assert.match(html, /premiere-series-spines/, "The six-volume banner must render visible volume spines");
+assert.match(html, /premiere-volume-chip/, "The six-volume banner must state the complete series count");
+assert.match(html, /id="editorialShelves"/, "Editorial catalog shelf container is missing");
+assert.match(html, /function renderEditorialShelves\(/, "Editorial shelf renderer is missing");
+assert.match(html, /editorialPick===true/, "Editorial shelf must use explicit curation metadata");
+assert.match(html, /publishedAt==="string"/, "New-arrivals shelf must require a real publication timestamp");
+assert.match(html, /#editorialShelves[\s\S]*?data-book-details/, "Editorial shelves must expose book detail actions");
+assert.match(html, /#editorialShelves[\s\S]*?openBookById\(read\.dataset\.read\)/, "Editorial shelf read actions must open the existing reader");
 assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
 assert.match(html, /async function loadPublishedBooks\(/, "Published book loader is missing");
 assert.match(html, /PUBLISHED_BOOKS_KEY/, "Published book offline cache is missing");
@@ -216,13 +261,13 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v65['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Book action update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v65['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /PUBLISHED_CATALOG_STATE_KEY/, "Catalog update state key is missing");
 assert.match(html, /function getCatalogMetadataSnapshot\(catalog\)/, "Catalog metadata snapshot helper is missing");
@@ -232,13 +277,13 @@ assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is miss
 assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
 assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
 assert.match(html, /Тексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Catalog update notice must use the refreshed app-shell cache");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v65['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
 assert.match(html, /Full book JSON is fetched only on explicit read\/download/, "Book content loading policy is missing");
 assert.match(html, /async function openBookById\(id\)[\s\S]*?fetch\(book\.contentPath, \{ cache: 'no-cache' \}\)/, "Published book text must load on demand when opening a book");
 assert.match(html, /metadataOnly: true,[\s\S]*?chapters: \[\]/, "Catalog fallback must not retain full book text in local metadata cache");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v57['"]/, "Lazy book loading update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v65['"]/, "Lazy book loading update must use the current cache version");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
 
@@ -258,3 +303,8 @@ assert.ok(html.includes("0%, 8%, 100% { transform: translateX(-115%) rotate(12de
 assert.ok(html.includes("@media (prefers-reduced-motion: reduce)"), "Signature star animations must respect reduced-motion preferences");
 assert.ok(html.includes(".hero .spark::after"), "Hero star ambient particle layer is missing");
 assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and ambient layers must be disabled for reduced-motion users");
+
+assert.match(html, /Book detail visual refinement/, "Book detail visual refinement styles are missing");
+assert.match(html, /grid-template-columns:minmax\(250px,370px\)/, "Book detail desktop cover/content layout is missing");
+assert.match(html, /@media\(max-width:760px\)/, "Book detail mobile layout is missing");
+assert.match(html, /prefers-reduced-motion:reduce/, "Book detail motion must respect reduced-motion preferences");

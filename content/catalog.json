@@ -49,7 +49,8 @@
       ],
       "cover": "./content/books/avtomaticheskaya-polnoch-cover.svg",
       "revision": "5.6",
-      "wordCount": 17253
+      "wordCount": 17253,
+      "editorialPick": true
     },
     {
       "id": "ty-v-moih-planah",
@@ -57,7 +58,7 @@
       "metadataOnly": true,
       "chapterCount": 0,
       "title": "Ты в моих планах",
-      "subtitle": "Закрытая премьера · AI Library",
+      "subtitle": "Многотомный роман · 6 томов · закрытая премьера",
       "author": "AI Library",
       "genre": "Современный роман 18+ · романтический детектив",
       "tagline": "Одна встреча. Два мира. И тайна, которая изменит всё.",
@@ -80,7 +81,8 @@
         "тайна прошлого",
         "добрый финал"
       ],
-      "countdownDate": "2026-11-01T18:00:00+03:00"
+      "countdownDate": "2026-11-01T18:00:00+03:00",
+      "volumeCount": 6
     }
   ]
 }

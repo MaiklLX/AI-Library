@@ -22,3 +22,9 @@ jobs:
           node-version: 22
       - name: Validate HTML scripts, manifest and local assets
         run: node scripts/validate.mjs
+      - name: Test Service Worker offline fallbacks
+        run: node scripts/test-service-worker.mjs
+      - name: Test non-destructive personal-state migration
+        run: node scripts/test-personal-state-migration.mjs
+      - name: Test offline book download integrity
+        run: node scripts/test-download-manager.mjs

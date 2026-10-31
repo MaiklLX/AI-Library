@@ -2943,13 +2943,163 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+
+<style id="offline-library-ux-v1">
+#books .offline-card-status{margin:11px 0 0;padding:7px 9px;border:1px solid rgba(255,255,255,.09);border-radius:8px;color:#aaa59a;font-size:11px;line-height:1.35;background:rgba(255,255,255,.025)}
+#books .offline-card-status.is-ready{color:#e5cd91;border-color:rgba(217,182,109,.28);background:rgba(217,182,109,.07)}
+#books .offline-download.is-downloaded{border-color:rgba(217,182,109,.35);color:#e5cd91}
+@media(max-width:540px){#books .offline-card-status{font-size:10px;padding:6px 7px}#books .book-back-actions .offline-download{font-size:11px!important;padding:9px 7px!important}}
+</style>
+
+<style id="book-detail-page-v1">
+#bookDetailPage{position:fixed;inset:72px 0 0;z-index:12;overflow:auto;background:radial-gradient(ellipse at 20% 0%,#33291a,transparent 42%),#101010;padding:clamp(20px,5vw,64px) 22px 48px}
+#bookDetailPage[hidden]{display:none!important}
+.book-detail-inner{max-width:1040px;margin:0 auto}
+.book-detail-back{margin-bottom:26px}
+.book-detail-layout{display:grid;grid-template-columns:minmax(220px,340px) minmax(0,1fr);gap:clamp(24px,5vw,58px);align-items:start}
+.book-detail-cover{width:100%;aspect-ratio:2/3;border:1px solid #6c5734;border-radius:16px;overflow:hidden;background:linear-gradient(145deg,#3b2a50,#15121f);display:grid;place-items:center;box-shadow:0 24px 70px #0008}
+.book-detail-cover img{width:100%;height:100%;object-fit:cover}
+.book-detail-cover .symbol{font:100px Georgia,serif;color:#e6cc8d}
+.book-detail-copy{padding:8px 0}
+.book-detail-kicker{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.book-detail-copy h1{font:500 clamp(34px,5vw,58px)/1.08 Georgia,serif;margin:12px 0}
+.book-detail-author{font-size:17px;color:#d7c7a5;margin-bottom:20px}
+.book-detail-description{font-size:16px;line-height:1.8;color:#c9c3b8;white-space:pre-line}
+.book-detail-meta{display:flex;gap:9px;flex-wrap:wrap;margin:24px 0}
+.book-detail-meta span{border:1px solid #ffffff1c;background:#ffffff08;border-radius:999px;padding:7px 11px;color:#c9c3b8;font-size:12px}
+.book-detail-progress{margin:22px 0}
+.book-detail-progress-track{height:6px;border-radius:9px;background:#ffffff16;overflow:hidden;margin-top:9px}
+.book-detail-progress-fill{height:100%;background:var(--gold);border-radius:9px}
+.book-detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.book-detail-offline{margin-top:18px;color:#aaa59a;font-size:12px}
+@media(max-width:650px){#bookDetailPage{inset:64px 0 0;padding:18px 16px 36px}.book-detail-layout{grid-template-columns:minmax(0,1fr);gap:22px}.book-detail-cover{width:min(66%,250px);margin:0 auto}.book-detail-copy{padding:0}.book-detail-copy h1{font-size:36px}.book-detail-actions>*{flex:1 1 100%;min-height:48px}}
+
+/* Book detail visual refinement */
+#bookDetailPage{background:
+ radial-gradient(ellipse at 16% 12%,rgba(181,139,66,.17),transparent 34%),
+ radial-gradient(ellipse at 88% 72%,rgba(92,67,112,.13),transparent 36%),
+ #0d0d0e}
+.book-detail-inner{max-width:1120px}
+.book-detail-back{display:inline-flex;align-items:center;gap:8px;background:#ffffff08;border-color:#ffffff20;color:#e9e2d2;transition:background .2s,border-color .2s,transform .2s}
+.book-detail-back:hover{background:#ffffff12;border-color:#c9a85d;transform:translateX(-2px)}
+.book-detail-layout{grid-template-columns:minmax(250px,370px) minmax(0,1fr);gap:clamp(34px,6vw,78px);align-items:center}
+.book-detail-cover{position:relative;width:100%;aspect-ratio:2/2.85;border:1px solid rgba(219,183,112,.48);border-radius:7px 17px 17px 7px;background:linear-gradient(145deg,#47351e,#17151a 72%);box-shadow:18px 22px 55px #0009, inset 5px 0 10px #fff1;isolation:isolate}
+.book-detail-cover:before{content:"";position:absolute;z-index:2;inset:0 auto 0 12px;width:1px;background:linear-gradient(transparent,#ffffff35 18%,#0008 50%,#ffffff24 82%,transparent);pointer-events:none}
+.book-detail-cover:after{content:"";position:absolute;z-index:2;inset:10px;border:1px solid #ffffff20;border-radius:3px;pointer-events:none}
+.book-detail-cover img{display:block;position:relative;z-index:1}
+.book-detail-cover .symbol{font-size:clamp(90px,12vw,150px);text-shadow:0 8px 32px #0009}
+.book-detail-copy{position:relative;padding:clamp(22px,3.8vw,42px);border:1px solid #ffffff16;border-radius:18px;background:linear-gradient(145deg,#ffffff0c,#ffffff04);box-shadow:0 22px 70px #0003}
+.book-detail-kicker{display:flex;align-items:center;gap:10px}
+.book-detail-kicker:before{content:"";width:24px;height:1px;background:var(--gold)}
+.book-detail-copy h1{letter-spacing:-.035em;text-wrap:balance;margin:16px 0 10px}
+.book-detail-author{display:flex;align-items:center;gap:9px;color:#e0c991;font-size:15px;margin-bottom:24px}
+.book-detail-author:before{content:"АВТОР";font-size:9px;letter-spacing:.16em;color:#8d877b;font-weight:800}
+.book-detail-description{max-width:650px;font-size:15px;line-height:1.85;color:#d0cbc1}
+.book-detail-meta{padding-top:20px;border-top:1px solid #ffffff15;margin:25px 0 0}
+.book-detail-meta span{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-color:#ffffff18;background:#08080838;color:#ddd5c5}
+.book-detail-progress{padding:17px 18px;border:1px solid #ffffff16;border-radius:12px;background:#08080835}
+.book-detail-progress .reading-progress-label{display:flex;justify-content:space-between;gap:12px;color:#d8d0bf;font-size:12px}
+.book-detail-progress-track{height:5px;background:#ffffff1c}
+.book-detail-progress-fill{background:linear-gradient(90deg,#a77c36,#f0d18a);box-shadow:0 0 14px #d9b66d66}
+.book-detail-actions{margin-top:26px;align-items:stretch}
+.book-detail-actions .btn{min-height:48px;padding:12px 18px;transition:transform .2s,filter .2s,border-color .2s}
+.book-detail-actions .btn:hover{transform:translateY(-2px);filter:brightness(1.08);border-color:#d9b66d}
+.book-detail-actions .btn.primary{box-shadow:0 8px 26px #d9b66d25}
+.book-detail-offline{display:flex;align-items:center;gap:8px;line-height:1.6;margin-top:18px;color:#aaa596}
+.book-detail-offline:before{content:"";width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#8aab83;box-shadow:0 0 10px #8aab8366}
+@media(max-width:760px){
+ #bookDetailPage{inset:64px 0 0}
+ .book-detail-layout{grid-template-columns:minmax(0,1fr);gap:25px;align-items:start}
+ .book-detail-cover{width:min(65%,280px);margin:4px auto 0;box-shadow:10px 16px 40px #0009}
+ .book-detail-copy{padding:23px 20px;border-radius:15px}
+ .book-detail-copy h1{font-size:clamp(32px,8vw,43px)}
+ .book-detail-author{margin-bottom:18px}
+ .book-detail-meta{margin-top:19px;padding-top:16px}
+ .book-detail-actions{display:grid;grid-template-columns:1fr}
+ .book-detail-actions>*{width:100%;min-height:50px}
+}
+@media(prefers-reduced-motion:reduce){.book-detail-back,.book-detail-actions .btn{transition:none}}
+
+</style>
+
+<style id="six-volume-prerelease-series-v1">
+/* Six-volume pre-release presentation — premium series treatment */
+.premiere-series-card{grid-template-columns:minmax(290px,.94fr) minmax(0,1.06fr);gap:clamp(26px,4vw,58px);padding:clamp(24px,4vw,48px);background:radial-gradient(ellipse at 22% 48%,#36516a38,transparent 42%),linear-gradient(118deg,#111820 0%,#171716 52%,#211a13 100%);border-color:#c6a45f99}
+.premiere-series-card:before{background:radial-gradient(ellipse at 18% 45%,#7895a51c,transparent 46%),radial-gradient(ellipse at 100% 0%,#d9b66d15,transparent 48%)}
+.premiere-series-art{min-height:350px}
+.premiere-series-stack{position:relative;width:min(100%,390px);height:310px;isolation:isolate;filter:drop-shadow(0 24px 24px #0008)}
+.premiere-series-spines{position:absolute;right:2%;bottom:24px;display:flex;align-items:flex-end;height:250px;padding-left:110px}
+.premiere-series-spine{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:39px;height:calc(218px + (var(--spine-index)*3px));margin-left:-2px;padding:15px 4px 12px;border:1px solid #b9965c88;border-radius:2px 5px 5px 2px;background:linear-gradient(90deg,#090d13,#253443 38%,#10151d 100%);box-shadow:inset 3px 0 5px #ffffff12,5px 8px 12px #0008;transform:perspective(600px) rotateY(-10deg) translateY(calc(var(--spine-index)*-2px));color:#e7cc91}
+.premiere-series-spine:before{content:"";position:absolute;inset:8px 4px;border:1px solid #d9b66d35;pointer-events:none}
+.premiere-series-spine b{font:500 18px Georgia,serif;text-shadow:0 0 12px #d9b66d55}
+.premiere-series-spine small{writing-mode:vertical-rl;transform:rotate(180deg);max-height:145px;overflow:hidden;color:#c8b68e;font:9px/1.2 Georgia,serif;letter-spacing:.08em;text-align:center}
+.premiere-series-front{position:absolute;z-index:3;left:4%;bottom:22px;width:178px;height:264px;aspect-ratio:auto;transform:perspective(850px) rotateY(-13deg);box-shadow:16px 22px 38px #000c,-5px 0 0 #d9b66d28,0 0 30px #d9b66d13}
+.premiere-series-front:before{inset:10px}
+.premiere-series-front img{object-fit:cover}
+.premiere-series-card:hover .premiere-series-front{transform:perspective(850px) rotateY(-5deg) translateY(-5px)}
+.premiere-series-art .premiere-orbit{width:310px;border-color:#9bb6c34a}
+.premiere-series-art .premiere-orbit:before{border-color:#d9b66d55}
+.premiere-series-art .premiere-stamp{left:auto;right:0;top:4%;width:88px;height:88px;display:flex;flex-direction:column;gap:1px;transform:rotate(8deg);font-size:8px;background:linear-gradient(145deg,#282216f5,#121316f5);border-color:#e1c17a}
+.premiere-stamp strong{font:500 29px Georgia,serif;line-height:1;color:#f0d89d}
+.premiere-stamp span{font-size:7px;letter-spacing:.12em;line-height:1.4}
+.premiere-series-card .premiere-copy h3{font-size:clamp(34px,4vw,50px);line-height:1.06}
+.premiere-series-card .premiere-kicker{letter-spacing:.16em}
+.premiere-series-card .premiere-volume-chip{background:linear-gradient(110deg,#d9b66d25,#d9b66d0c);border-color:#d9b66d77;color:#f0d89d;font-weight:750}
+.premiere-series-card .premiere-description{max-width:610px}
+.premiere-series-card .premiere-open{min-height:48px;padding:13px 20px;box-shadow:0 8px 28px #d9b66d25}
+@media(max-width:900px){.premiere-series-card{grid-template-columns:minmax(240px,.85fr) minmax(0,1.15fr);gap:22px}.premiere-series-stack{transform:scale(.9);transform-origin:center}.premiere-series-art{min-height:320px}}
+@media(max-width:700px){
+ .premiere-series-card{grid-template-columns:minmax(0,1fr);gap:6px;padding:20px}
+ .premiere-series-art{min-height:270px}
+ .premiere-series-stack{height:250px;transform:scale(.78);transform-origin:center}
+ .premiere-series-spines{bottom:16px;height:215px}
+ .premiere-series-front{width:150px;height:224px;bottom:16px}
+ .premiere-series-art .premiere-stamp{display:flex!important;right:calc(50% - 142px);top:1%;width:70px;height:70px}
+ .premiere-series-art .premiere-stamp strong{font-size:23px}
+ .premiere-series-card .premiere-copy h3{font-size:36px}
+ .premiere-series-card .premiere-kicker{display:flex!important;font-size:9px}
+ .premiere-series-card .premiere-tagline{display:block!important;font-size:17px;margin-bottom:12px}
+ .premiere-series-card .premiere-description,.premiere-series-card .premiere-meta,.premiere-series-card .premiere-editor-note{display:block!important}
+ .premiere-series-card .premiere-meta{display:flex!important;gap:7px;margin-bottom:16px}
+ .premiere-series-card .premiere-locked{display:flex!important}
+ .premiere-series-card .premiere-locked .lock{display:inline!important}
+ .premiere-series-card .premiere-open{display:inline-flex!important;min-height:44px!important;margin-top:12px}
+}
+@media(max-width:380px){.premiere-series-stack{transform:scale(.68)}.premiere-series-art{min-height:238px}.premiere-series-card{padding:16px}.premiere-series-card .premiere-copy h3{font-size:31px}}
+@media(prefers-reduced-motion:reduce){.premiere-series-front,.premiere-series-spine{transition:none!important}}
+</style>
+
+<style id="editorial-catalog-shelves-v1">
+.editorial-shelves{display:grid;gap:30px;margin:0 0 56px}
+.editorial-shelves[hidden]{display:none!important}
+.editorial-shelf{position:relative;min-width:0;padding:25px;border:1px solid #ffffff16;border-radius:18px;background:linear-gradient(135deg,#1b1b19,#141414 76%);box-shadow:0 16px 42px #0003;overflow:hidden}
+.editorial-shelf:before{content:"";position:absolute;right:-100px;top:-160px;width:300px;height:300px;border:1px solid #d9b66d18;border-radius:50%;box-shadow:0 0 0 24px #d9b66d05,0 0 0 48px #d9b66d04;pointer-events:none}
+.editorial-shelf-heading{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:19px}
+.editorial-shelf-heading .eyebrow{font-size:9px}
+.editorial-shelf-heading h2{font:500 clamp(26px,3vw,34px)/1.15 Georgia,serif;margin:7px 0 0;letter-spacing:-.025em}
+.editorial-shelf-heading>span{color:#a99b7d;font-size:9px;letter-spacing:.14em;white-space:nowrap}
+.editorial-shelf-track{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,390px),1fr));gap:14px}
+.editorial-book{display:grid;grid-template-columns:112px minmax(0,1fr);gap:18px;min-width:0;padding:13px;border:1px solid #ffffff12;border-radius:13px;background:linear-gradient(125deg,#ffffff07,#00000012);transition:border-color .2s,transform .2s}
+.editorial-book:hover{transform:translateY(-3px);border-color:#d9b66d66}
+.editorial-book-cover{position:relative;min-height:158px;overflow:hidden;border:1px solid #d9b66d55;border-radius:5px 9px 9px 5px;background:linear-gradient(145deg,#253b4c,#11151b);box-shadow:7px 9px 18px #0008}
+.editorial-book-cover img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover}
+.editorial-book-cover>span{height:100%;display:grid;place-items:center;color:#e6cc8d;font:42px Georgia,serif}
+.editorial-book-copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.editorial-book-genre{color:#d9b66d;font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.editorial-book-copy h3{font:500 22px/1.2 Georgia,serif;margin:6px 0}
+.editorial-book-copy p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#b8b1a5;font-size:12px;line-height:1.65;margin:0 0 12px}
+.editorial-book-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.editorial-book-actions .btn{min-height:38px;padding:8px 11px;font-size:11px}
+@media(max-width:560px){.editorial-shelf{padding:17px 13px}.editorial-shelf-heading{align-items:flex-start;flex-direction:column;gap:6px}.editorial-shelf-track{grid-template-columns:minmax(0,1fr)}.editorial-book{grid-template-columns:86px minmax(0,1fr);gap:12px;padding:9px}.editorial-book-cover{min-height:132px}.editorial-book-copy h3{font-size:18px}.editorial-book-copy p{-webkit-line-clamp:3;font-size:11px}.editorial-book-actions{gap:6px}.editorial-book-actions .btn{min-height:40px;padding:8px 9px}}
+@media(prefers-reduced-motion:reduce){.editorial-book{transition:none}.editorial-book:hover{transform:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
 <button class="pill nav-action" id="myLibraryToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11.5A2.5 2.5 0 0 1 19 7v13H7a2 2 0 0 1-2-2V4.5Z"/><path d="M7 17.5h12M8.5 8h7M8.5 11.5h7"/></svg><span>Моя библиотека</span></button>
 <button class="pill nav-action" id="favoritesToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.2-8.8 10.1-8.8 10.1S3.2 14 3.2 8.8A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.4Z"/></svg><span>Избранное</span></button>
 <button class="pill nav-action active" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/></svg><span>Каталог</span></button>
-<a class="pill nav-action" href="./book-creator.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4M4 20l4.2-.9L19 8.3a2.8 2.8 0 0 0-4-4L4.2 15.1 4 20Z"/><path d="M13 6.5 17.5 11"/></svg><span>Создать книгу</span></a>
+
 </div></nav></div></header>
 <div id="catalogUpdateNotice" class="catalog-update-notice" role="status" aria-live="polite" hidden>
   <span class="catalog-update-mark" aria-hidden="true">✦</span>
@@ -2970,7 +3120,7 @@ body.reader-open #pageTurnSheet.flip-back {
   <div class="my-library-heading"><div><div class="eyebrow">ТВОЯ ЛИЧНАЯ КОЛЛЕКЦИЯ</div><h2 id="myLibraryTitle">Моя библиотека</h2><p>Личные книги и истории, к которым ты уже возвращался.</p></div><a class="btn library-catalog-link" href="#catalog">Открыть каталог →</a></div>
   <div class="library-stats"><div><strong id="myLibraryPersonalCount">0</strong><span>личных книг</span></div><div><strong id="myLibraryProgressCount">0</strong><span>книг с прогрессом</span></div><div><strong id="myLibraryFavoritesCount">0</strong><span>в избранном</span></div></div>
   <div class="library-shelves">
-    <section class="library-shelf"><div class="library-shelf-heading"><h3>Недавно читали</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
+    <section class="library-shelf"><div class="library-shelf-heading"><h3>Продолжить чтение</h3><span>ТВОЯ ИСТОРИЯ ПРОДОЛЖАЕТСЯ</span></div><div class="library-book-list" id="myLibraryContinue" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Мои личные книги</h3><span>СОЗДАННЫЕ И СОХРАНЁННЫЕ</span></div><div class="library-book-list" id="myLibraryPersonalBooks" aria-live="polite"></div></section>
     <section class="library-shelf"><div class="library-shelf-heading"><h3>Доступно офлайн</h3><span>ХРАНИТСЯ НА ЭТОМ УСТРОЙСТВЕ</span></div><div class="library-storage-tools"><p id="myLibraryStorageStatus" aria-live="polite">Проверяем состояние хранилища…</p><button class="btn" id="requestStoragePersistence" type="button">Защитить офлайн-книги</button></div><div class="library-book-list" id="myLibraryDownloads" aria-live="polite"></div></section>
   </div>
@@ -2983,6 +3133,7 @@ body.reader-open #pageTurnSheet.flip-back {
   </div>
   <div id="prereleaseStage" class="premiere-stage" aria-live="polite"></div>
 </section>
+<section id="editorialShelves" class="editorial-shelves" aria-label="Редакционные подборки" hidden></section>
 <section id="catalog" aria-labelledby="catalogTitle"><div class="sectionhead"><div class="eyebrow">ТВОЯ СЛЕДУЮЩАЯ ИСТОРИЯ</div><h2 id="catalogTitle">Каталог библиотеки</h2><p id="catalogSummary" aria-live="polite">Выбери книгу — и пусть реальность подождёт.</p></div><div class="toolbar"><input id="search" class="search" type="search" autocomplete="off" placeholder="⌕  Поиск по названию, жанру или описанию…" aria-label="Поиск книг">
 <select id="sort" aria-label="Сортировка">
   <option value="featured">Рекомендуем</option>
@@ -2994,7 +3145,9 @@ body.reader-open #pageTurnSheet.flip-back {
 </select>
 </div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и открывай новые истории по мере их официального выхода.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
-</main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
+</main>
+<section id="bookDetailPage" hidden aria-labelledby="bookDetailTitle"><div class="book-detail-inner"><button class="btn book-detail-back" id="bookDetailBack" type="button">← Назад в библиотеку</button><div id="bookDetailContent"></div></div></section>
+<footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
@@ -3016,6 +3169,7 @@ body.reader-open #pageTurnSheet.flip-back {
 </div></div>
 <script src="./src/platform/runtime.js"></script>
 <script src="./src/platform/library-store.js"></script>
+<script src="./src/platform/personal-state-migration.js"></script>
 <script src="./src/platform/download-manager.js"></script>
 <script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
@@ -3218,6 +3372,7 @@ function savePersonalBook(book) {
     const stored = Array.isArray(existing) ? existing : [];
     const next = [...stored.filter(item => item.id !== book.id), book];
     localStorage.setItem(PERSONAL_BOOKS_KEY, JSON.stringify(next));
+    window.AILibraryPersonalStateMigration?.sync();
     personalBooks = next;
     syncGenreFilters();
     render();
@@ -3308,6 +3463,24 @@ async function openBookById(id) {
   }
 
   if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
+      String(book.id).startsWith('published-')) {
+    // Resolve a saved copy first. This also covers a quick tap before startup
+    // restoration has finished and allows the reader to open without a network.
+    try {
+      const records = await window.AILibraryDownloadManager?.load?.() || [];
+      const saved = records.find(record => String(record.id) === String(book.id));
+      if (saved?.book) {
+        const localBook = normalizePublishedBook(saved.book);
+        if (localBook && localBook.id === book.id && localBook.chapters.length) {
+          Object.assign(book, localBook, { metadataOnly: false, offlineReady: true });
+        }
+      }
+    } catch (error) {
+      console.warn('Не удалось прочитать локальную копию книги:', error);
+    }
+  }
+
+  if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
       String(book.id).startsWith('published-') && book.contentPath) {
     try {
       const response = await fetch(book.contentPath, { cache: 'no-cache' });
@@ -3320,7 +3493,7 @@ async function openBookById(id) {
       Object.assign(book, loadedBook, { metadataOnly: false });
     } catch (error) {
       console.warn('Не удалось загрузить текст книги:', error);
-      alert('Не удалось загрузить книгу. Проверьте подключение к интернету или скачайте её заранее для чтения офлайн.');
+      alert('Не удалось открыть книгу. Если она сохранена на этом устройстве, проверьте раздел «Мои загрузки». Иначе подключитесь к интернету и скачайте её заранее.');
       return;
     }
   }
@@ -3333,6 +3506,54 @@ async function openBookById(id) {
   openBook(book.id);
 }
 
+
+
+function openBookDetails(id, updateUrl = true) {
+  const book = getAllBooks().find(item => String(item.id) === String(id));
+  const page = document.querySelector('#bookDetailPage');
+  const content = document.querySelector('#bookDetailContent');
+  if (!book || !page || !content || book.status === 'prerelease') return false;
+  const progress = getReadingProgress()[book.id];
+  const total = Number(book.chapterCount) || (Array.isArray(book.chapters) ? book.chapters.length : 0);
+  const read = progress && Number.isInteger(progress.part) && total ? Math.min(total, Math.max(0, progress.part + 1)) : 0;
+  const percent = total ? Math.round(read / total * 100) : 0;
+  const cover = book.cover || '';
+  const downloaded = String(book.id).startsWith('published-') && window.AILibraryDownloadManager?.isDownloaded(book.id);
+  content.innerHTML = '<div class="book-detail-layout"><div class="book-detail-cover">'+(cover?'<img src="'+esc(cover)+'" alt="Обложка книги '+esc(book.title)+'">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>')+'</div><div class="book-detail-copy"><div class="book-detail-kicker">'+esc(book.genre||'Книга')+'</div><h1 id="bookDetailTitle">'+esc(book.title)+'</h1><div class="book-detail-author">'+esc(book.author||'AI Library')+'</div><p class="book-detail-description">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p><div class="book-detail-meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>'+ (total ? total+' глав' : 'Полное издание')+'</span><span>Бесплатно</span></div>'+(read?'<div class="book-detail-progress"><div class="reading-progress-label"><span>'+(percent>=100?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="book-detail-progress-track"><div class="book-detail-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+'<div class="book-detail-actions"><button class="btn primary" type="button" data-detail-read="'+esc(book.id)+'">'+(read?'Продолжить чтение':'Читать книгу')+'　→</button>'+(String(book.id).startsWith('published-')?(downloaded?'<button class="btn" type="button" disabled>✓ Сохранена офлайн</button>':'<button class="btn" type="button" data-detail-download="'+esc(book.id)+'" data-download-book="'+esc(book.id)+'">↓ Скачать для офлайн-чтения</button>'):'')+'</div><div class="book-detail-offline">'+(downloaded?'Книга сохранена на этом устройстве и доступна без интернета.':String(book.id).startsWith('published-')?'После загрузки книгу можно будет читать без подключения к сети.':'Личная книга хранится на этом устройстве.')+'</div></div></div>';
+  page.hidden = false;
+  document.body.classList.add('book-detail-open');
+  if (updateUrl) {
+    const url = new URL(location.href);
+    url.searchParams.set('book', String(id));
+    history.pushState({ bookDetail: id }, '', url);
+  }
+  page.scrollTop = 0;
+  return true;
+}
+function closeBookDetails(updateUrl = true) {
+  const page = document.querySelector('#bookDetailPage');
+  if (page) page.hidden = true;
+  document.body.classList.remove('book-detail-open');
+  if (updateUrl) {
+    const url = new URL(location.href);
+    url.searchParams.delete('book');
+    history.replaceState({}, '', url);
+  }
+}
+document.querySelector('#bookDetailBack')?.addEventListener('click', () => closeBookDetails());
+document.querySelector('#bookDetailPage')?.addEventListener('click', event => {
+  const read = event.target.closest('[data-detail-read]');
+  if (read) { const id = read.dataset.detailRead; closeBookDetails(); openBookById(id); return; }
+  const download = event.target.closest('[data-detail-download]');
+  if (download) { const id = download.dataset.detailDownload; handleBookDownload(download).then(() => openBookDetails(id, false)); }
+});
+window.addEventListener('popstate', () => {
+  const id = new URL(location.href).searchParams.get('book');
+  if (id) openBookDetails(id, false); else closeBookDetails(false);
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !document.querySelector('#bookDetailPage')?.hidden) closeBookDetails();
+});
 
 let genre='Все',onlyFav=false,current=null,part=0;
 const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
@@ -3350,6 +3571,21 @@ function syncGenreFilters(){
   });
   root.querySelectorAll("[data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre===genre));
 }
+function renderEditorialShelves(){
+  const root=document.querySelector("#editorialShelves");
+  if(!root)return;
+  const available=getAllBooks().filter(book=>book.status!=="prerelease"&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));
+  const editorial=available.filter(book=>book.editorialPick===true);
+  const arrivals=available.filter(book=>typeof book.publishedAt==="string"&&Number.isFinite(Date.parse(book.publishedAt))).sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt)).slice(0,6);
+  const shelf=(title,kicker,books)=>books.length?'<section class="editorial-shelf"><div class="editorial-shelf-heading"><div><div class="eyebrow">'+kicker+'</div><h2>'+title+'</h2></div><span>'+books.length+' '+(books.length===1?'КНИГА':'КНИГИ')+'</span></div><div class="editorial-shelf-track">'+books.map(book=>{
+    const cover=book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span aria-hidden="true">'+esc(book.symbol||'✦')+'</span>';
+    return '<article class="editorial-book"><div class="editorial-book-cover">'+cover+'</div><div class="editorial-book-copy"><span class="editorial-book-genre">'+esc(book.genre||'Книга')+'</span><h3>'+esc(book.title)+'</h3><p>'+esc(book.desc||book.description||'Открой эту историю в AI Library.')+'</p><div class="editorial-book-actions"><button class="btn primary" type="button" data-read="'+esc(book.id)+'">Читать →</button><button class="btn" type="button" data-book-details="'+esc(book.id)+'">О книге</button></div></div></article>';
+  }).join('')+'</div></section>':'';
+  const sections=shelf("Выбор редакции","РЕКОМЕНДАЦИЯ AI LIBRARY",editorial)+shelf("Новые поступления","ПОСЛЕДНИЕ ОФИЦИАЛЬНЫЕ РЕЛИЗЫ",arrivals);
+  root.innerHTML=sections;
+  root.hidden=!sections;
+}
+
 function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
@@ -3358,10 +3594,15 @@ function renderPrereleaseShowcase(){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
   }
-  root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
-    <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div><div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div></div>
-    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
-  </article>`).join('');
+  const romanVolumes=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+  root.innerHTML=upcoming.map(book=>{
+    const volumeCount=Math.max(1,Math.min(12,Number(book.volumeCount)||1));
+    const volumeSpines=romanVolumes.slice(1,volumeCount).map((roman,index)=>'<span class="premiere-series-spine" style="--spine-index:'+index+'"><b>'+roman+'</b><small>'+esc(book.title)+'</small></span>').join('');
+    return `<article class="premiere-card premiere-series-card" data-volume-count="${volumeCount}">
+      <div class="premiere-art premiere-series-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-series-stack" role="img" aria-label="${esc(book.title)} — серия из ${volumeCount} томов"><div class="premiere-series-spines" aria-hidden="true">${volumeSpines}</div><div class="premiere-book-cover premiere-series-front">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div></div><div class="premiere-stamp"><strong>${volumeCount}</strong><span>ТОМОВ<br>ОДНА ИСТОРИЯ</span></div></div>
+      <div class="premiere-copy"><div class="premiere-kicker">МНОГОТОМНЫЙ РОМАН · ${volumeCount} ТОМОВ</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span class="premiere-volume-chip">✦ ${volumeCount} томов · единая история</span><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст всех томов откроется по плану официального релиза</span></div><a class="btn primary premiere-open" href="./premiere.html?book=${encodeURIComponent(String(book.id).replace(/^(published-|shared-|personal-)/,''))}">Открыть презентацию　↗</a></div>
+    </article>`;
+  }).join('');
 }
 
 function renderBookCard(book){
@@ -3378,7 +3619,8 @@ function renderBookCard(book){
  '<h3>'+esc(book.title)+'</h3><div class="author">'+esc(book.author||'AI Library')+'</div><p class="desc">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p>'+
  '<div class="meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>Полное издание · бесплатно</span></div>'+
  (read>0?'<div class="reading-progress"><div class="reading-progress-label"><span>'+(completed?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+
- '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
+ (String(book.id).startsWith('published-')?'<div class="offline-card-status '+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'is-ready':'')+'" data-offline-status="'+esc(book.id)+'">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Сохранена на этом устройстве':'Доступна только при подключении')+'</div>':'')+
+  '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button><button class="btn" data-book-details="'+esc(book.id)+'" type="button">Подробнее</button>'+(String(book.id).startsWith('published-')?(window.AILibraryDownloadManager?.isDownloaded(book.id)?'<button class="btn offline-download is-downloaded" data-manage-download="'+esc(book.id)+'" type="button">✓ Управлять</button>':'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">↓ Скачать</button>'):'')+'</div></div></div></article>';
 }
 
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
@@ -3417,11 +3659,21 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+document.querySelector("#books").innerHTML=list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>';document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderEditorialShelves();renderMyLibrary()}
+document.querySelector("#editorialShelves")?.addEventListener("click",event=>{
+  const details=event.target.closest("[data-book-details]");
+  if(details){openBookDetails(details.dataset.bookDetails);return;}
+  const read=event.target.closest("[data-read]");
+  if(read)openBookById(read.dataset.read);
+});
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
 document.querySelector("#books").addEventListener("click",e=>{
+  const details=e.target.closest('[data-book-details]');
+  if(details){openBookDetails(details.dataset.bookDetails);return;}
+  const manage=e.target.closest("[data-manage-download]");
+  if(manage){document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'});return;}
   if(e.target.closest("[data-reset-catalog]")){
     document.querySelector("#search").value="";document.querySelector("#sort").value="featured";genre="Все";onlyFav=false;
     document.querySelectorAll("#genres [data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre==="Все"));
@@ -3449,6 +3701,7 @@ document.querySelector("#books").addEventListener("click",e=>{
       : [...currentFavs, normalizedId];
     try {
       localStorage.setItem("ai-library-favs", JSON.stringify(nextFavs));
+      window.AILibraryPersonalStateMigration?.sync();
     } catch (error) {
       console.warn("Не удалось сохранить избранное:", error);
       document.querySelector("#catalogSummary").textContent = "Браузер не разрешил сохранить избранное. Проверь настройки хранения данных сайта.";
@@ -3491,6 +3744,7 @@ function saveReadingProgress() {
       'ai-library-progress',
       JSON.stringify(progress)
     );
+    window.AILibraryPersonalStateMigration?.sync();
 
     updateContinueReadingButton();
     renderMyLibrary();
@@ -3561,7 +3815,7 @@ let readerPreviousFocus = null;
 
 function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7',theme:'sepia'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing,theme:['sepia','light','dark'].includes(String(saved.theme))?String(saved.theme):defaults.theme}}catch{return defaults}}
 function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const rightReader=document.querySelector('#readerRight');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');const rightPage=document.querySelector('#bookPageRight');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(rightReader){rightReader.style.fontSize=settings.fontSize+'px';rightReader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme;if(rightPage)rightPage.dataset.theme=settings.theme;const themeIcon=document.querySelector('#readerThemeIcon');const themeButton=document.querySelector('#readerThemeToggle');if(themeIcon)themeIcon.textContent=settings.theme==='dark'?'☀':'☾';if(themeButton){const nextTheme=settings.theme==='dark'?'светлую':'тёмную';themeButton.setAttribute('aria-label',`Переключить на ${nextTheme} тему`);themeButton.title=`Переключить на ${nextTheme} тему`}}
-function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
+function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings));window.AILibraryPersonalStateMigration?.sync()}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
 document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));document.querySelector('#readerTheme')?.addEventListener('change',event=>changeReaderSetting('theme',event.target.value));
 document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{const theme=getReaderSettings().theme;changeReaderSetting('theme',theme==='dark'?'light':'dark');});
 
@@ -4393,6 +4647,7 @@ async function importLibraryBackup(file) {
   localStorage.setItem(LIBRARY_STORAGE_KEYS.favorites, JSON.stringify(favorites));
   localStorage.setItem(LIBRARY_STORAGE_KEYS.progress, JSON.stringify(progress));
   localStorage.setItem(LIBRARY_STORAGE_KEYS.readerSettings, JSON.stringify(readerSettings));
+  await window.AILibraryPersonalStateMigration?.sync();
   loadPersonalBooks();
   syncGenreFilters();
   render();
@@ -4419,11 +4674,25 @@ document.querySelector('#importLibraryFile')?.addEventListener('change', async e
   }
 });
 
+// Render immediately from the synchronous browser cache, then recover missing/corrupt
+// personal records from IndexedDB and refresh personal-book UI only when recovery changed it.
 loadPersonalBooks();
 syncGenreFilters();
 render();
-loadPublishedBooks().finally(loadDownloadedBooks);
+loadPublishedBooks().finally(async()=>{await loadDownloadedBooks();const requestedBook=new URL(location.href).searchParams.get('book');if(requestedBook)openBookDetails(requestedBook,false);});
 updateContinueReadingButton();
+
+window.AILibraryPersonalStateMigration?.restore().then(result => {
+  if (result.restored.length) {
+    loadPersonalBooks();
+    syncGenreFilters();
+    render();
+    updateContinueReadingButton();
+    console.info('AI Library: personal data restored from local durable storage:', result.restored);
+  }
+}).catch(error => {
+  console.warn('AI Library: personal-state recovery will retry on the next launch.', error);
+});
 
 </script>
 <script>

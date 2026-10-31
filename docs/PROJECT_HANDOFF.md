@@ -170,3 +170,106 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+
+## Product direction reset — offline-first library (2026-10-31)
+
+The user has reprioritized the product. This section supersedes earlier creator-economy rollout assumptions where they conflict.
+
+### Current product focus
+- Prioritize a complete, polished AI Library website and cross-platform app experience (desktop, Android, iOS/PWA).
+- Prioritize reliable offline use: app shell, local book downloads, offline reading after app restart, local reading progress/settings/favorites/bookmarks, storage visibility and safe recovery.
+- The repository already contains an offline foundation: IndexedDB stores in `src/platform/runtime.js`, `src/platform/library-store.js`, and `src/platform/download-manager.js`; an offline shelf in `index.html`; and a Service Worker app shell/network fallback in `sw.js`. Audit and strengthen these components rather than rebuilding them.
+- The current Service Worker cache version on main is `v57`. Review cache invalidation and app-shell assets carefully when making future changes.
+- The first implementation step is to hide the public “Создать книгу” navigation action. Keep `book-creator.html` and its local-first implementation in the repository for future use; do not delete drafts, exports, or editor code. This is a navigation change, not a claim that the creator route is removed or secured.
+- The project team will curate and add catalogue books, covers, descriptions and editorial content manually for now.
+
+### Deferred, not cancelled
+- Google OAuth and email OTP authentication.
+- Coins, bonuses, XP, ranks, achievements, public author progression and community economy.
+- User-facing self-service book creation/publication rollout.
+- Backend v2 expansion and custom-domain/email-provider decisions.
+- Preserve the design documents and open PRs as reference material. Do not merge or deploy them as part of the current offline-first milestone.
+
+### Working priorities
+1. Hide the creator CTA without disturbing catalogue, favorites or personal library navigation.
+2. Audit and test the existing offline download lifecycle, including interrupted downloads, failed validation, update rollback, missing local data and storage-pressure messaging.
+3. Verify that a downloaded book opens and remains readable after closing/reopening the installed app in airplane mode.
+4. Preserve the reader's touch/page-turn behavior, pinch font resizing, cross-chapter page numbering, and desktop/Android behavior.
+5. Improve installation guidance and platform-specific polish; evaluate native wrappers only after the PWA experience is reliable.
+6. Populate and quality-check the catalogue with editorially curated books.
+
+### Release discipline
+- Work on dedicated branches and draft PRs. Keep `main` and production unchanged until the user explicitly approves merge/deployment.
+- Do not claim physical-device validation unless it was actually performed.
+- Keep the economy/authentication/backend work documented and recoverable; do not spend implementation effort on it until the user reprioritizes it.
+
+
+### Offline shell hardening checkpoint (2026-10-31)
+- Service Worker upgraded from cache `v57` to `v58` on the offline-first branch.
+- Navigation now falls back to the cached app shell when the network returns a non-success response as well as when fetch rejects.
+- Cache writes are best-effort: quota/storage errors no longer discard a successful online response.
+- Catalog/book network-first requests now fall back to their cached response on non-success HTTP responses, not only network exceptions.
+- Existing IndexedDB book downloads remain separate from the app-shell cache.
+- Validation script cache-version assertions were updated from v57 to v58.
+- GitHub Actions validation for head commit `71b2321993a6be61642dabdc57dcf5fa3219379c` completed successfully (run `41197803280`).
+- This is source/CI validation only. No browser, airplane-mode, Android, iOS or installed-PWA manual test has yet been performed. Do not claim physical-device validation.
+
+
+### Service Worker regression tests (2026-10-31)
+- Added `scripts/test-service-worker.mjs` using Node's built-in test primitives and a mocked Cache API/fetch environment.
+- Four regression scenarios cover navigation fallback after HTTP 503, offline navigation fallback, successful online navigation despite cache-write quota failure, and cached catalog fallback after HTTP 503.
+- Added the test script to `.github/workflows/validate.yml` after the static project validator.
+- GitHub Actions run `41197940751` passed for commit `7577bfe0aa29bc43430a4452cc662dc0935706e8`; both static validation and all four Service Worker scenarios passed.
+- These are automated logic tests, not real-device/PWA offline verification.
+
+
+### IndexedDB personal-state recovery checkpoint (2026-10-31)
+- Added `restore()` to `src/platform/personal-state-migration.js`: after the versioned migration check it reads the durable IndexedDB snapshot and restores only missing or malformed localStorage categories (personal books, favorites, progress, reader settings).
+- Valid localStorage values are always preserved; the restore path does not clear or remove keys. Each snapshot category is shape-checked before it is written.
+- Startup still renders immediately from synchronous local data, then performs recovery and refreshes personal-book UI only when records were restored.
+- Expanded `scripts/test-personal-state-migration.mjs` to cover cleared-storage restart recovery, preservation of valid newer local values, repair of malformed individual keys, and rejection of a corrupted snapshot.
+- Service Worker app-shell cache bumped to v61 for the updated recovery module.
+- This restores data in the same browser profile/origin when IndexedDB is available. It is not cross-device synchronization and cannot recover data if both localStorage and IndexedDB have been cleared/evicted.
+- Automated CI result pending. No physical-device/offline test has been performed.
+
+
+### Recovery test follow-up (2026-10-31)
+- First CI attempt for recovery commit `d89f5db` passed static validation and all four Service Worker tests, then exposed a Node VM cross-realm array assertion in the new recovery test (test harness issue, not an application assertion).
+- Hardened first-run migration so syntactically valid but structurally invalid legacy JSON is normalized to safe defaults before it reaches IndexedDB.
+- Expanded tests for malformed first-run values and normalized VM-returned arrays in strict assertions.
+- Follow-up commits: `0a4c758b`, `39094cb1`, `fd16e7eb`. Latest branch head: `fd16e7eb565ea8a46e7b8addf630ebc2b99143a6`.
+- Corrected recovery implementation and test suite passed GitHub Actions run `41200880018` (run 344) on commit `ccfcdcce23e20591d5a588c618898a2e03108c93`; static validation, four Service Worker scenarios, and the personal-state recovery suite all passed.
+
+### Dedicated book detail experience checkpoint (2026-10-31)
+- Added a dedicated book-detail surface to the main application with its own shareable `?book=<id>` URL; direct links are restored after catalog and local-download startup.
+- Catalog cards now expose a separate “Подробнее” action while preserving the existing flip-card interaction and the current reader entry point.
+- Detail view presents cover, title, author, genre, description, reading time, chapter count, saved reading progress, and read/download actions.
+- The download action refreshes the detail state after the download workflow; closing the detail view replaces the current URL state to avoid a browser-back loop.
+- Responsive layout includes a stacked mobile composition. Service Worker app-shell cache advanced to v63.
+- Automated validator checks detail markup, route restoration and read/download actions. CI run 41213857724 passed static validation, Service Worker fallback tests, personal-state migration tests and offline download integrity tests.
+- This is automated source validation only; no physical-device, mobile browser or airplane-mode UI test has been performed.
+
+### Book detail visual refinement checkpoint (2026-10-31)
+- Refined the book detail presentation into a more editorial layout: framed book-cover treatment, clearer title/author hierarchy, genre marker, readable description panel, compact metadata chips, and a more legible progress block.
+- Desktop layout uses a balanced cover/content composition; mobile layout stacks the cover and information panel with full-width actions.
+- Added hover/focus-friendly transitions and respects `prefers-reduced-motion`.
+- Extended static validation to guard the responsive detail layout and reduced-motion rule.
+- Latest CI run 41214206161 passed all checks, including static validation, Service Worker fallbacks, personal-state migration and offline download integrity.
+- Real-device visual and touch testing remains outstanding; branch remains draft and undeployed.
+
+### Six-volume pre-release banner checkpoint (2026-10-31)
+- The existing AI Library closed-premiere slot now presents «Ты в моих планах» as a six-volume series rather than a single standalone book.
+- content/catalog.json records volumeCount: 6 and the series subtitle; the existing novel cover, synopsis, age rating and planned release metadata are preserved.
+- The homepage premiere card now uses a premium dark-blue / warm-gold editorial treatment, a front cover with five visible companion spines (six volumes total), an explicit “6 томов · единая история” marker, and series-focused copy.
+- The original premiere destination and closed-text behavior remain intact. The card is responsive; mobile rules restore the series count, tagline, metadata and CTA that older compact-prerelease styles had hidden.
+- Service Worker app-shell cache advanced to v64; static validation now asserts the novel's six-volume metadata and the series banner elements.
+- Automated CI is pending for the new head. No physical-device visual check has been performed. PR #48 remains draft, open, unmerged and undeployed.
+
+### Editorial catalog shelves checkpoint (2026-10-31)
+- Added a responsive editorial shelf area between the pre-release showcase and the searchable catalog.
+- Published catalog metadata explicitly marks «Автоматическая полночь» as an editorial pick; the UI does not invent popularity, ratings or reader counts.
+- A «Новые поступления» shelf is data-driven and appears only when a published book has a real publishedAt timestamp. The current catalog does not yet contain such a timestamp, so no book is falsely presented as a new release.
+- The personal-library shelf label now says «Продолжить чтение» and continues to use actual saved reading progress.
+- Editorial shelf actions are wired to the existing reader and book-detail flows. Service Worker app-shell cache advanced to v65; static validation checks the shelf data rules and actions.
+- CI run 41218128979 passed on head cbe1afb75ba1c52e2c13080d2f77234c73cb70a4: static validation, Service Worker fallback tests, personal-state migration tests and offline download integrity tests all succeeded. No real-device visual or touch test has been performed. PR #48 remains draft, open, unmerged and undeployed.

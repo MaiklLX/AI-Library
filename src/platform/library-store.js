@@ -73,6 +73,19 @@
 
     async removeDownload(id) {
       return storage.remove('downloads', requireId(id, 'Download'));
+    },
+
+    async getPersonalState() {
+      return storage.get('personalState', 'legacy-local-state-v1');
+    },
+
+    async setPersonalState(snapshot) {
+      if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+        throw new TypeError('Personal state snapshot must be an object.');
+      }
+      const record = { ...snapshot, id: 'legacy-local-state-v1', updatedAt: Date.now() };
+      await storage.put('personalState', record);
+      return record;
     }
   });
 
