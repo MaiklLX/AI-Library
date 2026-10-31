@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 const source = readFileSync(new URL("../src/platform/personal-state-migration.js", import.meta.url), "utf8");
-function createHarness(initialLegacy = {}, initialSnapshot = null) {
+function createHarness(initialLegacy = {}, initialSnapshot = null, failWrites = 0) {
   const legacy = new Map(Object.entries(initialLegacy));
   const localStorage = {
     getItem(key) { return legacy.has(key) ? legacy.get(key) : null; },
@@ -13,7 +13,7 @@ function createHarness(initialLegacy = {}, initialSnapshot = null) {
   let stored = initialSnapshot ? structuredClone(initialSnapshot) : null, writes = 0;
   const store = {
     async getPersonalState() { return stored; },
-    async setPersonalState(snapshot) { stored = structuredClone(snapshot); writes += 1; return stored; }
+    async setPersonalState(snapshot) { if (failWrites > 0) { failWrites -= 1; throw new Error('simulated IndexedDB write failure'); } stored = structuredClone(snapshot); writes += 1; return stored; }
   };
   const window = { AILibraryStore: store };
   vm.runInNewContext(source, { window, localStorage, console, Date, Object, Array, JSON, Promise });
@@ -97,4 +97,28 @@ assert.deepEqual(firstBootCorrupt.stored.progress, {});
 assert.deepEqual(firstBootCorrupt.stored.readerSettings, { fontSize: 17, lineSpacing: "1.7", theme: "sepia" });
 const firstBootRepair = await firstBootCorrupt.api.restore();
 assert.equal(firstBootRepair.restored.length, 4);
-console.log("Personal-state tests passed: migration, sync, restart recovery, malformed data, newer local state and corrupted snapshots.");
+// A transient IndexedDB write failure must not erase local data and must allow a later retry.
+const retry = createHarness({
+  "ai-library-personal-books": JSON.stringify([{ id: "retry-book", title: "Retry", chapters: ["safe"] }]),
+  "ai-library-favs": JSON.stringify(["retry-favorite"])
+}, { migrationVersion: 1, personalBooks: [], favorites: [], progress: {}, readerSettings: {} }, 1);
+const failedWrite = await retry.api.sync();
+assert.equal(failedWrite, null);
+assert.deepEqual(JSON.parse(retry.legacy.get("ai-library-favs")), ["retry-favorite"]);
+assert.equal((await retry.api.flush()).synced, false);
+await retry.api.sync();
+assert.equal((await retry.api.flush()).synced, true);
+assert.deepEqual(retry.stored.favorites, ["retry-favorite"]);
+
+// Queued snapshots must serialize in order and retain changes made between calls.
+const queued = createHarness({}, { migrationVersion: 1, personalBooks: [], favorites: [], progress: {}, readerSettings: {} });
+queued.legacy.set("ai-library-favs", JSON.stringify(["first"]));
+const queuedFirst = queued.api.sync();
+queued.legacy.set("ai-library-progress", JSON.stringify({ book: { page: 9 } }));
+const queuedSecond = queued.api.sync();
+await Promise.all([queuedFirst, queuedSecond]);
+assert.deepEqual(queued.stored.favorites, ["first"]);
+assert.deepEqual(queued.stored.progress, { book: { page: 9 } });
+assert.equal((await queued.api.flush()).synced, true);
+
+console.log("Personal-state tests passed: migration, sync, restart recovery, malformed data, newer local state, corrupted snapshots, write retry and serialized sync.");
