@@ -305,3 +305,35 @@ Do not implement frontend registration against a speculative endpoint.
 - No debt may be created for a platform fault, duplicate transaction, mere complaint, or unreviewed allegation. If the refund allocation is later overturned, post a compensating ledger correction and remove the associated restriction/recovery as appropriate.
 - These are approved product rules, not implemented wallet behavior. Before launch, complete legal review and define evidence retention/access controls, abuse handling, and exceptional-case procedures.
 
+
+
+## Evidence privacy, retention and anti-abuse controls (approved product policy, 2026-10-31)
+
+### Evidence intake and minimization
+- A dispute is tied to one specific purchase. Accept only evidence relevant to the selected reason: screenshots (JPEG/PNG/WebP), PDF documents, EPUB integrity metadata/checksums, delivery/download logs, purchase and entitlement events, book metadata/description, and the author's response.
+- Prefer SHA-256 checksums, file metadata and narrow technical excerpts over uploading or retaining a complete EPUB when those are sufficient to investigate.
+- Collect the minimum personal data necessary. Do not expose a reader's unrelated account details or private information to the author; provide only the information needed to respond to the claim.
+- Evidence files must be checked by actual MIME/content signature, not filename extension alone. Reject HTML, SVG, executables, archives and unsupported formats. Apply bounded upload size/count, quarantine and malware scanning before staff preview. Never serve evidence from a public URL.
+
+### Approved storage limits
+- Keep evidence files in private object storage, not in D1. D1 stores only case/file identifiers, object key, checksum, detected MIME type, byte size, timestamps, access metadata and case relationship.
+- Maximum size: **5 MB per file**.
+- Maximum count: **3 files per dispute case**.
+- Delete evidence attachments **90 days after case closure**, unless an active appeal, legal hold, statutory retention duty or other documented legal requirement requires continued preservation. The retention clock must be extended only for the relevant material and documented reason.
+- Retain evidence-access audit logs for **6 months**. Financial/accounting records and the minimum case/decision record follow separately applicable statutory retention requirements; do not apply the 90-day attachment rule to required financial records.
+- At expiry, securely delete attachments and remove or anonymize associated file metadata where legally permitted. Preserve the minimum case/decision and financial audit trail required for accountability and law.
+- These are approved product retention targets, subject to jurisdiction-specific legal review before launch.
+
+### Access control and transport
+- Enforce role- and case-scoped access: reader sees their own submission; author sees only materials necessary to answer; case reviewer sees the case evidence; appeal reviewer receives access for the appeal; restricted security/support access requires a documented operational purpose.
+- Encrypt evidence in transit and at rest. Use short-lived signed URLs (proposed default: 5 minutes) and never expose object-store credentials or permanent public links.
+- Log every evidence view, download, export, permission change and deletion with actor, case/file reference, action, timestamp and outcome. Do not log passwords, session tokens or unnecessary personal content.
+- Apply least privilege, bounded payloads, upload rate limits and safe error messages. D1 stores references and compact metadata only; file bytes stay in object storage to keep database and Worker workloads bounded.
+
+### Abuse handling and fairness
+- Detect duplicate case submissions, repeated identical evidence, unusual claim frequency and suspicious account/device/payment patterns as review signals. A shared IP/device or a single anomaly is not proof of fraud.
+- Use rate limits and human review for ambiguous patterns. Do not automatically reject a complaint, create author debt, withhold unrelated earnings, or punish an author solely because an anti-abuse signal fired.
+- Protect both readers and authors from retaliation. Preserve the normal notice, response, reasoned decision and appeal process; restrict evidence access to the minimum necessary.
+- Evidence retention, access, deletion and any legal hold must be auditable. Mandatory consumer, privacy and accounting obligations override internal retention targets.
+
+These controls are product policy, not implemented storage or dispute functionality. Select and verify the actual object-storage service, malware-scanning path, access policy and legal retention schedule during backend discovery before launch.
