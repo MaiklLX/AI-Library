@@ -219,7 +219,7 @@ assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial v
 assert.match(html, /--ai-ink-950:[^;]+;/, "Editorial color tokens are missing");
 assert.match(html, /#catalog \.toolbar \.search:focus/, "Catalog search focus treatment is missing");
 assert.match(html, /#catalog \.genre:focus-visible/, "Catalog genre keyboard focus treatment is missing");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v59['"]/, "Visual app-shell update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v60['"]/, "Visual app-shell update must use the current cache version");
 
 
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
@@ -298,6 +298,7 @@ assert.doesNotMatch(seriesPage, /action\.href='#'/, "Planned volume actions must
 assert.match(seriesPage, /progress\['published-'\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must be keyed by the actual book ID");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v59["']/, "Series presentation must use the refreshed app-shell cache");
 assert.ok(serviceWorker.includes("url.pathname.includes('/content/series/')"), "Series manifest must use network-first caching");
+assert.ok(serviceWorker.includes("\'./content/series/ty-v-moih-planah.json\'"), "Six-volume series manifest must be available in the offline app shell");
 
 console.log(`AI Library release validation passed: ${scripts.length} inline scripts, service worker, ${ids.length} IDs, manifest and local assets checked.`);
 
