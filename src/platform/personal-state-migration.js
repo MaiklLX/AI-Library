@@ -13,6 +13,7 @@
     readerSettings: 'ai-library-reader-settings'
   });
   let migrationPromise = null;
+  let migrationComplete = false;
   let writeQueue = Promise.resolve();
   let lastSyncError = null;
 
@@ -40,8 +41,9 @@
   }
 
   function migrate() {
+    if (migrationComplete) return Promise.resolve({ migrated: false, alreadyMigrated: true });
     if (migrationPromise) return migrationPromise;
-    migrationPromise = (async () => {
+    const pending = (async () => {
       const existing = await store.getPersonalState();
       if (existing?.migrationVersion >= 1) {
         return { migrated: false, alreadyMigrated: true };
@@ -55,6 +57,13 @@
         favorites: Array.isArray(initial.favorites) ? initial.favorites.length : 0
       };
     })();
+    migrationPromise = pending.then(result => {
+      migrationComplete = true;
+      return result;
+    }, error => {
+      migrationPromise = null;
+      throw error;
+    });
     return migrationPromise;
   }
 
