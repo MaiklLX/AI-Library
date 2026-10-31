@@ -90,6 +90,8 @@ assert.match(downloadManager, /await store\.setDownload\(record\)/, "Offline boo
 assert.match(libraryStore, /async getDownloads\(/, "Library storage adapter must expose download collection retrieval");
 assert.match(html, /data-download-book=/, "Published catalog cards must expose offline download actions");
 assert.match(html, /data-offline-status=/, "Published cards must clearly show whether a book is available offline");
+assert.match(html, /AILibraryDownloadManager\?\.load\?\.\(\)/, "Reader must check a local book copy before requesting network content");
+assert.ok(html.indexOf("const saved = records.find(record => String(record.id) === String(book.id))") < html.indexOf("const response = await fetch(book.contentPath"), "Reader must prefer a saved offline copy over network content");
 assert.match(html, /data-manage-download=/, "Already downloaded books must link to local download management");
 assert.match(html, /Сохранена на этом устройстве/, "Offline-ready state must be visible in the catalog");
 assert.match(html, /id="my-library-desktop-grid-v2"/, "Personal library responsive grid refinement is missing");
