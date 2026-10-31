@@ -436,6 +436,8 @@ assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow 
 assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
 assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh visibility when a release time passes");
 assert.match(html, /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/, "A locked direct reader link must return to the library instead of leaving a blank page");
-assert.match(seriesPage, /timer\.volume\.status==='planned'&&timeReached/, "Series cards must switch planned volumes to released state at the scheduled time");
+assert.match(seriesPage, /timer\.volume\.status==='planned'&&timeReached&&timer\.hasReaderEntry/, "Series cards must require both the scheduled time and a ready catalog text before unlocking");
+assert.match(seriesPage, /Number\(entry\.chapterCount\)>0/, "Series cards must not unlock a volume without a complete chapter count in the reader catalog");
+assert.match(seriesPage, /entry\.status==='scheduled'&&entry\.releaseAt===volume\.releaseAt/, "Scheduled reader entry must match the series release timestamp");
 assert.match(seriesPage, /Том вышел — чтение открыто\./, "Series countdown must announce automatic reader availability");
 assert.doesNotMatch(seriesPage, /Доступ откроется после отдельной публикации/, "Series countdown must not require a separate manual publication after the timer");
