@@ -62,7 +62,7 @@ const newer = createHarness({
   "ai-library-reader-settings": JSON.stringify({ fontSize: 22, theme: "dark" })
 }, original.stored);
 const preserved = await newer.api.restore();
-assert.deepEqual(preserved.restored, []);
+assert.deepEqual(Array.from(preserved.restored), []);
 assert.equal(preserved.skipped.length, 4);
 assert.deepEqual(JSON.parse(newer.legacy.get("ai-library-favs")), ["local-favorite"]);
 assert.equal(JSON.parse(newer.legacy.get("ai-library-personal-books"))[0].id, "newer");
@@ -73,13 +73,13 @@ const partial = createHarness({
   "ai-library-progress": "[]"
 }, original.stored);
 const repaired = await partial.api.restore();
-assert.deepEqual(repaired.restored.sort(), ["personalBooks", "progress", "readerSettings"]);
+assert.deepEqual(Array.from(repaired.restored).sort(), ["personalBooks", "progress", "readerSettings"]);
 assert.deepEqual(JSON.parse(partial.legacy.get("ai-library-favs")), ["keep-this"]);
 assert.deepEqual(JSON.parse(partial.legacy.get("ai-library-progress")), { "book-b": { part: 2, page: 8 } });
 
 const corrupt = createHarness({}, { migrationVersion: 1, personalBooks: "not-an-array", favorites: null, progress: [], readerSettings: "broken" });
 const safe = await corrupt.api.restore();
-assert.deepEqual(safe.restored, []);
+assert.deepEqual(Array.from(safe.restored), []);
 assert.equal(safe.skipped.length, 4);
 assert.equal(corrupt.legacy.size, 0);
 
