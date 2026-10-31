@@ -201,3 +201,16 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
   - 10 coins → 8 author / 2 platform.
 - The product owner subsequently approved a **free EPUB option** alongside the paid tiers. Free acquisition creates no wallet transaction or platform commission and does not require registration; repeat downloads remain free. Readers who acquired a free edition retain a permanent entitlement even if the author later switches it to paid; it survives device changes and local-file removal. Repeat downloads remain free, and the new price applies only to readers who have not previously acquired the book.
 - These are documented product rules only; no purchase UI, wallet, EPUB generation, or payment code has been implemented.
+
+
+## Refund and author-settlement decision checkpoint (2026-10-31)
+
+- Product owner approved objective-cause refunds for duplicate charges, platform-caused failed/unusable EPUB delivery, and paid purchases where promised access was not provided.
+- A simple change of mind after successful delivery is not an automatic platform refund reason; mandatory consumer rights and applicable law always take precedence.
+- Approved author settlement rule: the author's 80% share is initially **pending** and becomes available **7 calendar days after successful purchase**, unless a substantiated refund/reversal/dispute is open.
+- Refund/reversal operations must be idempotent and auditable, using compensating ledger entries rather than editing/deleting the original purchase. A refund must not be processed twice.
+- A refunded paid entitlement may be revoked subject to mandatory consumer rights and exceptions; a separate permanent free-acquisition entitlement from before a price change must not be revoked.
+- These decisions are product specification only. No frontend, Worker, D1 schema, wallet, EPUB generator, purchase, refund, or settlement code was changed or deployed.
+- Current working branch: `product/creator-progression-economy`; current review PR: [#43](https://github.com/MaiklLX/AI-Library/pull/43), still open and not merged at the time of this checkpoint.
+- Files to keep synchronized: `docs/COMMUNITY_SYSTEM_SPEC.md` and this handoff document. PR body should summarize the approved policy.
+- Next exact action: continue product review of unresolved dispute/evidence workflow and mandatory consumer-rights handling; separately locate/audit the external Cloudflare Worker source and D1 schema before any live wallet implementation. Do not merge PR #43 until remaining provisional rules are reviewed.
