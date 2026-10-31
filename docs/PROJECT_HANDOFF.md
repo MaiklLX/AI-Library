@@ -162,8 +162,8 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 
 - The user has decided to stop automatic/background generation of public-catalogue books because the current generated results are incomplete and do not meet the desired quality bar.
 - The existing user-facing book creator is explicitly retained and should be treated as a core feature, not removed.
-- Target lifecycle: private author draft → preview/completeness checks → explicit publication by the author for a clearly displayed coin fee → attributed public book → eligibility for ratings and competitions. The author-paid coin fee is confirmed; exact amount, moderation and refund/settlement rules remain open.
-- Require explicit author confirmation before any coin debit. Private drafting, preview, local save and export remain free.
+- Target lifecycle: private author draft → preview/completeness checks → explicit, free publication by the author → attributed public book → eligibility for ratings and competitions. **Publication is free in the initial release; no coin fee or other publication commission is charged.**
+- Private drafting, preview, local save, export and publication remain free during the initial community rollout. Coins/XP are earned through separately approved, verifiable community and creator activities; they do not gate publication.
 - Add a creator progression system: competition placements award verified author XP; XP/achievements unlock profile statuses. Coins remain a separate spendable currency; XP/status are non-spendable progression.
 - Competition scoring needs refinement before implementation. A daily shortlist/ranked competition is likely needed if the product is to award top-place rewards; preserve lifetime book rating separately from daily event results.
 - Do not delete existing catalogue books or personal drafts. Do not remove the user-initiated generation path if it powers the book creator.
