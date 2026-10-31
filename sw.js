@@ -52,7 +52,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Published catalog and book files use network-first so new commits appear promptly.
+  // Catalog, series manifests and book files use network-first so new commits appear promptly.
   if (url.pathname.endsWith('/content/catalog.json') ||
       url.pathname.includes('/content/books/') ||
       url.pathname.includes('/content/series/')) {
