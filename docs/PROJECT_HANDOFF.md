@@ -170,3 +170,27 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+## Reader stability checkpoint — 2026-11-01
+
+### Completed and deployed
+- PR #63 — [Fix reader launch flash and page-turn timing](https://github.com/MaiklLX/AI-Library/pull/63), merged to `main`.
+- PR #63 merge commit: `1b31b8ee081e056aa9653c076c9d948c3ec3f2f5`.
+- Direct `?book=` launches hide the catalogue before first paint and reveal the reader modal; invalid, prerelease, and failed-open paths release the launch mask.
+- Mobile page-turn content changes on the flip sheet's own `animationend` event. The listener ignores bubbled events from descendants, completion is idempotent, cleanup runs in `finally`, and an 820 ms fallback remains for browsers that omit the event.
+- The current spread-turn CSS animation is 720 ms; the 820 ms fallback is intentionally longer.
+- PR #63 validation and GitHub Pages deployment both succeeded (workflow runs `41241004661` and `41241004684`).
+
+### Regression coverage added
+- PR #64 — [Add regression checks for reader launch and page turns](https://github.com/MaiklLX/AI-Library/pull/64), merged to `main`.
+- PR #64 adds static regression assertions in `scripts/validate.mjs` for the launch mask, all mask-release paths, the animation event target, idempotent completion, listener cleanup, fallback timer, and guaranteed cleanup.
+- PR #64 validation passed on its PR head (`41242091767`).
+- Merge commit and current `main` HEAD: `f06cc3df30e623427ddc0c8a9fb442e95f0e1f63`.
+- Post-merge validation passed (`41242138852`); GitHub Pages deployment passed (`41242138877`).
+
+### Still unverified
+- No physical-device confirmation has been recorded yet. On a phone, verify: open a book via «Читать» and confirm there is no homepage flash; turn several pages forward and backward and confirm the visual sheet and text swap finish together.
+- Automated checks protect source structure but do not replace Android/iOS touch and visual testing.
+
+### Exact next action
+- Continue reader polish without reworking PR #63 behavior. First obtain the phone regression result above; then take the next focused reader UX improvement on a dedicated branch and preserve desktop, Android, and iOS behavior.
