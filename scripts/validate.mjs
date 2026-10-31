@@ -425,7 +425,7 @@ const openReadingSpace = html.match(/function openReadingSpace\(\)\s*\{([\s\S]*?
 assert.ok(openReadingSpace, "Could not isolate the reader-opening transition");
 assert.match(openReadingSpace[1], /document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "Opening the reader must release the direct-launch mask");
-assert.match(html, /if \(!target \|\| target\.status === 'prerelease'\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
+assert.match(html, /if \(!target \|\| isBookReleaseLocked\(target\)\) \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "Unavailable, prerelease or not-yet-released scheduled direct links must release the launch mask");
 assert.match(html, /if \(opened\) \{[\s\S]*?\} else \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "A failed direct book open must release the launch mask");
