@@ -3271,11 +3271,11 @@ async function loadSharedBooks() {
 
 async function openBookById(id) {
   const book = getAllBooks().find(item => String(item.id) === String(id));
-  if (!book) return;
+  if (!book) return false;
 
   if (book.status === 'prerelease') {
     alert('«Автоматическая полночь» находится в пререлизе. Чтение откроется после официального релиза.');
-    return;
+    return false;
   }
 
   if (String(book.id).startsWith('shared-')) {
@@ -3298,15 +3298,17 @@ async function openBookById(id) {
       );
       try { localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks)); } catch {}
       openBook(book.id);
+      return true;
     } catch (error) {
       console.warn('Не удалось обновить общую книгу из сети:', error);
       if (Array.isArray(book.chapters) && book.chapters.length) {
         openBook(book.id);
+        return true;
       } else {
         alert('Не удалось загрузить общую книгу. Проверьте подключение к интернету и попробуйте ещё раз.');
       }
     }
-    return;
+    return false;
   }
 
   if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
@@ -3323,16 +3325,17 @@ async function openBookById(id) {
     } catch (error) {
       console.warn('Не удалось загрузить текст книги:', error);
       alert('Не удалось загрузить книгу. Проверьте подключение к интернету или скачайте её заранее для чтения офлайн.');
-      return;
+      return false;
     }
   }
 
   if (!Array.isArray(book.chapters) || !book.chapters.length) {
     alert('В этой книге пока нет доступных глав.');
-    return;
+    return false;
   }
 
   openBook(book.id);
+  return true;
 }
 
 
@@ -4442,8 +4445,10 @@ loadPublishedBooks().finally(async () => {
   if (!requestedBook) return;
   const target = getAllBooks().find(book => String(book.id) === requestedBook);
   if (!target || target.status === 'prerelease') return;
-  await openBookById(requestedBook);
-  window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  const opened = await openBookById(requestedBook);
+  if (opened) {
+    window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  }
 });
 updateContinueReadingButton();
 
