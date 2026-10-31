@@ -170,3 +170,25 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+
+## iOS standalone reader pinch checkpoint — 2026-10-31
+
+- User reported that two-finger font-size scaling does not work in the iOS app installed from Safari (Add to Home Screen).
+- Source audit found the reader already had a Pointer Events pinch handler, but it explicitly allowed browser-native pinch zoom via `touch-action: pan-y pinch-zoom`. This can let standalone Safari claim the gesture before the app's font-scaling handler receives a usable pointer stream.
+- A focused fix is being developed on branch `fix/ios-standalone-reader-pinch` in PR #46 (pending creation at the time this checkpoint was written).
+- The intended fix keeps vertical scrolling native, reserves pinch inside the reader for app font scaling, and adds a Touch Events implementation for touch devices while retaining Pointer Events for non-touch environments.
+- The service-worker app-shell cache is bumped from v57 to v58 so installed clients can receive the updated reader code.
+- Static validation is being extended to guard the iOS touch-pinch path.
+- This is source-level work only. It has **not** yet been tested on a physical iPhone or installed iOS web app.
+- Regression checks required on device: pinch out/in changes font size; single-finger horizontal page turns still animate; vertical movement remains natural; taps/reader controls remain responsive; page numbering and reading position remain stable.
+- Exact next action: run repository validation and CI, open PR #46, then ask the user to test the installed Safari app on iPhone before merging.
+
+## Authentication decision — 2026-10-31
+
+- User approved Google sign-in plus email one-time passcode (OTP) as the initial account access options for AI Library.
+- This is an architecture decision only; no OAuth credentials, email provider, auth endpoints, sessions, D1 schema, or secrets have been configured.
+- The browser must never contain Google client secrets or email-provider secrets.
+- Before implementation, define callback/redirect URLs, email delivery provider, secure session model (prefer HttpOnly Secure cookies if compatible with the chosen hosting/origin topology), CSRF protection, OTP expiry and attempt limits, account recovery, and account deletion/export.
+- Do not connect the new API v2 Worker to production or change the legacy `ai-library-generator` Worker as part of this work.
+- Keep authentication implementation isolated in PR #45 until reviewed and explicitly approved.
