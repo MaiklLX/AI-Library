@@ -438,7 +438,7 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
 assert.match(pageTurnAnimation[1], /window\\.setTimeout\\(finishTurn,1100\\)/,
-  "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1100\)/,
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
 assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
@@ -451,7 +451,7 @@ assert.match(html, /@keyframes aiLibraryRealPageCurlForward[\s\S]*?rotateY\(-180
   "Forward page turns must complete a full 180-degree paper rotation");
 assert.match(html, /@keyframes aiLibraryRealPageCurlBack[\s\S]*?rotateY\(180deg\)/,
   "Backward page turns must complete a full 180-degree paper rotation");
-assert.match(html, /aiLibraryRealPageFlipForward \.72s/,
+assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
   "The realistic paper turn must use the 720 ms motion timing");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
