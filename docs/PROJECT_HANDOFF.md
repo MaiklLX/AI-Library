@@ -190,3 +190,14 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Coins are internal platform currency; no cash withdrawal or real-money payout is promised.
 - Approved EPUB price tiers: **3, 5, or 10 coins**, selected by the author; arbitrary custom prices are not part of the initial model. Whether to offer a free EPUB option, plus refund policy and settlement timing, remains undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
 - No code or live wallet behavior has been implemented. Real purchases wait for Worker source/schema discovery and server-side transactional ledger support.
+
+
+## EPUB price-tier decision (2026-10-31)
+
+- The product owner approved fixed paid EPUB export tiers: **3, 5, or 10 internal coins**. The author selects one tier for their book.
+- The approved 80/20 split applies to every tier:
+  - 3 coins → 2.4 author / 0.6 platform.
+  - 5 coins → 4 author / 1 platform.
+  - 10 coins → 8 author / 2 platform.
+- Whether authors may additionally offer a free EPUB export remains undecided.
+- These are documented product rules only; no purchase UI, wallet, EPUB generation, or payment code has been implemented.
