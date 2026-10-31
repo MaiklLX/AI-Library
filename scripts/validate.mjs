@@ -437,7 +437,7 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,820\)/,
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1100\)/,
   "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
@@ -447,12 +447,12 @@ assert.match(pageTurnAnimation[1], /try \{\s*afterTurn\(\);\s*\} catch\(error\)/
   "The new page must be committed beneath the frozen old page before the animation");
 assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].indexOf("sheet.classList.add(direction>0?'flip-forward':'flip-back')"),
   "The new page must be visible underneath before the old paper begins to turn");
-assert.match(html, /@keyframes aiLibraryRealPageFlipForward[\s\S]*?rotateY\(-180deg\)/,
+assert.match(html, /@keyframes aiLibraryRealPageCurlForward[\s\S]*?rotateY\(-180deg\)/,
   "Forward page turns must complete a full 180-degree paper rotation");
-assert.match(html, /@keyframes aiLibraryRealPageFlipBack[\s\S]*?rotateY\(180deg\)/,
+assert.match(html, /@keyframes aiLibraryRealPageCurlBack[\s\S]*?rotateY\(180deg\)/,
   "Backward page turns must complete a full 180-degree paper rotation");
-assert.match(html, /aiLibraryRealPageFlipForward \.72s/,
-  "The realistic paper turn must use the 720 ms motion timing");
+assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
+  "The paper curl must use a slower, smoother 980 ms animation");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
@@ -461,3 +461,15 @@ assert.match(html, /reader-turn-face reader-turn-front/,
   "The turning sheet must have a printed front face");
 assert.match(html, /reader-turn-face reader-turn-back/,
   "The turning sheet must have a shaded reverse face");
+assert.match(html, /probe\.style\.paddingBottom = readerComputedStyle\.paddingBottom/,
+  "Pagination measurement must reserve the same footer lane as the visible reader");
+assert.match(html, /probe\.style\.boxSizing = readerComputedStyle\.boxSizing/,
+  "Pagination measurement must preserve the live reader box model");
+assert.ok(html.includes("#reader:focus") && html.includes("outline:none!important"),
+  "Touch focus must not draw a frame around the manuscript text");
+assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
+  "The paper curl must use a slower, smoother 980 ms animation");
+assert.match(html, /aiLibraryPaperEdgeLight/,
+  "The turning paper must have a moving light-catching edge");
+assert.ok(html.includes("rotateY(-68deg)") && html.includes("rotateY(-132deg)"),
+  "The forward page curl must use staged depth and bend-like motion");
