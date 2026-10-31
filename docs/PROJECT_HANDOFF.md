@@ -270,3 +270,14 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Documentation-only checkpoint: no Worker, D1 schema, object storage, wallet, dispute UI, purchase/refund behavior or user data changed.
 - PR #43 remains open and unmerged; branch: product/creator-progression-economy. Do not merge without the product owner's separate approval.
 - Next: complete legal/privacy review of retention and evidence handling; then continue backend source discovery and architecture planning before any live financial or dispute implementation.
+
+
+## Release sequencing checkpoint — internal market deferred (2026-10-31)
+
+- Product owner approved a staged rollout: do **not** launch the internal EPUB market in the initial release, even if its specifications and safeguards are designed ahead of time.
+- Initial priorities: (1) coins, XP, achievements and progression; (2) user-authored book creation and publication workflow; (3) grow the audience and validate real usage.
+- Deferred until the product has a meaningful audience: paid EPUB purchases, author revenue share/settlement, refunds, disputes, appeals, author-debt recovery, evidence handling/anti-abuse operations and moderator/admin console.
+- Initial coins remain internal platform currency for explicitly approved community/creator actions. Do not imply cash value, cash-out, or active paid EPUB trading.
+- Keep the market specification as future-phase design only. Do not expose purchase, payout or dispute functionality in the first release.
+- This is a product sequencing decision only. No application/backend code or live financial behavior has been implemented by this checkpoint.
+- PR #43 remains a documentation-only proposal and must remain open/unmerged until separately approved.
