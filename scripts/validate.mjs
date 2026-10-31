@@ -106,7 +106,7 @@ assert.match(serviceWorker, /if \(response && response\.ok && response\.type ===
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
-assert.match(html, /getAllBooks\(\)\.filter\(book=>book\.status!==["\']prerelease["\']&&\(Number\(book\.chapterCount\)>0\|\|\(Array\.isArray\(book\.chapters\)&&book\.chapters\.length>0\)\)\)/, "Random discovery must include metadata-only published books and exclude prerelease");
+assert.match(html, /getAllBooks\(\)\.filter\(book=>!isBookReleaseLocked\(book\)\)/, "Random discovery must exclude every book whose scheduled release is still locked");
 assert.match(html, /desktop-two-page-book-spread-v31/, "Desktop two-page book spread styles are missing");
 assert.match(html, /function isDesktopReaderSpread\(\)/, "Desktop spread mode detection is missing");
 assert.match(html, /const pageStep=isDesktopReaderSpread\(\)\?2:1/, "Desktop page turns must advance by a two-page spread");
@@ -316,8 +316,8 @@ assert.match(seriesPage, /if\(volume\.status==='prerelease'&&volume\.premiereBoo
 assert.match(seriesPage, /else if\(volume\.status==='published'\)/, "Only published volumes may expose a reading link");
 assert.match(seriesPage, /action\.setAttribute\('aria-disabled','true'\)/, "Planned volumes must remain non-interactive");
 
-assert.match(seriesPage, /const canNavigate=\(volume\.status==='prerelease'&&volume\.premiereBookId\)\|\|volume\.status==='published'/, "Only prerelease and published cards may be navigable");
-assert.match(seriesPage, /document\.createElement\(canNavigate\?'a':'span'\)/, "Planned volume actions must not be rendered as links");
+assert.match(seriesPage, /const action=document\.createElement\([\x27"]a[\x27"]\)/, "Series actions must support becoming reader links at the scheduled release time");
+assert.match(seriesPage, /if\(isPublished\)\{timer\.pill\.textContent=[\x27"]Опубликован[\x27"];[\s\S]*?timer\.action\.href=/, "A planned volume must become a reader link automatically when its release time arrives and its full text is ready");
 assert.doesNotMatch(seriesPage, /action\.href='#'/, "Planned volume actions must not contain a clickable placeholder URL");
 assert.match(seriesPage, /progress\['published-'\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must be keyed by the actual book ID");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v\d+["']/, "Series presentation must use the refreshed app-shell cache");
