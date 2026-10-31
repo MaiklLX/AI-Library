@@ -99,7 +99,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
  const list=document.getElementById('volumeList');
  const statusLabels={planned:'Готовится',prerelease:'Закрытая премьера',published:'Опубликован'};
  const fallback=[
-  {id:'ty-v-moih-planah-tom-01',number:1,title:'Тишина между щелчками',chapters:{from:1,to:16},status:'prerelease',premiereBookId:'ty-v-moih-planah',bookId:'ty-v-moih-planah',cover:'./content/books/ty-v-moih-planah-tom-01-cover.svg',releaseAt:'2026-11-02T18:00:00+03:00'},
+  {id:'ty-v-moih-planah-tom-01',number:1,title:'Тишина между щелчками',chapters:{from:1,to:16},status:'planned',premiereBookId:'ty-v-moih-planah',bookId:'ty-v-moih-planah-tom-01',cover:'./content/books/ty-v-moih-planah-tom-01-cover.svg',releaseAt:'2026-11-02T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-02',number:2,title:'Внутренний маршрут',chapters:{from:17,to:34},status:'planned',bookId:'ty-v-moih-planah-tom-02',cover:'./content/books/ty-v-moih-planah-tom-02-cover.svg',releaseAt:'2026-11-09T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-03',number:3,title:'До уточнения принадлежности',chapters:{from:35,to:56},status:'planned',bookId:'ty-v-moih-planah-tom-03',cover:'./content/books/ty-v-moih-planah-tom-03-cover.svg',releaseAt:'2026-11-16T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-04',number:4,title:'Шестнадцатая строка',chapters:{from:57,to:66},status:'planned',bookId:'ty-v-moih-planah-tom-04',cover:'./content/books/ty-v-moih-planah-tom-04-cover.svg',releaseAt:'2026-11-23T18:00:00+03:00'},
@@ -112,6 +112,8 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const response=await fetch('./content/series/ty-v-moih-planah.json',{cache:'no-cache'});
   if(response.ok){const data=await response.json();if(data.id==='ty-v-moih-planah'&&Array.isArray(data.volumes)&&data.volumes.length===6)volumes=data.volumes;}
  }catch{}
+ let catalogEntries=[];
+ try{const response=await fetch('./content/catalog.json',{cache:'no-cache'});if(response.ok){const catalog=await response.json();if(catalog&&Array.isArray(catalog.books))catalogEntries=catalog.books;}}catch{}
  const dateFmt=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Moscow'});
  const pad=n=>String(n).padStart(2,'0');
  const timers=[];
@@ -124,6 +126,8 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const num=document.createElement('span');num.className='num';num.textContent='ТОМ '+String(volume.number).padStart(2,'0');
   const pill=document.createElement('span');pill.className='state-pill';pill.textContent=statusLabels[volume.status]||'Статус уточняется';topline.append(num,pill);
   const title=document.createElement('h3');title.textContent=volume.title;
+  const readerEntry=catalogEntries.find(entry=>entry&&entry.id===(volume.bookId||volume.id)&&entry.metadataOnly===true&&Number(entry.chapterCount)>0&&entry.path==='./content/books/'+(volume.bookId||volume.id)+'.json'&&(entry.status==='published'||(entry.status==='scheduled'&&entry.releaseAt===volume.releaseAt)));
+  const hasReaderEntry=!!readerEntry;
   const annotation=document.createElement('div');annotation.className='annotation-wrap';
   const desc=document.createElement('p');desc.textContent=volume.description||('Главы '+volume.chapters.from+'–'+volume.chapters.to+'.');
   annotation.appendChild(desc);
@@ -144,11 +148,10 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   countdown.append(cLabel,units,ended);
   const row=document.createElement('div');row.className='status';
   const state=document.createElement('span');state.className='state';state.textContent=statusLabels[volume.status]||'Статус уточняется';
-  const canNavigate=(volume.status==='prerelease'&&volume.premiereBookId)||volume.status==='published';
-  const action=document.createElement(canNavigate?'a':'span');action.className='action';
+  const action=document.createElement('a');action.className='action';
   if(volume.status==='prerelease'&&volume.premiereBookId){action.href='./premiere.html?book='+encodeURIComponent(volume.premiereBookId);action.textContent='О премьере';}
-  else if(volume.status==='published'){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
-  else{action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
+  else if(volume.status==='published'&&hasReaderEntry){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
+  else{action.removeAttribute('href');action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
   row.append(state,action);
   const note=document.createElement('div');note.className='volume-note';note.textContent='Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';body.appendChild(progressLabel);}
@@ -156,18 +159,20 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const isFirstVolume=Number(volume.number)===1;
   const annotationTimer={release,annotation,isFirstVolume,isPublished:volume.status==='published'};
   if(!isFirstVolume&&volume.status!=='published')annotation.classList.add('is-locked');
-  timers.push({release,unitNodes,units,ended,annotationTimer});
+  timers.push({release,unitNodes,units,ended,annotationTimer,volume,pill,state,action,hasReaderEntry});
  });
  function tick(){
   const now=Date.now();
   timers.forEach(timer=>{
    const gate=timer.annotationTimer;
-   const reveal=gate.isFirstVolume||gate.isPublished||(gate.release&&!Number.isNaN(gate.release.getTime())&&gate.release.getTime()-now<=48*60*60*1000);
+   const timeReached=timer.release&&!Number.isNaN(timer.release.getTime())&&now>=timer.release.getTime();
+   const isPublished=(gate.isPublished&&timer.hasReaderEntry)||(timer.volume.status==='planned'&&timeReached&&timer.hasReaderEntry);
+   const reveal=gate.isFirstVolume||isPublished||(gate.release&&!Number.isNaN(gate.release.getTime())&&gate.release.getTime()-now<=48*60*60*1000);
    if(reveal){gate.annotation.classList.remove('is-locked');gate.annotation.classList.add('is-revealed');}
    else{gate.annotation.classList.add('is-locked');gate.annotation.classList.remove('is-revealed');}
    if(!timer.release||Number.isNaN(timer.release.getTime()))return;
    let remaining=timer.release.getTime()-now;
-   if(remaining<=0){timer.units.hidden=true;timer.ended.hidden=false;timer.ended.textContent='Плановая дата наступила. Доступ откроется после отдельной публикации тома.';return;}
+   if(remaining<=0){timer.units.hidden=true;timer.ended.hidden=false;timer.ended.textContent=isPublished?'Том вышел — чтение открыто.':'Дата наступила, но полный текст тома ещё не подготовлен к чтению.';if(isPublished){timer.pill.textContent='Опубликован';timer.state.textContent='ДОСТУПЕН';timer.action.href='./index.html?book='+encodeURIComponent('published-'+(timer.volume.bookId||timer.volume.id));timer.action.removeAttribute('aria-disabled');timer.action.textContent='Читать том';}return;}
    const days=Math.floor(remaining/86400000);remaining%=86400000;
    const hours=Math.floor(remaining/3600000);remaining%=3600000;
    const minutes=Math.floor(remaining/60000);remaining%=60000;
