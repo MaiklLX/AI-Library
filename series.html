@@ -57,10 +57,11 @@ a{color:inherit}.wrap{width:min(1120px,calc(100% - 36px));margin:auto}.top{paddi
   const range=document.createElement('div');range.className='range';range.textContent='ГЛАВЫ '+volume.chapters.from+'—'+volume.chapters.to;
   const row=document.createElement('div');row.className='status';
   const state=document.createElement('span');state.className='state';state.textContent=statusLabels[volume.status]||'Статус уточняется';
-  const action=document.createElement('a');action.className='action';
+  const canNavigate=(volume.status==='prerelease'&&volume.premiereBookId)||volume.status==='published';
+  const action=document.createElement(canNavigate?'a':'span');action.className='action';
   if(volume.status==='prerelease'&&volume.premiereBookId){action.href='./premiere.html?book='+encodeURIComponent(volume.premiereBookId);action.textContent='О премьере';}
   else if(volume.status==='published'){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
-  else{action.href='#';action.setAttribute('aria-disabled','true');action.setAttribute('tabindex','-1');action.textContent='Скоро';}
+  else{action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';card.appendChild(progressLabel);}
   row.append(state,action);card.append(num,title,desc,range,row);list.appendChild(card);
  });
