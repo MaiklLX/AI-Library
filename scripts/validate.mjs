@@ -225,7 +225,7 @@ assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v60['"]/, "Visual app-shell
 assert.match(html, /AI Library book-card actions: accessible sizing v1/, "Book card action sizing layer is missing");
 assert.match(html, /#books \.book-back-actions \.read,[\s\S]*#books \.book-back-actions \.offline-download/, "Book card read and offline actions must share accessible sizing");
 assert.match(html, /min-height: 48px !important/, "Book card action touch target is too small");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v59['"]/, "Book action update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v60['"]/, "Book action update must use the current cache version");
 
 assert.match(html, /PUBLISHED_CATALOG_STATE_KEY/, "Catalog update state key is missing");
 assert.match(html, /function getCatalogMetadataSnapshot\(catalog\)/, "Catalog metadata snapshot helper is missing");
@@ -235,13 +235,13 @@ assert.match(html, /id="catalogUpdateNotice"/, "Catalog update notice UI is miss
 assert.match(html, /id="dismissCatalogUpdate"/, "Catalog update notice must be dismissible");
 assert.match(html, /message\.textContent=/, "Catalog update notice must use safe text rendering");
 assert.match(html, /Тексты книг не загружались\./, "Catalog update notice must clarify that book bodies were not downloaded");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v59['"]/, "Catalog update notice must use the refreshed app-shell cache");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v60['"]/, "Catalog update notice must use the refreshed app-shell cache");
 assert.match(html, /AI Library lazy book loading: metadata first v1/, "Lazy book loading marker is missing");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>/, "Catalog startup must map metadata without fetching book bodies");
 assert.match(html, /Full book JSON is fetched only on explicit read\/download/, "Book content loading policy is missing");
 assert.match(html, /async function openBookById\(id\)[\s\S]*?fetch\(book\.contentPath, \{ cache: 'no-cache' \}\)/, "Published book text must load on demand when opening a book");
 assert.match(html, /metadataOnly: true,[\s\S]*?chapters: \[\]/, "Catalog fallback must not retain full book text in local metadata cache");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v59['"]/, "Lazy book loading update must use the current cache version");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*['"]v60['"]/, "Lazy book loading update must use the current cache version");
 
 
 assert.equal(seriesManifest.id, "ty-v-moih-planah", "Series manifest ID is incorrect");
@@ -296,7 +296,7 @@ assert.match(seriesPage, /const canNavigate=\(volume\.status==='prerelease'&&vol
 assert.match(seriesPage, /document\.createElement\(canNavigate\?'a':'span'\)/, "Planned volume actions must not be rendered as links");
 assert.doesNotMatch(seriesPage, /action\.href='#'/, "Planned volume actions must not contain a clickable placeholder URL");
 assert.match(seriesPage, /progress\['published-'\+\(volume\.bookId\|\|volume\.id\)\]/, "Series progress must be keyed by the actual book ID");
-assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v59["']/, "Series presentation must use the refreshed app-shell cache");
+assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v60["']/, "Series presentation must use the refreshed app-shell cache");
 assert.ok(serviceWorker.includes("url.pathname.includes('/content/series/')"), "Series manifest must use network-first caching");
 assert.ok(serviceWorker.includes("\'./content/series/ty-v-moih-planah.json\'"), "Six-volume series manifest must be available in the offline app shell");
 
