@@ -273,3 +273,20 @@ Do not implement frontend registration against a speculative endpoint.
 - A refund/reversal must never be applied twice. Use an idempotency key and immutable compensating ledger entries linked to the exact purchase and refund case.
 - The refund case must record who/what caused the failure, evidence/reason, decision timestamp, amounts allocated to author/platform, entitlement action, and any outstanding recovery amount.
 - These are approved product allocation rules, not live implementation. Mandatory consumer rights and legal review take precedence; disputed fault classification, author notice/appeal, and negative-balance limits must be specified before launch.
+
+## Dispute review and appeal workflow (approved product policy, 2026-10-31)
+
+- A reader can open a report from a specific paid purchase. The intake captures a structured reason, description, purchase reference, and optional supporting evidence (for example, screenshots or a relevant file).
+- Initial reason categories: duplicate charge; EPUB failed to download; EPUB is corrupted/unusable; paid access was not provided; material mismatch with the book description; other.
+- Every case receives a unique ID and an auditable status history. Suggested statuses: new, awaiting author response, under platform review, decision issued, appeal, closed.
+- A dispute is scoped to the affected purchase. Do not freeze the author's whole wallet or unrelated earnings. If the disputed author share is still pending, only that share may remain pending while the case is reviewed.
+- Notify the author with the case ID, reason, reader's description/evidence, and response deadline. The author may respond with an explanation, evidence, or a corrective re-delivery proposal.
+- Proposed service target: 5 calendar days for the author's response. No response is not an automatic admission of fault; the platform may decide using the available evidence and must record its reasoning.
+- A platform moderator reviews purchase and entitlement records, delivery/download diagnostics where available, EPUB integrity, listing description, reader evidence, and the author's response. Proposed review target: 3–5 business days after the case is ready for review.
+- A decision must record the reason and evidence considered and select an outcome: refund, no refund, corrected re-delivery, or (only where supported and justified) partial compensation. Notify both parties with a concise explanation.
+- Both reader and author may appeal within a proposed 7 calendar days, supplying new evidence or identifying a review error. A different moderator or second review level should handle the appeal where practical. Preserve the original decision and append the appeal outcome; never overwrite the audit history.
+- Refunds and author-share adjustments require a registered platform decision tied to the case. The only proposed automatic exception is a mechanically confirmed duplicate charge: the system may reverse only the duplicate transaction when ledger evidence proves it is an extra charge for the same purchase. It must not credit the author for the duplicate or affect the original successful purchase. Ambiguous cases go to human review.
+- All wallet effects use idempotent compensating ledger entries. Preserve original purchase and ledger records. Record the case ID, reason classification, evidence references, decision-maker, timestamps, amounts allocated to author/platform, entitlement action, and any outstanding author recovery.
+- Do not automatically revoke a paid entitlement merely because a complaint was opened. Entitlement changes occur only after a valid decision and remain subject to mandatory consumer rights. A prior permanent free-acquisition entitlement is never revoked by a later paid-price change or a dispute about a separate paid acquisition.
+- These internal targets do not limit mandatory statutory consumer rights or external dispute deadlines. Legal review is required before launch.
+- The 5-day author response, 3–5-business-day review, and 7-day appeal windows are approved initial product service targets; they are not waivers or restrictions of legal rights.
