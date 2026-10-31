@@ -101,7 +101,7 @@ const startup = makeHarness({
   ]
 });
 const loaded = await startup.api.load();
-assert.deepEqual(loaded.map(record => record.id), ["published-winter-city"]);
+assert.deepEqual(Array.from(loaded, record => record.id), ["published-winter-city"]);
 assert.equal(startup.calls.length, 0);
 assert.equal(startup.api.isDownloaded("published-winter-city"), true);
 assert.equal(startup.api.isDownloaded("published-broken"), false);
@@ -111,10 +111,10 @@ assert.equal(startup.records.has("published-winter-city"), false);
 assert.equal(startup.api.isDownloaded("published-winter-city"), false);
 
 const storage = makeHarness({ storage: { persisted: false, persistResult: true } });
-assert.deepEqual(await storage.api.getStorageInfo(), {
-  usage: 120, quota: 1000, persisted: false, persistenceSupported: true
-});
-assert.deepEqual(await storage.api.requestPersistence(), { supported: true, persisted: true });
+const storageInfo = await storage.api.getStorageInfo();
+assert.deepEqual({ ...storageInfo }, { usage: 120, quota: 1000, persisted: false, persistenceSupported: true });
+const persistence = await storage.api.requestPersistence();
+assert.deepEqual({ ...persistence }, { supported: true, persisted: true });
 
 await assert.rejects(() => initial.api.download("../bad-id"), /Некорректный идентификатор/);
 console.log("Offline download tests passed: verified save, atomic replacement protection, revision mismatch, metadata-only update checks, local startup, corruption filtering, removal and storage protection.");
