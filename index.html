@@ -3955,6 +3955,8 @@ function turnReadingPage(direction) {
 
 function showPart() {
   if (!current) return;
+  const completionPanel=document.getElementById("seriesCompletionPanel");
+  if(completionPanel) completionPanel.hidden=true;
 
   document.querySelector('#modalGenre').textContent =
     current.genre;
