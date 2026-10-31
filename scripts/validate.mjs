@@ -452,7 +452,7 @@ assert.match(html, /@keyframes aiLibraryRealPageCurlForward[\s\S]*?rotateY\(-180
 assert.match(html, /@keyframes aiLibraryRealPageCurlBack[\s\S]*?rotateY\(180deg\)/,
   "Backward page turns must complete a full 180-degree paper rotation");
 assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
-  "The realistic paper turn must use the 720 ms motion timing");
+  "The paper curl must use a slower, smoother 980 ms animation");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
