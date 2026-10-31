@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v60';
+const CACHE_NAME = CACHE_PREFIX + 'v61';
 const APP_SHELL = ['./', './index.html', './series.html', './premiere.html', './book-creator.html', './content/series/ty-v-moih-planah.json', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js', './src/platform/download-manager.js'];
 
 self.addEventListener('install', event => {
@@ -37,8 +37,12 @@ self.addEventListener('fetch', event => {
         if (response && response.ok) {
           await cache.put(new URL('./', self.registration.scope).href, response.clone());
           await cache.put(request, response.clone());
+          return response;
         }
-        return response;
+        return (await cache.match(request)) ||
+          (await cache.match(new URL('./', self.registration.scope).href)) ||
+          (await cache.match(new URL('./index.html', self.registration.scope).href)) ||
+          response;
       } catch {
         return (await cache.match(request)) ||
           (await cache.match(new URL('./', self.registration.scope).href)) ||
@@ -62,8 +66,9 @@ self.addEventListener('fetch', event => {
         const response = await fetch(request, { cache: 'no-cache' });
         if (response && response.ok && response.type === 'basic') {
           await cache.put(request, response.clone());
+          return response;
         }
-        return response;
+        return (await cache.match(request)) || response;
       } catch {
         return (await cache.match(request)) || new Response('', { status: 503, statusText: 'Offline' });
       }
