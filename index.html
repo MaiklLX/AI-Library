@@ -2943,6 +2943,13 @@ body.reader-open #pageTurnSheet.flip-back {
 }
 </style>
 
+
+<style id="offline-library-ux-v1">
+#books .offline-card-status{margin:11px 0 0;padding:7px 9px;border:1px solid rgba(255,255,255,.09);border-radius:8px;color:#aaa59a;font-size:11px;line-height:1.35;background:rgba(255,255,255,.025)}
+#books .offline-card-status.is-ready{color:#e5cd91;border-color:rgba(217,182,109,.28);background:rgba(217,182,109,.07)}
+#books .offline-download.is-downloaded{border-color:rgba(217,182,109,.35);color:#e5cd91}
+@media(max-width:540px){#books .offline-card-status{font-size:10px;padding:6px 7px}#books .book-back-actions .offline-download{font-size:11px!important;padding:9px 7px!important}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3380,7 +3387,8 @@ function renderBookCard(book){
  '<h3>'+esc(book.title)+'</h3><div class="author">'+esc(book.author||'AI Library')+'</div><p class="desc">'+esc(book.desc||'Описание этой книги скоро появится.')+'</p>'+
  '<div class="meta"><span>◷ '+(Number(book.length)||'—')+' мин чтения</span><span>Полное издание · бесплатно</span></div>'+
  (read>0?'<div class="reading-progress"><div class="reading-progress-label"><span>'+(completed?'Прочитано':'Прогресс чтения')+'</span><span>'+percent+'%</span></div><div class="reading-progress-track"><div class="reading-progress-fill" style="width:'+percent+'%"></div></div></div>':'')+
- '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
+ (String(book.id).startsWith('published-')?'<div class="offline-card-status '+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'is-ready':'')+'" data-offline-status="'+esc(book.id)+'">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Сохранена на этом устройстве':'Доступна только при подключении')+'</div>':'')+
+  '<div class="book-back-actions"><button class="btn read" data-read="'+esc(book.id)+'" type="button">Читать книгу　→</button>'+(String(book.id).startsWith('published-')?(window.AILibraryDownloadManager?.isDownloaded(book.id)?'<button class="btn offline-download is-downloaded" data-manage-download="'+esc(book.id)+'" type="button">✓ Управлять</button>':'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">↓ Скачать</button>'):'')+'</div></div></div></article>';
 }
 
 function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
@@ -3424,6 +3432,8 @@ document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.cl
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
 document.querySelector("#books").addEventListener("click",e=>{
+  const manage=e.target.closest("[data-manage-download]");
+  if(manage){document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'});return;}
   if(e.target.closest("[data-reset-catalog]")){
     document.querySelector("#search").value="";document.querySelector("#sort").value="featured";genre="Все";onlyFav=false;
     document.querySelectorAll("#genres [data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre==="Все"));
