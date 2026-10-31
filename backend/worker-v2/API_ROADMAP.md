@@ -10,14 +10,15 @@ This is a staged contract, not a claim that these endpoints already exist.
 ## Phase 1 — identity and author profile
 The user has approved Google sign-in plus email one-time passcode (OTP) as the initial sign-in options. This is an architecture decision, not an implementation or deployment authorization.
 
-Before implementation, finalize:
-- Google OAuth callback/redirect URLs and allowed origins.
-- Email OTP delivery provider and sender-domain verification.
-- Secure session model; prefer HttpOnly + Secure cookies if compatible with the selected origin topology.
-- CSRF protection for cookie-based sessions.
+The detailed proposal is in [AUTHENTICATION_DESIGN.md](./AUTHENTICATION_DESIGN.md). The key blocking decision is the first-party hosting topology: the current GitHub Pages site and a future workers.dev API are cross-site, which is a poor baseline for reliable Safari cookie sessions. Prefer a custom app domain and sibling API subdomain before implementing cookie sessions.
+
+Before implementation, confirm:
+- Owned custom domain and app hosting migration/arrangement.
+- Exact Google OAuth callback URL and allowed origins.
+- Whether Cloudflare Email Sending can verify the sending domain; otherwise select Resend.
+- Secure HttpOnly + Secure + SameSite=Lax host-only session cookie, with CSRF protection.
 - OTP expiry, resend cooldown, attempt limits and abuse/rate limiting.
-- Session expiry/revocation and account recovery.
-- Account deletion/export and data-retention policy.
+- Session expiry/revocation, account recovery and account deletion/export.
 
 Provider secrets must remain server-side; never ship them to the browser. No auth endpoints, secrets, D1 schema or production routing are configured yet. The browser must never receive a provider secret. Define account deletion/export, session expiry/revocation, CSRF protections where cookies are used, rate limits and abuse handling.
 
