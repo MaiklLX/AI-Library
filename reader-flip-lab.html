@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171612">
+<title>AI Library — лаборатория перелистывания</title>
+<style>
+:root{color-scheme:dark;--gold:#d9b66d;--muted:#a79c86;--paper:#f4ecd9;--ink:#30291f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 22%,#393126 0,#1b1915 48%,#11110f 100%);color:#f4efe5;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,a{font:inherit}
+.lab{width:min(100%,1100px);min-height:100vh;margin:auto;padding:22px clamp(14px,4vw,38px) 28px;display:flex;flex-direction:column;gap:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{font:500 17px Georgia,serif;letter-spacing:.16em;color:var(--gold)}
+.back{color:#e9d7ad;text-decoration:none;font-size:13px;border:1px solid #d9b66d45;border-radius:999px;padding:9px 13px}
+.intro{text-align:center;margin:4px 0 0}
+.kicker{font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
+.intro p{margin:0 auto;color:#bcb3a2;max-width:600px;font-size:13px;line-height:1.6}
+.stage{flex:1;min-height:480px;display:flex;align-items:center;justify-content:center;padding:12px 0 4px}
+.book-frame{width:min(100%,880px);height:min(70dvh,690px);min-height:450px;display:flex;align-items:center;justify-content:center;position:relative}
+#flipBook{width:100%;height:100%;margin:auto}
+.stf__parent{margin:auto}
+.stf__block{background:transparent}
+.flip-page{background:var(--paper);color:var(--ink);border:1px solid rgba(103,77,39,.18);overflow:hidden}
+.page-inner{height:100%;display:flex;flex-direction:column;padding:clamp(20px,4vw,42px) clamp(19px,4.3vw,44px) 22px;background:linear-gradient(100deg,rgba(255,255,255,.18),transparent 25%,transparent 78%,rgba(91,64,29,.07))}
+.page-head{display:flex;justify-content:space-between;gap:10px;font:10px Georgia,serif;letter-spacing:.12em;color:#8b7859;border-bottom:1px solid #b9a98c66;padding-bottom:11px}
+.page-copy{flex:1;overflow:hidden;padding-top:clamp(26px,5vh,54px);font:clamp(14px,2.05vw,17px)/1.85 Georgia,"Times New Roman",serif;white-space:pre-line}
+.page-copy h2{font:500 clamp(23px,3.2vw,31px)/1.25 Georgia,serif;margin:0 0 22px}
+.page-copy p{margin:0 0 1.15em;text-indent:1.2em}
+.page-copy .lead{text-indent:0;font-style:italic;color:#67553b}
+.page-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #b9a98c66;padding-top:10px;color:#8b7859;font:10px Georgia,serif;letter-spacing:.1em}
+.cover .page-inner{justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 40%,#fff8e9,#e9dcc1 75%,#d7c6a5)}
+.cover-mark{font:11px system-ui;letter-spacing:.28em;color:#9c7b43}
+.cover h2{font:500 clamp(30px,5vw,48px)/1.1 Georgia,serif;margin:28px 0 15px;color:#33291c}
+.cover p{font:italic 15px Georgia,serif;color:#776447}
+.cover .page-foot{justify-content:center;border:0;margin-top:auto}
+.controls{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.control{border:1px solid #d9b66d55;background:#29251e;color:#f3e8d0;border-radius:999px;padding:11px 17px;min-width:116px;cursor:pointer}
+.control.primary{background:linear-gradient(135deg,#d9b66d,#a98545);color:#1e1911;border:0;font-weight:650}
+.control:disabled{opacity:.35;cursor:not-allowed}
+.status{min-width:115px;text-align:center;color:#d8c9a7;font-size:12px;font-variant-numeric:tabular-nums}
+.hint{text-align:center;color:#928876;font-size:11px;line-height:1.5;margin:0}
+.notice{display:none;margin:0 auto;max-width:600px;padding:12px 15px;border:1px solid #b98250;border-radius:10px;color:#f0d0a4;background:#6b3e241c;font-size:13px}
+.notice.show{display:block}
+.footnote{text-align:center;color:#726b5d;font-size:10px;margin-top:auto}
+@media(max-width:620px){
+ .lab{padding:15px 12px 20px;gap:12px}
+ .top{padding:0 3px}
+ .stage{min-height:0;padding:4px 0}
+ .book-frame{width:100%;height:min(68dvh,690px);min-height:390px}
+ .page-inner{padding:19px 18px 17px}
+ .page-copy{padding-top:25px;font-size:15px;line-height:1.72}
+ .page-head{font-size:9px}
+ .controls{gap:8px}
+ .control{min-width:98px;padding:10px 13px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="lab">
+ <div class="top"><div class="brand">AI LIBRARY</div><a class="back" href="./index.html">← Вернуться в библиотеку</a></div>
+ <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Потяни за верхний или нижний угол листа, чтобы перелистнуть его, или воспользуйся кнопками.</p></header>
+ <div id="loadNotice" class="notice" role="status">Не удалось загрузить движок перелистывания. Проверь подключение к интернету и обнови страницу.</div>
+ <section class="stage" aria-label="Тестовая книга">
+  <div class="book-frame"><div id="flipBook">
+   <article class="flip-page cover" data-density="hard"><div class="page-inner"><div class="cover-mark">AI LIBRARY · ПРЕМИАЛЬНАЯ ЧИТАЛКА</div><h2>ТЫ В МОИХ<br>ПЛАНАХ</h2><p>Экспериментальная демонстрация бумаги</p><div class="page-foot">ТЕСТОВЫЙ РАЗВОРОТ</div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ГЛАВА I</span></div><div class="page-copy"><h2>Глава первая</h2><p class="lead">У каждой настоящей книги есть свой ритм. И у каждой страницы — собственный вес.</p><p>Она не исчезает и не превращается в карточку. Сначала поднимается угол, затем бумага начинает изгибаться, и линия сгиба медленно проходит через весь лист.</p><p>Под приподнятой частью уже видна следующая страница. Свет и тень меняются вместе с формой бумаги.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>01</span></div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ГЛАВА I</span></div><div class="page-copy"><h2>Тихое движение</h2><p>Пальцы касаются края. Бумага отвечает лёгким сопротивлением, словно у неё действительно есть толщина.</p><p>Сгиб не должен быть идеально прямой осью. Он движется по кривой, а свободный край листа немного отстаёт от руки.</p><p>Именно это маленькое несовершенство делает движение убедительным.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>02</span></div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ГЛАВА II</span></div><div class="page-copy"><h2>Обратная сторона</h2><p class="lead">На мгновение читатель видит не экран, а оборот бумажного листа.</p><p>Изнанка чуть темнее лицевой стороны. Возле сгиба появляется мягкая тень, а под листом постепенно открывается новый текст.</p><p>Никаких вспышек и декоративных световых полос — только бумага, объём и движение.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>03</span></div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ГЛАВА II</span></div><div class="page-copy"><h2>Ритм чтения</h2><p>Перелистывание должно быть достаточно медленным, чтобы глаз успел увидеть форму загиба, но достаточно лёгким, чтобы не прерывать чтение.</p><p>На телефоне книга остаётся одной вертикальной страницей. На широком экране можно раскрыть полноценный разворот.</p><p>Проверяем одинаково аккуратное движение вперёд и назад.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>04</span></div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ГЛАВА III</span></div><div class="page-copy"><h2>Настоящая книга</h2><p>Хорошая анимация не должна привлекать внимание к самой себе. Она должна помогать забыть, что перед нами экран.</p><p>Если лист ощущается как тонкая бумага, если его можно подхватить за угол и провести через воздух, значит мы движемся в правильную сторону.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>05</span></div></div></article>
+   <article class="flip-page"><div class="page-inner"><div class="page-head"><span>AI LIBRARY</span><span>ФИНАЛ</span></div><div class="page-copy"><h2>Продолжение следует</h2><p class="lead">Это только тест механики.</p><p>После оценки движения мы перенесём подход в основную читалку, сохранив настоящую пагинацию, прогресс чтения, настройки шрифта и переходы между главами.</p></div><div class="page-foot"><span>AI LIBRARY</span><span>06</span></div></div></article>
+   <article class="flip-page cover" data-density="hard"><div class="page-inner"><div class="cover-mark">AI LIBRARY</div><h2>КОНЕЦ<br>ОПЫТА</h2><p>Спасибо, что проверяешь вместе с нами</p><div class="page-foot">READER MOTION LAB</div></div></article>
+  </div></div>
+ </section>
+ <div class="controls"><button class="control" id="prevPage" type="button" disabled>← Назад</button><span class="status" id="pageStatus" aria-live="polite">Загрузка книги…</span><button class="control primary" id="nextPage" type="button" disabled>Вперёд →</button></div>
+ <p class="hint">На телефоне попробуй потянуть за угол листа. Проверь движение вперёд и назад, а также ощущение толщины и тени.</p>
+ <div class="footnote">Тестовый движок StPageFlip · оригинальная читалка пока не изменена</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+<script>
+(() => {
+  const notice = document.getElementById('loadNotice');
+  const status = document.getElementById('pageStatus');
+  const previous = document.getElementById('prevPage');
+  const next = document.getElementById('nextPage');
+  const host = document.getElementById('flipBook');
+  if (!window.St || !window.St.PageFlip) {
+    notice.classList.add('show');
+    status.textContent = 'Движок не загружен';
+    return;
+  }
+  const pages = Array.from(host.querySelectorAll('.flip-page'));
+  let pageFlip;
+  const update = index => {
+    const count = pageFlip.getPageCount();
+    status.textContent = 'Лист ' + (index + 1) + ' / ' + count;
+    previous.disabled = index <= 0;
+    next.disabled = index >= count - 1;
+  };
+  try {
+    pageFlip = new St.PageFlip(host, {
+      width: 420,
+      height: 640,
+      size: 'stretch',
+      minWidth: 270,
+      maxWidth: 460,
+      minHeight: 390,
+      maxHeight: 720,
+      drawShadow: true,
+      flippingTime: 1050,
+      usePortrait: true,
+      startPage: 0,
+      autoSize: false,
+      maxShadowOpacity: 0.34,
+      showCover: true,
+      mobileScrollSupport: false,
+      swipeDistance: 26,
+      clickEventForward: true,
+      useMouseEvents: true,
+      disableFlipByClick: true
+    });
+    pageFlip.on('flip', event => update(event.data));
+    pageFlip.on('init', event => update(event.data.page));
+    pageFlip.on('changeOrientation', () => requestAnimationFrame(() => pageFlip.update()));
+    pageFlip.loadFromHTML(pages);
+    previous.addEventListener('click', () => pageFlip.flipPrev('bottom'));
+    next.addEventListener('click', () => pageFlip.flipNext('bottom'));
+    window.addEventListener('resize', () => pageFlip.update(), { passive: true });
+    update(0);
+  } catch (error) {
+    notice.textContent = 'Не удалось запустить тестовую книгу: ' + error.message;
+    notice.classList.add('show');
+    status.textContent = 'Ошибка запуска';
+  }
+})();
+</script>
+</body>
+</html>
