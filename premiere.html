@@ -106,6 +106,19 @@ footer{background:linear-gradient(90deg,#ffffff03,transparent)}
 @media(hover:none){.visual:hover .cover{transform:perspective(1000px) rotateY(-9deg)}}
 
 </style>
+
+<script id="ai-library-scroll-policy-v1">
+/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', event => {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (event.persisted || navigation?.type === 'reload') {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
+  });
+})();
+</script>
 </head>
 <body>
 <header><a class="brand" href="./index.html"><span class="logo">✧</span><span>AI LIBRARY<small style="display:block;font-size:9px;letter-spacing:.2em;color:#aaa59a;font-weight:500">БИБЛИОТЕКА НОВЫХ МИРОВ</small></span></a><a class="back" href="./index.html#premieres">← Все премьеры</a></header>
