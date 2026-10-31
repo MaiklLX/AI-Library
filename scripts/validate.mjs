@@ -483,5 +483,12 @@ assert.ok(flipLab.includes("usePortrait: true"), "Reader motion lab must switch 
 assert.ok(flipLab.includes("maxShadowOpacity: 0.34"), "Reader motion lab must keep paper shadows restrained");
 assert.ok(flipLab.includes("flipNext('bottom')"), "Reader motion lab forward control must invoke an animated page flip");
 assert.ok(flipLab.includes("flipPrev('bottom')"), "Reader motion lab backward control must invoke an animated page flip");
+assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correct the StPageFlip 2.0.7 centered-book coordinate bug");
+assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
+assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v72'"), "Reader motion lab release must refresh the offline shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v73'"), "Reader motion lab release must refresh the offline shell cache");
+assert.match(flipLab, /host\.addEventListener\('pointerdown'[\s\S]*?xRatio <= 0\.2[\s\S]*?xRatio >= 0\.8/, "Reader motion lab must recognize taps on both outer page edges");
+assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flipPrev\('bottom'\)[\s\S]*?pageFlip\.flipNext\('bottom'\)/, "Edge taps must trigger animated backward and forward page curls");
+assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");
+assert.match(flipLab, /yRatio > 0\.12 && yRatio < 0\.88/, "Side-edge tap zones must leave the page corners available for manual dragging");
