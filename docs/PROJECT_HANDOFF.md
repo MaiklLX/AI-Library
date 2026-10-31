@@ -241,3 +241,18 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - Documentation only: no frontend, Worker, D1 schema, wallet, purchase or refund implementation was changed.
 - Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and must not be merged until remaining open items are reviewed.
 - Next: specify evidence retention/access controls, abuse handling, author negative-balance limits and exceptional cases; locate and audit the deployed Cloudflare Worker and D1 schema before implementing financial operations.
+
+## Author debt recovery decision checkpoint (2026-10-31)
+
+- Product owner approved the author-debt recovery model:
+  - Debt may arise only from a final, documented decision assigning a refund/reversal to author/content fault. Platform fault, duplicate charges, unresolved complaints and unsubstantiated allegations do not create author debt.
+  - Author receives a reasoned notice with purchase/case reference, evidence summary, amount and calculation. The appeal window is **7 calendar days**. A timely appeal pauses recovery of the disputed amount until the appeal is decided.
+  - After the decision is final, **50% of future author earnings** is applied to the outstanding debt. This is 50% of the author's 80% share, not half of the reader's gross payment. The other 50% is released under the normal seven-day pending settlement rule, subject to other valid holds.
+  - When confirmed outstanding debt reaches **10 coins or more**, suspend new paid sales until repayment or documented review. This is a trigger, not a debt cap or automatic confiscation.
+  - Existing reader entitlements and published books remain intact. Authors retain access to reading, drafts, editing, local saving and export; free publication may continue unless a separate moderation rule applies.
+  - Recovery uses exact arithmetic and separate idempotent ledger entries; no mutation/deletion of original transactions, no whole-wallet freeze, and no offset against unrelated coin rewards.
+  - Notify the author when the restriction begins and when it is lifted; lift automatically when the confirmed debt is fully repaid unless another documented restriction applies.
+- Documentation only: no frontend, Worker, D1 schema, wallet, purchase or refund behavior was implemented.
+- Current branch: `product/creator-progression-economy`; PR [#43](https://github.com/MaiklLX/AI-Library/pull/43) remains open and unmerged.
+- Next: define evidence retention/access controls, abuse handling, exceptional cases and legal review; audit the deployed Cloudflare Worker and D1 schema before live financial implementation.
+
