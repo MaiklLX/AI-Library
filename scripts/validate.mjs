@@ -350,9 +350,9 @@ assert.match(html, /function openBook\(id\) \{[\s\S]*?current = getAllBooks\(\)\
 assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["'][\s\S]*?showSeriesCompletion\(\)/, "Final-chapter completion must be gated by the active book's series metadata");
 
 
-const showPartSource = html.match(/function showPart\\(\\) \\{([\\s\\S]*?)\\n\\}/);
+const showPartSource = html.match(/function showPart\(\) \{([\s\S]*?)\n\}/);
 assert.ok(showPartSource, "Reader chapter renderer is missing");
-assert.match(showPartSource[1], /getElementById\\(["']seriesCompletionPanel["']\\)[\\s\\S]*?completionPanel\\.hidden=true/, "Navigating to another chapter must hide the series completion panel");
-const nextChapterHandler = html.match(/document\\.querySelector\\(["']#nextChapter["']\\)\\.onclick=\\(\\)=>\\{([\\s\\S]*?)\\};document\\.querySelector\\(["']#closeModal["']\\)/);
+assert.match(showPartSource[1], /getElementById\(["']seriesCompletionPanel["']\)[\s\S]*?completionPanel\.hidden=true/, "Navigating to another chapter must hide the series completion panel");
+const nextChapterHandler = html.match(/document\.querySelector\(["']#nextChapter["']\)\.onclick=\(\)=>\{([\s\S]*?)\};document\.querySelector\(["']#closeModal["']\)/);
 assert.ok(nextChapterHandler, "Next-chapter handler is missing");
-assert.match(nextChapterHandler[1], /part<current\\.chapters\\.length-1[\\s\\S]*?part\\+\\+[\\s\\S]*?else if\\(current\\?\\.seriesId===["']ty-v-moih-planah["']\\)\\{showSeriesCompletion\\(\\)\\}/, "Series completion must appear only after the final chapter");
+assert.match(nextChapterHandler[1], /part<current\.chapters\.length-1[\s\S]*?part\+\+[\s\S]*?else if\(current\?\.seriesId===["']ty-v-moih-planah["']\)\{showSeriesCompletion\(\)\}/, "Series completion must appear only after the final chapter");
