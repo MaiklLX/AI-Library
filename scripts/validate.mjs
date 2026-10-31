@@ -459,6 +459,11 @@ assert.equal(scheduledCatalogEntry.status, "scheduled", "Volume II must remain t
 assert.equal(scheduledCatalogEntry.releaseAt, scheduledVolumeTwo.releaseAt, "Reader catalog and series card must share the same release timestamp");
 assert.equal(scheduledCatalogEntry.chapterCount, 18, "Scheduled volume II must expose the correct chapter count");
 assert.equal(scheduledCatalogEntry.metadataOnly, true, "Scheduled catalog entry must not embed chapter text");
+
+const scheduledBookTwo = JSON.parse(readFileSync(resolve(root, scheduledCatalogEntry.path), "utf8"));
+assert.equal(scheduledBookTwo.status, "scheduled", "Volume II book JSON must carry the same scheduled-release state as its catalog entry");
+assert.equal(scheduledBookTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II JSON and series must share the same release timestamp");
+
 assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
 assert.match(html, /Date\.now\(\) < releaseTime/, "Scheduled release guard must compare the current time to releaseAt");
 assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
