@@ -365,3 +365,29 @@ const nextChapterEnd = html.indexOf("document.querySelector(\"#closeModal\").onc
 assert.ok(nextChapterEnd > nextChapterStart, "Could not isolate next-chapter handler");
 const nextChapterHandler = html.slice(nextChapterStart, nextChapterEnd);
 assert.match(nextChapterHandler, /part<current\.chapters\.length-1[\s\S]*?part\+\+[\s\S]*?else if\(current\?\.seriesId===["']ty-v-moih-planah["']\)\{showSeriesCompletion\(\)\}/, "Series completion must appear only after the final chapter");
+
+const progressReader = html.match(/function getReadingProgress\(\) \{([\s\S]*?)\n\}/);
+assert.ok(progressReader, "Could not isolate reading-progress loader");
+assert.match(progressReader[1], /localStorage\.getItem\(['"]ai-library-progress['"]\)/, "Reader and series must share the same progress storage key");
+assert.match(progressReader[1], /!Array\.isArray\(saved\)/, "Malformed array-shaped progress data must be rejected safely");
+const progressLoaderFixture = new Function("localStorage", progressReader[0] + "; return getReadingProgress();");
+assert.deepEqual(progressLoaderFixture({ getItem: () => JSON.stringify({ "published-fixture": { part: 2, page: 4, updatedAt: 123 } }) }), { "published-fixture": { part: 2, page: 4, updatedAt: 123 } }, "Reading progress loader must preserve valid saved positions");
+assert.deepEqual(progressLoaderFixture({ getItem: () => "not-json" }), {}, "Corrupt progress JSON must safely fall back to an empty object");
+assert.deepEqual(progressLoaderFixture({ getItem: () => "[]" }), {}, "Array-shaped progress must safely fall back to an empty object");
+
+const progressSaver = html.match(/function saveReadingProgress\(\) \{([\s\S]*?)\n\}/);
+assert.ok(progressSaver, "Could not isolate reading-progress saver");
+assert.match(progressSaver[1], /progress\[current\.id\]\s*=\s*\{[\s\S]*?part:\s*part[\s\S]*?page:\s*readingPageIndex\s*\|\|\s*0[\s\S]*?updatedAt:\s*Date\.now\(\)/, "Reader must persist book ID, chapter index, page index and timestamp together");
+assert.match(progressSaver[1], /localStorage\.setItem\(\s*['"]ai-library-progress['"]/, "Reader must persist progress to the shared localStorage key");
+
+const openBookSource = html.match(/function openBook\(id\) \{([\s\S]*?)\n\}/);
+assert.ok(openBookSource, "Could not isolate book-opening progress restoration");
+assert.match(openBookSource[1], /const saved = progress\[current\.id\]/, "Opening a book must restore progress by its actual book ID");
+assert.match(openBookSource[1], /Math\.min\(saved\.part, current\.chapters\.length - 1\)/, "Restored chapter index must be clamped to the available chapter range");
+assert.match(openBookSource[1], /Math\.min\(saved\.page, readingPages\.length - 1\)/, "Restored page index must be clamped to the newly paginated chapter");
+assert.match(openBookSource[1], /renderReadingPage\(false\)/, "Restored page position must be rendered without replaying a page-turn animation");
+
+const continueReadingSource = html.match(/function updateContinueReadingButton\(\) \{([\s\S]*?)\n\}/);
+assert.ok(continueReadingSource, "Could not isolate continue-reading action");
+assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\)\)/, "Continue-reading must ignore progress records for unavailable books");
+assert.match(continueReadingSource[1], /btn\.onclick = \(\) => openBookById\(book\.id\)/, "Continue-reading must use the guarded book-opening workflow");
