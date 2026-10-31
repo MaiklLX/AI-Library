@@ -474,15 +474,14 @@ assert.ok(html.includes("#modal:focus") && html.includes("#reader:focus"),
   "The dialog shell and manuscript must not draw a browser focus frame");
 
 
-
-assert.match(flipLab, /page-flip@2\\.0\\.7\\/dist\\/js\\/page-flip\\.browser\\.min\\.js/, "Reader motion lab must load the pinned StPageFlip browser build");
-assert.match(flipLab, /new St\\.PageFlip\\(host,/, "Reader motion lab must initialize the real StPageFlip engine");
-assert.match(flipLab, /loadFromHTML\\(pages\\)/, "Reader motion lab must use HTML pages, not a CSS-only mock animation");
-assert.match(flipLab, /data-density="hard"/, "Reader motion lab must demonstrate hard cover pages and soft inner pages");
-assert.match(flipLab, /flippingTime: 1050/, "Reader motion lab must use a deliberate paper-turn duration");
-assert.match(flipLab, /usePortrait: true/, "Reader motion lab must switch to single-page portrait mode on mobile");
-assert.match(flipLab, /maxShadowOpacity: 0\\.34/, "Reader motion lab must keep paper shadows restrained");
-assert.match(flipLab, /flipNext\\('bottom'\\)/, "Reader motion lab forward control must invoke an animated page flip");
-assert.match(flipLab, /flipPrev\\('bottom'\\)/, "Reader motion lab backward control must invoke an animated page flip");
-assert.match(serviceWorker, /reader-flip-lab\\.html/, "Reader motion lab must be included in the offline app shell");
-assert.match(serviceWorker, /CACHE_PREFIX \\+ 'v72'/, "Reader motion lab release must refresh the offline shell cache");
+assert.ok(flipLab.includes("page-flip@2.0.7/dist/js/page-flip.browser.min.js"), "Reader motion lab must load the pinned StPageFlip browser build");
+assert.ok(flipLab.includes("new St.PageFlip(host,"), "Reader motion lab must initialize the real StPageFlip engine");
+assert.ok(flipLab.includes("loadFromHTML(pages)"), "Reader motion lab must use HTML pages, not a CSS-only mock animation");
+assert.ok(flipLab.includes('data-density="hard"'), "Reader motion lab must demonstrate hard cover pages and soft inner pages");
+assert.ok(flipLab.includes("flippingTime: 1050"), "Reader motion lab must use a deliberate paper-turn duration");
+assert.ok(flipLab.includes("usePortrait: true"), "Reader motion lab must switch to single-page portrait mode on mobile");
+assert.ok(flipLab.includes("maxShadowOpacity: 0.34"), "Reader motion lab must keep paper shadows restrained");
+assert.ok(flipLab.includes("flipNext('bottom')"), "Reader motion lab forward control must invoke an animated page flip");
+assert.ok(flipLab.includes("flipPrev('bottom')"), "Reader motion lab backward control must invoke an animated page flip");
+assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v72'"), "Reader motion lab release must refresh the offline shell cache");
