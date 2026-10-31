@@ -1,23 +1,20 @@
-/* AI Library — non-destructive legacy migration and write-through bridge.
- * Existing localStorage remains the synchronous compatibility layer for the UI.
- * Every change to its personal-data keys is queued into IndexedDB as a durable snapshot.
+/* AI Library — non-destructive migration and durable personal-state bridge.
+ * localStorage remains the synchronous compatibility layer; explicit save operations
+ * call sync() to mirror a complete snapshot into IndexedDB. Legacy keys are preserved.
  */
 (() => {
   'use strict';
   const store = window.AILibraryStore;
   if (!store) throw new Error('AI Library storage is unavailable.');
-
   const KEYS = Object.freeze({
     personalBooks: 'ai-library-personal-books',
     favorites: 'ai-library-favs',
     progress: 'ai-library-progress',
     readerSettings: 'ai-library-reader-settings'
   });
-  const KEY_SET = new Set(Object.values(KEYS));
-  let initializationPromise = null;
+  let migrationPromise = null;
   let writeQueue = Promise.resolve();
   let lastSyncError = null;
-  let bridgeInstalled = false;
 
   function readJson(key, fallback) {
     try {
@@ -32,7 +29,7 @@
   function readSnapshot(existing = null) {
     return {
       migrationVersion: 1,
-      source: 'localStorage-write-through',
+      source: 'localStorage-compatibility-bridge',
       migratedAt: existing?.migratedAt || new Date().toISOString(),
       synchronizedAt: new Date().toISOString(),
       personalBooks: readJson(KEYS.personalBooks, []),
@@ -42,69 +39,39 @@
     };
   }
 
-  async function persistSnapshot() {
-    const existing = await store.getPersonalState();
-    const snapshot = readSnapshot(existing);
-    await store.setPersonalState(snapshot);
-    lastSyncError = null;
-    return snapshot;
-  }
-
-  function scheduleSync() {
-    writeQueue = writeQueue
-      .then(() => initializationPromise)
-      .then(() => persistSnapshot())
-      .catch(error => {
-        lastSyncError = error;
-        console.warn('AI Library: personal data remains safe in the browser; IndexedDB sync will retry after the next change.', error);
-      });
-    return writeQueue;
-  }
-
-  function installWriteThrough() {
-    if (bridgeInstalled) return;
-    const prototype = Object.getPrototypeOf(localStorage);
-    const canPatchPrototype = prototype && prototype !== Object.prototype &&
-      typeof prototype.setItem === 'function';
-
-    if (canPatchPrototype) {
-      const originalSetItem = prototype.setItem;
-      prototype.setItem = function(key, value) {
-        const result = originalSetItem.call(this, key, value);
-        if (this === localStorage && KEY_SET.has(String(key))) scheduleSync();
-        return result;
-      };
-    } else {
-      const originalSetItem = localStorage.setItem.bind(localStorage);
-      localStorage.setItem = function(key, value) {
-        const result = originalSetItem(key, value);
-        if (KEY_SET.has(String(key))) scheduleSync();
-        return result;
-      };
-    }
-    bridgeInstalled = true;
-  }
-
   function migrate() {
-    installWriteThrough();
-    if (initializationPromise) return initializationPromise;
-
-    initializationPromise = (async () => {
+    if (migrationPromise) return migrationPromise;
+    migrationPromise = (async () => {
       const existing = await store.getPersonalState();
       if (existing?.migrationVersion >= 1) {
         return { migrated: false, alreadyMigrated: true };
       }
-
-      const snapshot = readSnapshot();
-      await store.setPersonalState(snapshot);
+      const initial = readSnapshot();
+      await store.setPersonalState(initial);
       return {
         migrated: true,
         alreadyMigrated: false,
-        personalBooks: Array.isArray(snapshot.personalBooks) ? snapshot.personalBooks.length : 0,
-        favorites: Array.isArray(snapshot.favorites) ? snapshot.favorites.length : 0
+        personalBooks: Array.isArray(initial.personalBooks) ? initial.personalBooks.length : 0,
+        favorites: Array.isArray(initial.favorites) ? initial.favorites.length : 0
       };
     })();
-    return initializationPromise;
+    return migrationPromise;
+  }
+
+  function sync() {
+    writeQueue = writeQueue.then(async () => {
+      await migrate();
+      const existing = await store.getPersonalState();
+      const next = readSnapshot(existing);
+      await store.setPersonalState(next);
+      lastSyncError = null;
+      return next;
+    }).catch(error => {
+      lastSyncError = error;
+      console.warn('AI Library: IndexedDB sync failed; browser data remains intact.', error);
+      return null;
+    });
+    return writeQueue;
   }
 
   async function flush() {
@@ -114,7 +81,7 @@
   }
 
   Object.defineProperty(window, 'AILibraryPersonalStateMigration', {
-    value: Object.freeze({ migrate, flush }),
+    value: Object.freeze({ migrate, sync, flush }),
     configurable: false,
     enumerable: false,
     writable: false
