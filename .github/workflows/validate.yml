@@ -24,3 +24,5 @@ jobs:
         run: node scripts/validate.mjs
       - name: Test Service Worker offline fallbacks
         run: node scripts/test-service-worker.mjs
+      - name: Test non-destructive personal-state migration
+        run: node scripts/test-personal-state-migration.mjs
