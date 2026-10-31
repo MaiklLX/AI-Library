@@ -3177,6 +3177,34 @@ body.reader-open #readerRight:focus {
   }
 }
 </style>
+
+<style id="reader-pageflip-integration-v1">
+/* Real paper curl is progressive enhancement; the original reader remains the offline fallback. */
+body.reader-open .book-spread{position:relative!important;display:flex!important;flex:1 1 0!important;min-height:0!important;width:100%!important;max-width:1500px!important;align-self:stretch!important;overflow:visible}
+body.reader-open .book-spread>.book-page{visibility:visible}
+body.reader-open .reader-flip-mount{display:none;position:absolute;inset:0;z-index:7;width:100%;height:100%;min-width:0;min-height:0;pointer-events:auto}
+body.reader-open.reader-flip-enabled .reader-flip-mount{display:block}
+body.reader-open.reader-flip-enabled .book-spread>.book-page{visibility:hidden!important;pointer-events:none!important}
+body.reader-open.reader-flip-enabled .book-spread>.book-page-right{display:flex!important}
+.reader-flip-mount .stf__parent{margin:0 auto}
+.reader-flip-mount .stf__block{background:transparent}
+.reader-flip-page{height:100%;overflow:hidden;background:#f4ecd9;color:#30291f;border:1px solid rgba(103,77,39,.18);box-shadow:inset 0 0 0 4px rgba(255,255,255,.25)}
+.reader-flip-inner{height:100%;display:flex;flex-direction:column;padding:clamp(18px,3.4vw,36px) clamp(17px,3.5vw,38px) 17px;background:linear-gradient(100deg,rgba(255,255,255,.17),transparent 25%,transparent 78%,rgba(91,64,29,.06))}
+.reader-flip-head{flex:0 0 auto;display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #b9a98c66;padding-bottom:9px;color:#8b7859;font:10px Georgia,serif;letter-spacing:.12em}
+.reader-flip-copy{flex:1 1 0;min-height:0;overflow:hidden;padding-top:clamp(19px,3.5vh,36px);white-space:pre-wrap;overflow-wrap:anywhere;font:clamp(14px,1.85vw,18px)/1.78 Georgia,"Times New Roman",serif}
+.reader-flip-foot{flex:0 0 auto;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid #b9a98c66;color:#8b7859;font:10px Georgia,serif;letter-spacing:.1em;line-height:1;text-align:right}
+.reader-flip-page:nth-child(even) .reader-flip-foot{text-align:left}
+.reader-flip-page[data-theme="dark"]{background:#22211f;color:#e8e2d6}
+.reader-flip-page[data-theme="dark"] .reader-flip-head,.reader-flip-page[data-theme="dark"] .reader-flip-foot{color:#c1ad83;border-color:#c1ad8344}
+.reader-flip-page[data-theme="light"]{background:#fff;color:#242424}
+.reader-flip-page[data-theme="light"] .reader-flip-head,.reader-flip-page[data-theme="light"] .reader-flip-foot{color:#777;border-color:#7775}
+body.reader-open .book-page{display:flex!important;flex-direction:column!important}
+body.reader-open .book-page-number{position:static!important;inset:auto!important;align-self:stretch;display:block;flex:0 0 auto;width:100%;margin:8px 0 0!important;padding:8px 0 0!important;border-top:1px solid rgba(130,116,92,.28);text-align:right;line-height:1!important;font-size:10px;letter-spacing:.1em;background:none!important}
+body.reader-open #bookPage .book-page-number{text-align:right}
+body.reader-open #bookPageRight .book-page-number{text-align:left}
+@media(max-width:1099px){body.reader-open .book-spread{display:flex!important;position:relative!important;flex:1 1 0!important;min-height:0!important}body.reader-open .book-spread>.book-page{width:100%!important;flex:1 1 100%!important}body.reader-open .book-spread>.book-page-right{display:none!important}body.reader-open.reader-flip-enabled .book-spread>.book-page-right{display:none!important}}
+@media(prefers-reduced-motion:reduce){.reader-flip-mount .stf__parent{scroll-behavior:auto}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3239,6 +3267,7 @@ body.reader-open #readerRight:focus {
   <div class="book-spread" id="bookSpread">
 <div class="book-page" id="bookPage"><div class="page-turn-sheet" id="pageTurnSheet" aria-hidden="true"></div><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabel">СТРАНИЦЫ 1–2</span></div><div class="reader" id="reader" tabindex="0" aria-label="Текст книги. Используйте стрелки или Page Up и Page Down для перелистывания."></div><div class="book-page-number" id="bookPageNumber">1</div></div>
 <div class="book-page book-page-right" id="bookPageRight" aria-hidden="true"><div class="book-running-head"><span>AI LIBRARY</span><span id="bookPageLabelRight">СТР. 2</span></div><div class="reader" id="readerRight"></div><div class="book-page-number" id="bookPageNumberRight">2</div></div>
+<div id="readerFlipMount" class="reader-flip-mount" aria-label="Книжные страницы с реалистичным перелистыванием"></div>
 </div>
   <div class="reader-settings" id="readerSettings" aria-label="Настройки чтения" hidden>
     <span class="reader-settings-label">ТЕКСТ</span><button type="button" id="fontDown" aria-label="Уменьшить шрифт">A−</button><span id="fontSizeLabel">17 px</span><button type="button" id="fontUp" aria-label="Увеличить шрифт">A+</button>
@@ -3251,6 +3280,7 @@ body.reader-open #readerRight:focus {
 <script src="./src/platform/runtime.js"></script>
 <script src="./src/platform/library-store.js"></script>
 <script src="./src/platform/download-manager.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js" defer></script>
 <script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
 
@@ -3891,6 +3921,7 @@ function closeReadingSpace() {
   if(readerChromeTimer)clearTimeout(readerChromeTimer);
   document.body.classList.remove('reader-chrome-hidden');
   modal.classList.remove('open');
+  document.body.classList.remove('reader-flip-enabled');
   modal.style.touchAction = '';
   document.body.classList.remove('reader-open');
   document.body.style.top = "";
@@ -4149,6 +4180,7 @@ function renderReadingPage(animate = true) {
     const sheet=document.querySelector('#pageTurnSheet');
     if(sheet){sheet.classList.remove('flip-forward','flip-back');sheet.style.visibility='hidden';}
   }
+  if(!readerFlipEventSync)ensureReaderFlipEngine();
   saveReadingProgress();
 }
 
@@ -4255,10 +4287,117 @@ function animateBookPageTurn(direction,afterTurn){
   },105);
 }
 
+
+let readerPageFlip=null;
+let readerFlipEventSync=false;
+let readerFlipEdgeStart=null;
+function escapeReaderFlipText(value){
+ return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function createReaderFlipPages(){
+ const theme=getReaderSettings().theme;
+ const pages=[];
+ for(let index=0;index<readingPages.length;index++){
+  const page=document.createElement('article');
+  page.className='reader-flip-page';
+  page.dataset.theme=theme;
+  const inner=document.createElement('div');inner.className='reader-flip-inner';
+  const head=document.createElement('div');head.className='reader-flip-head';
+  const brand=document.createElement('span');brand.textContent='AI LIBRARY';
+  const chapter=document.createElement('span');chapter.textContent='ЧАСТЬ '+(part+1);
+  head.append(brand,chapter);
+  const copy=document.createElement('div');copy.className='reader-flip-copy';copy.textContent=readingPages[index]||'';
+  const foot=document.createElement('footer');foot.className='reader-flip-foot';foot.textContent=String(getBookPageNumber(part,index));
+  inner.append(head,copy,foot);page.appendChild(inner);pages.push(page);
+ }
+ return pages;
+}
+function alignReaderFlipIndex(index){
+ const bounded=Math.max(0,Math.min(Number(index)||0,Math.max(0,readingPages.length-1)));
+ return isDesktopReaderSpread()?Math.floor(bounded/2)*2:bounded;
+}
+function updateReaderFlipStatus(){
+ const state=getReaderPageState(readingPageIndex,Math.max(1,readingPages.length),isDesktopReaderSpread());
+ const metrics=getReaderBookPageMetrics();
+ const first=getBookPageNumber(part,state.startIndex);
+ const second=state.rightPage!==null?first+1:null;
+ const status=document.querySelector('#readerPageStatus');
+ if(status)status.textContent='СТР. '+first+(second!==null?'–'+second:'')+' / '+metrics.total;
+}
+function ensureReaderFlipEngine(){
+ const host=document.querySelector('#readerFlipMount');
+ if(!host||!window.St?.PageFlip||!readingPages.length)return false;
+ const pages=createReaderFlipPages();
+ try{
+  if(!readerPageFlip){
+   readerPageFlip=new St.PageFlip(host,{
+    width:420,height:640,size:'stretch',minWidth:260,maxWidth:640,minHeight:360,maxHeight:900,
+    drawShadow:true,flippingTime:1050,usePortrait:true,autoSize:false,maxShadowOpacity:.34,
+    showCover:false,mobileScrollSupport:false,swipeDistance:26,clickEventForward:false,
+    useMouseEvents:true,disableFlipByClick:true,showPageCorners:true
+   });
+   readerPageFlip.on('flip',event=>{
+    const next=alignReaderFlipIndex(event.data);
+    readingPageIndex=next;
+    readerFlipEventSync=true;
+    try{renderReadingPage(false);updateReaderFlipStatus()}finally{readerFlipEventSync=false}
+   });
+   readerPageFlip.on('changeOrientation',()=>{
+    requestAnimationFrame(()=>{
+     if(!readerPageFlip)return;
+     const next=alignReaderFlipIndex(readerPageFlip.getCurrentPageIndex());
+     readingPageIndex=next;
+     if(next!==readerPageFlip.getCurrentPageIndex())readerPageFlip.turnToPage(next);
+     readerFlipEventSync=true;
+     try{renderReadingPage(false);updateReaderFlipStatus()}finally{readerFlipEventSync=false}
+    });
+   });
+   readerPageFlip.loadFromHTML(pages);
+   // Correct upstream's previous-page start point for a centered book viewport.
+   const nativeFlipPrev=readerPageFlip.flipPrev.bind(readerPageFlip);
+   readerPageFlip.flipPrev=corner=>{
+    const bounds=readerPageFlip.getBoundsRect();
+    if(!bounds||!readerPageFlip.flipController)return nativeFlipPrev(corner);
+    readerPageFlip.flipController.flip({x:bounds.left+10,y:corner==='top'?1:bounds.height-2});
+   };
+   host.addEventListener('pointerdown',event=>{
+    if(!event.isPrimary||event.button>0)return;
+    const rect=host.getBoundingClientRect();
+    const xRatio=(event.clientX-rect.left)/Math.max(1,rect.width);
+    const yRatio=(event.clientY-rect.top)/Math.max(1,rect.height);
+    if(yRatio>.12&&yRatio<.88&&(xRatio<=.2||xRatio>=.8))readerFlipEdgeStart={x:event.clientX,y:event.clientY,time:Date.now(),side:xRatio<=.2?'left':'right',pointerId:event.pointerId};
+    else readerFlipEdgeStart=null;
+   },{passive:true});
+   host.addEventListener('pointerup',event=>{
+    const start=readerFlipEdgeStart;readerFlipEdgeStart=null;
+    if(!start||start.pointerId!==event.pointerId||Date.now()-start.time>360||Math.hypot(event.clientX-start.x,event.clientY-start.y)>7)return;
+    if(start.side==='left'&&readingPageIndex>0)readerPageFlip.flipPrev('bottom');
+    else if(start.side==='right'&&readingPageIndex<readingPages.length-1)readerPageFlip.flipNext('bottom');
+   },{passive:true});
+   host.addEventListener('pointercancel',()=>{readerFlipEdgeStart=null},{passive:true});
+  }else{
+   readerPageFlip.updateFromHtml(pages);
+   readerPageFlip.turnToPage(alignReaderFlipIndex(readingPageIndex));
+  }
+  document.body.classList.add('reader-flip-enabled');
+  return true;
+ }catch(error){
+  console.warn('StPageFlip недоступен, используем резервное перелистывание:',error);
+  document.body.classList.remove('reader-flip-enabled');
+  return false;
+ }
+}
+
 function turnReadingPage(direction) {
   if (!document.querySelector('#modal').classList.contains('open')) return false;
   const pageStep=isDesktopReaderSpread()?2:1;
   const target=readingPageIndex+direction*pageStep;
+  if(readerPageFlip&&document.body.classList.contains('reader-flip-enabled')){
+    if(target>=0&&target<readingPages.length){
+      if(direction>0)readerPageFlip.flipNext('bottom');else readerPageFlip.flipPrev('bottom');
+      return true;
+    }
+  }
   if(target>=0&&target<readingPages.length){
     animateBookPageTurn(direction, () => {
       readingPageIndex = target;
