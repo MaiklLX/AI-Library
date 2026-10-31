@@ -291,3 +291,8 @@ assert.ok(html.includes("0%, 8%, 100% { transform: translateX(-115%) rotate(12de
 assert.ok(html.includes("@media (prefers-reduced-motion: reduce)"), "Signature star animations must respect reduced-motion preferences");
 assert.ok(html.includes(".hero .spark::after"), "Hero star ambient particle layer is missing");
 assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and ambient layers must be disabled for reduced-motion users");
+
+assert.match(html, /Book detail visual refinement/, "Book detail visual refinement styles are missing");
+assert.match(html, /grid-template-columns:minmax\(250px,370px\)/, "Book detail desktop cover/content layout is missing");
+assert.match(html, /@media\(max-width:760px\)/, "Book detail mobile layout is missing");
+assert.match(html, /prefers-reduced-motion:reduce/, "Book detail motion must respect reduced-motion preferences");
