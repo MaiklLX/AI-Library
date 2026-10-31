@@ -240,3 +240,12 @@ The user has reprioritized the product. This section supersedes earlier creator-
 - Expanded tests for malformed first-run values and normalized VM-returned arrays in strict assertions.
 - Follow-up commits: `0a4c758b`, `39094cb1`, `fd16e7eb`. Latest branch head: `fd16e7eb565ea8a46e7b8addf630ebc2b99143a6`.
 - Corrected recovery implementation and test suite passed GitHub Actions run `41200880018` (run 344) on commit `ccfcdcce23e20591d5a588c618898a2e03108c93`; static validation, four Service Worker scenarios, and the personal-state recovery suite all passed.
+
+### Dedicated book detail experience checkpoint (2026-10-31)
+- Added a dedicated book-detail surface to the main application with its own shareable `?book=<id>` URL; direct links are restored after catalog and local-download startup.
+- Catalog cards now expose a separate “Подробнее” action while preserving the existing flip-card interaction and the current reader entry point.
+- Detail view presents cover, title, author, genre, description, reading time, chapter count, saved reading progress, and read/download actions.
+- The download action refreshes the detail state after the download workflow; closing the detail view replaces the current URL state to avoid a browser-back loop.
+- Responsive layout includes a stacked mobile composition. Service Worker app-shell cache advanced to v63.
+- Automated validator checks detail markup, route restoration and read/download actions. CI run 41213857724 passed static validation, Service Worker fallback tests, personal-state migration tests and offline download integrity tests.
+- This is automated source validation only; no physical-device, mobile browser or airplane-mode UI test has been performed.
