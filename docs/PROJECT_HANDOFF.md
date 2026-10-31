@@ -170,3 +170,11 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+
+## Authentication decision — 2026-10-31
+
+- User approved Google sign-in plus email one-time passcode (OTP) as the initial account access options.
+- This is a design decision only; no OAuth credentials, email provider, auth endpoints, sessions, D1 schema, or secrets have been configured.
+- Before implementation, settle callback URLs, email delivery provider, secure session model, CSRF, OTP expiry/attempt limits, account recovery, and account deletion/export.
+- Keep secrets server-side. Do not connect API v2 to production or alter the legacy Worker.
