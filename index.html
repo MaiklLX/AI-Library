@@ -4179,6 +4179,14 @@ function animateBookPageTurn(direction,afterTurn){
         if(clone.removeAttribute)clone.removeAttribute('id');
         clone.querySelectorAll?.('[id]').forEach(item=>item.removeAttribute('id'));
         clone.querySelectorAll?.('[tabindex]').forEach(item=>item.removeAttribute('tabindex'));
+        if(clone.matches?.('.reader')){
+          const sourceStyle=getComputedStyle(node);
+          clone.style.paddingTop=sourceStyle.paddingTop;
+          clone.style.paddingRight=sourceStyle.paddingRight;
+          clone.style.paddingBottom=sourceStyle.paddingBottom;
+          clone.style.paddingLeft=sourceStyle.paddingLeft;
+          clone.style.boxSizing=sourceStyle.boxSizing;
+        }
         front.appendChild(clone);
       });
       const back=document.createElement('div');
