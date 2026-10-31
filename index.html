@@ -3879,12 +3879,34 @@ function renderReadingPage(animate = true) {
 }
 
 let readerTurnInProgress=false;
+let readerResizeTimer=null;
+let readerResizePending=false;
+function scheduleReaderResizePagination(){
+  if(!current||!document.querySelector('#modal')?.classList.contains('open'))return;
+  readerResizePending=true;
+  if(readerResizeTimer)window.clearTimeout(readerResizeTimer);
+  readerResizeTimer=window.setTimeout(()=>{
+    readerResizeTimer=null;
+    if(!current||!document.querySelector('#modal')?.classList.contains('open')){
+      readerResizePending=false;
+      return;
+    }
+    // Wait until the current page-turn callback has committed its new index.
+    if(readerTurnInProgress)return;
+    const preserveOffset=getCurrentReadingOffset();
+    readerResizePending=false;
+    paginateCurrentChapter(preserveOffset);
+  },120);
+}
+function flushReaderResizePagination(){
+  if(readerResizePending)scheduleReaderResizePagination();
+}
 function animateBookPageTurn(direction,afterTurn){
   if(readerTurnInProgress)return;
   readerTurnInProgress=true;
   const spread=isDesktopReaderSpread();
   const host=spread?document.querySelector('#bookSpread'):document.querySelector('#bookPage');
-  if(!host){readerTurnInProgress=false;afterTurn();return;}
+  if(!host){readerTurnInProgress=false;afterTurn();flushReaderResizePagination();return;}
   host.classList.remove('reader-turn-out-forward','reader-turn-out-back','reader-turn-in-forward','reader-turn-in-back');
   if (!spread) {
     const sheet=document.querySelector('#pageTurnSheet');
@@ -3899,6 +3921,7 @@ function animateBookPageTurn(direction,afterTurn){
           sheet.classList.remove('flip-forward','flip-back');
           sheet.style.visibility='hidden';
           readerTurnInProgress=false;
+          flushReaderResizePagination();
         }
       },340);
       return;
@@ -3914,6 +3937,7 @@ function animateBookPageTurn(direction,afterTurn){
       window.setTimeout(()=>{
         host.classList.remove(inClass);
         readerTurnInProgress=false;
+        flushReaderResizePagination();
       },150);
     }
   },105);
@@ -4311,10 +4335,8 @@ document.querySelector('#bookPage').addEventListener('wheel', e => {
   }
 }, { passive: true });
 
-window.addEventListener('resize', () => {
-  if (!current || !document.querySelector('#modal').classList.contains('open')) return;
-  paginateCurrentChapter(getCurrentReadingOffset());
-}, { passive: true });
+window.addEventListener('resize', scheduleReaderResizePagination, { passive: true });
+window.addEventListener('orientationchange', scheduleReaderResizePagination, { passive: true });
 
 
 /* AI Library Release — резервное копирование личных данных */
