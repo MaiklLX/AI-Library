@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v69';
+const CACHE_NAME = CACHE_PREFIX + 'v70';
 const APP_SHELL = ['./', './index.html', './series.html', './premiere.html', './book-creator.html', './content/series/ty-v-moih-planah.json', './content/books/ty-v-moih-planah-tom-01-cover.svg', './content/books/ty-v-moih-planah-tom-02-cover.svg', './content/books/ty-v-moih-planah-tom-03-cover.svg', './content/books/ty-v-moih-planah-tom-04-cover.svg', './content/books/ty-v-moih-planah-tom-05-cover.svg', './content/books/ty-v-moih-planah-tom-06-cover.svg', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js', './src/platform/download-manager.js'];
 
 self.addEventListener('install', event => {

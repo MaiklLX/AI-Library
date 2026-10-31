@@ -107,18 +107,13 @@ footer{background:linear-gradient(90deg,#ffffff03,transparent)}
 
 </style>
 
-<script id="ai-library-scroll-policy-v1">
-/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+<script id="ai-library-scroll-policy-v2">
+/* Every document navigation starts at the top, including normal links and BFCache returns.
+   Same-document anchor controls remain untouched because they do not trigger pageshow. */
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  const navigation = performance.getEntriesByType('navigation')[0];
-  if (navigation?.type === 'reload' && location.hash) {
-    history.replaceState(history.state, '', location.pathname + location.search);
-  }
-  window.addEventListener('pageshow', event => {
-    if (event.persisted || navigation?.type === 'reload') {
-      requestAnimationFrame(() => window.scrollTo(0, 0));
-    }
+  window.addEventListener('pageshow', () => {
+    requestAnimationFrame(() => window.scrollTo(0, 0));
   });
 })();
 </script>
