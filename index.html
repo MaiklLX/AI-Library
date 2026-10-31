@@ -4167,7 +4167,7 @@ function showSeriesCompletion(){
   panel.querySelector("#seriesCompletionTitle").textContent=finalVolume?"Вы завершили роман":"Том завершён";
   panel.querySelector("#seriesCompletionCopy").textContent=finalVolume?"Это последняя часть истории. Спасибо, что прошли этот путь.":"Следующая часть романа находится на странице серии. Там указан её актуальный статус; закрытый том не откроется до официальной публикации.";
   const link=panel.querySelector("#seriesCompletionLink");link.href="./series.html#volume-"+String(finalVolume?6:volume+1).padStart(2,"0");link.textContent=finalVolume?"Вернуться к серии":"Посмотреть следующий том";
-  panel.hidden=false;panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth");
+  panel.hidden=false;panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 }
 document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});document.addEventListener("keydown",e=>{
   const modal=document.querySelector("#modal");
