@@ -253,6 +253,7 @@ assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volu
 assert.match(seriesPage, /content\/series\/ty-v-moih-planah\.json/, "Series page must load its manifest");
 assert.match(seriesPage, /premiere\.html\?book=/, "Prerelease volume must link to the existing premiere page");
 assert.match(html, /function showSeriesCompletion\(/, "Reader series completion panel is missing");
+assert.ok(html.includes("setAttribute('aria-label',part === current.chapters.length - 1 ? (current.seriesId === \"ty-v-moih-planah\" ? (Number(current.seriesVolume) === 6 ? \"Завершить роман\" : \"К следующему тому\") : \"Закрыть чтение\") : \"Следующая часть\");", "Series completion button must expose the correct accessible label");
 assert.match(html, /current\?\.seriesId===["']ty-v-moih-planah["']/, "Reader must route series completion to the series page");
 assert.match(serviceWorker, /CACHE_PREFIX\s*\+\s*["']v58["']/, "Series presentation must use the refreshed app-shell cache");
 
