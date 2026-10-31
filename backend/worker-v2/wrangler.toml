@@ -1,0 +1,8 @@
+name = "ai-library-api-v2"
+main = "src/index.js"
+compatibility_date = "2026-10-31"
+workers_dev = true
+
+# Intentionally no routes, D1 database, KV namespace, R2 bucket,
+# cron trigger or production custom domain in the initial scaffold.
+# Add bindings only alongside reviewed migrations and implementation.
