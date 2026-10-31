@@ -437,7 +437,6 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\\.setTimeout\\(finishTurn,1100\\)/,
 assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1100\)/,
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
