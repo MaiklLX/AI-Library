@@ -4169,7 +4169,8 @@ document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().fi
 const readerArea = document.querySelector('#reader');
 const readingModal = document.querySelector('#modal');
 let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0, activeSwipePointer = null;
-if (readerArea) readerArea.style.touchAction = 'pan-y pinch-zoom';
+// Keep vertical scrolling native, but reserve two-finger pinch inside the reader for font scaling.
+if (readerArea) readerArea.style.touchAction = 'pan-y';
 let pullStartY = 0, pullGuardActive = false;
 readingModal.addEventListener('touchstart', e => {
   if (!readingModal.classList.contains('open') || e.touches.length !== 1) return;
@@ -4238,40 +4239,87 @@ const getReaderPinchDistance = () => {
   if (points.length < 2) return 0;
   return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
 };
-bookPageArea.addEventListener('pointerdown', e => {
-  if (!readingModal.classList.contains('open') || e.pointerType !== 'touch') return;
-  readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(readerPinchPointers.size===2){
-    readerPinchActive=true;
-    readerPinchStartDistance=getReaderPinchDistance();
-    readerPinchStartFontSize=getReaderSettings().fontSize;
-    readerPinchLastFontSize=readerPinchStartFontSize;
-    edgeTapStart=null;
-    resetReaderSwipe();
-  }
-}, {capture:true,passive:true});
-bookPageArea.addEventListener('pointermove', e => {
-  if(!readerPinchPointers.has(e.pointerId))return;
-  readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(!readerPinchActive||readerPinchPointers.size<2)return;
-  if(e.cancelable)e.preventDefault();
-  const distance=getReaderPinchDistance();
-  const delta=Math.round((distance-readerPinchStartDistance)/18);
-  const nextSize=Math.max(14,Math.min(24,readerPinchStartFontSize+delta));
-  if(nextSize!==readerPinchLastFontSize){
-    readerPinchLastFontSize=nextSize;
-    changeReaderSetting('fontSize',nextSize);
-  }
-}, {capture:true,passive:false});
-const finishReaderPinch = e => {
-  readerPinchPointers.delete(e.pointerId);
-  if(readerPinchPointers.size<2){
-    readerPinchActive=false;
-    readerPinchStartDistance=0;
-  }
+// iOS standalone Safari is more reliable with Touch Events for multi-touch than
+// Pointer Events. Also, "pinch-zoom" in touch-action lets Safari take over the
+// gesture before the app can translate it into a font-size change.
+const readerUsesTouchPinch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+let readerTouchPinchActive = false;
+let readerTouchPinchStartDistance = 0;
+let readerTouchPinchStartFontSize = 17;
+let readerTouchPinchLastFontSize = 17;
+const getReaderTouchPinchDistance = touches => {
+  if (!touches || touches.length < 2) return 0;
+  return Math.hypot(
+    touches[0].clientX - touches[1].clientX,
+    touches[0].clientY - touches[1].clientY
+  );
 };
-bookPageArea.addEventListener('pointerup',finishReaderPinch,{capture:true,passive:true});
-bookPageArea.addEventListener('pointercancel',finishReaderPinch,{capture:true,passive:true});
+if (readerUsesTouchPinch) {
+  bookPageArea.addEventListener('touchstart', e => {
+    if (!readingModal.classList.contains('open') || e.touches.length < 2) return;
+    readerTouchPinchActive = true;
+    readerTouchPinchStartDistance = getReaderTouchPinchDistance(e.touches);
+    readerTouchPinchStartFontSize = getReaderSettings().fontSize;
+    readerTouchPinchLastFontSize = readerTouchPinchStartFontSize;
+    edgeTapStart = null;
+    resetReaderSwipe();
+  }, {capture:true,passive:true});
+  bookPageArea.addEventListener('touchmove', e => {
+    if (!readerTouchPinchActive || e.touches.length < 2) return;
+    if (e.cancelable) e.preventDefault();
+    const distance = getReaderTouchPinchDistance(e.touches);
+    const delta = Math.round((distance - readerTouchPinchStartDistance) / 18);
+    const nextSize = Math.max(14, Math.min(24, readerTouchPinchStartFontSize + delta));
+    if (nextSize !== readerTouchPinchLastFontSize) {
+      readerTouchPinchLastFontSize = nextSize;
+      changeReaderSetting('fontSize', nextSize);
+    }
+  }, {capture:true,passive:false});
+  const finishReaderTouchPinch = e => {
+    if (!e.touches || e.touches.length < 2) {
+      readerTouchPinchActive = false;
+      readerTouchPinchStartDistance = 0;
+    }
+  };
+  bookPageArea.addEventListener('touchend',finishReaderTouchPinch,{capture:true,passive:true});
+  bookPageArea.addEventListener('touchcancel',finishReaderTouchPinch,{capture:true,passive:true});
+} else {
+  // Keep the Pointer Events implementation for non-touch / hybrid environments.
+  bookPageArea.addEventListener('pointerdown', e => {
+    if (!readingModal.classList.contains('open') || e.pointerType !== 'touch') return;
+    readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(readerPinchPointers.size===2){
+      readerPinchActive=true;
+      readerPinchStartDistance=getReaderPinchDistance();
+      readerPinchStartFontSize=getReaderSettings().fontSize;
+      readerPinchLastFontSize=readerPinchStartFontSize;
+      edgeTapStart=null;
+      resetReaderSwipe();
+    }
+  }, {capture:true,passive:true});
+  bookPageArea.addEventListener('pointermove', e => {
+    if(!readerPinchPointers.has(e.pointerId))return;
+    readerPinchPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(!readerPinchActive||readerPinchPointers.size<2)return;
+    if(e.cancelable)e.preventDefault();
+    const distance=getReaderPinchDistance();
+    const delta=Math.round((distance-readerPinchStartDistance)/18);
+    const nextSize=Math.max(14,Math.min(24,readerPinchStartFontSize+delta));
+    if(nextSize!==readerPinchLastFontSize){
+      readerPinchLastFontSize=nextSize;
+      changeReaderSetting('fontSize',nextSize);
+    }
+  }, {capture:true,passive:false});
+  const finishReaderPinch = e => {
+    readerPinchPointers.delete(e.pointerId);
+    if(readerPinchPointers.size<2){
+      readerPinchActive=false;
+      readerPinchStartDistance=0;
+    }
+  };
+  bookPageArea.addEventListener('pointerup',finishReaderPinch,{capture:true,passive:true});
+  bookPageArea.addEventListener('pointercancel',finishReaderPinch,{capture:true,passive:true});
+}
 
 
 readingModal.addEventListener('touchend', () => { pullGuardActive = false; pullStartY = 0; }, { passive: true });
