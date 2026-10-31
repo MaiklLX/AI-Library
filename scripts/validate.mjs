@@ -284,3 +284,9 @@ assert.ok(html.includes("0%, 8%, 100% { transform: translateX(-115%) rotate(12de
 assert.ok(html.includes("@media (prefers-reduced-motion: reduce)"), "Signature star animations must respect reduced-motion preferences");
 assert.ok(html.includes(".hero .spark::after"), "Hero star ambient particle layer is missing");
 assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and ambient layers must be disabled for reduced-motion users");
+
+const openBookByIdSource = html.match(/async function openBookById\\(id\\) \\{([\\s\\S]*?)\\n\\}/);
+assert.ok(openBookByIdSource, "Could not isolate the reader book-opening workflow");
+assert.match(openBookByIdSource[1], /return true;/, "Reader book opening must report successful completion");
+assert.match(openBookByIdSource[1], /return false;/, "Reader book opening must report failed or blocked completion");
+assert.match(html, /const opened = await openBookById\\(requestedBook\\);[\\s\\S]{0,180}?if \\(opened\\) \\{[\\s\\S]{0,180}?history\\.replaceState/, "Direct reader links must be preserved when a book cannot be opened");
