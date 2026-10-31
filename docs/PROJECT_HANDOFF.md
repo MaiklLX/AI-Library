@@ -170,3 +170,12 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - The automatic scheduled generation handler lives in the external Cloudflare Worker, which is not currently accessible. It has **not** been disabled. The Worker source must be inspected before changing scheduled behavior or generation routes.
 - No application code, Worker code, catalogue records, or user data were changed in this product-direction checkpoint.
 - Next: inspect the book creator page and its save/export behavior; then isolate the exact automatic-generation trigger(s) in the frontend and document the Worker-side scheduled handler when source access is restored. Implement UI/code changes only after confirming that manual creation remains intact.
+
+## Creator economy proposal checkpoint (2026-10-31)
+
+- Drafted a review-only coin / author XP / rank model in `docs/COMMUNITY_SYSTEM_SPEC.md`; it is explicitly a proposal, not approved production values.
+- Proposal separates spendable coins from non-spendable lifetime author XP and rank. It discourages rewards for logins, page refreshes, raw reading time and voting.
+- Illustrative starting values: 25-coin new-account grant; XP for approved publications and verified contest placements; ranks from Reader through Legend with configurable thresholds.
+- Anti-abuse requirements: server-side reward verification, idempotent settlement, self-vote exclusion, contest minimum vote thresholds, auditable ledger, visible prices and refund rules.
+- No frontend, Worker, D1 schema, catalogue or user data changed.
+- Next: review and adjust the proposed numbers/rank names with the product owner; then refine contest shortlist, tie-breaks, minimum vote count, fee/refund timing and moderation policy before implementation.
