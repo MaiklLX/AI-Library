@@ -3219,6 +3219,7 @@ function savePersonalBook(book) {
     const stored = Array.isArray(existing) ? existing : [];
     const next = [...stored.filter(item => item.id !== book.id), book];
     localStorage.setItem(PERSONAL_BOOKS_KEY, JSON.stringify(next));
+    window.AILibraryPersonalStateMigration?.sync();
     personalBooks = next;
     syncGenreFilters();
     render();
@@ -3450,6 +3451,7 @@ document.querySelector("#books").addEventListener("click",e=>{
       : [...currentFavs, normalizedId];
     try {
       localStorage.setItem("ai-library-favs", JSON.stringify(nextFavs));
+      window.AILibraryPersonalStateMigration?.sync();
     } catch (error) {
       console.warn("Не удалось сохранить избранное:", error);
       document.querySelector("#catalogSummary").textContent = "Браузер не разрешил сохранить избранное. Проверь настройки хранения данных сайта.";
@@ -3492,6 +3494,7 @@ function saveReadingProgress() {
       'ai-library-progress',
       JSON.stringify(progress)
     );
+    window.AILibraryPersonalStateMigration?.sync();
 
     updateContinueReadingButton();
     renderMyLibrary();
@@ -3562,7 +3565,7 @@ let readerPreviousFocus = null;
 
 function getReaderSettings(){const defaults={fontSize:17,lineSpacing:'1.7',theme:'sepia'};try{const saved=JSON.parse(localStorage.getItem('ai-library-reader-settings')||'{}');return{fontSize:Number.isFinite(Number(saved.fontSize))?Math.max(14,Math.min(24,Number(saved.fontSize))):defaults.fontSize,lineSpacing:['1.45','1.7','1.95'].includes(String(saved.lineSpacing))?String(saved.lineSpacing):defaults.lineSpacing,theme:['sepia','light','dark'].includes(String(saved.theme))?String(saved.theme):defaults.theme}}catch{return defaults}}
 function applyReaderSettings(){const settings=getReaderSettings();const reader=document.querySelector('#reader');const rightReader=document.querySelector('#readerRight');const label=document.querySelector('#fontSizeLabel');const spacing=document.querySelector('#lineSpacing');const theme=document.querySelector('#readerTheme');const page=document.querySelector('#bookPage');const rightPage=document.querySelector('#bookPageRight');if(reader){reader.style.fontSize=settings.fontSize+'px';reader.style.lineHeight=settings.lineSpacing}if(rightReader){rightReader.style.fontSize=settings.fontSize+'px';rightReader.style.lineHeight=settings.lineSpacing}if(label)label.textContent=settings.fontSize+' px';if(spacing)spacing.value=settings.lineSpacing;if(theme)theme.value=settings.theme;if(page)page.dataset.theme=settings.theme;if(rightPage)rightPage.dataset.theme=settings.theme;const themeIcon=document.querySelector('#readerThemeIcon');const themeButton=document.querySelector('#readerThemeToggle');if(themeIcon)themeIcon.textContent=settings.theme==='dark'?'☀':'☾';if(themeButton){const nextTheme=settings.theme==='dark'?'светлую':'тёмную';themeButton.setAttribute('aria-label',`Переключить на ${nextTheme} тему`);themeButton.title=`Переключить на ${nextTheme} тему`}}
-function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings))}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
+function changeReaderSetting(key,value){readerBookPageMetricsCache=null;const settings=getReaderSettings();if(key==='fontSize')settings.fontSize=Math.max(14,Math.min(24,Number(value)));if(key==='lineSpacing')settings.lineSpacing=String(value);if(key==='theme'&&['sepia','light','dark'].includes(String(value)))settings.theme=String(value);try{localStorage.setItem('ai-library-reader-settings',JSON.stringify(settings));window.AILibraryPersonalStateMigration?.sync()}catch{}const savedOffset=current&&key!=='theme'?getCurrentReadingOffset():null;applyReaderSettings();if(current&&key!=='theme')paginateCurrentChapter(savedOffset)}
 document.querySelector('#fontDown')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize-1));document.querySelector('#fontUp')?.addEventListener('click',()=>changeReaderSetting('fontSize',getReaderSettings().fontSize+1));document.querySelector('#lineSpacing')?.addEventListener('change',event=>changeReaderSetting('lineSpacing',event.target.value));document.querySelector('#readerTheme')?.addEventListener('change',event=>changeReaderSetting('theme',event.target.value));
 document.querySelector('#readerThemeToggle')?.addEventListener('click',()=>{const theme=getReaderSettings().theme;changeReaderSetting('theme',theme==='dark'?'light':'dark');});
 
@@ -4394,6 +4397,7 @@ async function importLibraryBackup(file) {
   localStorage.setItem(LIBRARY_STORAGE_KEYS.favorites, JSON.stringify(favorites));
   localStorage.setItem(LIBRARY_STORAGE_KEYS.progress, JSON.stringify(progress));
   localStorage.setItem(LIBRARY_STORAGE_KEYS.readerSettings, JSON.stringify(readerSettings));
+  await window.AILibraryPersonalStateMigration?.sync();
   loadPersonalBooks();
   syncGenreFilters();
   render();
