@@ -188,7 +188,7 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
 - A repeat download of an already purchased EPUB is free and creates no second debit or credit.
 - Show price and split before confirmation; settle reader debit, author credit, platform commission and entitlement atomically on the server with idempotency protection.
 - Coins are internal platform currency; no cash withdrawal or real-money payout is promised.
-- Approved EPUB price tiers: **3, 5, or 10 coins**, selected by the author; arbitrary custom prices are not part of the initial model. Whether to offer a free EPUB option, plus refund policy and settlement timing, remains undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
+- Approved EPUB offer choices: **free**, or one of three paid tiers — **3, 5, or 10 coins**, selected by the author; arbitrary custom prices are not part of the initial model. A free EPUB has no debit, author credit or platform commission, and does not require registration. Repeat downloads remain free. If an author later changes a book from free to paid, readers who already acquired the free edition retain access; the new price applies only to future acquisitions. Refund policy and paid-settlement timing remain undecided. Private drafts, previews, local saving and an author's own draft export remain free; do not apply a blanket fee to free/public-domain books.
 - No code or live wallet behavior has been implemented. Real purchases wait for Worker source/schema discovery and server-side transactional ledger support.
 
 
@@ -199,5 +199,5 @@ This is a source-code and mocked-workflow checkpoint, not proof of physical-devi
   - 3 coins → 2.4 author / 0.6 platform.
   - 5 coins → 4 author / 1 platform.
   - 10 coins → 8 author / 2 platform.
-- Whether authors may additionally offer a free EPUB export remains undecided.
+- The product owner subsequently approved a **free EPUB option** alongside the paid tiers. Free acquisition creates no wallet transaction or platform commission and does not require registration; repeat downloads remain free. If the author later switches the offer to paid, existing free entitlements are preserved and the new price applies only to future acquisitions.
 - These are documented product rules only; no purchase UI, wallet, EPUB generation, or payment code has been implemented.
