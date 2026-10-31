@@ -413,7 +413,7 @@ assert.match(openBookSource[1], /renderReadingPage\(false\)/, "Restored page pos
 
 const continueReadingSource = html.match(/function updateContinueReadingButton\(\) \{([\s\S]*?)\n\}/);
 assert.ok(continueReadingSource, "Could not isolate continue-reading action");
-assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\)\)/, "Continue-reading must ignore progress records for unavailable books");
+assert.match(continueReadingSource[1], /allBooks\.some\(book => String\(book\.id\) === String\(id\) && !isBookReleaseLocked\(book\)\)/, "Continue-reading must ignore progress records for unavailable books");
 assert.match(continueReadingSource[1], /btn\.onclick = \(\) => openBookById\(book\.id\)/, "Continue-reading must use the guarded book-opening workflow");
 
 // Regression guards for the direct reader launch and synchronized page-turn fix.
