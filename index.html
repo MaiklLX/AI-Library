@@ -2993,20 +2993,49 @@ header nav .site-nav-actions{width:auto;max-width:none;flex:1 1 0;display:grid;g
 header nav .site-nav-actions .nav-action{width:100%;min-width:0;min-height:48px;padding-inline:8px}
 @media(max-width:680px){header nav{gap:9px}header nav .brand{flex:1 1 100%}header nav .site-nav-actions{width:100%;flex:1 1 100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}header nav .site-nav-actions .nav-action{min-height:53px;padding-inline:4px}}
 @media(prefers-reduced-motion:reduce){#books .book-back .reading-progress-fill{transition:none}}
-</style>
+/* Final header layout: three identical navigation cells fill all space after the brand. */
+header nav .site-nav-actions{
+  width:auto!important;
+  max-width:none!important;
+  flex:1 1 0!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch;
+  min-width:0;
+  gap:10px;
+}
+header nav .site-nav-actions .nav-action{
+  display:flex;
+  width:100%;
+  min-width:0;
+  min-height:48px;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+}
+@media(max-width:680px){
+  header nav .brand{flex:1 1 100%}
+  header nav .site-nav-actions{
+    width:100%!important;
+    flex:1 1 100%!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  header nav .site-nav-actions .nav-action{
+    min-height:53px;
+    height:100%;
+    padding:5px 3px;
+  }
+}
 
-<script id="ai-library-scroll-policy-v1">
-/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+<script id="ai-library-scroll-policy-v2">
+/* Every document navigation starts at the top, including normal links and BFCache returns.
+   Same-document anchor controls remain untouched because they do not trigger pageshow. */
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  const navigation = performance.getEntriesByType('navigation')[0];
-  if (navigation?.type === 'reload' && location.hash) {
-    history.replaceState(history.state, '', location.pathname + location.search);
-  }
-  window.addEventListener('pageshow', event => {
-    if (event.persisted || navigation?.type === 'reload') {
-      requestAnimationFrame(() => window.scrollTo(0, 0));
-    }
+  window.addEventListener('pageshow', () => {
+    requestAnimationFrame(() => window.scrollTo(0, 0));
   });
 })();
 </script>
