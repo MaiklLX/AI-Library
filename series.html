@@ -62,6 +62,19 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 .back-link{flex:0 0 auto;box-shadow:0 5px 18px rgba(0,0,0,.18)}
 @media(max-width:540px){.topbar{min-height:62px;margin:0 -10px;padding:10px;gap:8px}.back-link{min-height:40px;padding:0 10px;font-size:12px}.top{font-size:9px;letter-spacing:.13em;text-align:right}}
 </style>
+
+<script id="ai-library-scroll-policy-v1">
+/* Start document views at the top; preserve deliberate in-page anchor navigation. */
+(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('pageshow', event => {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (event.persisted || navigation?.type === 'reload') {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
+  });
+})();
+</script>
 </head>
 <body>
 <main class="wrap">
@@ -165,7 +178,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   });
  }
  tick();window.setInterval(tick,1000);
- if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+ const navigation=performance.getEntriesByType('navigation')[0];if(location.hash&&navigation?.type!=='reload'){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
 })();
 </script>
 </body>
