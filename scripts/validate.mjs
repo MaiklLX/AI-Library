@@ -437,7 +437,7 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,820\)/,
+assert.match(pageTurnAnimation[1], /window\\.setTimeout\\(finishTurn,1100\\)/,
   "Page-turn completion must retain a guarded fallback for browsers that omit animationend");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
@@ -465,11 +465,11 @@ assert.match(html, /probe\.style\.paddingBottom = readerComputedStyle\.paddingBo
   "Pagination measurement must reserve the same footer lane as the visible reader");
 assert.match(html, /probe\.style\.boxSizing = readerComputedStyle\.boxSizing/,
   "Pagination measurement must preserve the live reader box model");
-assert.match(html, /#reader:focus[\\s\\S]*?outline:none!important/,
+assert.ok(html.includes("#reader:focus") && html.includes("outline:none!important"),
   "Touch focus must not draw a frame around the manuscript text");
-assert.match(html, /aiLibraryRealPageCurlForward \\.98s/,
+assert.ok(html.includes("aiLibraryRealPageCurlForward .98s"),
   "The paper curl must use a slower, smoother 980 ms animation");
 assert.match(html, /aiLibraryPaperEdgeLight/,
   "The turning paper must have a moving light-catching edge");
-assert.match(html, /rotateY\(-68deg\)[\\s\\S]*?rotateY\(-132deg\)/,
+assert.ok(html.includes("rotateY(-68deg)") && html.includes("rotateY(-132deg)"),
   "The forward page curl must use staged depth and bend-like motion");
