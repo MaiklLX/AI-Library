@@ -3,7 +3,7 @@
  * Downloaded book bodies are stored separately in IndexedDB by the download manager.
  */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v58';
+const CACHE_NAME = CACHE_PREFIX + 'v59';
 const APP_SHELL = [
   './',
   './index.html',
@@ -13,6 +13,7 @@ const APP_SHELL = [
   './icon.svg',
   './src/platform/runtime.js',
   './src/platform/library-store.js',
+  './src/platform/personal-state-migration.js',
   './src/platform/download-manager.js'
 ];
 
