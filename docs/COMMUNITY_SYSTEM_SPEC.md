@@ -236,9 +236,9 @@ Do not implement frontend registration against a speculative endpoint.
 ### Paid EPUB export and creator revenue share (approved product rule)
 
 - A published community book may offer an optional downloadable EPUB export. The export action should live in the book's secondary-actions menu so the main catalogue card remains uncluttered.
-- The proposed introductory price is **3 coins**; the final price and whether authors can choose free/paid export or select from price tiers remain to be decided before implementation.
+- Authors choose one of three fixed EPUB price tiers: **3, 5, or 10 coins**. Arbitrary custom prices are not supported in the initial model. Whether a free EPUB option should also be available remains to be decided separately.
 - For each first successful purchase, distribute **80% of the coin price to the book's author** and retain **20% as the AI Library platform commission**. This 80/20 split is approved product direction.
-- Example at a 3-coin price: author receives 2.4 coins; AI Library receives 0.6 coins. Use decimal-safe integer subunits or another exact representation; do not use imprecise floating-point arithmetic for ledger balances.
+- Examples: at 3 coins, author receives 2.4 and AI Library 0.6; at 5 coins, author receives 4 and AI Library 1; at 10 coins, author receives 8 and AI Library 2. Use decimal-safe integer subunits or another exact representation; do not use imprecise floating-point arithmetic for ledger balances.
 - The purchase confirmation must show the total price and the author/platform split before the user confirms.
 - A successful purchase creates a durable account entitlement. Re-downloading the same EPUB is free and must not debit the reader or credit the author/platform again.
 - Debit, entitlement creation, author credit and platform commission must settle atomically on the server with a unique idempotency key. The browser must never calculate or mutate authoritative balances.
