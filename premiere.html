@@ -111,8 +111,11 @@ footer{background:linear-gradient(90deg,#ffffff03,transparent)}
 /* Start document views at the top; preserve deliberate in-page anchor navigation. */
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const navigation = performance.getEntriesByType('navigation')[0];
+  if (navigation?.type === 'reload' && location.hash) {
+    history.replaceState(history.state, '', location.pathname + location.search);
+  }
   window.addEventListener('pageshow', event => {
-    const navigation = performance.getEntriesByType('navigation')[0];
     if (event.persisted || navigation?.type === 'reload') {
       requestAnimationFrame(() => window.scrollTo(0, 0));
     }
