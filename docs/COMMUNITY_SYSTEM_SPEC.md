@@ -231,3 +231,19 @@ Do not implement frontend registration against a speculative endpoint.
 - An unlock cannot debit twice or grant an entitlement without a matching debit.
 - Private account data never enters public caches or static catalogue files.
 - Existing generation, catalogue, reader, and offline-download flows pass regression tests.
+
+
+### Paid EPUB export and creator revenue share (approved product rule)
+
+- A published community book may offer an optional downloadable EPUB export. The export action should live in the book's secondary-actions menu so the main catalogue card remains uncluttered.
+- The proposed introductory price is **3 coins**; the final price and whether authors can choose free/paid export or select from price tiers remain to be decided before implementation.
+- For each first successful purchase, distribute **80% of the coin price to the book's author** and retain **20% as the AI Library platform commission**. This 80/20 split is approved product direction.
+- Example at a 3-coin price: author receives 2.4 coins; AI Library receives 0.6 coins. Use decimal-safe integer subunits or another exact representation; do not use imprecise floating-point arithmetic for ledger balances.
+- The purchase confirmation must show the total price and the author/platform split before the user confirms.
+- A successful purchase creates a durable account entitlement. Re-downloading the same EPUB is free and must not debit the reader or credit the author/platform again.
+- Debit, entitlement creation, author credit and platform commission must settle atomically on the server with a unique idempotency key. The browser must never calculate or mutate authoritative balances.
+- Keep author earnings and platform commission visible in auditable transaction history. Refunds/reversals, moderation removal, and settlement timing must have explicit rules before launch.
+- Coins are an internal AI Library currency. This rule does **not** promise cash payouts or bank withdrawals; any future cash-out feature requires a separate product, legal, tax, and payment design.
+- Do not charge for private drafts, previews, local saving, or an author's own draft export. Do not impose a blanket export fee on free/public-domain catalogue books without a separately approved policy.
+- Generate a standards-compliant EPUB within the application/backend, including metadata, cover, chapter navigation and valid package structure; validate the resulting archive before offering it.
+- No EPUB purchase or wallet UI should be wired to localStorage or a speculative API. Implementation requires an audited Worker source/schema, transactional ledger support, and server-side entitlement checks.
