@@ -3195,6 +3195,49 @@ body.reader-open .book-page-number {
 }
 </style>
 
+
+<style id="reader-wave-curl-v43">
+/* Refine the free edge into a continuous paper bow instead of a stepped zig-zag.
+   The text remains a frozen, untransformed face; only the paper snapshot moves. */
+body.reader-open #pageTurnSheet .reader-turn-front::after {
+  background:
+    linear-gradient(90deg,transparent 58%,rgba(54,40,21,.025) 70%,rgba(45,34,19,.13) 88%,rgba(28,21,13,.22) 100%),
+    radial-gradient(ellipse at 100% 50%,rgba(34,25,14,.18),transparent 58%);
+  box-shadow:inset -20px 0 26px rgba(40,30,18,.12);
+}
+body.reader-open #pageTurnSheet.flip-forward {
+  animation:aiLibraryWavePageForward 1.18s cubic-bezier(.2,.72,.22,1) both!important;
+  -webkit-animation:aiLibraryWavePageForward 1.18s cubic-bezier(.2,.72,.22,1) both!important;
+}
+body.reader-open #pageTurnSheet.flip-back {
+  animation:aiLibraryWavePageBack 1.18s cubic-bezier(.2,.72,.22,1) both!important;
+  -webkit-animation:aiLibraryWavePageBack 1.18s cubic-bezier(.2,.72,.22,1) both!important;
+}
+@keyframes aiLibraryWavePageForward {
+  0%{transform:translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 10%,100% 20%,100% 30%,100% 40%,100% 50%,100% 60%,100% 70%,100% 80%,100% 90%,100% 100%,0 100%);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  18%{transform:translate3d(1px,-2px,9px) rotateY(-17deg) rotateZ(-.5deg) skewY(-.7deg) scaleX(.99);clip-path:polygon(0 0,100% 0,98% 10%,96% 20%,94% 30%,92% 40%,91% 50%,92% 60%,94% 70%,96% 80%,98% 90%,100% 100%,0 100%);box-shadow:-10px 5px 18px rgba(0,0,0,.12)}
+  42%{transform:translate3d(2px,-4px,17px) rotateY(-54deg) rotateZ(-1.4deg) skewY(-1.2deg) scaleX(.95);clip-path:polygon(0 0,98% 0,93% 10%,88% 20%,83% 30%,80% 40%,79% 50%,80% 60%,83% 70%,88% 80%,93% 90%,98% 100%,0 100%);box-shadow:-24px 7px 30px rgba(0,0,0,.2)}
+  64%{transform:translate3d(1px,-2px,12px) rotateY(-112deg) rotateZ(-.8deg) skewY(1deg) scaleX(.93);clip-path:polygon(0 0,96% 0,86% 10%,76% 20%,66% 30%,59% 40%,56% 50%,59% 60%,66% 70%,76% 80%,86% 90%,96% 100%,0 100%);box-shadow:-20px 5px 26px rgba(0,0,0,.17)}
+  84%{transform:translate3d(0,0,5px) rotateY(-157deg) rotateZ(.3deg) skewY(.4deg) scaleX(.98);clip-path:polygon(0 0,99% 0,97% 10%,95% 20%,93% 30%,91% 40%,90% 50%,91% 60%,93% 70%,95% 80%,97% 90%,99% 100%,0 100%);box-shadow:-8px 2px 14px rgba(0,0,0,.1)}
+  100%{transform:translate3d(0,0,0) rotateY(-180deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 10%,100% 20%,100% 30%,100% 40%,100% 50%,100% 60%,100% 70%,100% 80%,100% 90%,100% 100%,0 100%);box-shadow:-2px 1px 5px rgba(0,0,0,.04)}
+}
+@keyframes aiLibraryWavePageBack {
+  0%{transform:translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 90%,0 80%,0 70%,0 60%,0 50%,0 40%,0 30%,0 20%,0 10%)}
+  18%{transform:translate3d(-1px,-2px,9px) rotateY(17deg) rotateZ(.5deg) skewY(.7deg) scaleX(.99);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,2% 90%,4% 80%,6% 70%,8% 60%,9% 50%,8% 40%,6% 30%,4% 20%,2% 10%);box-shadow:10px 5px 18px rgba(0,0,0,.12)}
+  42%{transform:translate3d(-2px,-4px,17px) rotateY(54deg) rotateZ(1.4deg) skewY(1.2deg) scaleX(.95);clip-path:polygon(2% 0,100% 0,100% 100%,2% 100%,7% 90%,12% 80%,17% 70%,20% 60%,21% 50%,20% 40%,17% 30%,12% 20%,7% 10%);box-shadow:24px 7px 30px rgba(0,0,0,.2)}
+  64%{transform:translate3d(-1px,-2px,12px) rotateY(112deg) rotateZ(.8deg) skewY(-1deg) scaleX(.93);clip-path:polygon(4% 0,100% 0,100% 100%,4% 100%,14% 90%,24% 80%,34% 70%,41% 60%,44% 50%,41% 40%,34% 30%,24% 20%,14% 10%);box-shadow:20px 5px 26px rgba(0,0,0,.17)}
+  84%{transform:translate3d(0,0,5px) rotateY(157deg) rotateZ(-.3deg) skewY(-.4deg) scaleX(.98);clip-path:polygon(1% 0,100% 0,100% 100%,1% 100%,3% 90%,5% 80%,7% 70%,9% 60%,10% 50%,9% 40%,7% 30%,5% 20%,3% 10%);box-shadow:8px 2px 14px rgba(0,0,0,.1)}
+  100%{transform:translate3d(0,0,0) rotateY(180deg) rotateZ(0deg) skewY(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 90%,0 80%,0 70%,0 60%,0 50%,0 40%,0 30%,0 20%,0 10%);box-shadow:2px 1px 5px rgba(0,0,0,.04)}
+}
+@media(prefers-reduced-motion:reduce) {
+  body.reader-open #pageTurnSheet.flip-forward,
+  body.reader-open #pageTurnSheet.flip-back {
+    -webkit-animation-duration:.01ms!important;
+    animation-duration:.01ms!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
