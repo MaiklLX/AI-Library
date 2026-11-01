@@ -243,9 +243,9 @@ assert.match(html, /style\.paddingBottom/, "Book-wide page metrics cache must ac
 assert.match(html, /aiLibraryIOSPaperFold/, "iOS fallback page-turn animation is missing");
 assert.match(html, /function getReaderBookPageMetrics\(/, "Book-wide page metrics are missing");
 assert.match(html, /function getBookPageNumber\(/, "Book-wide page numbering is missing");
-assert.match(html, /readerArea\.addEventListener\('pointerdown'/, "Mobile edge and center taps must be handled on the reader viewport");
-assert.match(html, /const surface=isDesktopReaderSpread\(\)\?bookSpreadArea:bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
-assert.match(html, /if\(start\.pointerType!=='mouse'\)toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown'/, "All reader gestures must start on the unified visible spread controller");
+assert.match(html, /const surface = isDesktopReaderSpread\(\) \? bookSpreadArea : bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
+assert.match(html, /if \(start\.pointerType !== 'mouse'\) toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
 assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
 
 
