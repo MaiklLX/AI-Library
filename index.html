@@ -3107,6 +3107,28 @@ body.reader-open #pageTurnSheet.flip-back {
 .age-gate-cancel{background:transparent;border:1px solid #ffffff25;border-radius:10px;color:#c8c1b5}
 @media(max-width:540px){.age-gate-card{padding:26px 20px}.age-gate-card h2{font-size:29px}}
 </style>
+<style id="poka-release-feature-v1">
+.poka-release-feature{margin:8px 0 42px}
+.poka-release-banner{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(150px,.34fr) minmax(0,1fr) auto;align-items:center;gap:clamp(20px,4vw,48px);min-height:260px;padding:clamp(22px,4vw,42px);overflow:hidden;border:1px solid #8f713f99;border-radius:20px;background:radial-gradient(ellipse at 18% 50%,#8d672b35,transparent 36%),radial-gradient(ellipse at 100% 0%,#d9b66d16,transparent 45%),linear-gradient(112deg,#211b13 0%,#171615 52%,#111 100%);color:var(--text);text-decoration:none;box-shadow:0 20px 55px #0005;transition:border-color .25s,transform .25s,box-shadow .25s}
+.poka-release-banner:hover{transform:translateY(-3px);border-color:#e2c17a;box-shadow:0 26px 65px #0007,0 0 28px #d9b66d12}
+.poka-release-glow{position:absolute;z-index:-1;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 28%,#e5c77b0b 48%,transparent 68%);transform:translateX(-60%);animation:pokaReleaseSheen 9s ease-in-out infinite}
+.poka-release-cover{position:relative;display:block;width:min(100%,190px);justify-self:center;filter:drop-shadow(0 16px 22px #0009);transform:rotate(-3deg);transition:transform .35s}
+.poka-release-banner:hover .poka-release-cover{transform:rotate(0) translateY(-4px)}
+.poka-release-cover img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border:1px solid #d9b66d55;border-radius:5px 10px 10px 5px}
+.poka-release-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.poka-release-eyebrow{color:#e1c17d;font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.poka-release-title{margin:10px 0 7px;font:500 clamp(32px,4.4vw,54px)/1.05 Georgia,serif;letter-spacing:-.035em;text-wrap:balance}
+.poka-release-subtitle{color:#e0cfaa;font-size:13px;line-height:1.6}
+.poka-release-description{max-width:650px;margin:13px 0 18px;color:#bcb5a8;font-size:14px;line-height:1.75}
+.poka-release-cta{display:inline-flex;align-items:center;gap:12px;padding:11px 17px;border:1px solid #c5a35f;border-radius:9px;background:linear-gradient(135deg,#dfc17e,#b18b49);color:#17130b;font-size:13px;font-weight:800;transition:gap .2s,filter .2s}
+.poka-release-banner:hover .poka-release-cta{gap:18px;filter:brightness(1.08)}
+.poka-release-side-note{max-width:90px;color:#a58a59;font-size:9px;line-height:1.8;letter-spacing:.17em;writing-mode:vertical-rl;text-align:center}
+.poka-release-banner:focus-visible{outline:3px solid #f0d99b;outline-offset:4px}
+@keyframes pokaReleaseSheen{0%,12%,100%{transform:translateX(-70%);opacity:0}22%{opacity:1}42%{transform:translateX(70%);opacity:0}}
+@media(max-width:720px){.poka-release-feature{margin:0 0 30px}.poka-release-banner{grid-template-columns:86px minmax(0,1fr);gap:16px;padding:17px;border-radius:15px;min-height:0}.poka-release-cover{width:82px}.poka-release-side-note{display:none}.poka-release-title{font-size:clamp(25px,7vw,36px);margin:7px 0 5px}.poka-release-eyebrow{font-size:8px;letter-spacing:.12em}.poka-release-subtitle{font-size:11px}.poka-release-description{font-size:11px;line-height:1.55;margin:8px 0 11px}.poka-release-cta{padding:9px 12px;font-size:11px}}
+@media(max-width:380px){.poka-release-banner{grid-template-columns:68px minmax(0,1fr);gap:12px;padding:13px}.poka-release-cover{width:66px}.poka-release-title{font-size:25px}.poka-release-description{display:none}}
+@media(prefers-reduced-motion:reduce){.poka-release-glow{animation:none}.poka-release-banner,.poka-release-cover,.poka-release-cta{transition:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3130,6 +3152,20 @@ body.reader-open #pageTurnSheet.flip-back {
 <div><strong>✦</strong><span>редакционный отбор</span></div>
 <div><strong>0 ₽</strong><span>доступ к чтению</span></div>
 </div></div><div class="art"><i class="cosmic-halo" aria-hidden="true"></i><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
+<section class="poka-release-feature" aria-label="Закрытая премьера «Пока нас не найдут»">
+  <a class="poka-release-banner" href="./premiere.html?book=poka-nas-ne-naydut">
+    <span class="poka-release-glow" aria-hidden="true"></span>
+    <span class="poka-release-cover"><img src="./content/books/poka-nas-ne-naydut-cover.svg" alt="Обложка дилогии «Пока нас не найдут»" loading="lazy" decoding="async"></span>
+    <span class="poka-release-copy">
+      <span class="poka-release-eyebrow">✦ НОВАЯ ЗАКРЫТАЯ ПРЕМЬЕРА · 18+</span>
+      <span class="poka-release-title">Пока нас не найдут</span>
+      <span class="poka-release-subtitle">Дилогия · две книги · современная романтика и психологический детектив</span>
+      <span class="poka-release-description">У прошлого есть голос. У каждой тайны — цена. И у Миры Соколовой есть причина не доверять человеку, который знает, где искать ответы.</span>
+      <span class="poka-release-cta">Открыть премьеру <span aria-hidden="true">↗</span></span>
+    </span>
+    <span class="poka-release-side-note" aria-hidden="true">НЕКОТОРЫЕ ТАЙНЫ НЕ ХОТЯТ БЫТЬ НАЙДЕННЫМИ</span>
+  </a>
+</section>
 <section class="my-library-section" id="myLibrary" aria-labelledby="myLibraryTitle">
   <div class="my-library-heading"><div><div class="eyebrow">ТВОЯ ЛИЧНАЯ КОЛЛЕКЦИЯ</div><h2 id="myLibraryTitle">Моя библиотека</h2><p>Личные книги и истории, к которым ты уже возвращался.</p></div><a class="btn library-catalog-link" href="#catalog">Открыть каталог →</a></div>
   <div class="library-stats"><div><strong id="myLibraryPersonalCount">0</strong><span>личных книг</span></div><div><strong id="myLibraryProgressCount">0</strong><span>книг с прогрессом</span></div><div><strong id="myLibraryFavoritesCount">0</strong><span>в избранном</span></div></div>
