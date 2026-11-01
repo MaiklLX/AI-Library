@@ -580,7 +580,7 @@ assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-1
 assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
 assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
 assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The premium production reader must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The premium production reader must refresh the app-shell cache");
 
 
 assert.match(html, /id="ai-library-paper-turn-v83"/, "The redesigned production paper turn must be the final reader style in the document head");
@@ -589,4 +589,4 @@ assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\s\S]*?rotateY\(180deg\
 assert.ok(html.includes("aiLibraryPaperCurlForwardV83 1.18s") && html.includes("aiLibraryPaperCurlBackV83 1.18s"), "Both directions must use the same smooth 1.18 second animation");
 assert.ok(html.includes("perspective:1800px!important") && html.includes("drop-shadow(-22px 10px 16px"), "The new page turn must preserve depth and a moving soft paper shadow");
 assert.ok(html.includes("window.setTimeout(finishTurn,1320)"), "The page-turn fallback must outlast the new 1.18 second animation");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The redesigned reader must refresh the offline app shell");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The redesigned reader must refresh the offline app shell");
