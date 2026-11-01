@@ -450,6 +450,17 @@ assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].in
   "The new page must be visible underneath before the old paper begins to turn");
 assert.match(html, /@keyframes aiLibraryWavePageForward[\s\S]*?rotateY\(-180deg\)/,
   "Forward page turns must complete the wave motion");
+assert.match(html, /id="reader-wave-curl-v43"/, "The refined reader curl layer must be present");
+assert.ok(html.includes("clip-path:polygon(0 0,98% 0,93% 10%,88% 20%,83% 30%,80% 40%,79% 50%"),
+  "Forward curl must use a continuous bowed free edge rather than stepped zig-zags");
+assert.ok(html.includes("clip-path:polygon(2% 0,100% 0,100% 100%,2% 100%,7% 90%,12% 80%,17% 70%"),
+  "Backward curl must mirror the smooth bowed edge");
+assert.ok(html.includes("aiLibraryWavePageForward 1.18s") && html.includes("aiLibraryWavePageBack 1.18s"),
+  "The refined paper curl must use the same deliberate duration in both directions");
+assert.ok(html.includes("animation-duration:.01ms!important"),
+  "The refined curl must respect reduced-motion preferences");
+assert.ok(!html.includes("new St.PageFlip("),
+  "The production reader must not initialize StPageFlip while the integration remains isolated");
 assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
   "Backward page turns must complete the wave motion");
 assert.ok(html.includes("aiLibraryWavePageForward 1.12s"),
@@ -487,7 +498,7 @@ assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correc
 assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
 assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v76'"), "Reader motion lab release must refresh the offline shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v77'"), "Reader motion lab release must refresh the offline shell cache");
 assert.match(flipLab, /host\.addEventListener\('pointerdown'[\s\S]*?xRatio <= 0\.2[\s\S]*?xRatio >= 0\.8/, "Reader motion lab must recognize taps on both outer page edges");
 assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flipPrev\('bottom'\)[\s\S]*?pageFlip\.flipNext\('bottom'\)/, "Edge taps must trigger animated backward and forward page curls");
 assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");
