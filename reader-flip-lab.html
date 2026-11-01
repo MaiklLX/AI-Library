@@ -116,14 +116,16 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
   // Use the public controller and the actual rendered book rectangle for both directions.
   const flipFromEdge = (direction, corner = 'bottom') => {
     if (!pageFlip || pageFlip.getState() === 'flipping') return;
-    const rect = host.getBoundingClientRect();
+    const bookElement = host.querySelector('.stf__parent') || host;
+    const rect = bookElement.getBoundingClientRect();
     const x = direction === 'prev' ? rect.left + 10 : rect.right - 10;
     const y = corner === 'top' ? rect.top + 10 : rect.bottom - 10;
     pageFlip.getFlipController().flip({ x, y });
   };
 
   const pointInBook = (clientX, clientY) => {
-    const rect = host.getBoundingClientRect();
+    const bookElement = host.querySelector('.stf__parent') || host;
+    const rect = bookElement.getBoundingClientRect();
     return {
       x: clientX, y: clientY,
       xRatio: (clientX - rect.left) / Math.max(1, rect.width),
@@ -194,22 +196,8 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
       if (event.pointerType !== 'mouse' || !pointerStart) return;
       const start = pointerStart;
       pointerStart = null;
-      const dx = event.clientX - start.x;
-      const dy = event.clientY - start.y;
-      const distance = Math.hypot(dx, dy);
       const elapsed = performance.now() - start.time;
-      const horizontalSwipe = distance >= 34 && Math.abs(dx) > Math.abs(dy) * 1.25;
-      if (horizontalSwipe) {
-        const direction = dx < 0 ? 'next' : 'prev';
-        const current = pageFlip.getCurrentPageIndex();
-        const last = pageFlip.getPageCount() - 1;
-        if ((direction === 'prev' && current <= 0) ||
-            (direction === 'next' && current >= last)) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        flipFromEdge(direction, 'bottom');
-        return;
-      }
+      // Native StPageFlip owns mouse drags/swipes; intercept only a stationary edge tap.
       runEdgeTap(start, event.clientX, event.clientY, elapsed, event);
     }, true);
     host.addEventListener('pointercancel', () => { pointerStart = null; }, true);
