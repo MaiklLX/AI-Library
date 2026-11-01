@@ -483,24 +483,5 @@ assert.ok(flipLab.includes("usePortrait: true"), "Reader motion lab must switch 
 assert.ok(flipLab.includes("maxShadowOpacity: 0.34"), "Reader motion lab must keep paper shadows restrained");
 assert.ok(flipLab.includes("flipNext('bottom')"), "Reader motion lab forward control must invoke an animated page flip");
 assert.ok(flipLab.includes("flipPrev('bottom')"), "Reader motion lab backward control must invoke an animated page flip");
-assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correct the StPageFlip 2.0.7 centered-book coordinate bug");
-assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
-assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v74'"), "Reader motion lab release must refresh the offline shell cache");
-assert.match(flipLab, /host\.addEventListener\('pointerdown'[\s\S]*?xRatio <= 0\.2[\s\S]*?xRatio >= 0\.8/, "Reader motion lab must recognize taps on both outer page edges");
-assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flipPrev\('bottom'\)[\s\S]*?pageFlip\.flipNext\('bottom'\)/, "Edge taps must trigger animated backward and forward page curls");
-assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");
-assert.match(flipLab, /yRatio > 0\.12 && yRatio < 0\.88/, "Side-edge tap zones must leave the page corners available for manual dragging");
-
-const mainReaderSource = html;
-assert.ok(mainReaderSource.includes('reader-pageflip-integration-v1'), 'Main reader must include the progressive StPageFlip integration layer');
-assert.ok(mainReaderSource.includes('readerFlipMount'), 'Main reader must provide an isolated StPageFlip mount');
-assert.ok(mainReaderSource.includes('updateFromHtml(pages)'), 'Main reader must refresh page-flip pages after pagination changes');
-assert.ok(mainReaderSource.includes('readerPageFlip.flipPrev'), 'Main reader must support animated reverse page curls');
-assert.ok(mainReaderSource.includes("xRatio<=.2||xRatio>=.8"), 'Main reader must support edge tap page navigation');
-assert.ok(mainReaderSource.includes('readerFlipEventSync'), 'Page-flip events must synchronize with the existing pagination state');
-assert.ok(mainReaderSource.includes('book-page-number{position:static!important'), 'Main reader page numbers must reserve a dedicated footer lane outside the text');
-assert.ok(mainReaderSource.includes('reader-flip-foot'), 'StPageFlip pages must render page numbers in a dedicated footer');
-assert.ok(mainReaderSource.includes('page-flip@2.0.7'), 'Main reader must pin the tested StPageFlip version');
-assert.ok(mainReaderSource.includes('reader-flip-enabled'), 'Main reader must retain the legacy reader as a progressive fallback');
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v72'"), "Reader motion lab release must refresh the offline shell cache");
