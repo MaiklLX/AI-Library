@@ -584,8 +584,8 @@ assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The premium productio
 
 
 assert.match(html, /id="ai-library-paper-turn-v83"/, "The redesigned production paper turn must be the final reader style in the document head");
-assert.match(html, /@keyframes aiLibraryPaperCurlForwardV83[\\s\\S]*?rotateY\\(-180deg\\)/, "The new forward paper curl must complete its full turn");
-assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\\s\\S]*?rotateY\\(180deg\\)/, "The new backward paper curl must complete its full turn");
+assert.match(html, /@keyframes aiLibraryPaperCurlForwardV83[\s\S]*?rotateY\(-180deg\)/, "The new forward paper curl must complete its full turn");
+assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\s\S]*?rotateY\(180deg\)/, "The new backward paper curl must complete its full turn");
 assert.ok(html.includes("aiLibraryPaperCurlForwardV83 1.18s") && html.includes("aiLibraryPaperCurlBackV83 1.18s"), "Both directions must use the same smooth 1.18 second animation");
 assert.ok(html.includes("perspective:1800px!important") && html.includes("drop-shadow(-22px 10px 16px"), "The new page turn must preserve depth and a moving soft paper shadow");
 assert.ok(html.includes("window.setTimeout(finishTurn,1320)"), "The page-turn fallback must outlast the new 1.18 second animation");
