@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200" viewBox="0 0 800 1200">
+<defs>
+  <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d27"/><stop offset=".52" stop-color="#17202a"/><stop offset="1" stop-color="#080d13"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#b58b58" stop-opacity=".34"/><stop offset="1" stop-color="#b58b58" stop-opacity="0"/></radialGradient>
+  <linearGradient id="line" x2="0" y2="1"><stop stop-color="#e4c68b" stop-opacity=".9"/><stop offset="1" stop-color="#e4c68b" stop-opacity=".12"/></linearGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>
+<rect width="800" height="1200" fill="url(#bg)"/>
+<circle cx="405" cy="465" r="310" fill="url(#glow)" filter="url(#blur)"/>
+<path d="M0 760 L800 570 M0 860 L800 670 M0 960 L800 770" stroke="#9bb0bd" stroke-opacity=".12" stroke-width="2"/>
+<g fill="none" stroke="url(#line)" stroke-width="2">
+  <path d="M145 760V250H655V760"/>
+  <path d="M205 760V315H595V760"/>
+  <path d="M265 760V380H535V760"/>
+  <path d="M400 210V850"/>
+  <path d="M115 850H685"/>
+</g>
+<g fill="none" stroke="#d8bd88" stroke-opacity=".48" stroke-width="3">
+  <path d="M270 540C310 470 365 445 400 490C435 535 490 510 530 440"/>
+  <path d="M270 620C320 550 365 535 400 575C435 615 480 590 530 520"/>
+  <circle cx="400" cy="540" r="190" stroke-dasharray="2 18"/>
+</g>
+<g fill="#d9c39a" opacity=".75">
+  <circle cx="180" cy="190" r="3"/><circle cx="625" cy="255" r="2"/><circle cx="590" cy="690" r="3"/><circle cx="220" cy="720" r="2"/>
+</g>
+<rect x="54" y="54" width="692" height="1092" rx="8" fill="none" stroke="#d9b66d" stroke-opacity=".48"/>
+<rect x="70" y="70" width="660" height="1060" rx="5" fill="none" stroke="#d9b66d" stroke-opacity=".2"/>
+<text x="400" y="925" text-anchor="middle" fill="#e7d5b4" font-family="Georgia,serif" font-size="58" letter-spacing="2">ПОКА НАС</text>
+<text x="400" y="1000" text-anchor="middle" fill="#e7d5b4" font-family="Georgia,serif" font-size="58" letter-spacing="2">НЕ НАЙДУТ</text>
+<path d="M275 1038H525" stroke="#d9b66d" stroke-opacity=".8"/>
+<text x="400" y="1080" text-anchor="middle" fill="#c4b28f" font-family="Arial,sans-serif" font-size="18" letter-spacing="8">ДИЛОГИЯ · КНИГА I</text>
+</svg>

@@ -2904,6 +2904,28 @@ body.reader-open .book-flip-sheet.spread-turn-sheet.flip-back{transform-origin:r
 body.reader-open #modal:focus{outline:none!important;box-shadow:none!important;}
 body.reader-open #reader:focus,body.reader-open #readerRight:focus{outline:none!important;box-shadow:none!important;}
 </style>
+
+<style id="paired-editorial-premieres-v1">
+/* Editorial premiere shelf: two equal cards on desktop, one readable column on phones. */
+#prereleaseStage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
+#prereleaseStage .premiere-card{grid-template-columns:minmax(92px,.34fr) minmax(0,1fr);gap:18px;min-height:220px;padding:clamp(16px,2vw,24px);border-radius:17px}
+#prereleaseStage .premiere-art{min-height:190px}
+#prereleaseStage .premiere-orbit{width:min(190px,90%)}
+#prereleaseStage .premiere-book-cover{width:min(145px,72%);max-width:100%}
+#prereleaseStage .premiere-stamp{width:62px;height:62px;left:calc(50% + 36px);top:10%;font-size:7px}
+#prereleaseStage .premiere-copy h3{font-size:clamp(23px,2.2vw,32px);margin:10px 0 6px;overflow-wrap:anywhere}
+#prereleaseStage .premiere-tagline{font-size:15px;line-height:1.4;margin-bottom:9px}
+#prereleaseStage .premiere-byline{font-size:10px;margin-bottom:10px}
+#prereleaseStage .premiere-description{font-size:11px;line-height:1.55;margin-bottom:12px}
+#prereleaseStage .premiere-meta{gap:6px;margin-bottom:12px}
+#prereleaseStage .premiere-meta span{font-size:9px;padding:5px 7px}
+#prereleaseStage .premiere-editor-note{font-size:11px;line-height:1.5;margin-bottom:12px;padding:8px 10px}
+#prereleaseStage .premiere-locked{font-size:10px;line-height:1.4;padding:8px 10px;margin-bottom:10px}
+#prereleaseStage .premiere-open{font-size:11px;padding:9px 11px}
+@media(max-width:900px){#prereleaseStage{grid-template-columns:minmax(0,1fr);gap:12px}#prereleaseStage .premiere-card{grid-template-columns:112px minmax(0,1fr);min-height:180px;padding:17px}#prereleaseStage .premiere-art{min-height:150px}#prereleaseStage .premiere-book-cover{width:100px}#prereleaseStage .premiere-copy h3{font-size:clamp(25px,5vw,34px)}}
+@media(max-width:680px){#prereleaseStage{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}#prereleaseStage .premiere-card{grid-template-columns:64px minmax(0,1fr)!important;gap:11px!important;padding:10px!important;min-height:0!important}#prereleaseStage .premiere-art{min-height:88px!important;height:88px!important}#prereleaseStage .premiere-book-cover{width:58px!important}#prereleaseStage .premiere-copy h3{font-size:17px!important;margin:0 0 3px!important}#prereleaseStage .premiere-description,#prereleaseStage .premiere-meta,#prereleaseStage .premiere-editor-note{display:none!important}#prereleaseStage .premiere-locked{display:block!important;font-size:8px!important;margin:0!important;padding:5px 7px!important}#prereleaseStage .premiere-open{font-size:9px!important;padding:6px 8px!important;margin-top:6px}}
+@media(prefers-reduced-motion:reduce){#prereleaseStage .premiere-card,#prereleaseStage .premiere-book-cover{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3354,7 +3376,7 @@ async function renderPrereleaseShowcase(){
     : '<div class="premiere-stamp" aria-label="Закрытый пререлиз">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>';
   root.innerHTML=upcoming.map(book=>`<article class="premiere-card">
     <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${book.id==="ty-v-moih-planah"?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
-    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="./series.html">Открыть роман · 6 томов　↗</a></div>
+    <div class="premiere-copy"><div class="premiere-kicker">Эксклюзивная презентация</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta"><span>${book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ'}</span><span>◷ ${Number(book.length)||'—'} мин чтения</span>${book.releaseDate?`<span>Выход: ${esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))}</span>`:''}<span>Текст пока закрыт</span></div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div><a class="btn primary premiere-open" href="${book.id==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":"./series.html"}">${book.id==="poka-nas-ne-naydut"?"Открыть премьеру":"Открыть роман · 6 томов"}　↗</a></div>
   </article>`).join('');
 }
 
