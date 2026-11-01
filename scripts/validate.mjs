@@ -442,8 +442,8 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1250\)/,
-  "Page-turn completion must retain a guarded fallback after the 1.12 second wave animation");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1320\)/,
+  "Page-turn completion must retain a guarded fallback just beyond the 1.18 second paper animation");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
 assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
