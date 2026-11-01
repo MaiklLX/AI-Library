@@ -3313,6 +3313,95 @@ body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
 }
 </style>
 
+
+<style id="ai-library-premium-paper-turn-v80">
+/* Production page turn: a restrained, dimensional paper sheet with a curved free edge. */
+body.reader-open #pageTurnSheet {
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+  perspective:1600px!important;
+  overflow:visible!important;
+  will-change:transform,clip-path,filter;
+  backface-visibility:visible!important;
+  -webkit-backface-visibility:visible!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-face {
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+  transform-style:preserve-3d!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-front {
+  background:linear-gradient(100deg,#faf5e9 0%,#f4ecd9 68%,#e8dcc5 100%)!important;
+  box-shadow:inset -14px 0 26px rgba(66,48,22,.12),0 8px 22px rgba(0,0,0,.16)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-front {
+  background:linear-gradient(100deg,#fff 0%,#f8f8f6 68%,#e9e9e5 100%)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-front {
+  background:linear-gradient(100deg,#30343b 0%,#272b31 68%,#1c2026 100%)!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-back {
+  background:linear-gradient(100deg,#d9cdb7 0%,#f1e8d7 45%,#d8cbb5 100%)!important;
+  box-shadow:inset 14px 0 26px rgba(54,39,19,.13),inset 0 0 0 1px rgba(100,76,42,.12)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-back {
+  background:linear-gradient(100deg,#e2e2df,#fafaf8 45%,#dededb)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-back {
+  background:linear-gradient(100deg,#171a20,#292d34 45%,#191c22)!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-front::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(90deg,transparent 55%,rgba(31,23,13,.04) 73%,rgba(25,18,10,.28) 100%);
+  box-shadow:inset -26px 0 34px rgba(35,25,12,.16);
+}
+body.reader-open #pageTurnSheet.flip-forward {
+  transform-origin:left center!important;
+  animation:aiLibraryPremiumCurlForwardV80 1.14s cubic-bezier(.22,.68,.18,1) both!important;
+  -webkit-animation:aiLibraryPremiumCurlForwardV80 1.14s cubic-bezier(.22,.68,.18,1) both!important;
+}
+body.reader-open #pageTurnSheet.flip-back {
+  transform-origin:right center!important;
+  animation:aiLibraryPremiumCurlBackV80 1.14s cubic-bezier(.22,.68,.18,1) both!important;
+  -webkit-animation:aiLibraryPremiumCurlBackV80 1.14s cubic-bezier(.22,.68,.18,1) both!important;
+}
+body.reader-open #pageTurnSheet.flip-forward .reader-turn-front::after,
+body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
+  animation:aiLibraryPremiumCurlShadeV80 1.14s ease-in-out both;
+}
+@keyframes aiLibraryPremiumCurlShadeV80 {
+  0%,100%{opacity:0}
+  22%,72%{opacity:1}
+}
+@keyframes aiLibraryPremiumCurlForwardV80 {
+  0%{transform:perspective(1600px) translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.04))}
+  18%{transform:perspective(1600px) translate3d(1px,-2px,16px) rotateY(-24deg) rotateZ(-.8deg) scaleX(.99);clip-path:polygon(0 0,100% 0,96% 14%,92% 28%,89% 42%,88% 50%,89% 58%,92% 72%,96% 86%,100% 100%,0 100%);filter:drop-shadow(-9px 8px 9px rgba(0,0,0,.12))}
+  43%{transform:perspective(1600px) translate3d(2px,-4px,28px) rotateY(-68deg) rotateZ(-1.6deg) scaleX(.94);clip-path:polygon(0 0,94% 0,82% 14%,70% 28%,61% 42%,58% 50%,61% 58%,70% 72%,82% 86%,94% 100%,0 100%);filter:drop-shadow(-22px 12px 15px rgba(0,0,0,.2))}
+  68%{transform:perspective(1600px) translate3d(1px,-2px,22px) rotateY(-132deg) rotateZ(-.7deg) scaleX(.92);clip-path:polygon(0 0,88% 0,73% 14%,60% 28%,51% 42%,48% 50%,51% 58%,60% 72%,73% 86%,88% 100%,0 100%);filter:drop-shadow(-18px 10px 13px rgba(0,0,0,.17))}
+  88%{transform:perspective(1600px) translate3d(0,0,8px) rotateY(-168deg) rotateZ(.25deg) scaleX(.98);clip-path:polygon(0 0,99% 0,97% 14%,95% 28%,94% 42%,93% 50%,94% 58%,95% 72%,97% 86%,99% 100%,0 100%);filter:drop-shadow(-5px 3px 5px rgba(0,0,0,.08))}
+  100%{transform:perspective(1600px) translate3d(0,0,0) rotateY(-180deg) rotateZ(0) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 1px 1px rgba(0,0,0,.03))}
+}
+@keyframes aiLibraryPremiumCurlBackV80 {
+  0%{transform:perspective(1600px) translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.04))}
+  18%{transform:perspective(1600px) translate3d(-1px,-2px,16px) rotateY(24deg) rotateZ(.8deg) scaleX(.99);clip-path:polygon(0 0,100% 0,100% 100%,4% 100%,8% 86%,11% 72%,12% 58%,12% 50%,12% 42%,11% 28%,8% 14%);filter:drop-shadow(9px 8px 9px rgba(0,0,0,.12))}
+  43%{transform:perspective(1600px) translate3d(-2px,-4px,28px) rotateY(68deg) rotateZ(1.6deg) scaleX(.94);clip-path:polygon(0 0,100% 0,100% 100%,6% 100%,18% 86%,29% 72%,37% 58%,39% 50%,37% 42%,29% 28%,18% 14%);filter:drop-shadow(22px 12px 15px rgba(0,0,0,.2))}
+  68%{transform:perspective(1600px) translate3d(-1px,-2px,22px) rotateY(132deg) rotateZ(.7deg) scaleX(.92);clip-path:polygon(0 0,100% 0,100% 100%,12% 100%,27% 86%,40% 72%,49% 58%,52% 50%,49% 42%,40% 28%,27% 14%);filter:drop-shadow(18px 10px 13px rgba(0,0,0,.17))}
+  88%{transform:perspective(1600px) translate3d(0,0,8px) rotateY(168deg) rotateZ(-.25deg) scaleX(.98);clip-path:polygon(0 0,100% 0,100% 100%,1% 100%,3% 86%,5% 72%,6% 58%,6% 50%,6% 42%,5% 28%,3% 14%);filter:drop-shadow(5px 3px 5px rgba(0,0,0,.08))}
+  100%{transform:perspective(1600px) translate3d(0,0,0) rotateY(180deg) rotateZ(0) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 1px 1px rgba(0,0,0,.03))}
+}
+@media(prefers-reduced-motion:reduce) {
+  body.reader-open #pageTurnSheet.flip-forward,
+  body.reader-open #pageTurnSheet.flip-back {
+    animation-duration:.01ms!important;
+    -webkit-animation-duration:.01ms!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
