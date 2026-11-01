@@ -79,6 +79,11 @@
         "романтический детектив",
         "тайна прошлого",
         "добрый финал"
+      ],
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
       ]
     },
     {
@@ -99,7 +104,13 @@
       "status": "scheduled",
       "releaseAt": "2026-11-02T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-01-cover.svg",
-      "revision": "web-candidate-1"
+      "revision": "web-candidate-1",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-02",
@@ -119,7 +130,13 @@
       "status": "scheduled",
       "releaseAt": "2026-11-09T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-02-cover.svg",
-      "revision": "web-candidate-1"
+      "revision": "web-candidate-1",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-03",
@@ -140,7 +157,13 @@
       "releaseAt": "2026-11-16T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-03-cover.svg",
       "revision": "web-candidate-1",
-      "wordCount": 29529
+      "wordCount": 29529,
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-04",
@@ -161,7 +184,13 @@
       "releaseAt": "2026-11-23T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-04-cover.svg",
       "revision": "web-candidate-1",
-      "wordCount": 20214
+      "wordCount": 20214,
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-05",
@@ -182,7 +211,13 @@
       "releaseAt": "2026-11-30T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-05-cover.svg",
       "revision": "web-candidate-1",
-      "wordCount": 27170
+      "wordCount": 27170,
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-06",
@@ -203,7 +238,13 @@
       "releaseAt": "2026-12-07T18:00:00+03:00",
       "cover": "./content/books/ty-v-moih-planah-tom-06-cover.svg",
       "revision": "web-candidate-1",
-      "wordCount": 25295
+      "wordCount": 25295,
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "poka-nas-ne-naydut",
