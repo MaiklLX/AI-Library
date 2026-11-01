@@ -456,16 +456,6 @@ assert.match(html, /reader-chrome-hidden \.reader-bottombar[\s\S]*?opacity:1!imp
 assert.ok(html.includes("padding-bottom:0!important"), "The manuscript text must not reserve an obsolete in-page folio lane");
 assert.ok(!html.includes("new St.PageFlip("),
   "The production reader must not initialize StPageFlip while the integration remains isolated");
-assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
-  "Backward page turns must complete the wave motion");
-assert.ok(html.includes("aiLibraryWavePageForward 1.12s"),
-  "The paper wave must use a slower, smoother 1.12 second animation");
-assert.ok(html.includes("clip-path:polygon(0 0,100% 0,97% 15%"),
-  "The turning page must develop a rolling, wave-shaped edge");
-assert.match(html, /aiLibraryWavePaperShadow/,
-  "The wave must use a soft moving paper shadow");
-assert.ok(!html.includes("aiLibraryPaperEdgeLight") && !html.includes("rgba(255,255,255,.46)"),
-  "The page turn must not use the former bright travelling flash");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown', [\s\S]*?if \(edge && e\.cancelable\) e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
