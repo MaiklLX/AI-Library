@@ -3494,6 +3494,11 @@ function getAllBooks() {
   return [...books, ...publishedBooks, ...personalBooks];
 }
 
+function isSeriesVolumeBook(book) {
+  // Тома шеститомной серии показываются только внутри страницы серии, не отдельными карточками каталога.
+  return /^published-ty-v-moih-planah-tom-\d{2}$/.test(String(book?.id || ''));
+}
+
 function isBookReleaseLocked(book) {
   if (!book) return true;
   if (book.status === 'prerelease') return true;
@@ -3814,7 +3819,7 @@ function syncGenreFilters(){
   const root=document.querySelector("#genres");
   if(!root)return;
   const known=new Set([...root.querySelectorAll("[data-genre]")].map(button=>button.dataset.genre));
-  [...new Set(getAllBooks().filter(book=>!isBookReleaseLocked(book)).map(book=>String(book.genre||"Без жанра").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")).forEach(name=>{
+  [...new Set(getAllBooks().filter(book=>!isSeriesVolumeBook(book)&&!isBookReleaseLocked(book)).map(book=>String(book.genre||"Без жанра").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")).forEach(name=>{
     if(known.has(name))return;
     const button=document.createElement("button");
     button.type="button";button.className="genre";button.dataset.genre=name;button.textContent=name;
@@ -3882,7 +3887,7 @@ function renderBookCard(book){
  '<div class="book-back-actions"><a class="btn read" data-read="'+esc(book.id)+'" href="./book.html?book='+encodeURIComponent(book.id)+'">Подробнее о книге　→</a>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
 }
 
-function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease");let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
+function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease"&&!isSeriesVolumeBook(book));let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
 let s=document.querySelector('#sort').value;
 const progress=getReadingProgress();
 
@@ -4770,7 +4775,7 @@ document.addEventListener("keydown",e=>{
   if(e.key==="PageDown"||e.key==="ArrowRight"){e.preventDefault();turnReadingPage(1);}
   else if(e.key==="PageUp"||e.key==="ArrowLeft"){e.preventDefault();turnReadingPage(-1);}
 });
-document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>!isBookReleaseLocked(book)&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
+document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>!isSeriesVolumeBook(book)&&!isBookReleaseLocked(book)&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
 
 /* Cross-platform page gestures: native vertical movement, deliberate horizontal page turns. */
 const readerArea = document.querySelector('#reader');
