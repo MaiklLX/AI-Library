@@ -153,9 +153,9 @@ for (const entry of publishedCatalog.books) {
     assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
   }
 }
-assert.match(html, /function isSeriesVolumeBook\\(book\\)/, "Six-volume series books must be recognized as series-only entries");
-assert.match(html, /const all=getAllBooks\\(\\)\\.filter\\(book=>book\\.status !== \\"prerelease\\"&&!isSeriesVolumeBook\\(book\\)\\)/, "Series volumes must not render as standalone cards on the homepage");
-assert.match(html, /getAllBooks\\(\\)\\.filter\\(book=>!isSeriesVolumeBook\\(book\\)&&!isBookReleaseLocked\\(book\\)\\)/, "Series volumes must be excluded from homepage genre and random discovery lists");
+assert.match(html, /function isSeriesVolumeBook\(book\)/, "Six-volume series books must be recognized as series-only entries");
+assert.match(html, /const all=getAllBooks\(\)\.filter\(book=>book\.status !== \"prerelease\"&&!isSeriesVolumeBook\(book\)\)/, "Series volumes must not render as standalone cards on the homepage");
+assert.match(html, /getAllBooks\(\)\.filter\(book=>!isSeriesVolumeBook\(book\)&&!isBookReleaseLocked\(book\)\)/, "Series volumes must be excluded from homepage genre and random discovery lists");
 assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
 assert.match(html, /async function loadPublishedBooks\(/, "Published book loader is missing");
 assert.match(html, /PUBLISHED_BOOKS_KEY/, "Published book offline cache is missing");
