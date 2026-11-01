@@ -113,7 +113,8 @@
         "тайна прошлого"
       ],
       "volumeCount": 2,
-      "seriesType": "duology"
+      "seriesType": "duology",
+      "retrospectiveStyle": true
     }
   ]
 }
