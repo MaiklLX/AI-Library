@@ -25,7 +25,13 @@
       "bookId": "ty-v-moih-planah-tom-01",
       "cover": "./content/books/ty-v-moih-planah-tom-01-cover.svg",
       "releaseAt": "2026-11-02T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-02",
@@ -40,7 +46,13 @@
       "bookId": "ty-v-moih-planah-tom-02",
       "cover": "./content/books/ty-v-moih-planah-tom-02-cover.svg",
       "releaseAt": "2026-11-09T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-03",
@@ -55,7 +67,13 @@
       "bookId": "ty-v-moih-planah-tom-03",
       "cover": "./content/books/ty-v-moih-planah-tom-03-cover.svg",
       "releaseAt": "2026-11-16T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-04",
@@ -70,7 +88,13 @@
       "bookId": "ty-v-moih-planah-tom-04",
       "cover": "./content/books/ty-v-moih-planah-tom-04-cover.svg",
       "releaseAt": "2026-11-23T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-05",
@@ -85,7 +109,13 @@
       "bookId": "ty-v-moih-planah-tom-05",
       "cover": "./content/books/ty-v-moih-planah-tom-05-cover.svg",
       "releaseAt": "2026-11-30T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     },
     {
       "id": "ty-v-moih-planah-tom-06",
@@ -100,7 +130,18 @@
       "bookId": "ty-v-moih-planah-tom-06",
       "cover": "./content/books/ty-v-moih-planah-tom-06-cover.svg",
       "releaseAt": "2026-12-07T18:00:00+03:00",
-      "releaseLabel": "Плановый выпуск · 18:00 МСК"
+      "releaseLabel": "Плановый выпуск · 18:00 МСК",
+      "genres": [
+        "18+",
+        "Роман",
+        "Детектив"
+      ],
+      "ageRating": "18+"
     }
+  ],
+  "genres": [
+    "18+",
+    "Роман",
+    "Детектив"
   ]
 }
