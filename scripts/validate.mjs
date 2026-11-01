@@ -459,7 +459,7 @@ assert.ok(html.includes("aiLibraryWavePageForward 1.18s") && html.includes("aiLi
   "The refined paper curl must use the same deliberate duration in both directions");
 assert.ok(html.includes("animation-duration:.01ms!important"),
   "The refined curl must respect reduced-motion preferences");
-assert.doesNotMatch(html, /new St\\.PageFlip\\(/,
+assert.ok(!html.includes("new St.PageFlip("),
   "The production reader must not initialize StPageFlip while the integration remains isolated");
 assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
   "Backward page turns must complete the wave motion");
