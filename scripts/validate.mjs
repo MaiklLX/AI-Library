@@ -184,7 +184,6 @@ assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown'/, "Page edge
 assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*return/, "Mouse clicks must not be excluded from page edge turns");
 
 
-assert.match(html, /reader-crisp-page-turn-v35/, "Reader must use the crisp non-3D page transition");
 assert.match(html, /const pageState=getReaderPageState\(readingPageIndex,localTotalPages,spread\)/, "Reader page index must align with the current chapter page count and canonical spread state");
 assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, "Right-page numbering must be conditional on a real page");
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
@@ -222,9 +221,6 @@ assert.match(serviceWorker, /const CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*[\'"]v\d
 
 assert.match(html, /function getReaderPageState\(index,totalPages,spread\)/, "Reader page numbering must use one canonical page-state calculation");
 assert.match(html, /function formatReaderPageStatus\(state,totalPages\)/, "Reader status must be formatted from the canonical page state");
-assert.match(html, /reader-paper-light-turn-v36/, "Crisp paper-light page-turn layer is missing");
-assert.match(html, /body\.reader-open #bookPage,[\s\S]{0,900}?transform:none!important/, "The page surface must remain untransformed while the paper-light layer animates");
-assert.match(html, /body\.reader-open #bookPage\.reader-turn-out-back::after/, "Single-page backward paper-light animation selector is missing");
 const pageStateMatch = html.match(/function getReaderPageState\(index,totalPages,spread\)\{[\s\S]*?\n\}/);
 assert.ok(pageStateMatch, "Could not isolate page-state helper for boundary tests");
 const getPageState = new Function(`${pageStateMatch[0]}; return getReaderPageState;`)();
@@ -236,17 +232,14 @@ assert.deepEqual(getPageState(99, 7, true), { startIndex: 6, leftPage: 7, rightP
 
 
 assert.match(html, /reader-mobile-touch-recovery-v37/, "Mobile reader interaction and animation recovery styles are missing");
-assert.match(html, /mobile-paper-page-turn-v38/, "Mobile paper page-turn animation styles are missing");
 assert.match(html, /ios-reader-and-catalog-fixes-v39/, "iOS reader and catalog compatibility fixes are missing");
 assert.match(html, /padding-bottom:56px!important/, "Reader pagination must reserve space for the page number footer");
 assert.match(html, /style\.paddingBottom/, "Book-wide page metrics cache must account for the reserved page-number footer");
-assert.match(html, /aiLibraryIOSPaperFold/, "iOS fallback page-turn animation is missing");
 assert.match(html, /function getReaderBookPageMetrics\(/, "Book-wide page metrics are missing");
 assert.match(html, /function getBookPageNumber\(/, "Book-wide page numbering is missing");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown'/, "All reader gestures must start on the unified visible spread controller");
 assert.match(html, /const surface = isDesktopReaderSpread\(\) \? bookSpreadArea : bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
 assert.match(html, /if \(start\.pointerType !== 'mouse'\) toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
-assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
 
 
 assert.match(html, /AI Library visual system: editorial tokens v1/, "Editorial visual token layer is missing");
@@ -441,41 +434,26 @@ assert.match(html, /if \(!target \|\| isBookReleaseLocked\(target\)\) \{\s*docum
 assert.match(html, /if \(opened\) \{[\s\S]*?\} else \{\s*document\.documentElement\.classList\.remove\('reader-launch-pending'\)/,
   "A failed direct book open must release the launch mask");
 
-assert.match(pageTurnAnimation[1], /sheet\.addEventListener\('animationend',onAnimationEnd\)/,
-  "The animated page sheet must finish on its actual animationend event");
-assert.match(pageTurnAnimation[1], /event\.target===sheet/,
-  "Nested animation events must not prematurely finish a page turn");
-assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
-  "Page-turn completion must be idempotent when the event and fallback both fire");
-assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
-  "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1320\)/,
-  "Page-turn completion must retain a guarded fallback just beyond the 1.18 second paper animation");
-assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
-  "The turning paper must carry a frozen copy of the printed page");
-assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
-  "The turning paper must render front and reverse faces");
-assert.match(pageTurnAnimation[1], /try \{\s*afterTurn\(\);\s*\} catch\(error\)/,
-  "The new page must be committed beneath the frozen old page before the animation");
-assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].indexOf("sheet.classList.add(direction>0?'flip-forward':'flip-back')"),
-  "The new page must be visible underneath before the old paper begins to turn");
-assert.match(html, /@keyframes aiLibraryWavePageForward[\s\S]*?rotateY\(-180deg\)/,
-  "Forward page turns must complete the wave motion");
-assert.match(html, /id="reader-page-indicator-wave-v44"/, "The reader page-indicator and wave refinement must be present");
-assert.ok(!html.includes('id="bookPageNumber"') && !html.includes('id="bookPageNumberRight"'),
-  "Printed page surfaces must not contain page-number overlays");
-assert.match(html, /reader-chrome-hidden \.reader-bottombar[\s\S]*?opacity:1!important[\s\S]*?reader-page-status/,
-  "The centered page status must remain visible when reader controls are hidden");
-assert.ok(html.includes("padding-bottom:0!important"),
-  "The manuscript text must not reserve an obsolete in-page folio lane");
-assert.ok(html.includes("aiLibraryWavePageForwardV44 1.22s") && html.includes("aiLibraryWavePageBackV44 1.22s"),
-  "The new pronounced paper curl must use unique forward and backward animation names");
-assert.match(html, /@keyframes aiLibraryWavePageForwardV44[\s\S]*?rotateY\(-180deg\)/,
-  "The new forward paper curl must complete its full turn");
-assert.match(html, /@keyframes aiLibraryWavePageBackV44[\s\S]*?rotateY\(180deg\)/,
-  "The new backward paper curl must complete its full turn");
-assert.ok(html.includes("animation-duration:.01ms!important"),
-  "The refined curl must respect reduced-motion preferences");
+assert.match(pageTurnAnimation[1], /const sheet=page\.cloneNode\(true\)/, "The active page-turn engine must animate a frozen clone of the outgoing paper");
+assert.match(pageTurnAnimation[1], /sheet\.classList\.add\('book-flip-sheet'\)/, "The cloned paper must use the canonical visual layer");
+assert.match(pageTurnAnimation[1], /host\.appendChild\(sheet\)/, "The same sheet must be mounted over the single page or desktop spread");
+assert.match(pageTurnAnimation[1], /sheet\.addEventListener\('animationend',onAnimationEnd\)/, "The paper turn must finish on its animationend event");
+assert.match(pageTurnAnimation[1], /event\.target===sheet/, "Nested animation events must not prematurely finish a page turn");
+assert.match(pageTurnAnimation[1], /if\(finished\)return;finished=true/, "Page-turn completion must be idempotent");
+assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/, "Page-turn completion must remove its listener");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,900\)/, "Page-turn cleanup must have a guarded fallback");
+assert.ok(pageTurnAnimation[1].indexOf("afterTurn();") < pageTurnAnimation[1].indexOf("sheet.classList.add(direction>0?'flip-forward':'flip-back')"), "The new page must be committed beneath the frozen outgoing sheet before the turn starts");
+assert.match(html, /id="reader-single-paper-turn-v87"/, "Exactly one canonical production page-turn stylesheet must be present");
+assert.match(html, /@keyframes aiLibraryClassicSingleForward[\s\S]*?rotateY\(-88deg\)/, "Single-page forward turns must retain the original 3D hinge motion");
+assert.match(html, /@keyframes aiLibraryClassicSingleBack[\s\S]*?rotateY\(88deg\)/, "Single-page backward turns must mirror the original 3D hinge motion");
+assert.match(html, /@keyframes aiLibraryClassicSpreadForward[\s\S]*?rotateY\(-178deg\)/, "Desktop forward turns must complete the original full sheet rotation");
+assert.match(html, /@keyframes aiLibraryClassicSpreadBack[\s\S]*?rotateY\(178deg\)/, "Desktop backward turns must mirror the full sheet rotation");
+assert.match(html, /\.book-flip-sheet::after[\s\S]*?transform:rotateY\(180deg\)/, "The turning paper must expose a shaded reverse side");
+assert.ok(!html.includes("pageTurnSheet") && !html.includes("aiLibraryPaperCurl") && !html.includes("aiLibraryPremiumCurl") && !html.includes("aiLibraryWavePage"), "All retired page-turn overlays and keyframes must be removed");
+assert.equal((html.match(/id="reader-single-paper-turn-v87"/g)||[]).length,1,"The canonical page-turn stylesheet must not be duplicated");
+assert.ok(!html.includes('id="bookPageNumber"') && !html.includes('id="bookPageNumberRight"'), "Printed page surfaces must not contain page-number overlays");
+assert.match(html, /reader-chrome-hidden \.reader-bottombar[\s\S]*?opacity:1!important[\s\S]*?reader-page-status/, "The centered page status must remain visible when reader controls are hidden");
+assert.ok(html.includes("padding-bottom:0!important"), "The manuscript text must not reserve an obsolete in-page folio lane");
 assert.ok(!html.includes("new St.PageFlip("),
   "The production reader must not initialize StPageFlip while the integration remains isolated");
 assert.match(html, /@keyframes aiLibraryWavePageBack[\s\S]*?rotateY\(180deg\)/,
@@ -492,10 +470,6 @@ assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown', [\s\S]*?if 
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
   "Page-edge taps must work across the full paper area, not only the text column");
-assert.match(html, /reader-turn-face reader-turn-front/,
-  "The turning sheet must have a printed front face");
-assert.match(html, /reader-turn-face reader-turn-back/,
-  "The turning sheet must have a shaded reverse face");
 assert.ok(html.includes("modal.focus({ preventScroll: true })") && !html.includes('document.querySelector("#reader")?.focus'),
   "Opening the reader must focus the dialog shell, not the manuscript text");
 assert.ok(html.includes("#modal:focus") && html.includes("#reader:focus"),
@@ -571,22 +545,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The unified native gesture lab must refresh the offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v87'"), "The unified native gesture lab must refresh the offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 
-assert.match(html, /id="ai-library-premium-paper-turn-v80"/, "The bespoke production paper curl must be present in the main reader");
-assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-180deg\)/, "The premium forward curl must complete a full 3D page turn");
-assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
-assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
-assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The premium production reader must refresh the app-shell cache");
-
-
-assert.match(html, /id="ai-library-paper-turn-v83"/, "The redesigned production paper turn must be the final reader style in the document head");
-assert.match(html, /@keyframes aiLibraryPaperCurlForwardV83[\s\S]*?rotateY\(-180deg\)/, "The new forward paper curl must complete its full turn");
-assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\s\S]*?rotateY\(180deg\)/, "The new backward paper curl must complete its full turn");
-assert.ok(html.includes("aiLibraryPaperCurlForwardV83 1.18s") && html.includes("aiLibraryPaperCurlBackV83 1.18s"), "Both directions must use the same smooth 1.18 second animation");
-assert.ok(html.includes("perspective:1800px!important") && html.includes("drop-shadow(-22px 10px 16px"), "The new page turn must preserve depth and a moving soft paper shadow");
-assert.ok(html.includes("window.setTimeout(finishTurn,1320)"), "The page-turn fallback must outlast the new 1.18 second animation");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The redesigned reader must refresh the offline app shell");
