@@ -2987,7 +2987,7 @@ body.reader-open #reader:focus,body.reader-open #readerRight:focus{outline:none!
   <option value="title">По названию</option>
   <option value="short">Сначала короткие</option>
 </select>
-</div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
+</div><div class="genres" id="genres"><button class="genre active" data-genre="Все">Все истории</button><button class="genre" data-genre="Фантастика">Фантастика</button><button class="genre" data-genre="Фэнтези">Фэнтези</button><button class="genre" data-genre="Детектив">Детектив</button><button class="genre" data-genre="Романтика">Романтика</button><button class="genre" data-genre="18+">18+</button><button class="genre" data-genre="Роман">Роман</button><button class="genre" data-genre="Ужасы">Ужасы</button><button class="genre" data-genre="Приключения">Приключения</button></div><div class="grid" id="books" aria-live="polite" aria-busy="false"></div></section>
 <section class="banner"><div><div class="eyebrow">БИБЛИОТЕКА РАСТЁТ</div><h2>Каждая книга — целая вселенная.</h2><p>Читай в удобном книжном режиме, сохраняй прогресс и открывай новые истории по мере их официального выхода.</p></div><button class="btn primary" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Найти историю　→</button></section>
 </main><footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
 <div class="modal" id="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
@@ -3083,7 +3083,7 @@ const PUBLISHED_CATALOG_STATE_KEY = 'ai-library-catalog-update-state-v1';
 function getCatalogMetadataSnapshot(catalog) {
   return (Array.isArray(catalog?.books) ? catalog.books : []).map(book => ({
     id:String(book.id||''),title:String(book.title||''),author:String(book.author||''),
-    genre:String(book.genre||''),status:String(book.status||''),revision:String(book.revision||''),
+    genre:String(book.genre||''),genres:(Array.isArray(book.genres)?book.genres:[]).map(String).sort().join('|'),status:String(book.status||''),revision:String(book.revision||''),
     chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
     releaseDate:String(book.releaseDate||'')
   })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
@@ -3355,7 +3355,7 @@ function syncGenreFilters(){
   const root=document.querySelector("#genres");
   if(!root)return;
   const known=new Set([...root.querySelectorAll("[data-genre]")].map(button=>button.dataset.genre));
-  [...new Set(getAllBooks().filter(book=>!isSeriesVolumeBook(book)&&!isBookReleaseLocked(book)).map(book=>String(book.genre||"Без жанра").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")).forEach(name=>{
+  [...new Set(getAllBooks().filter(book=>!isSeriesVolumeBook(book)&&!isBookReleaseLocked(book)).flatMap(book=>[String(book.genre||"Без жанра").trim(),...(Array.isArray(book.genres)?book.genres.map(value=>String(value||"").trim()):[])]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")).forEach(name=>{
     if(known.has(name))return;
     const button=document.createElement("button");
     button.type="button";button.className="genre";button.dataset.genre=name;button.textContent=name;
@@ -3437,7 +3437,7 @@ function renderBookCard(book){
  '<div class="book-back-actions"><a class="btn read" data-read="'+esc(book.id)+'" href="./book.html?book='+encodeURIComponent(book.id)+'">Подробнее о книге　→</a>'+(String(book.id).startsWith('published-')?'<button class="btn offline-download" data-download-book="'+esc(book.id)+'" type="button">'+(window.AILibraryDownloadManager?.isDownloaded(book.id)?'✓ Доступна офлайн':'↓ Скачать')+'</button>':'')+'</div></div></div></article>';
 }
 
-function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease"&&!isSeriesVolumeBook(book));let list=all.filter(b=>(genre==="Все"||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
+function render(){let q=document.querySelector("#search").value.toLocaleLowerCase("ru").trim();const all=getAllBooks().filter(book=>book.status !== "prerelease"&&!isSeriesVolumeBook(book));let list=all.filter(b=>(genre==="Все"||(Array.isArray(b.genres)&&b.genres.includes(genre))||String(b.genre||"Без жанра")===genre)&&(!onlyFav||favs().some(id=>String(id)===String(b.id)))&&[b.title,b.author,b.desc,b.genre,b.tag,...(Array.isArray(b.genres)?b.genres:[])].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
 let s=document.querySelector('#sort').value;
 const progress=getReadingProgress();
 
@@ -3473,7 +3473,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length+2);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};

@@ -118,5 +118,10 @@
   "revision": "web-candidate-1",
   "sourceWorkingCopyBlobSha": "5527b5bf9c631886ea0a975238b0d99314ee4261",
   "sourceWorkingCopyPath": "editorial/working-copies/volume-03-editorial-copy.md",
-  "sourceEditorialBranch": "editorial/pre-release-audit"
+  "sourceEditorialBranch": "editorial/pre-release-audit",
+  "genres": [
+    "18+",
+    "Роман",
+    "Детектив"
+  ]
 }
