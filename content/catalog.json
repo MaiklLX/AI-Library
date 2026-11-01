@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": "1-paired-premiere",
   "books": [
     {
       "id": "avtomaticheskaya-polnoch",
@@ -204,6 +204,10 @@
       "cover": "./content/books/ty-v-moih-planah-tom-06-cover.svg",
       "revision": "web-candidate-1",
       "wordCount": 25295
+    },
+    {
+      "id": "poka-nas-ne-naydut",
+      "path": "./content/books/poka-nas-ne-naydut.json"
     }
   ]
 }
