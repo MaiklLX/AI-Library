@@ -3413,10 +3413,10 @@ function renderPokaDuologyCard(){
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
  '<span class="cover detective has-cover duology-muted-cover"><img class="cover-art" src="./content/books/poka-nas-ne-naydut-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
- '<div class="book-face book-back"><div class="book-back-top"><span class="book-back-label">БУДУЩЕЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
- '<h3>'+title+'</h3><div class="author">AI LIBRARY · ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
- '<div class="duology-release-stamp" aria-label="Скоро релиз"><span>СКОРО</span><strong>РЕЛИЗ</strong></div>'+
- '<div class="meta"><span>2 книги · 18+</span><span>Романтика · психологический детектив</span></div>'+
+ '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">БУДУЩЕЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
+ '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
+ '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
  '<div class="book-back-actions"><a class="btn read" href="./premiere.html?book=poka-nas-ne-naydut">Страница премьеры　→</a></div></div></div></article>';
 }
 
@@ -4836,5 +4836,36 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
   .logo::after,
   .hero .spark::after { opacity: .45; }
   .hero .spark { filter: drop-shadow(0 0 14px #d9b66d55); }
+}
+</style>
+
+<style id="poka-duology-card-fit-v2">
+/* Оборот дилогии: компактная вертикальная композиция без тесноты и обрезанных элементов. */
+#books .duology-back{padding:clamp(10px,1.25vw,15px);gap:0;overflow:hidden}
+#books .duology-back .book-back-top{margin-bottom:clamp(5px,.8vw,8px)}
+#books .duology-back .book-back-label{font-size:8px;letter-spacing:.1em}
+#books .duology-back .book-flip-back{flex-basis:27px;width:27px;height:27px;min-height:27px}
+#books .duology-back h3{font-size:clamp(16px,1.55vw,20px);line-height:1.12;-webkit-line-clamp:2;margin:0 0 4px}
+#books .duology-back .author{font-size:8px;line-height:1.3;margin:0 0 6px}
+#books .duology-back .desc{flex:0 1 auto;-webkit-line-clamp:3;overflow:hidden;font-size:9px;line-height:1.38;margin:0 0 7px}
+#books .duology-back-details{display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0 0 7px;min-width:0}
+#books .duology-back .duology-release-stamp{display:inline-flex;align-items:center;justify-content:center;flex:0 1 auto;width:auto;height:auto;min-height:22px;margin:0;padding:4px 7px;border:1px solid #b69a68;border-radius:999px;color:#e4cc9d;background:#b69a6810;transform:none;box-shadow:inset 0 0 0 1px #b69a6818;font:800 7px/1.1 system-ui,sans-serif;letter-spacing:.07em;white-space:nowrap}
+#books .duology-facts{flex:0 0 auto;color:#cfc6b4;font:700 7px/1 system-ui,sans-serif;letter-spacing:.08em;white-space:nowrap}
+#books .duology-facts i{color:#b99a61;font-style:normal}
+#books .duology-back .meta{gap:2px;padding:6px 0 0;font-size:7.5px;line-height:1.25}
+#books .duology-back .book-back-actions{margin-top:auto;padding-top:7px}
+#books .duology-back .book-back-actions .read{min-height:32px;padding:6px;font-size:9px;white-space:nowrap}
+@media(max-width:540px){
+ #books .duology-back{padding:9px}
+ #books .duology-back .book-back-top{margin-bottom:4px}
+ #books .duology-back h3{font-size:15px;line-height:1.1;margin-bottom:3px}
+ #books .duology-back .author{font-size:7px;margin-bottom:5px}
+ #books .duology-back .desc{-webkit-line-clamp:3;font-size:8px;line-height:1.32;margin-bottom:5px}
+ #books .duology-back-details{margin-bottom:5px}
+ #books .duology-back .duology-release-stamp{min-height:19px;padding:3px 5px;font-size:6px}
+ #books .duology-facts{font-size:6px}
+ #books .duology-back .meta{font-size:6.5px;padding-top:5px}
+ #books .duology-back .book-back-actions{padding-top:5px}
+ #books .duology-back .book-back-actions .read{min-height:29px;font-size:8px;padding:5px}
 }
 </style>
