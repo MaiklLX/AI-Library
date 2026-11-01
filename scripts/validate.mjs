@@ -550,12 +550,12 @@ for (const releaseAt of expectedReleaseSchedule) {
 
 
 assert.ok(flipLab.includes("touch-action:none"), "Reader motion lab must prevent browser gestures from stealing page swipes");
-assert.ok(flipLab.includes("horizontalSwipe") && flipLab.includes("Math.abs(dx) > Math.abs(dy) * 1.25"), "Reader motion lab must recognize deliberate mouse swipes");
-assert.ok(flipLab.includes("direction = dx < 0 ? 'next' : 'prev'"), "Left and right mouse swipes must map to forward and backward turns");
-assert.ok(flipLab.includes("event.pointerType !== 'mouse'"), "Touch drags must remain under native StPageFlip gesture control");
+assert.ok(flipLab.includes("event.pointerType !== 'mouse'"), "Touch pointers must not be processed twice");
+assert.ok(flipLab.includes("Native StPageFlip owns mouse drags/swipes"), "Native StPageFlip must own manual drag gestures");
 assert.ok(flipLab.includes("touchend") && flipLab.includes("passive: false"), "Touch edge taps must be handled before the page-flip engine's bubble listeners");
 assert.ok(flipLab.includes("distance > 9 || elapsed > 650"), "Edge taps must be separated from intentional finger drags");
 assert.ok(flipLab.includes("flipFromEdge") && flipLab.includes("getFlipController().flip"), "Programmatic page turns must use the native curl controller");
+assert.ok(flipLab.includes("host.querySelector('.stf__parent') || host"), "Gesture coordinates must use the actual rendered flipbook, not its wider outer mount");
 assert.ok(flipLab.includes("rect.left + 10") && flipLab.includes("rect.right - 10"), "Forward and reverse curl starts must use the rendered book's horizontal bounds");
 assert.ok(flipLab.includes("rect.top + 10") && flipLab.includes("rect.bottom - 10"), "Curl start points must include the rendered book's vertical viewport offset");
 assert.ok(flipLab.includes("pageFlip.flipPrev = corner => flipFromEdge('prev', corner)"), "The reverse page-turn method must use corrected viewport coordinates");
