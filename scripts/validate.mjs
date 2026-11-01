@@ -550,11 +550,11 @@ for (const releaseAt of expectedReleaseSchedule) {
 
 
 assert.ok(flipLab.includes("touch-action:none"), "Reader motion lab must prevent browser gestures from stealing page swipes");
-assert.ok(flipLab.includes("event.pointerType !== 'mouse'"), "Touch pointers must not be processed twice");
-assert.ok(flipLab.includes("Native StPageFlip owns mouse drags/swipes"), "Native StPageFlip must own manual drag gestures");
-assert.ok(flipLab.includes("touchend") && flipLab.includes("passive: false"), "Touch edge taps must be handled before the page-flip engine's bubble listeners");
-assert.ok(flipLab.includes("distance > 9 || elapsed > 650"), "Edge taps must be separated from intentional finger drags");
-assert.ok(flipLab.includes("flipFromEdge") && flipLab.includes("getFlipController().flip"), "Programmatic page turns must use the native curl controller");
+assert.ok(flipLab.includes("StPageFlip handles mouse, touch, corner taps and drags"), "One gesture engine must own all manual page-turn gestures");
+assert.ok(!flipLab.includes("addEventListener('touchend'") && !flipLab.includes("addEventListener('pointerup'"), "The lab must not intercept release events and compete with StPageFlip gesture state");
+assert.ok(flipLab.includes("disableFlipByClick: true"), "Only deliberate page-corner taps may trigger a click turn");
+assert.ok(flipLab.includes("flippingTime: 1220") && flipLab.includes("maxShadowOpacity: 0.46"), "The paper curl must have a deliberate duration and visible moving shadow");
+assert.ok(flipLab.includes("flipFromEdge") && flipLab.includes("getFlipController().flip"), "Programmatic page turns must use the native 3D curl controller");
 assert.ok(flipLab.includes("host.querySelector('.stf__parent') || host"), "Gesture coordinates must use the actual rendered flipbook, not its wider outer mount");
 assert.ok(flipLab.includes("rect.left + 10") && flipLab.includes("rect.right - 10"), "Forward and reverse curl starts must use the rendered book's horizontal bounds");
 assert.ok(flipLab.includes("rect.top + 10") && flipLab.includes("rect.bottom - 10"), "Curl start points must include the rendered book's vertical viewport offset");
@@ -564,7 +564,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v84'"), "The corrected reader motion lab must refresh the offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v85'"), "The unified native gesture lab must refresh the offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 
