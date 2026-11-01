@@ -1,32 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200" viewBox="0 0 800 1200">
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200" viewBox="0 0 800 1200" role="img" aria-labelledby="title desc">
+<title id="title">Пока нас не найдут — обложка дилогии</title><desc id="desc">Ночной дождливый город, две разобщённые фигуры у старого моста, золотая нить тайны и графитово-золотая типографика.</desc>
 <defs>
-  <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101d27"/><stop offset=".52" stop-color="#17202a"/><stop offset="1" stop-color="#080d13"/></linearGradient>
-  <radialGradient id="glow"><stop stop-color="#b58b58" stop-opacity=".34"/><stop offset="1" stop-color="#b58b58" stop-opacity="0"/></radialGradient>
-  <linearGradient id="line" x2="0" y2="1"><stop stop-color="#e4c68b" stop-opacity=".9"/><stop offset="1" stop-color="#e4c68b" stop-opacity=".12"/></linearGradient>
-  <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+ <linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090e14"/><stop offset=".48" stop-color="#17202a"/><stop offset="1" stop-color="#080b10"/></linearGradient>
+ <radialGradient id="mist"><stop stop-color="#a77b4c" stop-opacity=".35"/><stop offset=".55" stop-color="#66727b" stop-opacity=".12"/><stop offset="1" stop-color="#10151b" stop-opacity="0"/></radialGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f0d9a5"/><stop offset=".48" stop-color="#b88b50"/><stop offset="1" stop-color="#6f5234"/></linearGradient>
+ <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#53616a" stop-opacity=".35"/><stop offset="1" stop-color="#080c12" stop-opacity="0"/></linearGradient>
+ <filter id="soft"><feGaussianBlur stdDeviation="28"/></filter>
+ <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <pattern id="rain" width="42" height="54" patternUnits="userSpaceOnUse" patternTransform="rotate(14)"><path d="M8 0L0 28M30 20L20 54" stroke="#b6c0c7" stroke-opacity=".12" stroke-width="1"/></pattern>
 </defs>
-<rect width="800" height="1200" fill="url(#bg)"/>
-<circle cx="405" cy="465" r="310" fill="url(#glow)" filter="url(#blur)"/>
-<path d="M0 760 L800 570 M0 860 L800 670 M0 960 L800 770" stroke="#9bb0bd" stroke-opacity=".12" stroke-width="2"/>
-<g fill="none" stroke="url(#line)" stroke-width="2">
-  <path d="M145 760V250H655V760"/>
-  <path d="M205 760V315H595V760"/>
-  <path d="M265 760V380H535V760"/>
-  <path d="M400 210V850"/>
-  <path d="M115 850H685"/>
+<rect width="800" height="1200" fill="url(#night)"/>
+<ellipse cx="420" cy="470" rx="360" ry="300" fill="url(#mist)" filter="url(#soft)"/>
+<!-- distant city -->
+<g fill="#111922" stroke="#65717a" stroke-opacity=".25">
+ <path d="M0 480V345h55v-48h34v183h38V365h62v115h40V320h54v160h44V390h48v90h42V330h55v150h34V370h62v110h42V340h40v140h48v-95h42v95h40v-58h30v58z"/>
 </g>
-<g fill="none" stroke="#d8bd88" stroke-opacity=".48" stroke-width="3">
-  <path d="M270 540C310 470 365 445 400 490C435 535 490 510 530 440"/>
-  <path d="M270 620C320 550 365 535 400 575C435 615 480 590 530 520"/>
-  <circle cx="400" cy="540" r="190" stroke-dasharray="2 18"/>
+<g fill="#c5a16b" opacity=".5"><path d="M72 352h5v8h-5zm16-20h4v7h-4zm121 49h5v8h-5zm104-40h4v7h-4zm160 12h5v8h-5zm91 32h4v7h-4zm107-26h5v8h-5z"/></g>
+<!-- old bridge / vanishing road -->
+<path d="M0 615Q190 565 400 600Q610 565 800 615V930H0Z" fill="#111a22"/>
+<path d="M0 660Q400 585 800 660V1030H0Z" fill="url(#water)"/>
+<g fill="none" stroke="#8d9aa0" stroke-opacity=".3" stroke-width="5">
+ <path d="M0 605Q200 548 400 592Q600 548 800 605"/>
+ <path d="M0 642Q200 584 400 628Q600 584 800 642"/>
+ <path d="M70 594v95m80-113v110m580-110v110m-80-92v104"/>
 </g>
-<g fill="#d9c39a" opacity=".75">
-  <circle cx="180" cy="190" r="3"/><circle cx="625" cy="255" r="2"/><circle cx="590" cy="690" r="3"/><circle cx="220" cy="720" r="2"/>
+<!-- two distant figures -->
+<g fill="#080c11" stroke="#a98a5c" stroke-opacity=".25" stroke-width="2">
+ <circle cx="278" cy="555" r="17"/><path d="M260 575Q278 563 296 575l17 112-21 9-14-75-13 75-22-8z"/>
+ <circle cx="540" cy="548" r="18"/><path d="M520 568Q540 557 560 568l21 125-23 7-18-79-17 79-23-8z"/>
 </g>
-<rect x="54" y="54" width="692" height="1092" rx="8" fill="none" stroke="#d9b66d" stroke-opacity=".48"/>
-<rect x="70" y="70" width="660" height="1060" rx="5" fill="none" stroke="#d9b66d" stroke-opacity=".2"/>
-<text x="400" y="925" text-anchor="middle" fill="#e7d5b4" font-family="Georgia,serif" font-size="58" letter-spacing="2">ПОКА НАС</text>
-<text x="400" y="1000" text-anchor="middle" fill="#e7d5b4" font-family="Georgia,serif" font-size="58" letter-spacing="2">НЕ НАЙДУТ</text>
-<path d="M275 1038H525" stroke="#d9b66d" stroke-opacity=".8"/>
-<text x="400" y="1080" text-anchor="middle" fill="#c4b28f" font-family="Arial,sans-serif" font-size="18" letter-spacing="8">ДИЛОГИЯ · КНИГА I</text>
+<path d="M278 576C340 620 365 665 400 702S485 765 540 568" fill="none" stroke="url(#gold)" stroke-width="2.4" filter="url(#glow)" opacity=".92"/>
+<circle cx="400" cy="702" r="7" fill="#e7c78e" filter="url(#glow)"/>
+<!-- rain and foreground -->
+<rect width="800" height="1200" fill="url(#rain)"/>
+<path d="M0 830Q180 780 400 825T800 820V1200H0Z" fill="#080b10" opacity=".78"/>
+<g stroke="#c6a06b" stroke-opacity=".2" stroke-width="2"><path d="M90 880h210m-170 26h130m260-42h190m-150 28h110"/></g>
+<!-- editorial frame -->
+<rect x="42" y="42" width="716" height="1116" rx="4" fill="none" stroke="#c6a06b" stroke-opacity=".6" stroke-width="2"/>
+<rect x="56" y="56" width="688" height="1088" rx="2" fill="none" stroke="#c6a06b" stroke-opacity=".2"/>
+<path d="M72 170h90M638 170h90" stroke="url(#gold)" stroke-width="2"/>
+<text x="400" y="145" fill="#d8bd8c" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" letter-spacing="8">AI LIBRARY  ·  ПРЕМЬЕРА</text>
+<text x="400" y="930" fill="#f0e5d0" text-anchor="middle" font-family="Georgia,serif" font-size="61" letter-spacing="1.5">ПОКА НАС</text>
+<text x="400" y="1004" fill="#f0e5d0" text-anchor="middle" font-family="Georgia,serif" font-size="61" letter-spacing="1.5">НЕ НАЙДУТ</text>
+<path d="M260 1037H540" stroke="url(#gold)" stroke-width="2"/>
+<text x="400" y="1080" fill="#c9b38e" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" letter-spacing="7">ДИЛОГИЯ  ·  КНИГА I</text>
 </svg>
