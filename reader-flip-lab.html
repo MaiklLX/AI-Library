@@ -82,7 +82,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
  <p class="hint">Проверка: касание левого/правого края, свайп влево/вправо и перетягивание верхнего или нижнего угла. Все переходы должны использовать один и тот же эффект загиба бумаги.</p>
  <div class="footnote">Тестовый движок StPageFlip · оригинальная читалка пока не изменена</div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.min.js'"></script>
 <script>
 (() => {
   const notice = document.getElementById('loadNotice');
@@ -97,12 +97,58 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
   }
   const pages = Array.from(host.querySelectorAll('.flip-page'));
   let pageFlip;
+  let pointerStart = null;
+  let touchStart = null;
+  let resizeFrame = 0;
+  let resizeObserver = null;
+
   const update = index => {
+    if (!pageFlip) return;
     const count = pageFlip.getPageCount();
-    status.textContent = 'Лист ' + (index + 1) + ' / ' + count;
-    previous.disabled = index <= 0;
-    next.disabled = index >= count - 1;
+    const safeIndex = Math.max(0, Math.min(Number(index) || 0, count - 1));
+    status.textContent = 'Лист ' + (safeIndex + 1) + ' / ' + count;
+    previous.disabled = safeIndex <= 0;
+    next.disabled = safeIndex >= count - 1;
   };
+
+  // StPageFlip 2.0.7 expects viewport coordinates in Flip.flip().
+  // Its built-in flipPrev() omits the vertical offset of a centered book.
+  // Use the public controller and the actual rendered book rectangle for both directions.
+  const flipFromEdge = (direction, corner = 'bottom') => {
+    if (!pageFlip || pageFlip.getState() === 'flipping') return;
+    const rect = host.getBoundingClientRect();
+    const x = direction === 'prev' ? rect.left + 10 : rect.right - 10;
+    const y = corner === 'top' ? rect.top + 10 : rect.bottom - 10;
+    pageFlip.getFlipController().flip({ x, y });
+  };
+
+  const pointInBook = (clientX, clientY) => {
+    const rect = host.getBoundingClientRect();
+    return {
+      x: clientX, y: clientY,
+      xRatio: (clientX - rect.left) / Math.max(1, rect.width),
+      yRatio: (clientY - rect.top) / Math.max(1, rect.height)
+    };
+  };
+
+  const runEdgeTap = (start, endX, endY, elapsed, event) => {
+    if (!start) return false;
+    const distance = Math.hypot(endX - start.x, endY - start.y);
+    if (distance > 9 || elapsed > 650 ||
+        start.yRatio <= 0.10 || start.yRatio >= 0.90) return false;
+    const direction = start.xRatio <= 0.22 ? 'prev' :
+      start.xRatio >= 0.78 ? 'next' : null;
+    if (!direction) return false;
+    const current = pageFlip.getCurrentPageIndex();
+    const last = pageFlip.getPageCount() - 1;
+    if ((direction === 'prev' && current <= 0) ||
+        (direction === 'next' && current >= last)) return false;
+    if (event.cancelable) event.preventDefault();
+    event.stopImmediatePropagation();
+    flipFromEdge(direction, 'bottom');
+    return true;
+  };
+
   try {
     pageFlip = new St.PageFlip(host, {
       width: 420,
@@ -110,7 +156,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
       size: 'stretch',
       minWidth: 270,
       maxWidth: 460,
-      minHeight: 390,
+      minHeight: 360,
       maxHeight: 720,
       drawShadow: true,
       flippingTime: 1050,
@@ -120,82 +166,100 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
       maxShadowOpacity: 0.34,
       showCover: true,
       mobileScrollSupport: false,
-      swipeDistance: 26,
+      swipeDistance: 30,
       clickEventForward: true,
       useMouseEvents: true,
       disableFlipByClick: true,
       showPageCorners: true
     });
+
+    // Register events before loading pages; StPageFlip emits init during loadFromHTML().
     pageFlip.on('flip', event => update(event.data));
     pageFlip.on('init', event => update(event.data.page));
-    pageFlip.on('changeOrientation', () => requestAnimationFrame(() => pageFlip.update()));
+    pageFlip.on('update', event => update(event.data.page));
+
+    // Route all programmatic turns through the same coordinate-safe curl entry point.
+    pageFlip.flipPrev = corner => flipFromEdge('prev', corner);
+    pageFlip.flipNext = corner => flipFromEdge('next', corner);
     pageFlip.loadFromHTML(pages);
-    // StPageFlip 2.0.7 uses x=10 in viewport coordinates for flipPrev().
-    // On a centered book this can fall outside the book and prevent the curl.
-    // Correct only the start point; the library still renders the native page curl.
-    pageFlip.flipPrev = corner => {
-      const bounds = pageFlip.getBoundsRect();
-      pageFlip.flipController.flip({
-        x: bounds.left + 10,
-        y: corner === 'top' ? 1 : bounds.height - 2
-      });
-    };
-    // Normalize touch gestures before they reach the library/browser. Corner drags
-    // remain owned by StPageFlip; edge taps and horizontal swipes use its same curl API.
-    let gestureStart = null;
-    const gesturePoint = event => {
-      const bounds = pageFlip.getBoundsRect();
-      const x = event.clientX - bounds.left;
-      const y = event.clientY - bounds.top;
-      return {
-        x: event.clientX, y: event.clientY,
-        xRatio: x / bounds.width, yRatio: y / bounds.height,
-        bounds
-      };
-    };
+    update(pageFlip.getCurrentPageIndex());
+
+    // Mouse gestures are normalized here. Touch drags and swipes remain native StPageFlip
+    // gestures so we never compete with its touchmove/touchend state machine.
     host.addEventListener('pointerdown', event => {
-      if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
-      const point = gesturePoint(event);
-      gestureStart = {
-        pointerId: event.pointerId, ...point, time: performance.now(),
-        corner: (point.xRatio < 0.24 || point.xRatio > 0.76) &&
-                (point.yRatio < 0.18 || point.yRatio > 0.82)
-      };
+      if (!event.isPrimary || event.pointerType !== 'mouse' || event.button !== 0) return;
+      pointerStart = { ...pointInBook(event.clientX, event.clientY), time: performance.now() };
     }, true);
     host.addEventListener('pointerup', event => {
-      const start = gestureStart;
-      if (!start || start.pointerId !== event.pointerId) return;
-      gestureStart = null;
+      if (event.pointerType !== 'mouse' || !pointerStart) return;
+      const start = pointerStart;
+      pointerStart = null;
       const dx = event.clientX - start.x;
       const dy = event.clientY - start.y;
       const distance = Math.hypot(dx, dy);
       const elapsed = performance.now() - start.time;
-      const horizontalSwipe = !start.corner && distance >= 34 &&
-        Math.abs(dx) > Math.abs(dy) * 1.25;
-      const edgeTap = distance <= 9 && elapsed <= 650 &&
-        start.yRatio > 0.10 && start.yRatio < 0.90 &&
-        (start.xRatio <= 0.22 || start.xRatio >= 0.78);
-      if (!horizontalSwipe && !edgeTap) return;
-
-      const current = pageFlip.getCurrentPageIndex();
-      const last = pageFlip.getPageCount() - 1;
-      let direction = null;
-      if (horizontalSwipe) direction = dx < 0 ? 'next' : 'prev';
-      else direction = start.xRatio <= 0.22 ? 'prev' : 'next';
-
-      if ((direction === 'prev' && current <= 0) ||
-          (direction === 'next' && current >= last)) return;
-
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (direction === 'prev') pageFlip.flipPrev('bottom');
-      else pageFlip.flipNext('bottom');
+      const horizontalSwipe = distance >= 34 && Math.abs(dx) > Math.abs(dy) * 1.25;
+      if (horizontalSwipe) {
+        const direction = dx < 0 ? 'next' : 'prev';
+        const current = pageFlip.getCurrentPageIndex();
+        const last = pageFlip.getPageCount() - 1;
+        if ((direction === 'prev' && current <= 0) ||
+            (direction === 'next' && current >= last)) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        flipFromEdge(direction, 'bottom');
+        return;
+      }
+      runEdgeTap(start, event.clientX, event.clientY, elapsed, event);
     }, true);
-    host.addEventListener('pointercancel', () => { gestureStart = null; }, true);
+    host.addEventListener('pointercancel', () => { pointerStart = null; }, true);
+
+    // Touch edge taps are handled in capture phase. Real finger drags/swipes are left
+    // entirely to StPageFlip, avoiding duplicate turns and broken corner tracking.
+    host.addEventListener('touchstart', event => {
+      if (event.touches.length !== 1) { touchStart = null; return; }
+      const touch = event.touches[0];
+      touchStart = { ...pointInBook(touch.clientX, touch.clientY), time: performance.now() };
+    }, { capture: true, passive: true });
+    host.addEventListener('touchend', event => {
+      const start = touchStart;
+      touchStart = null;
+      if (!start || !event.changedTouches.length) return;
+      const touch = event.changedTouches[0];
+      runEdgeTap(start, touch.clientX, touch.clientY, performance.now() - start.time, event);
+    }, { capture: true, passive: false });
+    host.addEventListener('touchcancel', () => { touchStart = null; }, { capture: true, passive: true });
+
     previous.addEventListener('click', () => pageFlip.flipPrev('bottom'));
     next.addEventListener('click', () => pageFlip.flipNext('bottom'));
-    window.addEventListener('resize', () => pageFlip.update(), { passive: true });
-    update(0);
+
+    // Re-measure after viewport/orientation changes without losing the current page.
+    const refreshLayout = () => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        const current = pageFlip.getCurrentPageIndex();
+        pageFlip.update();
+        requestAnimationFrame(() => {
+          if (pageFlip.getCurrentPageIndex() !== current) pageFlip.turnToPage(current);
+          update(pageFlip.getCurrentPageIndex());
+        });
+      });
+    };
+    pageFlip.on('changeOrientation', refreshLayout);
+    window.addEventListener('resize', refreshLayout, { passive: true });
+    window.visualViewport?.addEventListener('resize', refreshLayout, { passive: true });
+    if ('ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(refreshLayout);
+      resizeObserver.observe(document.querySelector('.book-frame'));
+    }
+    update(pageFlip.getCurrentPageIndex());
+  } catch (error) {
+    if (resizeObserver) resizeObserver.disconnect();
+    notice.textContent = 'Не удалось запустить тестовую книгу: ' + error.message;
+    notice.classList.add('show');
+    status.textContent = 'Ошибка запуска';
+  }
   } catch (error) {
     notice.textContent = 'Не удалось запустить тестовую книгу: ' + error.message;
     notice.classList.add('show');
