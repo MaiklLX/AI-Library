@@ -3402,6 +3402,126 @@ body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
 }
 </style>
 
+
+<style id="ai-library-paper-turn-v83">
+/* Final production page-turn layer: calm, continuous paper motion with a soft curved edge. */
+body.reader-open #pageTurnSheet {
+  position:absolute!important;
+  inset:0!important;
+  z-index:8!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:4px!important;
+  overflow:visible!important;
+  visibility:hidden;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+  backface-visibility:visible!important;
+  -webkit-backface-visibility:visible!important;
+  perspective:1800px!important;
+  will-change:auto;
+}
+body.reader-open #pageTurnSheet .reader-turn-face {
+  position:absolute!important;
+  inset:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border:1px solid rgba(116,91,52,.18)!important;
+  border-radius:4px!important;
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-front {
+  z-index:2!important;
+  background:linear-gradient(105deg,#faf6ec 0%,#f5eedf 72%,#e9ddc7 100%)!important;
+  box-shadow:inset -12px 0 24px rgba(63,46,22,.11),0 7px 20px rgba(0,0,0,.15)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-front {
+  background:linear-gradient(105deg,#fff 0%,#fafaf8 72%,#e8e8e4 100%)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-front {
+  background:linear-gradient(105deg,#30343a 0%,#272b31 72%,#1c2026 100%)!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-back {
+  z-index:1!important;
+  transform:rotateY(180deg)!important;
+  background:linear-gradient(100deg,#d8cbb4 0%,#f0e7d5 48%,#d7c9b1 100%)!important;
+  box-shadow:inset 13px 0 25px rgba(54,39,19,.14),inset 0 0 0 1px rgba(100,76,42,.12)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="light"] .reader-turn-back {
+  background:linear-gradient(100deg,#dededb,#fafaf8 48%,#dededb)!important;
+}
+body.reader-open #pageTurnSheet[data-theme="dark"] .reader-turn-back {
+  background:linear-gradient(100deg,#171a20,#292d34 48%,#191c22)!important;
+}
+body.reader-open #pageTurnSheet .reader-turn-front::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(90deg,transparent 48%,rgba(37,27,15,.035) 67%,rgba(30,22,13,.23) 100%);
+  box-shadow:inset -24px 0 30px rgba(35,25,12,.13);
+}
+body.reader-open #pageTurnSheet.flip-forward,
+body.reader-open #pageTurnSheet.flip-back {
+  visibility:visible!important;
+  will-change:transform,clip-path,filter;
+}
+body.reader-open #pageTurnSheet.flip-forward {
+  transform-origin:left center!important;
+  -webkit-transform-origin:left center!important;
+  animation:aiLibraryPaperCurlForwardV83 1.18s cubic-bezier(.2,.72,.18,1) both!important;
+  -webkit-animation:aiLibraryPaperCurlForwardV83 1.18s cubic-bezier(.2,.72,.18,1) both!important;
+}
+body.reader-open #pageTurnSheet.flip-back {
+  transform-origin:right center!important;
+  -webkit-transform-origin:right center!important;
+  animation:aiLibraryPaperCurlBackV83 1.18s cubic-bezier(.2,.72,.18,1) both!important;
+  -webkit-animation:aiLibraryPaperCurlBackV83 1.18s cubic-bezier(.2,.72,.18,1) both!important;
+}
+body.reader-open #pageTurnSheet.flip-forward .reader-turn-front::after,
+body.reader-open #pageTurnSheet.flip-back .reader-turn-front::after {
+  animation:aiLibraryPaperCurlShadeV83 1.18s ease-in-out both;
+}
+@keyframes aiLibraryPaperCurlShadeV83 {
+  0%,100%{opacity:0}
+  24%,68%{opacity:1}
+}
+@keyframes aiLibraryPaperCurlForwardV83 {
+  0%{transform:perspective(1800px) translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.04))}
+  18%{transform:perspective(1800px) translate3d(1px,-1px,9px) rotateY(-18deg) rotateZ(-.35deg) scaleX(.99);clip-path:polygon(0 0,100% 0,97% 16%,93% 32%,91% 50%,93% 68%,97% 84%,100% 100%,0 100%);filter:drop-shadow(-9px 6px 9px rgba(0,0,0,.11))}
+  43%{transform:perspective(1800px) translate3d(2px,-3px,22px) rotateY(-58deg) rotateZ(-1deg) scaleX(.95);clip-path:polygon(0 0,83% 0,69% 16%,60% 32%,56% 50%,60% 68%,69% 84%,83% 100%,0 100%);filter:drop-shadow(-22px 10px 16px rgba(0,0,0,.19))}
+  68%{transform:perspective(1800px) translate3d(1px,-2px,17px) rotateY(-126deg) rotateZ(-.45deg) scaleX(.94);clip-path:polygon(0 0,67% 0,55% 16%,48% 32%,45% 50%,48% 68%,55% 84%,67% 100%,0 100%);filter:drop-shadow(-18px 8px 13px rgba(0,0,0,.16))}
+  88%{transform:perspective(1800px) translate3d(0,0,6px) rotateY(-168deg) rotateZ(.2deg) scaleX(.985);clip-path:polygon(0 0,97% 0,95% 16%,93% 32%,92% 50%,93% 68%,95% 84%,97% 100%,0 100%);filter:drop-shadow(-5px 3px 5px rgba(0,0,0,.07))}
+  100%{transform:perspective(1800px) translate3d(0,0,0) rotateY(-180deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.03))}
+}
+@keyframes aiLibraryPaperCurlBackV83 {
+  0%{transform:perspective(1800px) translate3d(0,0,0) rotateY(0deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.04))}
+  18%{transform:perspective(1800px) translate3d(-1px,-1px,9px) rotateY(18deg) rotateZ(.35deg) scaleX(.99);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,3% 84%,7% 68%,9% 50%,7% 32%,3% 16%);filter:drop-shadow(9px 6px 9px rgba(0,0,0,.11))}
+  43%{transform:perspective(1800px) translate3d(-2px,-3px,22px) rotateY(58deg) rotateZ(1deg) scaleX(.95);clip-path:polygon(17% 0,100% 0,100% 100%,17% 100%,31% 84%,40% 68%,44% 50%,40% 32%,31% 16%);filter:drop-shadow(22px 10px 16px rgba(0,0,0,.19))}
+  68%{transform:perspective(1800px) translate3d(-1px,-2px,17px) rotateY(126deg) rotateZ(.45deg) scaleX(.94);clip-path:polygon(33% 0,100% 0,100% 100%,33% 100%,45% 84%,52% 68%,55% 50%,52% 32%,45% 16%);filter:drop-shadow(18px 8px 13px rgba(0,0,0,.16))}
+  88%{transform:perspective(1800px) translate3d(0,0,6px) rotateY(168deg) rotateZ(-.2deg) scaleX(.985);clip-path:polygon(3% 0,100% 0,100% 100%,3% 100%,5% 84%,7% 68%,8% 50%,7% 32%,5% 16%);filter:drop-shadow(5px 3px 5px rgba(0,0,0,.07))}
+  100%{transform:perspective(1800px) translate3d(0,0,0) rotateY(180deg) rotateZ(0deg) scaleX(1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);filter:drop-shadow(0 1px 2px rgba(0,0,0,.03))}
+}
+@media(prefers-reduced-motion:reduce) {
+  body.reader-open #pageTurnSheet.flip-forward,
+  body.reader-open #pageTurnSheet.flip-back {
+    animation-duration:.01ms!important;
+    -webkit-animation-duration:.01ms!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -4474,8 +4594,8 @@ function animateBookPageTurn(direction,afterTurn){
         throw error;
       }
       sheet.classList.add(direction>0?'flip-forward':'flip-back');
-      // Fallback for browsers that occasionally omit animationend in background tabs.
-      window.setTimeout(finishTurn,1250);
+      // Fallback for browsers that occasionally omit animationend in background tabs; kept just beyond the 1.18s paper turn.
+      window.setTimeout(finishTurn,1320);
       return;
     }
   }
