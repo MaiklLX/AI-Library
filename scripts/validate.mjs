@@ -119,7 +119,7 @@ assert.match(html, /reader-settings\{top:calc\(66px/, "Desktop reading settings 
 assert.match(html, /rightReader\.style\.fontSize=settings\.fontSize/, "Reader typography settings must apply to both pages");
 assert.match(html, /readerHoverEnabled=window\.matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches/, "Desktop reader hover controls must be enabled only for mouse-like pointers");
 assert.match(html, /const readerHoverEdge=64/, "Desktop reader controls must reveal from the screen edges");
-assert.match(html, /readerArea\.addEventListener\('pointerup'/, "Mouse and touch page-edge interaction must use the visible reader viewport");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/, "All reader page gestures must resolve through one pointer-up controller");
 assert.match(html, /function exportLibraryBackup\(/, "Backup export logic is missing");
 assert.match(html, /async function importLibraryBackup\(/, "Backup import logic is missing");
 assert.match(html, /const safeClass\s*=\s*value\s*=>/, "Dynamic cover classes must be sanitized");
@@ -180,7 +180,7 @@ assert.match(serviceWorker, /const CACHE_NAME\s*=\s*CACHE_PREFIX\s*\+\s*[\'"]v\d
 
 assert.match(html, /let pageTokenEstimate = 0/, "Pagination should reuse measured page lengths to reduce DOM layout work");
 assert.match(html, /reader-interaction-performance-fixes-v34/, "Reader interaction fixes must be present");
-assert.match(html, /readerArea\.addEventListener\('pointerup'/, "Page edge handling must be delegated from the reader viewport");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown'/, "Page edge taps and horizontal swipes must share one gesture owner");
 assert.doesNotMatch(html, /if\s*\(e\.pointerType\s*===\s*['"]mouse['"]\)\s*return/, "Mouse clicks must not be excluded from page edge turns");
 
 
@@ -190,6 +190,13 @@ assert.match(html, /rightPage=spread&&startIndex\+1<total\?startIndex\+2:null/, 
 assert.match(html, /readerPageStatus/, "Reader spread counter must remain available");
 assert.doesNotMatch(html, /function animateBookPageTurn\(direction, afterTurn\)\s*\{[\s\S]{0,1500}rotateY/, "Page-turn logic must not rotate text content in 3D");
 assert.match(html, /readerTurnInProgress/, "Reader must guard against overlapping page-turn animations");
+assert.match(html, /Unified reader gesture controller: one pointer sequence, one page-turn decision/, "Production reader must use one unified gesture controller");
+assert.match(html, /bookSpreadArea\.style\.touchAction = 'pan-y pinch-zoom'/, "Reader must reserve horizontal gestures for page turns while preserving vertical movement and pinch zoom");
+assert.match(html, /Math\.abs\(dx\) >= 48 && Math\.abs\(dx\) > Math\.abs\(dy\) \* 1\.25/, "Horizontal page swipes must be distinguished from vertical movement");
+assert.doesNotMatch(html, /readerArea\.addEventListener\('pointerup'/, "The previous competing text-area swipe handler must be removed");
+assert.doesNotMatch(html, /edgeTapStart/, "The previous separate edge-tap state machine must be removed");
+assert.match(html, /if \(readerTurnInProgress \|\| !document\.querySelector\('#modal'\)/, "A page-turn in progress must reject duplicate gesture commands");
+
 const resizeScheduler = html.match(/function scheduleReaderResizePagination\(\)\s*\{([\s\S]*?)\n\}/);
 assert.ok(resizeScheduler, "Could not isolate reader resize scheduler");
 assert.match(resizeScheduler[1], /window\.setTimeout\([\s\S]*?120/, "Reader resize pagination must be debounced");

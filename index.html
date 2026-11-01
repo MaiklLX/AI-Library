@@ -4616,7 +4616,7 @@ function animateBookPageTurn(direction,afterTurn){
 }
 
 function turnReadingPage(direction) {
-  if (!document.querySelector('#modal').classList.contains('open')) return false;
+  if (readerTurnInProgress || !document.querySelector('#modal').classList.contains('open')) return false;
   const pageStep=isDesktopReaderSpread()?2:1;
   const target=readingPageIndex+direction*pageStep;
   if(target>=0&&target<readingPages.length){
@@ -4897,11 +4897,12 @@ document.addEventListener("keydown",e=>{
 });
 document.querySelector("#randomBtn").onclick=()=>{const options=getAllBooks().filter(book=>!isSeriesVolumeBook(book)&&!isBookReleaseLocked(book)&&(Number(book.chapterCount)>0||(Array.isArray(book.chapters)&&book.chapters.length>0)));if(options.length)openBookById(options[Math.floor(Math.random()*options.length)].id);};
 
-/* Cross-platform page gestures: native vertical movement, deliberate horizontal page turns. */
-const readerArea = document.querySelector('#reader');
+/* Unified reader gesture controller: one pointer sequence, one page-turn decision. */
 const readingModal = document.querySelector('#modal');
-let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0, activeSwipePointer = null;
-if (readerArea) readerArea.style.touchAction = 'pan-y pinch-zoom';
+const bookPageArea = document.querySelector('#bookPage');
+const bookSpreadArea = document.querySelector('#bookSpread');
+const readerArea = document.querySelector('#reader');
+if (bookSpreadArea) bookSpreadArea.style.touchAction = 'pan-y pinch-zoom';
 let pullStartY = 0, pullGuardActive = false;
 readingModal.addEventListener('touchstart', e => {
   if (!readingModal.classList.contains('open') || e.touches.length !== 1) return;
@@ -4912,55 +4913,49 @@ readingModal.addEventListener('touchmove', e => {
   if (!readingModal.classList.contains('open') || !pullGuardActive || e.touches.length !== 1) return;
   if (e.touches[0].clientY > pullStartY && e.cancelable) e.preventDefault();
 }, { passive: false });
-const resetReaderSwipe = () => { swipeStartX = 0; swipeStartY = 0; swipeStartTime = 0; activeSwipePointer = null; };
-readerArea.addEventListener('pointerdown', e => {
-  if (!readingModal.classList.contains('open') || !e.isPrimary || e.button !== 0) return;
-  activeSwipePointer = e.pointerId; swipeStartX = e.clientX; swipeStartY = e.clientY; swipeStartTime = Date.now();
-}, { passive: true });
-readerArea.addEventListener('pointerup', e => {
-  if (activeSwipePointer !== e.pointerId || !swipeStartTime) return;
-  const dx = e.clientX - swipeStartX, dy = e.clientY - swipeStartY, duration = Date.now() - swipeStartTime;
-  resetReaderSwipe();
-  if (duration > 900 || !current || !readingModal.classList.contains('open') || window.getSelection()?.toString()) return;
-  if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
-  turnReadingPage(dx < 0 ? 1 : -1);
-}, { passive: true });
-readerArea.addEventListener('pointercancel', resetReaderSwipe, { passive: true });
-readerArea.addEventListener('lostpointercapture', resetReaderSwipe, { passive: true });
 
-// Tap/click the outer paper edges to turn pages on desktop and touch devices.
-// Listen on the paper spread so the entire page margin is an active, reliable tap target.
-const bookPageArea = document.querySelector('#bookPage');
-const bookSpreadArea = document.querySelector('#bookSpread');
-let edgeTapStart = null;
+let readerGesture = null;
+const resetReaderGesture = () => { readerGesture = null; };
 bookSpreadArea.addEventListener('pointerdown', e => {
-  if (!readingModal.classList.contains('open') || !e.isPrimary || (e.pointerType==='mouse'&&e.button!==0)) return;
+  if (!readingModal.classList.contains('open') || !e.isPrimary ||
+      (e.pointerType === 'mouse' && e.button !== 0) || readerPinchActive) return;
   if (e.target.closest?.('button,a,input,select,textarea,[contenteditable="true"]')) return;
-  const page=e.target.closest?.('.book-page');
-  if(!page||page.classList.contains('book-flip-sheet'))return;
-  const surface=isDesktopReaderSpread()?bookSpreadArea:bookPageArea;
-  const rect=surface?.getBoundingClientRect();
-  if(!rect||!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
-  const edgeWidth=Math.max(48,Math.min(92,rect.width*(isDesktopReaderSpread()?0.075:0.18)));
-  const edge=e.clientX-rect.left<=edgeWidth?'back':(rect.right-e.clientX<=edgeWidth?'forward':null);
-  edgeTapStart={id:e.pointerId,x:e.clientX,y:e.clientY,time:Date.now(),pointerType:e.pointerType,surface,edge};
-  // Prevent the browser's text-selection/focus highlight only on the page-turn gutters.
-  if(edge&&e.cancelable)e.preventDefault();
-}, { passive:false });
+  const page = e.target.closest?.('.book-page');
+  if (!page || page.classList.contains('book-flip-sheet')) return;
+  const surface = isDesktopReaderSpread() ? bookSpreadArea : bookPageArea;
+  const rect = surface?.getBoundingClientRect();
+  if (!rect || !rect.width || e.clientX < rect.left || e.clientX > rect.right) return;
+  const edgeWidth = Math.max(48, Math.min(92, rect.width * (isDesktopReaderSpread() ? 0.075 : 0.18)));
+  const edge = e.clientX - rect.left <= edgeWidth ? 'back' :
+    (rect.right - e.clientX <= edgeWidth ? 'forward' : null);
+  readerGesture = {
+    id: e.pointerId, x: e.clientX, y: e.clientY, time: Date.now(),
+    pointerType: e.pointerType, edge, surface
+  };
+  if (edge && e.cancelable) e.preventDefault();
+}, { passive: false });
+
 bookSpreadArea.addEventListener('pointerup', e => {
-  const start=edgeTapStart;
-  edgeTapStart=null;
-  if(!start||start.id!==e.pointerId||!readingModal.classList.contains('open')||!current)return;
-  if(Date.now()-start.time>650||Math.abs(e.clientX-start.x)>12||Math.abs(e.clientY-start.y)>12)return;
-  if(window.getSelection()?.toString())return;
-  const rect=start.surface?.getBoundingClientRect();
-  if(!rect||!rect.width||e.clientX<rect.left||e.clientX>rect.right)return;
-  if(start.edge==='back'){turnReadingPage(-1);return;}
-  if(start.edge==='forward'){turnReadingPage(1);return;}
-  if(start.pointerType!=='mouse')toggleReaderChrome();
-}, { passive:true });
-bookSpreadArea.addEventListener('pointercancel',()=>{edgeTapStart=null;},{passive:true});
-bookSpreadArea.addEventListener('lostpointercapture',()=>{edgeTapStart=null;},{passive:true});
+  const start = readerGesture;
+  resetReaderGesture();
+  if (!start || start.id !== e.pointerId || !readingModal.classList.contains('open') ||
+      !current || readerPinchActive || window.getSelection()?.toString()) return;
+  const dx = e.clientX - start.x;
+  const dy = e.clientY - start.y;
+  const elapsed = Date.now() - start.time;
+  if (elapsed <= 900 && Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+    turnReadingPage(dx < 0 ? 1 : -1);
+    return;
+  }
+  if (elapsed > 650 || Math.abs(dx) > 12 || Math.abs(dy) > 12) return;
+  const rect = start.surface?.getBoundingClientRect();
+  if (!rect || !rect.width || e.clientX < rect.left || e.clientX > rect.right) return;
+  if (start.edge === 'back') { turnReadingPage(-1); return; }
+  if (start.edge === 'forward') { turnReadingPage(1); return; }
+  if (start.pointerType !== 'mouse') toggleReaderChrome();
+}, { passive: true });
+bookSpreadArea.addEventListener('pointercancel', resetReaderGesture, { passive: true });
+bookSpreadArea.addEventListener('lostpointercapture', resetReaderGesture, { passive: true });
 
 // Two-finger pinch changes the reader font size without losing the reading position.
 const readerPinchPointers = new Map();
@@ -4981,8 +4976,7 @@ bookPageArea.addEventListener('pointerdown', e => {
     readerPinchStartDistance=getReaderPinchDistance();
     readerPinchStartFontSize=getReaderSettings().fontSize;
     readerPinchLastFontSize=readerPinchStartFontSize;
-    edgeTapStart=null;
-    resetReaderSwipe();
+    readerGesture=null;
   }
 }, {capture:true,passive:true});
 bookPageArea.addEventListener('pointermove', e => {
