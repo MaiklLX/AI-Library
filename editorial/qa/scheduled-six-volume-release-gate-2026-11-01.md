@@ -2,6 +2,7 @@
 
 Date: 1 November 2026  
 Candidate branch: `release/scheduled-six-volume-reader-v4-main-sync-2026-11-01`  
+Draft PR: [#84](https://github.com/MaiklLX/AI-Library/pull/84). Current code candidate is mergeable; production `main` remains unchanged.  
 Base: current `main` at `3efd0b726351ea5f70e3b589c0cd91211996c515`.
 
 ## Release payload
@@ -34,7 +35,7 @@ Volume I is editorially complete and accepted: 16 chapters, 25,498 words. Its ma
 
 - The previous candidate passed 16/16 structural checks and 18/18 time-boundary checks.
 - This rebased candidate is based on current main, which had advanced 11 commits beyond the former PR base. The release changes were reapplied as focused patches; the Service Worker cache was advanced to v81 rather than reverting current main's v80.
-- CI for this rebased candidate is pending and must be confirmed before production publication.
+- GitHub Actions `Validate AI Library` passed on code HEAD `8f3c3ed461834975fd7758d4619622d836bfc1fe`: run [#41274760088](https://github.com/MaiklLX/AI-Library/actions/runs/41274760088), job `validate` completed successfully. A later QA-documentation-only update will receive its own CI run.
 - Real browser verification on mobile and desktop remains outstanding.
 - GitHub Pages serves pre-positioned JSON files by direct URL. The client-side guard controls the site UI but does not provide strict confidentiality against direct requests before release. A Worker/gateway or publication of book bodies at release time is required for strict server-side blocking.
 - Do not merge into production `main` without the user's explicit approval.
