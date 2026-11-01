@@ -3129,6 +3129,24 @@ body.reader-open #pageTurnSheet.flip-back {
 @media(max-width:380px){.poka-release-banner{grid-template-columns:68px minmax(0,1fr);gap:12px;padding:13px}.poka-release-cover{width:66px}.poka-release-title{font-size:25px}.poka-release-description{display:none}}
 @media(prefers-reduced-motion:reduce){.poka-release-glow{animation:none}.poka-release-banner,.poka-release-cover,.poka-release-cta{transition:none}}
 </style>
+
+<style id="ai-library-release-pair-v1">
+/* Two editorial releases share one balanced shelf; cards keep their own identities. */
+.release-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:8px 0 48px;align-items:stretch}
+.release-pair .poka-release-feature{margin:0;min-width:0}
+.release-pair .poka-release-banner{height:100%;min-height:250px;grid-template-columns:minmax(96px,.34fr) minmax(0,1fr);gap:clamp(14px,2vw,24px);padding:clamp(16px,2.3vw,26px);border-radius:17px}
+.release-pair .poka-release-cover{width:min(100%,142px)}
+.release-pair .poka-release-title{font-size:clamp(25px,2.5vw,34px);line-height:1.08}
+.release-pair .poka-release-eyebrow{font-size:9px;letter-spacing:.13em;line-height:1.5}
+.release-pair .poka-release-subtitle{font-size:12px}
+.release-pair .poka-release-description{font-size:12px;line-height:1.65;margin:10px 0 14px}
+.release-pair .poka-release-cta{padding:9px 12px;font-size:11px}
+.release-pair .poka-release-side-note{display:none}
+.release-pair .poka-release-banner:hover{transform:translateY(-3px)}
+@media(max-width:900px){.release-pair{grid-template-columns:minmax(0,1fr);gap:14px}.release-pair .poka-release-banner{min-height:210px;grid-template-columns:112px minmax(0,1fr);padding:19px}.release-pair .poka-release-cover{width:104px}.release-pair .poka-release-title{font-size:clamp(27px,5vw,36px)}}
+@media(max-width:540px){.release-pair{gap:12px;margin:0 0 34px}.release-pair .poka-release-banner{grid-template-columns:82px minmax(0,1fr);gap:14px;padding:15px;min-height:0}.release-pair .poka-release-cover{width:78px}.release-pair .poka-release-title{font-size:clamp(24px,7vw,31px)}.release-pair .poka-release-description{display:block;font-size:10px;line-height:1.5;margin:7px 0 9px}.release-pair .poka-release-eyebrow{font-size:8px;letter-spacing:.09em}.release-pair .poka-release-subtitle{font-size:10px}.release-pair .poka-release-cta{padding:8px 10px;font-size:10px}}
+@media(max-width:360px){.release-pair .poka-release-banner{grid-template-columns:66px minmax(0,1fr);gap:11px;padding:12px}.release-pair .poka-release-cover{width:64px}.release-pair .poka-release-title{font-size:23px}.release-pair .poka-release-description{display:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3152,19 +3170,33 @@ body.reader-open #pageTurnSheet.flip-back {
 <div><strong>✦</strong><span>редакционный отбор</span></div>
 <div><strong>0 ₽</strong><span>доступ к чтению</span></div>
 </div></div><div class="art"><i class="cosmic-halo" aria-hidden="true"></i><div class="spark">✧</div><label>ЧИТАЙ. МЕЧТАЙ. ОТКРЫВАЙ.</label></div></section>
-<section class="poka-release-feature" aria-label="Закрытая премьера «Пока нас не найдут»">
-  <a class="poka-release-banner" href="./premiere.html?book=poka-nas-ne-naydut">
-    <span class="poka-release-glow" aria-hidden="true"></span>
-    <span class="poka-release-cover"><img src="./content/books/poka-nas-ne-naydut-cover.svg" alt="Обложка дилогии «Пока нас не найдут»" loading="lazy" decoding="async"></span>
-    <span class="poka-release-copy">
-      <span class="poka-release-eyebrow">✦ НОВАЯ ЗАКРЫТАЯ ПРЕМЬЕРА · 18+</span>
-      <span class="poka-release-title">Пока нас не найдут</span>
-      <span class="poka-release-subtitle">Дилогия · две книги · современная романтика и психологический детектив</span>
-      <span class="poka-release-description">У прошлого есть голос. У каждой тайны — цена. И у Миры Соколовой есть причина не доверять человеку, который знает, где искать ответы.</span>
-      <span class="poka-release-cta">Открыть премьеру <span aria-hidden="true">↗</span></span>
-    </span>
-    <span class="poka-release-side-note" aria-hidden="true">НЕКОТОРЫЕ ТАЙНЫ НЕ ХОТЯТ БЫТЬ НАЙДЕННЫМИ</span>
-  </a>
+<section class="release-pair" aria-label="Главные релизы AI Library">
+  <article class="poka-release-feature" aria-label="Новинка «Ты в моих планах»">
+    <a class="poka-release-banner" href="./?book=ty-v-moih-planah">
+      <span class="poka-release-glow" aria-hidden="true"></span>
+      <span class="poka-release-cover"><img src="./content/books/ty-v-moih-planah-cover.svg" alt="Обложка романа «Ты в моих планах»" loading="lazy" decoding="async"></span>
+      <span class="poka-release-copy">
+        <span class="poka-release-eyebrow">✦ НОВИНКА · РЕЛИЗ СОСТОЯЛСЯ · 18+</span>
+        <span class="poka-release-title">Ты в моих планах</span>
+        <span class="poka-release-subtitle">Роман · современная романтика и детектив</span>
+        <span class="poka-release-description">Одна встреча. Два мира. И тайна, которая изменит всё. История о чувствах, правде и прошлом, которое не желает оставаться забытым.</span>
+        <span class="poka-release-cta">Открыть роман <span aria-hidden="true">↗</span></span>
+      </span>
+    </a>
+  </article>
+  <article class="poka-release-feature" aria-label="Закрытая премьера «Пока нас не найдут»">
+    <a class="poka-release-banner" href="./premiere.html?book=poka-nas-ne-naydut">
+      <span class="poka-release-glow" aria-hidden="true"></span>
+      <span class="poka-release-cover"><img src="./content/books/poka-nas-ne-naydut-cover.svg" alt="Обложка дилогии «Пока нас не найдут»" loading="lazy" decoding="async"></span>
+      <span class="poka-release-copy">
+        <span class="poka-release-eyebrow">✦ ЗАКРЫТАЯ ПРЕМЬЕРА · 18+</span>
+        <span class="poka-release-title">Пока нас не найдут</span>
+        <span class="poka-release-subtitle">Дилогия · две книги · психологический детектив</span>
+        <span class="poka-release-description">У прошлого есть голос. У каждой тайны — цена. И у Миры Соколовой есть причина не доверять человеку, который знает, где искать ответы.</span>
+        <span class="poka-release-cta">Открыть премьеру <span aria-hidden="true">↗</span></span>
+      </span>
+    </a>
+  </article>
 </section>
 <section class="my-library-section" id="myLibrary" aria-labelledby="myLibraryTitle">
   <div class="my-library-heading"><div><div class="eyebrow">ТВОЯ ЛИЧНАЯ КОЛЛЕКЦИЯ</div><h2 id="myLibraryTitle">Моя библиотека</h2><p>Личные книги и истории, к которым ты уже возвращался.</p></div><a class="btn library-catalog-link" href="#catalog">Открыть каталог →</a></div>
