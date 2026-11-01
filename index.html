@@ -3093,6 +3093,20 @@ body.reader-open #pageTurnSheet.flip-back {
 @media(max-width:560px){.editorial-shelf{padding:17px 13px}.editorial-shelf-heading{align-items:flex-start;flex-direction:column;gap:6px}.editorial-shelf-track{grid-template-columns:minmax(0,1fr)}.editorial-book{grid-template-columns:86px minmax(0,1fr);gap:12px;padding:9px}.editorial-book-cover{min-height:132px}.editorial-book-copy h3{font-size:18px}.editorial-book-copy p{-webkit-line-clamp:3;font-size:11px}.editorial-book-actions{gap:6px}.editorial-book-actions .btn{min-height:40px;padding:8px 9px}}
 @media(prefers-reduced-motion:reduce){.editorial-book{transition:none}.editorial-book:hover{transform:none}}
 </style>
+<style id="age-confirmation-gate-v1">
+#ageGate{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(5,6,8,.88);backdrop-filter:blur(12px)}
+#ageGate.open{display:flex}
+.age-gate-card{width:min(460px,100%);padding:30px 26px;border:1px solid #8b7042;border-radius:18px;background:linear-gradient(145deg,#242019,#141414 72%);box-shadow:0 28px 90px #000b;text-align:center}
+.age-gate-mark{width:58px;height:58px;margin:0 auto 17px;border:1px solid #d9b66d;border-radius:50%;display:grid;place-items:center;color:#e5c77f;font:26px Georgia,serif}
+.age-gate-kicker{color:#d9b66d;font-size:10px;font-weight:800;letter-spacing:.2em}
+.age-gate-card h2{font:500 32px/1.15 Georgia,serif;color:#f1e6d0;margin:12px 0}
+.age-gate-card p{color:#c1b9aa;font-size:14px;line-height:1.75;margin:0 auto 20px;max-width:360px}
+.age-gate-book{color:#e5c77f;font:italic 18px Georgia,serif;margin:0 0 20px}
+.age-gate-actions{display:grid;gap:9px}
+.age-gate-actions button{min-height:48px}
+.age-gate-cancel{background:transparent;border:1px solid #ffffff25;border-radius:10px;color:#c8c1b5}
+@media(max-width:540px){.age-gate-card{padding:26px 20px}.age-gate-card h2{font-size:29px}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3148,6 +3162,19 @@ body.reader-open #pageTurnSheet.flip-back {
 </main>
 <section id="bookDetailPage" hidden aria-labelledby="bookDetailTitle"><div class="book-detail-inner"><button class="btn book-detail-back" id="bookDetailBack" type="button">← Назад в библиотеку</button><div id="bookDetailContent"></div></div></section>
 <footer><div class="wrap foot"><span>✦ AI LIBRARY — библиотека новых миров</span><div class="data-tools"><button type="button" class="footer-action" id="exportLibraryData">↓ Резервная копия</button><button type="button" class="footer-action" id="importLibraryData">↑ Восстановить данные</button><input id="importLibraryFile" type="file" accept="application/json,.json" hidden aria-label="Файл резервной копии"></div><span>Бесплатное чтение · AI Library</span></div></footer>
+<div id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle" aria-describedby="ageGateDescription" aria-hidden="true">
+  <div class="age-gate-card">
+    <div class="age-gate-mark" aria-hidden="true">18+</div>
+    <div class="age-gate-kicker">ВОЗРАСТНОЕ ОГРАНИЧЕНИЕ</div>
+    <h2 id="ageGateTitle">Только для взрослых</h2>
+    <p id="ageGateDescription">Эта книга содержит материалы для совершеннолетней аудитории: чувственные сцены, взрослые отношения и темы психологической драмы. Подтвердите, что вам исполнилось 18 лет.</p>
+    <div class="age-gate-book" id="ageGateBook"></div>
+    <div class="age-gate-actions">
+      <button class="btn primary" id="ageGateConfirm" type="button">Мне исполнилось 18 лет · Продолжить</button>
+      <button class="age-gate-cancel" id="ageGateCancel" type="button">Мне нет 18 лет · Назад</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="dialog reader-shell">
   <div class="reader-topbar" id="readerTopbar">
     <button class="reader-icon-button" id="closeModal" type="button" aria-label="Закрыть книгу">‹</button>
@@ -3422,6 +3449,59 @@ async function loadSharedBooks() {
   updateContinueReadingButton();
 }
 
+const AGE_GATE_SESSION_PREFIX = 'ai-library-age-confirmed-18-v1:';
+let ageGateResolver = null;
+let ageGatePreviousFocus = null;
+
+function requiresAdultConfirmation(book) {
+  return /^18\s*\+?$/i.test(String(book?.ageRating || '').trim());
+}
+
+function confirmAdultAccess(book) {
+  if (!requiresAdultConfirmation(book)) return Promise.resolve(true);
+  const key = AGE_GATE_SESSION_PREFIX + String(book.id);
+  try { if (sessionStorage.getItem(key) === 'yes') return Promise.resolve(true); } catch {}
+  const gate = document.querySelector('#ageGate');
+  const title = document.querySelector('#ageGateBook');
+  const confirm = document.querySelector('#ageGateConfirm');
+  const cancel = document.querySelector('#ageGateCancel');
+  if (!gate || !confirm || !cancel) return Promise.resolve(false);
+  if (ageGateResolver) ageGateResolver(false);
+  title.textContent = '«' + String(book.title || 'Книга') + '»';
+  gate.classList.add('open');
+  gate.setAttribute('aria-hidden', 'false');
+  ageGatePreviousFocus = document.activeElement;
+  confirm.focus();
+  return new Promise(resolve => {
+    ageGateResolver = accepted => {
+      gate.classList.remove('open');
+      gate.setAttribute('aria-hidden', 'true');
+      if (accepted) { try { sessionStorage.setItem(key, 'yes'); } catch {} }
+      const previous = ageGatePreviousFocus;
+      ageGatePreviousFocus = null;
+      ageGateResolver = null;
+      if (previous && typeof previous.focus === 'function') previous.focus();
+      resolve(accepted);
+    };
+    confirm.onclick = () => ageGateResolver?.(true);
+    cancel.onclick = () => ageGateResolver?.(false);
+    gate.onclick = event => { if (event.target === gate) ageGateResolver?.(false); };
+  });
+}
+
+document.addEventListener('keydown', event => {
+  const gate = document.querySelector('#ageGate');
+  if (!gate?.classList.contains('open')) return;
+  if (event.key === 'Escape') { event.preventDefault(); ageGateResolver?.(false); }
+  if (event.key === 'Tab') {
+    const buttons = [...gate.querySelectorAll('button:not([disabled])')];
+    if (!buttons.length) return;
+    const first = buttons[0], last = buttons[buttons.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
+});
+
 async function openBookById(id) {
   const book = getAllBooks().find(item => String(item.id) === String(id));
   if (!book) return;
@@ -3430,6 +3510,8 @@ async function openBookById(id) {
     alert('«Автоматическая полночь» находится в пререлизе. Чтение откроется после официального релиза.');
     return;
   }
+
+  if (!(await confirmAdultAccess(book))) return;
 
   if (String(book.id).startsWith('shared-')) {
     try {
