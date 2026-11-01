@@ -519,8 +519,8 @@ assert.ok(flipLab.includes("start.yRatio > 0.10 && start.yRatio < 0.90") && flip
 
 
 assert.match(html, /id="ai-library-premium-paper-turn-v80"/, "The bespoke production paper curl must be present in the main reader");
-assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\\s\\S]*?rotateY\\(-180deg\\)/, "The premium forward curl must complete a full 3D page turn");
-assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\\s\\S]*?rotateY\\(180deg\\)/, "The premium backward curl must complete a symmetric 3D page turn");
+assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-180deg\)/, "The premium forward curl must complete a full 3D page turn");
+assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
 assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
 assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v80'"), "The premium production reader must refresh the app-shell cache");
