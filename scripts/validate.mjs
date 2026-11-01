@@ -512,7 +512,7 @@ assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turn
 assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v79'"), "Reader indicator and wave release must refresh the offline shell cache");
-assert.match(flipLab, /host\.addEventListener\('pointerdown'[\s\S]*?xRatio <= 0\.2[\s\S]*?xRatio >= 0\.8/, "Reader motion lab must recognize taps on both outer page edges");
-assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flipPrev\('bottom'\)[\s\S]*?pageFlip\.flipNext\('bottom'\)/, "Edge taps must trigger animated backward and forward page curls");
-assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");
-assert.match(flipLab, /yRatio > 0\.12 && yRatio < 0\.88/, "Side-edge tap zones must leave the page corners available for manual dragging");
+assert.ok(flipLab.includes("start.xRatio <= 0.22 || start.xRatio >= 0.78"), "Reader motion lab must recognize taps on both outer page edges");
+assert.ok(flipLab.includes("if (direction === 'prev') pageFlip.flipPrev('bottom');") && flipLab.includes("else pageFlip.flipNext('bottom');"), "Edge taps and swipes must trigger animated curls in both directions");
+assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Edge taps must be distinguished from intentional finger drags");
+assert.ok(flipLab.includes("start.yRatio > 0.10 && start.yRatio < 0.90") && flipLab.includes("start.corner"), "Gesture zones must preserve page corners for manual dragging");
