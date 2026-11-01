@@ -491,6 +491,13 @@ assert.ok(html.includes("#modal:focus") && html.includes("#reader:focus"),
   "The dialog shell and manuscript must not draw a browser focus frame");
 
 
+
+assert.ok(flipLab.includes("touch-action:none"), "Reader motion lab must prevent browser gestures from stealing page swipes");
+assert.ok(flipLab.includes("horizontalSwipe") && flipLab.includes("Math.abs(dx) > Math.abs(dy) * 1.25"), "Reader motion lab must recognize deliberate horizontal swipes");
+assert.ok(flipLab.includes("direction = dx < 0 ? 'next' : 'prev'"), "Left and right swipes must map to forward and backward page turns");
+assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Reader motion lab must recognize short edge taps");
+assert.ok(flipLab.includes("event.stopImmediatePropagation()"), "Handled gestures must not trigger a second native page turn");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v79'"), "Reader motion lab gesture fix must refresh the app-shell cache");
 assert.ok(flipLab.includes("page-flip@2.0.7/dist/js/page-flip.browser.min.js"), "Reader motion lab must load the pinned StPageFlip browser build");
 assert.ok(flipLab.includes("new St.PageFlip(host,"), "Reader motion lab must initialize the real StPageFlip engine");
 assert.ok(flipLab.includes("loadFromHTML(pages)"), "Reader motion lab must use HTML pages, not a CSS-only mock animation");
