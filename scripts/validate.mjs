@@ -499,6 +499,22 @@ const scheduledBookTwo = JSON.parse(readFileSync(resolve(root, scheduledCatalogE
 assert.equal(scheduledBookTwo.status, "scheduled", "Volume II book JSON must be scheduled");
 assert.equal(scheduledBookTwo.chapters.length, 18, "Volume II JSON must contain all 18 chapters");
 assert.equal(scheduledBookTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II JSON release timestamp must match series");
+
+for (const scheduledVolume of seriesManifest.volumes) {
+  const catalogEntry = publishedCatalog.books.find(entry => entry.id === scheduledVolume.bookId);
+  assert.ok(catalogEntry, `Volume ${scheduledVolume.number} must be pre-registered in the reader catalog`);
+  assert.equal(catalogEntry.status, "scheduled", `Volume ${scheduledVolume.number} catalog entry must remain scheduled`);
+  assert.equal(catalogEntry.releaseAt, scheduledVolume.releaseAt, `Volume ${scheduledVolume.number} catalog timestamp must match the series schedule`);
+  assert.equal(catalogEntry.chapterCount, scheduledVolume.chapters.to - scheduledVolume.chapters.from + 1, `Volume ${scheduledVolume.number} catalog chapter count is incorrect`);
+  const scheduledBook = JSON.parse(readFileSync(resolve(root, catalogEntry.path), "utf8"));
+  assert.equal(scheduledBook.status, "scheduled", `Volume ${scheduledVolume.number} full text must remain locked until release`);
+  assert.equal(scheduledBook.chapters.length, catalogEntry.chapterCount, `Volume ${scheduledVolume.number} full text chapter count is incorrect`);
+  assert.equal(scheduledBook.seriesId, seriesManifest.id, `Volume ${scheduledVolume.number} series ID is incorrect`);
+  assert.equal(scheduledBook.seriesVolume, scheduledVolume.number, `Volume ${scheduledVolume.number} order is incorrect`);
+  assert.equal(scheduledBook.releaseAt, scheduledVolume.releaseAt, `Volume ${scheduledVolume.number} full-text timestamp must match the series schedule`);
+  assert.equal(scheduledBook.cover, scheduledVolume.cover, `Volume ${scheduledVolume.number} cover must match the series card`);
+  assert.ok(existsSync(resolve(root, scheduledVolume.cover)), `Volume ${scheduledVolume.number} cover asset is missing`);
+}
 assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
 assert.match(html, /Date\.now\(\) < releaseTime/, "Scheduled release guard must compare the current time to releaseAt");
 assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
