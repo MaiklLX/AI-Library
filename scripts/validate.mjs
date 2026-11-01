@@ -442,8 +442,8 @@ assert.match(pageTurnAnimation[1], /if\(finished\)return;\s*finished=true/,
   "Page-turn completion must be idempotent when the event and fallback both fire");
 assert.match(pageTurnAnimation[1], /sheet\.removeEventListener\('animationend',onAnimationEnd\)/,
   "Page-turn completion must remove its animation listener");
-assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1250\)/,
-  "Page-turn completion must retain a guarded fallback after the 1.12 second wave animation");
+assert.match(pageTurnAnimation[1], /window\.setTimeout\(finishTurn,1320\)/,
+  "Page-turn completion must retain a guarded fallback just beyond the 1.18 second paper animation");
 assert.match(pageTurnAnimation[1], /front\.appendChild\(clone\)/,
   "The turning paper must carry a frozen copy of the printed page");
 assert.match(pageTurnAnimation[1], /sheet\.replaceChildren\(front,back\)/,
@@ -554,7 +554,7 @@ assert.ok(flipLab.includes("horizontalSwipe") && flipLab.includes("Math.abs(dx) 
 assert.ok(flipLab.includes("direction = dx < 0 ? 'next' : 'prev'"), "Left and right swipes must map to forward and backward page turns");
 assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Reader motion lab must recognize short edge taps");
 assert.ok(flipLab.includes("event.stopImmediatePropagation()"), "Handled gestures must not trigger a second native page turn");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "Reader motion lab gesture fix must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "Reader motion lab gesture fix must refresh the app-shell cache");
 assert.ok(flipLab.includes("page-flip@2.0.7/dist/js/page-flip.browser.min.js"), "Reader motion lab must load the pinned StPageFlip browser build");
 assert.ok(flipLab.includes("new St.PageFlip(host,"), "Reader motion lab must initialize the real StPageFlip engine");
 assert.ok(flipLab.includes("loadFromHTML(pages)"), "Reader motion lab must use HTML pages, not a CSS-only mock animation");
@@ -568,7 +568,7 @@ assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correc
 assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
 assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "Reader indicator and wave release must refresh the offline shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "Reader indicator and wave release must refresh the offline shell cache");
 assert.ok(flipLab.includes("start.xRatio <= 0.22 || start.xRatio >= 0.78"), "Reader motion lab must recognize taps on both outer page edges");
 assert.ok(flipLab.includes("if (direction === 'prev') pageFlip.flipPrev('bottom');") && flipLab.includes("else pageFlip.flipNext('bottom');"), "Edge taps and swipes must trigger animated curls in both directions");
 assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Edge taps must be distinguished from intentional finger drags");
@@ -580,4 +580,13 @@ assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-1
 assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
 assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
 assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "The premium production reader must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The premium production reader must refresh the app-shell cache");
+
+
+assert.match(html, /id="ai-library-paper-turn-v83"/, "The redesigned production paper turn must be the final reader style in the document head");
+assert.match(html, /@keyframes aiLibraryPaperCurlForwardV83[\s\S]*?rotateY\(-180deg\)/, "The new forward paper curl must complete its full turn");
+assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\s\S]*?rotateY\(180deg\)/, "The new backward paper curl must complete its full turn");
+assert.ok(html.includes("aiLibraryPaperCurlForwardV83 1.18s") && html.includes("aiLibraryPaperCurlBackV83 1.18s"), "Both directions must use the same smooth 1.18 second animation");
+assert.ok(html.includes("perspective:1800px!important") && html.includes("drop-shadow(-22px 10px 16px"), "The new page turn must preserve depth and a moving soft paper shadow");
+assert.ok(html.includes("window.setTimeout(finishTurn,1320)"), "The page-turn fallback must outlast the new 1.18 second animation");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The redesigned reader must refresh the offline app shell");
