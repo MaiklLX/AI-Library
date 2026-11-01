@@ -153,6 +153,9 @@ for (const entry of publishedCatalog.books) {
     assert.ok(book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Book chapters have an invalid format: ${entry.id}`);
   }
 }
+assert.match(html, /function isSeriesVolumeBook\\(book\\)/, "Six-volume series books must be recognized as series-only entries");
+assert.match(html, /const all=getAllBooks\\(\\)\\.filter\\(book=>book\\.status !== \\"prerelease\\"&&!isSeriesVolumeBook\\(book\\)\\)/, "Series volumes must not render as standalone cards on the homepage");
+assert.match(html, /getAllBooks\\(\\)\\.filter\\(book=>!isSeriesVolumeBook\\(book\\)&&!isBookReleaseLocked\\(book\\)\\)/, "Series volumes must be excluded from homepage genre and random discovery lists");
 assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
 assert.match(html, /async function loadPublishedBooks\(/, "Published book loader is missing");
 assert.match(html, /PUBLISHED_BOOKS_KEY/, "Published book offline cache is missing");
@@ -551,7 +554,7 @@ assert.ok(flipLab.includes("horizontalSwipe") && flipLab.includes("Math.abs(dx) 
 assert.ok(flipLab.includes("direction = dx < 0 ? 'next' : 'prev'"), "Left and right swipes must map to forward and backward page turns");
 assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Reader motion lab must recognize short edge taps");
 assert.ok(flipLab.includes("event.stopImmediatePropagation()"), "Handled gestures must not trigger a second native page turn");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v81'"), "Reader motion lab gesture fix must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "Reader motion lab gesture fix must refresh the app-shell cache");
 assert.ok(flipLab.includes("page-flip@2.0.7/dist/js/page-flip.browser.min.js"), "Reader motion lab must load the pinned StPageFlip browser build");
 assert.ok(flipLab.includes("new St.PageFlip(host,"), "Reader motion lab must initialize the real StPageFlip engine");
 assert.ok(flipLab.includes("loadFromHTML(pages)"), "Reader motion lab must use HTML pages, not a CSS-only mock animation");
@@ -565,7 +568,7 @@ assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correc
 assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
 assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v81'"), "Reader indicator and wave release must refresh the offline shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "Reader indicator and wave release must refresh the offline shell cache");
 assert.ok(flipLab.includes("start.xRatio <= 0.22 || start.xRatio >= 0.78"), "Reader motion lab must recognize taps on both outer page edges");
 assert.ok(flipLab.includes("if (direction === 'prev') pageFlip.flipPrev('bottom');") && flipLab.includes("else pageFlip.flipNext('bottom');"), "Edge taps and swipes must trigger animated curls in both directions");
 assert.ok(flipLab.includes("distance <= 9 && elapsed <= 650"), "Edge taps must be distinguished from intentional finger drags");
@@ -577,4 +580,4 @@ assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-1
 assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
 assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
 assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v81'"), "The premium production reader must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v82'"), "The premium production reader must refresh the app-shell cache");
