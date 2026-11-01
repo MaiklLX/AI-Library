@@ -228,7 +228,7 @@ assert.deepEqual(getPageState(99, 7, true), { startIndex: 6, leftPage: 7, rightP
 assert.match(html, /reader-mobile-touch-recovery-v37/, "Mobile reader interaction and animation recovery styles are missing");
 assert.match(html, /mobile-paper-page-turn-v38/, "Mobile paper page-turn animation styles are missing");
 assert.match(html, /ios-reader-and-catalog-fixes-v39/, "iOS reader and catalog compatibility fixes are missing");
-assert.match(html, /padding-bottom:34px!important/, "Reader pagination must reserve space for the page number footer");
+assert.match(html, /padding-bottom:56px!important/, "Reader pagination must reserve space for the page number footer");
 assert.match(html, /style\.paddingBottom/, "Book-wide page metrics cache must account for the reserved page-number footer");
 assert.match(html, /aiLibraryIOSPaperFold/, "iOS fallback page-turn animation is missing");
 assert.match(html, /function getReaderBookPageMetrics\(/, "Book-wide page metrics are missing");
@@ -487,7 +487,7 @@ assert.ok(flipLab.includes("bounds.left + 10"), "Backward page turns must correc
 assert.ok(flipLab.includes("pageFlip.flipController.flip("), "Backward page turns must retain the native StPageFlip curl renderer");
 assert.ok(flipLab.includes("левый угол к правому"), "Reader motion lab must explain the reverse drag direction on portrait pages");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v75'"), "Reader motion lab release must refresh the offline shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v76'"), "Reader motion lab release must refresh the offline shell cache");
 assert.match(flipLab, /host\.addEventListener\('pointerdown'[\s\S]*?xRatio <= 0\.2[\s\S]*?xRatio >= 0\.8/, "Reader motion lab must recognize taps on both outer page edges");
 assert.match(flipLab, /host\.addEventListener\('pointerup'[\s\S]*?pageFlip\.flipPrev\('bottom'\)[\s\S]*?pageFlip\.flipNext\('bottom'\)/, "Edge taps must trigger animated backward and forward page curls");
 assert.match(flipLab, /Math\.hypot\(event\.clientX - start\.x, event\.clientY - start\.y\) > 7/, "Edge taps must be distinguished from intentional finger drags");

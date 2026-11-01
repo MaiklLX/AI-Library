@@ -3177,6 +3177,24 @@ body.reader-open #readerRight:focus {
   }
 }
 </style>
+
+<style id="reader-page-number-safe-lane-v40">
+/* Keep a generous, measured footer lane so the folio never collides with manuscript text.
+   Pagination copies this computed padding into its measurement probe. */
+body.reader-open #reader,
+body.reader-open #readerRight {
+  box-sizing:border-box!important;
+  padding-bottom:56px!important;
+}
+body.reader-open .book-page-number {
+  z-index:9!important;
+  line-height:1.2!important;
+  min-height:18px;
+  display:grid;
+  place-items:center;
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
