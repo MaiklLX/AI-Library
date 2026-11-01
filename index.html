@@ -3454,7 +3454,8 @@ let ageGateResolver = null;
 let ageGatePreviousFocus = null;
 
 function requiresAdultConfirmation(book) {
-  return /^18\s*\+?$/i.test(String(book?.ageRating || '').trim());
+  const rating = String(book?.ageRating || '').trim();
+  return /(^|\D)18\s*\+/i.test(rating) || /^18$/i.test(rating);
 }
 
 function confirmAdultAccess(book) {
