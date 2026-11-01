@@ -94,5 +94,10 @@
   "revision": "web-candidate-1",
   "sourceWorkingCopyBlobSha": "9272dfb807c03e21ea789582605f0a789b96812e",
   "sourceReleasePreviewBlobSha": "0ac01f16944ce8438199a1d940083a1d4101e425",
-  "sourceCheckpoint": "editorial/pre-release-audit · 2026-10-31"
+  "sourceCheckpoint": "editorial/pre-release-audit · 2026-10-31",
+  "genres": [
+    "18+",
+    "Роман",
+    "Детектив"
+  ]
 }
