@@ -107,7 +107,7 @@ assert.match(serviceWorker, /if \(response && response\.ok && response\.type ===
 assert.match(serviceWorker, /url\.origin\s*!==\s*self\.location\.origin/, "Service worker must not intercept external APIs");
 assert.match(html, /id="exportLibraryData"/, "Personal data export control is missing");
 assert.match(html, /id="importLibraryData"/, "Personal data import control is missing");
-assert.match(html, /getAllBooks\(\)\.filter\(book=>!isBookReleaseLocked\(book\)\)/, "Random discovery must exclude every book whose scheduled release is still locked");
+assert.match(html, /getAllBooks\(\)\.filter\(book=>!isSeriesVolumeBook\(book\)&&!isBookReleaseLocked\(book\)/, "Random discovery must exclude series-only volumes and every book whose scheduled release is still locked");
 assert.match(html, /desktop-two-page-book-spread-v31/, "Desktop two-page book spread styles are missing");
 assert.match(html, /function isDesktopReaderSpread\(\)/, "Desktop spread mode detection is missing");
 assert.match(html, /const pageStep=isDesktopReaderSpread\(\)\?2:1/, "Desktop page turns must advance by a two-page spread");
