@@ -243,9 +243,9 @@ assert.match(html, /style\.paddingBottom/, "Book-wide page metrics cache must ac
 assert.match(html, /aiLibraryIOSPaperFold/, "iOS fallback page-turn animation is missing");
 assert.match(html, /function getReaderBookPageMetrics\(/, "Book-wide page metrics are missing");
 assert.match(html, /function getBookPageNumber\(/, "Book-wide page numbering is missing");
-assert.match(html, /readerArea\.addEventListener\('pointerdown'/, "Mobile edge and center taps must be handled on the reader viewport");
-assert.match(html, /const surface=isDesktopReaderSpread\(\)\?bookSpreadArea:bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
-assert.match(html, /if\(start\.pointerType!=='mouse'\)toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown'/, "All reader gestures must start on the unified visible spread controller");
+assert.match(html, /const surface = isDesktopReaderSpread\(\) \? bookSpreadArea : bookPageArea/, "Touch hit testing must use the visible page surface, not display:contents spread wrapper");
+assert.match(html, /if \(start\.pointerType !== 'mouse'\) toggleReaderChrome\(\)/, "A center tap on touch devices must toggle reader controls");
 assert.match(html, /@media \(max-width:1099px\), \(hover:none\) and \(pointer:coarse\)/, "Mobile page-turn overlay must be disabled on touch devices");
 
 
@@ -488,7 +488,7 @@ assert.match(html, /aiLibraryWavePaperShadow/,
   "The wave must use a soft moving paper shadow");
 assert.ok(!html.includes("aiLibraryPaperEdgeLight") && !html.includes("rgba(255,255,255,.46)"),
   "The page turn must not use the former bright travelling flash");
-assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown', [\s\S]*?if \(edge && e\.cancelable\) e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
   "Page-edge taps must work across the full paper area, not only the text column");
@@ -571,7 +571,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v85'"), "The unified native gesture lab must refresh the offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The unified native gesture lab must refresh the offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 
@@ -580,7 +580,7 @@ assert.match(html, /@keyframes aiLibraryPremiumCurlForwardV80[\s\S]*?rotateY\(-1
 assert.match(html, /@keyframes aiLibraryPremiumCurlBackV80[\s\S]*?rotateY\(180deg\)/, "The premium backward curl must complete a symmetric 3D page turn");
 assert.ok(html.includes("aiLibraryPremiumCurlForwardV80 1.14s") && html.includes("aiLibraryPremiumCurlBackV80 1.14s"), "Both production page-turn directions must use the same deliberate duration");
 assert.ok(html.includes("perspective(1600px)") && html.includes("drop-shadow("), "The production page turn must preserve depth and moving paper shadows");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The premium production reader must refresh the app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The premium production reader must refresh the app-shell cache");
 
 
 assert.match(html, /id="ai-library-paper-turn-v83"/, "The redesigned production paper turn must be the final reader style in the document head");
@@ -589,4 +589,4 @@ assert.match(html, /@keyframes aiLibraryPaperCurlBackV83[\s\S]*?rotateY\(180deg\
 assert.ok(html.includes("aiLibraryPaperCurlForwardV83 1.18s") && html.includes("aiLibraryPaperCurlBackV83 1.18s"), "Both directions must use the same smooth 1.18 second animation");
 assert.ok(html.includes("perspective:1800px!important") && html.includes("drop-shadow(-22px 10px 16px"), "The new page turn must preserve depth and a moving soft paper shadow");
 assert.ok(html.includes("window.setTimeout(finishTurn,1320)"), "The page-turn fallback must outlast the new 1.18 second animation");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v83'"), "The redesigned reader must refresh the offline app shell");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v86'"), "The redesigned reader must refresh the offline app shell");
