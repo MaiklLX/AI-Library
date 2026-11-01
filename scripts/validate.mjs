@@ -488,7 +488,7 @@ assert.match(html, /aiLibraryWavePaperShadow/,
   "The wave must use a soft moving paper shadow");
 assert.ok(!html.includes("aiLibraryPaperEdgeLight") && !html.includes("rgba(255,255,255,.46)"),
   "The page turn must not use the former bright travelling flash");
-assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',[\s\S]*?if\(edge&&e\.cancelable\)e\.preventDefault\(\)/,
+assert.match(html, /bookSpreadArea\.addEventListener\('pointerdown',([\s\S]*?)\}, \{ passive: false \}\);[\s\S]*?if \(edge && e\.cancelable\) e\.preventDefault\(\)/,
   "Page-edge taps must suppress accidental text selection on pointer down");
 assert.match(html, /bookSpreadArea\.addEventListener\('pointerup'/,
   "Page-edge taps must work across the full paper area, not only the text column");
