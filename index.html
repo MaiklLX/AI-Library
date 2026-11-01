@@ -3495,8 +3495,8 @@ function getAllBooks() {
 }
 
 function isSeriesVolumeBook(book) {
-  // Томá шеститомной серии показываются только внутри страницы серии, не отдельными карточками каталога.
-  return /^published-ty-v-moih-planah-tom-\\d{2}$/.test(String(book?.id || ''));
+  // Тома шеститомной серии показываются только внутри страницы серии, не отдельными карточками каталога.
+  return /^published-ty-v-moih-planah-tom-\d{2}$/.test(String(book?.id || ''));
 }
 
 function isBookReleaseLocked(book) {
