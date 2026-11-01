@@ -64,7 +64,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
 <body>
 <main class="lab">
  <div class="top"><div class="brand">AI LIBRARY</div><a class="back" href="./index.html">← Вернуться в библиотеку</a></div>
- <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Касайся правого края для перехода вперёд, левого — назад. Также листай горизонтальным свайпом: влево — вперёд, вправо — назад. Для ручного перелистывания тяни правый угол к левому краю, левый угол к правому краю.</p></header>
+ <header class="intro"><div class="kicker">Reader motion lab · эксперимент</div><h1>Живая книжная страница</h1><p>Проверяем механику настоящего загиба бумаги. Для перехода касайся верхнего или нижнего угла страницы. Листай горизонтальным свайпом: влево — вперёд, вправо — назад. Для ручного перелистывания подхвати угол пальцем и плавно потяни его к противоположному краю.</p></header>
  <div id="loadNotice" class="notice" role="status">Не удалось загрузить движок перелистывания. Проверь подключение к интернету и обнови страницу.</div>
  <section class="stage" aria-label="Тестовая книга">
   <div class="book-frame"><div id="flipBook">
@@ -79,7 +79,7 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
   </div></div>
  </section>
  <div class="controls"><button class="control" id="prevPage" type="button" disabled>← Назад</button><span class="status" id="pageStatus" aria-live="polite">Загрузка книги…</span><button class="control primary" id="nextPage" type="button" disabled>Вперёд →</button></div>
- <p class="hint">Проверка: касание левого/правого края, свайп влево/вправо и перетягивание верхнего или нижнего угла. Все переходы должны использовать один и тот же эффект загиба бумаги.</p>
+ <p class="hint">Проверка: касание углов, свайп влево/вправо и медленное перетягивание угла. Все жесты обрабатывает один движок — без параллельных обработчиков.</p>
  <div class="footnote">Тестовый движок StPageFlip · оригинальная читалка пока не изменена</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.min.js'"></script>
@@ -97,8 +97,6 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
   }
   const pages = Array.from(host.querySelectorAll('.flip-page'));
   let pageFlip;
-  let pointerStart = null;
-  let touchStart = null;
   let resizeFrame = 0;
   let resizeObserver = null;
 
@@ -161,11 +159,11 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
       minHeight: 360,
       maxHeight: 720,
       drawShadow: true,
-      flippingTime: 1050,
+      flippingTime: 1220,
       usePortrait: true,
       startPage: 0,
       autoSize: false,
-      maxShadowOpacity: 0.34,
+      maxShadowOpacity: 0.46,
       showCover: true,
       mobileScrollSupport: false,
       swipeDistance: 30,
@@ -180,44 +178,15 @@ h1{font:500 clamp(25px,5vw,39px) Georgia,serif;margin:9px 0 7px}
     pageFlip.on('init', event => update(event.data.page));
     pageFlip.on('update', event => update(event.data.page));
 
-    // Route all programmatic turns through the same coordinate-safe curl entry point.
+    // Buttons use the same native 3D curl controller as the corner gestures.
     pageFlip.flipPrev = corner => flipFromEdge('prev', corner);
     pageFlip.flipNext = corner => flipFromEdge('next', corner);
     pageFlip.loadFromHTML(pages);
     update(pageFlip.getCurrentPageIndex());
 
-    // Mouse gestures are normalized here. Touch drags and swipes remain native StPageFlip
-    // gestures so we never compete with its touchmove/touchend state machine.
-    host.addEventListener('pointerdown', event => {
-      if (!event.isPrimary || event.pointerType !== 'mouse' || event.button !== 0) return;
-      pointerStart = { ...pointInBook(event.clientX, event.clientY), time: performance.now() };
-    }, true);
-    host.addEventListener('pointerup', event => {
-      if (event.pointerType !== 'mouse' || !pointerStart) return;
-      const start = pointerStart;
-      pointerStart = null;
-      const elapsed = performance.now() - start.time;
-      // Native StPageFlip owns mouse drags/swipes; intercept only a stationary edge tap.
-      runEdgeTap(start, event.clientX, event.clientY, elapsed, event);
-    }, true);
-    host.addEventListener('pointercancel', () => { pointerStart = null; }, true);
-
-    // Touch edge taps are handled in capture phase. Real finger drags/swipes are left
-    // entirely to StPageFlip, avoiding duplicate turns and broken corner tracking.
-    host.addEventListener('touchstart', event => {
-      if (event.touches.length !== 1) { touchStart = null; return; }
-      const touch = event.touches[0];
-      touchStart = { ...pointInBook(touch.clientX, touch.clientY), time: performance.now() };
-    }, { capture: true, passive: true });
-    host.addEventListener('touchend', event => {
-      const start = touchStart;
-      touchStart = null;
-      if (!start || !event.changedTouches.length) return;
-      const touch = event.changedTouches[0];
-      runEdgeTap(start, touch.clientX, touch.clientY, performance.now() - start.time, event);
-    }, { capture: true, passive: false });
-    host.addEventListener('touchcancel', () => { touchStart = null; }, { capture: true, passive: true });
-
+    // Keep one gesture owner: StPageFlip handles mouse, touch, corner taps and drags.
+    // Do not intercept touchend/pointerup here; interrupting its release event can leave
+    // the engine in USER_FOLD and make the next gesture feel like a competing drag.
     previous.addEventListener('click', () => pageFlip.flipPrev('bottom'));
     next.addEventListener('click', () => pageFlip.flipNext('bottom'));
 
