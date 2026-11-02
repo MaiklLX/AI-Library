@@ -138,6 +138,7 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const desc=document.createElement('p');desc.textContent=volume.description||('Главы '+volume.chapters.from+'–'+volume.chapters.to+'.');
   annotation.appendChild(desc);
   const range=document.createElement('div');range.className='range';range.textContent='ГЛАВЫ '+volume.chapters.from+'—'+volume.chapters.to;
+  const release=volume.releaseAt?new Date(volume.releaseAt):null;
   const isPublished=hasReaderEntry&&(volume.status==='published'||(volume.status==='planned'&&release&&!Number.isNaN(release.getTime())&&Date.now()>=release.getTime()));
   const countdown=document.createElement('div');
   if(isPublished){

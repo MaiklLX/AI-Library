@@ -3362,6 +3362,8 @@ function syncGenreFilters(){
   });
   root.querySelectorAll("[data-genre]").forEach(button=>button.classList.toggle("active",button.dataset.genre===genre));
 }
+const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '');
+
 async function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
@@ -3372,7 +3374,7 @@ async function renderPrereleaseShowcase(){
   }
   // The stamp follows the actual publication status of volume I, not its countdown date.
   let firstVolumePublished=false;
-  if(upcoming.some(book=>book.id==="ty-v-moih-planah")){
+  if(upcoming.some(book=>canonicalBookId(book)==="ty-v-moih-planah")){
     try{
       const response=await fetch("./content/series/ty-v-moih-planah.json",{cache:"no-cache"});
       if(response.ok){
@@ -3386,7 +3388,8 @@ async function renderPrereleaseShowcase(){
     ? '<div class="premiere-stamp premiere-stamp-new" aria-label="Новинка · первый том вышел">НОВИНКА</div>'
     : '<div class="premiere-stamp" aria-label="Закрытый пререлиз">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>';
   root.innerHTML=upcoming.map(book=>{
-    const isMainSeries=book.id==="ty-v-moih-planah";
+    const canonicalId=canonicalBookId(book);
+    const isMainSeries=canonicalId==="ty-v-moih-planah";
     const isSeriesReleased=isMainSeries&&firstVolumePublished;
     const kicker=isSeriesReleased?"РОМАН В ШЕСТИ ТОМАХ · ТОМ I УЖЕ ВЫШЕЛ":"Эксклюзивная презентация";
     const meta=isSeriesReleased
@@ -3398,7 +3401,7 @@ async function renderPrereleaseShowcase(){
     const cta=isSeriesReleased?"Открыть серию · читать том I":"Открыть роман · 6 томов";
     return `<article class="premiere-card">
       <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${isMainSeries?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
-      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${book.id==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":"./series.html"}">${book.id==="poka-nas-ne-naydut"?"Открыть премьеру":cta}　↗</a></div>
+      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":"./series.html"}">${canonicalId==="poka-nas-ne-naydut"?"Открыть премьеру":cta}　↗</a></div>
     </article>`;
   }).join('');
 }
