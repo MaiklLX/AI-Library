@@ -3327,6 +3327,7 @@ function confirm18PlusReading(book){
   if(!overlay||!proceed||!back)return Promise.resolve(false);
   title.textContent="Материал для взрослых";
   copy.textContent="«"+String(book.title||"Это произведение")+"» предназначено исключительно для совершеннолетних читателей. В произведении могут затрагиваться темы и ситуации, рассчитанные на аудиторию 18+.";
+  const previousFocus=document.activeElement;
   overlay.hidden=false;
   overlay.classList.add("open");
   return new Promise(resolve=>{
@@ -3336,12 +3337,12 @@ function confirm18PlusReading(book){
       overlay.classList.remove("open");overlay.hidden=true;
       proceed.removeEventListener("click",accept);back.removeEventListener("click",decline);
       overlay.removeEventListener("click",outside);document.removeEventListener("keydown",escape);
-      if(!accepted)document.documentElement.classList.remove("reader-launch-pending");
+      if(!accepted){document.documentElement.classList.remove("reader-launch-pending");if(previousFocus&&typeof previousFocus.focus==="function")previousFocus.focus({preventScroll:true});}
       resolve(accepted);
     };
     const accept=()=>finish(true),decline=()=>finish(false);
     const outside=event=>{if(event.target===overlay)decline()};
-    const escape=event=>{if(event.key==="Escape"){event.preventDefault();decline()}};
+    const escape=event=>{if(event.key==="Escape"){event.preventDefault();decline();return;}if(event.key==="Tab"){if(event.shiftKey&&document.activeElement===proceed){event.preventDefault();back.focus();}else if(!event.shiftKey&&document.activeElement===back){event.preventDefault();proceed.focus();}}};
     proceed.addEventListener("click",accept);back.addEventListener("click",decline);
     overlay.addEventListener("click",outside);document.addEventListener("keydown",escape);
     requestAnimationFrame(()=>proceed.focus({preventScroll:true}));
