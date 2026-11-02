@@ -2937,7 +2937,27 @@ body.reader-open #reader:focus,body.reader-open #readerRight:focus{outline:none!
 @media(max-width:900px){#prereleaseStage{grid-template-columns:minmax(0,1fr);gap:12px}#prereleaseStage .premiere-card{grid-template-columns:112px minmax(0,1fr);min-height:180px;padding:17px}#prereleaseStage .premiere-art{min-height:150px}#prereleaseStage .premiere-book-cover{width:100px}#prereleaseStage .premiere-copy h3{font-size:clamp(25px,5vw,34px)}}
 @media(max-width:680px){#prereleaseStage{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}#prereleaseStage .premiere-card{grid-template-columns:64px minmax(0,1fr)!important;gap:11px!important;padding:10px!important;min-height:0!important}#prereleaseStage .premiere-art{min-height:88px!important;height:88px!important}#prereleaseStage .premiere-book-cover{width:58px!important}#prereleaseStage .premiere-copy h3{font-size:17px!important;margin:0 0 3px!important}#prereleaseStage .premiere-description,#prereleaseStage .premiere-meta,#prereleaseStage .premiere-editor-note{display:none!important}#prereleaseStage .premiere-locked{display:block!important;font-size:8px!important;margin:0!important;padding:5px 7px!important}#prereleaseStage .premiere-open{font-size:9px!important;padding:6px 8px!important;margin-top:6px}}
 @media(prefers-reduced-motion:reduce){#prereleaseStage .premiere-card,#prereleaseStage .premiere-book-cover{animation:none!important;transition:none!important}}
-</style></head>
+</style><style id="ai-library-age-gate-v1">
+html.reader-launch-pending body>#ageGate{visibility:visible!important}
+.age-gate-overlay{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:22px;background:radial-gradient(ellipse at 50% 42%,#302516bb 0%,#090909f2 72%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.age-gate-overlay.open{display:flex}
+.age-gate-dialog{width:min(460px,100%);padding:clamp(25px,5vw,42px);border:1px solid #9b7945;border-radius:22px;background:linear-gradient(155deg,#211d17 0%,#141414 58%,#101010 100%);box-shadow:0 28px 100px #000b,inset 0 0 40px #d9b66d0a;text-align:center;color:#f4f0e7;animation:ageGateAppear .24s ease-out both}
+.age-gate-emblem{display:grid;place-items:center;width:82px;height:82px;margin:0 auto 21px;border:1px solid #d9b66d;border-radius:50%;color:#f0d79e;font:500 35px/1 Georgia,serif;box-shadow:0 0 0 7px #d9b66d0c,0 0 34px #d9b66d20,inset 0 0 24px #d9b66d12}
+.age-gate-emblem span{font-size:19px;margin-left:2px}
+.age-gate-eyebrow{color:#c8a66b;font:800 9px/1.4 system-ui,sans-serif;letter-spacing:.2em}
+.age-gate-dialog h2{margin:10px 0 12px;color:#f4e5c5;font:500 clamp(27px,5vw,34px)/1.12 Georgia,serif}
+.age-gate-dialog p{margin:0 auto;color:#c5bdae;font:14px/1.7 system-ui,sans-serif;max-width:360px}
+.age-gate-dialog .age-gate-confirm{margin-top:14px;color:#eee3cc;font-weight:650}
+.age-gate-actions{display:grid;gap:10px;margin-top:25px}
+.age-gate-actions button{min-height:48px;border-radius:11px;padding:12px 16px;font:750 13px/1.3 system-ui,sans-serif}
+.age-gate-continue{border:1px solid #e2c17d;background:linear-gradient(110deg,#e3c781,#c59c53);color:#17130b;box-shadow:0 7px 24px #d9b66d24}
+.age-gate-back{border:1px solid #ffffff24;background:#ffffff08;color:#c9c1b3}
+.age-gate-continue:focus-visible,.age-gate-back:focus-visible{outline:2px solid #f4dda5;outline-offset:3px}
+.age-gate-footnote{margin-top:21px;color:#8f8067;font:800 8px/1.4 system-ui,sans-serif;letter-spacing:.18em}
+@keyframes ageGateAppear{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.age-gate-dialog{animation:none}}
+</style>
+</head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
 <button class="pill nav-action" id="myLibraryToggle" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h11.5A2.5 2.5 0 0 1 19 7v13H7a2 2 0 0 1-2-2V4.5Z"/><path d="M7 17.5h12M8.5 8h7M8.5 11.5h7"/></svg><span>Моя библиотека</span></button>
@@ -3008,6 +3028,20 @@ body.reader-open #reader:focus,body.reader-open #readerRight:focus{outline:none!
   <div class="controls reader-bottombar" id="readerBottombar"><button class="reader-nav-button" id="prevChapter" type="button" aria-label="Предыдущая часть">←</button><span class="reader-page-status" id="readerPageStatus" role="status" aria-live="polite" aria-atomic="true">СТР. 1</span><button class="reader-nav-button reader-next-chapter" id="nextChapter" type="button" aria-label="Следующая часть">Следующая часть <span aria-hidden="true">→</span></button></div>
   <p class="notice" hidden>Прогресс и настройки чтения сохраняются в этом браузере.</p>
 </div></div>
+<div class="age-gate-overlay" id="ageGate" hidden>
+  <section class="age-gate-dialog" role="dialog" aria-modal="true" aria-labelledby="ageGateTitle" aria-describedby="ageGateCopy">
+    <div class="age-gate-emblem" aria-hidden="true">18<span>+</span></div>
+    <div class="age-gate-eyebrow">ВОЗРАСТНОЕ ПРЕДУПРЕЖДЕНИЕ</div>
+    <h2 id="ageGateTitle">Материал для взрослых</h2>
+    <p id="ageGateCopy">Это произведение предназначено исключительно для совершеннолетних читателей. В нём могут затрагиваться темы и ситуации, рассчитанные на аудиторию 18+.</p>
+    <p class="age-gate-confirm">Продолжая, вы подтверждаете, что вам уже исполнилось 18 лет.</p>
+    <div class="age-gate-actions">
+      <button class="age-gate-continue" id="ageGateContinue" type="button">Мне есть 18 лет · читать</button>
+      <button class="age-gate-back" id="ageGateBack" type="button">Вернуться назад</button>
+    </div>
+    <div class="age-gate-footnote">AI LIBRARY · ЧИТАЙ ОТВЕТСТВЕННО</div>
+  </section>
+</div>
 <script src="./src/platform/runtime.js"></script>
 <script src="./src/platform/library-store.js"></script>
 <script src="./src/platform/download-manager.js"></script>
@@ -3276,6 +3310,45 @@ async function loadSharedBooks() {
   updateContinueReadingButton();
 }
 
+function requires18PlusConfirmation(book){
+  const age=String(book?.ageRating||"").trim().toUpperCase();
+  const genres=Array.isArray(book?.genres)?book.genres.map(value=>String(value||"").trim().toLowerCase()):[];
+  const genreText=String(book?.genre||"").toLowerCase();
+  return age==="18+"||genres.includes("18+")||/(^|\\D)18\\s*\\+/.test(genreText);
+}
+
+function confirm18PlusReading(book){
+  if(!requires18PlusConfirmation(book))return Promise.resolve(true);
+  const overlay=document.getElementById("ageGate");
+  const title=document.getElementById("ageGateTitle");
+  const copy=document.getElementById("ageGateCopy");
+  const proceed=document.getElementById("ageGateContinue");
+  const back=document.getElementById("ageGateBack");
+  if(!overlay||!proceed||!back)return Promise.resolve(false);
+  title.textContent="Материал для взрослых";
+  copy.textContent="«"+String(book.title||"Это произведение")+"» предназначено исключительно для совершеннолетних читателей. В произведении могут затрагиваться темы и ситуации, рассчитанные на аудиторию 18+.";
+  const previousFocus=document.activeElement;
+  overlay.hidden=false;
+  overlay.classList.add("open");
+  return new Promise(resolve=>{
+    let settled=false;
+    const finish=accepted=>{
+      if(settled)return;settled=true;
+      overlay.classList.remove("open");overlay.hidden=true;
+      proceed.removeEventListener("click",accept);back.removeEventListener("click",decline);
+      overlay.removeEventListener("click",outside);document.removeEventListener("keydown",escape);
+      if(!accepted){document.documentElement.classList.remove("reader-launch-pending");if(previousFocus&&typeof previousFocus.focus==="function")previousFocus.focus({preventScroll:true});}
+      resolve(accepted);
+    };
+    const accept=()=>finish(true),decline=()=>finish(false);
+    const outside=event=>{if(event.target===overlay)decline()};
+    const escape=event=>{if(event.key==="Escape"){event.preventDefault();decline();return;}if(event.key==="Tab"){if(event.shiftKey&&document.activeElement===proceed){event.preventDefault();back.focus();}else if(!event.shiftKey&&document.activeElement===back){event.preventDefault();proceed.focus();}}};
+    proceed.addEventListener("click",accept);back.addEventListener("click",decline);
+    overlay.addEventListener("click",outside);document.addEventListener("keydown",escape);
+    requestAnimationFrame(()=>proceed.focus({preventScroll:true}));
+  });
+}
+
 async function openBookById(id) {
   const book = getAllBooks().find(item => String(item.id) === String(id));
   if (!book) return false;
@@ -3288,34 +3361,23 @@ async function openBookById(id) {
   if (String(book.id).startsWith('shared-')) {
     try {
       const serverId = String(book.id).slice(7);
-      const response = await fetch(
-        `${SHARED_BOOKS_URL}/${encodeURIComponent(serverId)}`
-      );
+      const response = await fetch(`${SHARED_BOOKS_URL}/${encodeURIComponent(serverId)}`);
       if (!response.ok) throw new Error('Не удалось загрузить книгу');
-
       const data = await response.json();
       if (!data.ok || !Array.isArray(data.chapters) || !data.chapters.length) {
         throw new Error('У этой книги пока нет доступных глав');
       }
-
       book.chapters = data.chapters.map(chapter =>
-        typeof chapter === 'string'
-          ? chapter
-          : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
+        typeof chapter === 'string' ? chapter : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
       );
       try { localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks)); } catch {}
-      openBook(book.id);
-      return true;
     } catch (error) {
       console.warn('Не удалось обновить общую книгу из сети:', error);
-      if (Array.isArray(book.chapters) && book.chapters.length) {
-        openBook(book.id);
-        return true;
-      } else {
+      if (!Array.isArray(book.chapters) || !book.chapters.length) {
         alert('Не удалось загрузить общую книгу. Проверьте подключение к интернету и попробуйте ещё раз.');
+        return false;
       }
     }
-    return false;
   }
 
   if ((!Array.isArray(book.chapters) || !book.chapters.length) &&
@@ -3341,6 +3403,7 @@ async function openBookById(id) {
     return false;
   }
 
+  if (!(await confirm18PlusReading(book))) return false;
   openBook(book.id);
   return true;
 }
