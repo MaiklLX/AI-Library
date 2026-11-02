@@ -3367,7 +3367,7 @@ async function openBookById(id) {
         throw new Error('У этой книги пока нет доступных глав');
       }
       book.chapters = data.chapters.map(chapter =>
-        typeof chapter === 'string' ? chapter : `${chapter.title ? chapter.title + '\\n\\n' : ''}${chapter.content || ''}`
+        typeof chapter === 'string' ? chapter : `${chapter.title ? chapter.title + '\n\n' : ''}${chapter.content || ''}`
       );
       try { localStorage.setItem(SHARED_BOOKS_KEY, JSON.stringify(sharedBooks)); } catch {}
     } catch (error) {
