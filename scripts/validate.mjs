@@ -308,7 +308,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut"'), "The Poka premiere card must open its own premiere page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v88'"), "The app shell cache must be invalidated after the premiere and series fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The app shell cache must be invalidated after the premiere and series fixes");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
 
@@ -358,6 +358,12 @@ assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and
 
 const openBookByIdSource = html.match(/async function openBookById\(id\) \{([\s\S]*?)\n\}/);
 assert.ok(openBookByIdSource, "Could not isolate the reader book-opening workflow");
+assert.match(html, /function requires18PlusConfirmation\\(book\\)/, "Books with an 18+ rating or genre must be identified for an age warning");
+assert.match(html, /function confirm18PlusReading\\(book\\)/, "The reader must request explicit 18+ confirmation before opening adult works");
+assert.match(html, /id="ageGate"[^>]*|id="ageGate"/, "The accessible age-warning dialog must exist in the reader shell");
+assert.match(openBookByIdSource[1], /await confirm18PlusReading\\(book\\)[\\s\\S]*?openBook\\(book\\.id\\)/, "18+ confirmation must run after book loading and before the reader opens");
+assert.match(html, /id="ageGateContinue"[^>]*|id="ageGateContinue"/, "The age-warning dialog must provide an explicit continue action");
+assert.match(html, /id="ageGateBack"[^>]*|id="ageGateBack"/, "The age-warning dialog must provide a safe back action");
 assert.match(openBookByIdSource[1], /return true;/, "Reader book opening must report successful completion");
 assert.match(openBookByIdSource[1], /return false;/, "Reader book opening must report failed or blocked completion");
 assert.match(openBookByIdSource[1], /book\.title[\s\S]*пререлиз/, "Prerelease notices must use the current book title");
@@ -561,7 +567,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v88'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 
