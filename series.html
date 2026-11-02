@@ -45,6 +45,12 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 .countdown-unit strong{display:block;color:#f2e6cf;font:500 23px/1 Georgia,serif;font-variant-numeric:tabular-nums}
 .countdown-unit span{display:block;margin-top:5px;color:#928b80;font-size:8px;letter-spacing:.12em;text-transform:uppercase}
 .countdown-ended{color:#d8c69f;font-size:11px;line-height:1.5}
+.countdown-published{display:flex;align-items:center;gap:14px;min-height:88px;padding:15px 16px;border-color:rgba(143,190,147,.42);background:radial-gradient(ellipse at 18% 50%,rgba(116,166,124,.16),transparent 65%),linear-gradient(120deg,#d8b9780b,#fff0)}
+.published-emblem{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border:1px solid rgba(161,205,164,.62);border-radius:50%;background:radial-gradient(circle at 35% 30%,#31563c,#18271d);color:#e0f2df;font:600 25px/1 Georgia,serif;box-shadow:0 0 22px rgba(116,166,124,.16)}
+.published-copy{display:flex;flex-direction:column;gap:5px}
+.published-copy strong{color:#e6d3a7;font:500 17px/1.15 Georgia,serif;letter-spacing:.07em}
+.published-copy span{color:#a8c9a9;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:540px){.countdown-published{min-height:72px;padding:11px;gap:10px}.published-emblem{flex-basis:38px;width:38px;height:38px;font-size:21px}.published-copy strong{font-size:14px}.published-copy span{font-size:8px}}
 .status{margin-top:auto;padding-top:2px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .action{min-height:40px;font-size:11px;padding:0 13px}
 .volume-note{margin-top:13px;color:#807a72;font-size:10px;line-height:1.45}
@@ -91,15 +97,15 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
 <div class="section-head"><h2 id="volumesTitle">Шесть частей одной истории</h2><p>Нумерация глав сквозная и не начинается заново.</p></div>
 <div class="volumes" id="volumeList" aria-live="polite"></div>
 </section>
-<aside class="note"><strong>О премьере.</strong> Все шесть томов представлены на этой странице одновременно. Первый том открывается 2 ноября 2026 года в 18:00 по московскому времени; следующие тома — каждую неделю в 18:00 МСК согласно таймерам карточек. Статус карточки не означает, что текст уже открыт для чтения.</aside>
+<aside class="note"><strong>О премьере.</strong> Все шесть томов представлены на этой странице одновременно. Первый том опубликован 2 ноября 2026 года в 18:00 по московскому времени; следующие тома выходят каждую неделю в 18:00 МСК согласно таймерам карточек. Статус карточки не означает, что текст уже открыт для чтения.</aside>
 <footer class="footer"><a href="./index.html">AI Library</a> · Страница серии · Полный текст открывается только после официальной публикации соответствующего тома.</footer>
 </main>
 <script>
 (async function(){
  const list=document.getElementById('volumeList');
- const statusLabels={planned:'Готовится',prerelease:'Закрытая премьера',published:'Опубликован'};
+ const statusLabels={planned:'Готовится',prerelease:'Закрытая премьера',published:'Новинка'};
  const fallback=[
-  {id:'ty-v-moih-planah-tom-01',number:1,title:'Тишина между щелчками',chapters:{from:1,to:16},status:'planned',premiereBookId:'ty-v-moih-planah',bookId:'ty-v-moih-planah-tom-01',cover:'./content/books/ty-v-moih-planah-tom-01-cover.svg',releaseAt:'2026-11-02T18:00:00+03:00'},
+  {id:'ty-v-moih-planah-tom-01',number:1,title:'Тишина между щелчками',chapters:{from:1,to:16},status:'published',premiereBookId:'ty-v-moih-planah',bookId:'ty-v-moih-planah-tom-01',cover:'./content/books/ty-v-moih-planah-tom-01-cover.svg',releaseAt:'2026-11-02T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-02',number:2,title:'Внутренний маршрут',chapters:{from:17,to:34},status:'planned',bookId:'ty-v-moih-planah-tom-02',cover:'./content/books/ty-v-moih-planah-tom-02-cover.svg',releaseAt:'2026-11-09T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-03',number:3,title:'До уточнения принадлежности',chapters:{from:35,to:56},status:'planned',bookId:'ty-v-moih-planah-tom-03',cover:'./content/books/ty-v-moih-planah-tom-03-cover.svg',releaseAt:'2026-11-16T18:00:00+03:00'},
   {id:'ty-v-moih-planah-tom-04',number:4,title:'Шестнадцатая строка',chapters:{from:57,to:66},status:'planned',bookId:'ty-v-moih-planah-tom-04',cover:'./content/books/ty-v-moih-planah-tom-04-cover.svg',releaseAt:'2026-11-23T18:00:00+03:00'},
@@ -132,34 +138,50 @@ a{color:inherit}.topbar{display:flex;align-items:center;justify-content:space-be
   const desc=document.createElement('p');desc.textContent=volume.description||('Главы '+volume.chapters.from+'–'+volume.chapters.to+'.');
   annotation.appendChild(desc);
   const range=document.createElement('div');range.className='range';range.textContent='ГЛАВЫ '+volume.chapters.from+'—'+volume.chapters.to;
-  const countdown=document.createElement('div');countdown.className='countdown';
-  const cLabel=document.createElement('div');cLabel.className='countdown-label';
-  const label=document.createElement('span');label.textContent='До планового выпуска';
-  const date=document.createElement('time');date.className='countdown-date';
-  const release=volume.releaseAt?new Date(volume.releaseAt):null;
-  if(release&&!Number.isNaN(release.getTime())){date.dateTime=release.toISOString();date.textContent=dateFmt.format(release)+' · 18:00 МСК';}
-  else{date.textContent='Дата будет объявлена';}
-  cLabel.append(label,date);
-  const units=document.createElement('div');units.className='countdown-units';
-  const unitDefs=[['days','дн.'],['hours','ч.'],['minutes','мин.'],['seconds','сек.']];
-  const unitNodes={};
-  unitDefs.forEach(([key,caption])=>{const wrap=document.createElement('div');wrap.className='countdown-unit';const value=document.createElement('strong');value.textContent='—';const text=document.createElement('span');text.textContent=caption;wrap.append(value,text);units.appendChild(wrap);unitNodes[key]=value;});
-  const ended=document.createElement('div');ended.className='countdown-ended';ended.hidden=true;
-  countdown.append(cLabel,units,ended);
+  const isPublished=hasReaderEntry&&(volume.status==='published'||(volume.status==='planned'&&release&&!Number.isNaN(release.getTime())&&Date.now()>=release.getTime()));
+  const countdown=document.createElement('div');
+  if(isPublished){
+   countdown.className='countdown countdown-published';
+   const mark=document.createElement('span');mark.className='published-emblem';mark.setAttribute('aria-hidden','true');mark.textContent='✓';
+   const copy=document.createElement('span');copy.className='published-copy';
+   const heading=document.createElement('strong');heading.textContent='ТОМ УЖЕ ВЫШЕЛ';
+   const sub=document.createElement('span');sub.textContent='Новинка · чтение открыто';
+   copy.append(heading,sub);countdown.append(mark,copy);
+  }else{
+   countdown.className='countdown';
+   const cLabel=document.createElement('div');cLabel.className='countdown-label';
+   const label=document.createElement('span');label.textContent='До планового выпуска';
+   const date=document.createElement('time');date.className='countdown-date';
+   if(release&&!Number.isNaN(release.getTime())){date.dateTime=release.toISOString();date.textContent=dateFmt.format(release)+' · 18:00 МСК';}
+   else{date.textContent='Дата будет объявлена';}
+   cLabel.append(label,date);
+   const units=document.createElement('div');units.className='countdown-units';
+   const unitDefs=[['days','дн.'],['hours','ч.'],['minutes','мин.'],['seconds','сек.']];
+   const unitNodes={};
+   unitDefs.forEach(([key,caption])=>{const wrap=document.createElement('div');wrap.className='countdown-unit';const value=document.createElement('strong');value.textContent='—';const text=document.createElement('span');text.textContent=caption;wrap.append(value,text);units.appendChild(wrap);unitNodes[key]=value;});
+   const ended=document.createElement('div');ended.className='countdown-ended';ended.hidden=true;
+   countdown.append(cLabel,units,ended);
+  }
   const row=document.createElement('div');row.className='status';
-  const state=document.createElement('span');state.className='state';state.textContent=statusLabels[volume.status]||'Статус уточняется';
+  const state=document.createElement('span');state.className='state';state.textContent=isPublished?'ДОСТУПЕН':(statusLabels[volume.status]||'Статус уточняется');
   const action=document.createElement('a');action.className='action';
-  if(volume.status==='prerelease'&&volume.premiereBookId){action.href='./premiere.html?book='+encodeURIComponent(volume.premiereBookId);action.textContent='О премьере';}
-  else if(volume.status==='published'&&hasReaderEntry){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
+  if(isPublished){action.href='./index.html?book='+encodeURIComponent('published-'+(volume.bookId||volume.id));action.textContent='Читать том';}
+  else if(volume.status==='prerelease'&&volume.premiereBookId){action.href='./premiere.html?book='+encodeURIComponent(volume.premiereBookId);action.textContent='О премьере';}
   else{action.removeAttribute('href');action.setAttribute('aria-disabled','true');action.textContent='Скоро';}
   row.append(state,action);
-  const note=document.createElement('div');note.className='volume-note';note.textContent='Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
+  const note=document.createElement('div');note.className='volume-note';note.textContent=isPublished?'Официальный релиз состоялся. Полный текст доступен для чтения.':'Обратный отсчёт показывает плановую дату и сам по себе не открывает текст тома.';
   const saved=progress['published-'+(volume.bookId||volume.id)];if(saved&&Number.isInteger(saved.part)){const progressLabel=document.createElement('small');progressLabel.className='range';progressLabel.textContent='Есть сохранённый прогресс чтения';body.appendChild(progressLabel);}
   body.append(topline,title,annotation,range,countdown,row,note);card.append(coverWrap,body);list.appendChild(card);
   const isFirstVolume=Number(volume.number)===1;
-  const annotationTimer={release,annotation,isFirstVolume,isPublished:volume.status==='published'};
-  if(!isFirstVolume&&volume.status!=='published')annotation.classList.add('is-locked');
-  timers.push({release,unitNodes,units,ended,annotationTimer,volume,pill,state,action,hasReaderEntry});
+  const annotationTimer={release,annotation,isFirstVolume,isPublished};
+  if(!isFirstVolume&&!isPublished)annotation.classList.add('is-locked');
+  if(!isPublished){
+   const unitNodes=countdown.querySelectorAll('.countdown-unit strong');
+   const unitMap={days:unitNodes[0],hours:unitNodes[1],minutes:unitNodes[2],seconds:unitNodes[3]};
+   const units=countdown.querySelector('.countdown-units');
+   const ended=countdown.querySelector('.countdown-ended');
+   timers.push({release,unitNodes:unitMap,units,ended,annotationTimer,volume,pill,state,action,hasReaderEntry});
+  }
  });
  function tick(){
   const now=Date.now();
