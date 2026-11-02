@@ -358,12 +358,12 @@ assert.ok(html.includes(".hero .spark,\n  .hero .spark::before"), "Hero star and
 
 const openBookByIdSource = html.match(/async function openBookById\(id\) \{([\s\S]*?)\n\}/);
 assert.ok(openBookByIdSource, "Could not isolate the reader book-opening workflow");
-assert.match(html, /function requires18PlusConfirmation\\(book\\)/, "Books with an 18+ rating or genre must be identified for an age warning");
-assert.match(html, /function confirm18PlusReading\\(book\\)/, "The reader must request explicit 18+ confirmation before opening adult works");
-assert.match(html, /id="ageGate"[^>]*|id="ageGate"/, "The accessible age-warning dialog must exist in the reader shell");
-assert.match(openBookByIdSource[1], /await confirm18PlusReading\\(book\\)[\\s\\S]*?openBook\\(book\\.id\\)/, "18+ confirmation must run after book loading and before the reader opens");
-assert.match(html, /id="ageGateContinue"[^>]*|id="ageGateContinue"/, "The age-warning dialog must provide an explicit continue action");
-assert.match(html, /id="ageGateBack"[^>]*|id="ageGateBack"/, "The age-warning dialog must provide a safe back action");
+assert.ok(html.includes("function requires18PlusConfirmation(book)"), "Books with an 18+ rating or genre must be identified for an age warning");
+assert.ok(html.includes("function confirm18PlusReading(book)"), "The reader must request explicit 18+ confirmation before opening adult works");
+assert.ok(html.includes('id="ageGate"'), "The accessible age-warning dialog must exist in the reader shell");
+assert.ok(openBookByIdSource[1].includes("await confirm18PlusReading(book)") && openBookByIdSource[1].includes("openBook(book.id)"), "18+ confirmation must run before the reader opens");
+assert.ok(html.includes('id="ageGateContinue"'), "The age-warning dialog must provide an explicit continue action");
+assert.ok(html.includes('id="ageGateBack"'), "The age-warning dialog must provide a safe back action");
 assert.match(openBookByIdSource[1], /return true;/, "Reader book opening must report successful completion");
 assert.match(openBookByIdSource[1], /return false;/, "Reader book opening must report failed or blocked completion");
 assert.match(openBookByIdSource[1], /book\.title[\s\S]*пререлиз/, "Prerelease notices must use the current book title");
