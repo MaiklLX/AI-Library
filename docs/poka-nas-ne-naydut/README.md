@@ -15,6 +15,19 @@
 - KT-047-COUPLE-CENTERED-ROMANTIC-SUSPENSE-AND-SCALE-DRAFT.md — черновик романтического саспенса, центральной дуги пары, требований к финальному перевороту и целевого объёма.
 - KT-048-DAMIAN-RESPONSIBILITY-AND-REVEAL-ARC-DRAFT.md — черновик ответственности Дамиана и ступеней раскрытия правды.
 - KT-049-MIRA-DAMIAN-ROMANTIC-ARC-DRAFT.md — черновик романтической дуги пары от притяжения до осознанного выбора.\n- KT-050-AURELIA-CAUSAL-MODEL-DRAFT.md — черновик причинно-следственной модели «Аурелии», Веры, Натальи, Савелия и ответственности Дамиана.
+- KT-051-FINAL-TWIST-AND-FAIR-CLUES-DRAFT.md — модели финального переворота и архитектура честных подсказок.
+- KT-052-CAUSAL-TRUTH-MAP-DRAFT.md — карта причинной истины и уровней раскрытия.
+- KT-053-SAVELY-ARCHITECTURE-COMPARISON-DRAFT.md — сравнение архитектур линии Савелия.
+- KT-054-SAVELY-SELECTED-ARCHITECTURE-DRAFT.md — рабочая выбранная модель линии Савелия.
+- KT-055-SOURCE-CONTINUITY-AUDIT-DRAFT.md — аудит исходных опор и непрерывности.
+- KT-056-SAVELY-TIMELINE-RESOLUTION-DRAFT.md — временная модель линии Савелия.
+- KT-057-AURELIA-INSTITUTION-AND-SAVELY-ACCESS-AUDIT-DRAFT.md — аудит учреждения и доступа Савелия.
+- KT-058-SAVELY-DOCUMENT-AND-ACTOR-MAP-DRAFT.md — карта документов, участников и доступа.
+- KT-059-SAVELY-CONSENT-PROCEDURE-STRESSTEST-DRAFT.md — стресс-тест согласия и процедуры.
+- KT-060-DAMIAN-KNOWLEDGE-AND-ROMANCE-AXIS-DRAFT.md — границы знания Дамиана и связь его ответственности с романтической дугой.
+- KT-061-MASTER-CAUSAL-AND-EVIDENCE-MATRIX-DRAFT.md — общая причинная и доказательная матрица.
+- KT-062-CONTINUITY-AUDIT-AVAILABLE-SOURCES-DRAFT.md — аудит полноты и согласованности доступной архитектуры.
+- KT-062B-ARCHITECTURE-INVENTORY-AND-GAP-CLOSURE-PLAN.md — инвентаризация уже разработанного и план закрытия архитектурных пробелов.
 
 ## Правила работы
 1. Не писать главы, пока полная архитектура обеих книг не согласована.
