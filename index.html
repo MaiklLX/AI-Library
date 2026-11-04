@@ -3070,8 +3070,7 @@ function isSeriesVolumeBook(book) {
 
 function isBookReleaseLocked(book) {
   if (!book) return true;
-  if (book.status === 'prerelease') return true;
-  if (book.status === 'scheduled') {
+  if (book.status === 'prerelease' || book.status === 'scheduled') {
     const releaseTime = Date.parse(book.releaseAt || '');
     return !Number.isFinite(releaseTime) || Date.now() < releaseTime;
   }
@@ -3107,7 +3106,7 @@ function normalizePublishedBook(book) {
     chapterCount: Number.isInteger(Number(book.chapterCount)) && Number(book.chapterCount) >= 0 ? Number(book.chapterCount) : chapters.length,
     contentPath: typeof book.path === 'string' && book.path.startsWith('./content/books/') && book.path.endsWith('.json') && !book.path.includes('..') ? book.path : (typeof book.contentPath === 'string' && book.contentPath.startsWith('./content/books/') && book.contentPath.endsWith('.json') && !book.contentPath.includes('..') ? book.contentPath : ''),
     metadataOnly: isMetadataOnly,
-    chapters: isPrerelease ? [] : chapters
+    chapters: isPrerelease && isBookReleaseLocked(book) ? [] : chapters
   };
 }
 
@@ -3430,7 +3429,7 @@ const canonicalBookId = book => String(book?.id || '').replace(/^published-/, ''
 async function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
-  const upcoming=getAllBooks().filter(book=>book.status==="prerelease");
+  const upcoming=getAllBooks().filter(book=>book.status==="prerelease" || (book.status==="scheduled" && isBookReleaseLocked(book)));
   if(!upcoming.length){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
@@ -3457,17 +3456,31 @@ async function renderPrereleaseShowcase(){
     const kicker=isSeriesReleased?"РОМАН В ШЕСТИ ТОМАХ · ТОМ I УЖЕ ВЫШЕЛ":"Эксклюзивная презентация";
     const meta=isSeriesReleased
       ? '<span>🔞 18+</span><span>✦ Том I · уже вышел</span><span>Тома II–VI · по графику</span>'
-      : '<span>'+(book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ')+'</span><span>◷ '+(Number(book.length)||'—')+' мин чтения</span>'+(book.releaseDate?'<span>Выход: '+esc(new Date(book.releaseDate).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))+'</span>':'')+'<span>Текст пока закрыт</span>';
+      : '<span>'+(book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ')+'</span><span>◷ '+(Number(book.length)||'—')+' мин чтения</span>'+(book.releaseAt?'<span>Выход: '+esc(new Date(book.releaseAt).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))+'</span>':'')+'<span data-premiere-countdown="'+esc(canonicalId)+'">Текст пока закрыт</span>';
     const accessNote=isSeriesReleased
       ? '<div class="premiere-locked premiere-available"><span class="lock" aria-hidden="true">✓</span><span>Первый том уже доступен. Следующие части выходят по графику серии.</span></div>'
       : '<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div>';
     const cta=isSeriesReleased?"Открыть серию · читать том I":"Открыть роман · 6 томов";
     return `<article class="premiere-card">
       <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${isMainSeries?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
-      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":"./series.html"}">${canonicalId==="poka-nas-ne-naydut"?"Открыть премьеру":cta}　↗</a></div>
+      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":canonicalId==="ty-v-moih-planah"?"./series.html":"./book.html?book=published-"+encodeURIComponent(canonicalId)}">${canonicalId==="poka-nas-ne-naydut"?"Открыть премьеру":isMainSeries?cta:"Открыть книгу"}　↗</a></div>
     </article>`;
   }).join('');
 }
+
+function updatePremiereCountdowns(){
+ document.querySelectorAll('[data-premiere-countdown]').forEach(node=>{
+  const id=node.getAttribute('data-premiere-countdown');
+  const book=getAllBooks().find(item=>canonicalBookId(item)===id);
+  const release=Date.parse(book?.releaseAt||'');
+  if(!Number.isFinite(release)){node.textContent='Дата релиза уточняется';return;}
+  const left=release-Date.now();
+  if(left<=0){node.textContent='РЕЛИЗ СОСТОЯЛСЯ · ЧТЕНИЕ ОТКРЫТО';return;}
+  const days=Math.floor(left/86400000),hours=Math.floor(left%86400000/3600000),minutes=Math.floor(left%3600000/60000),seconds=Math.floor(left%60000/1000);
+  node.textContent='До открытия: '+(days?days+' д. ':'')+[hours,minutes,seconds].map(value=>String(value).padStart(2,'0')).join(':');
+ });
+}
+window.setInterval(updatePremiereCountdowns,1000);
 
 
 function renderSeriesCollectionCard(){
