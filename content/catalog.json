@@ -296,7 +296,8 @@
       ],
       "chapterCount": 0,
       "metadataOnly": true,
-      "cover": "./content/books/gromche-chem-tormoza-cover.svg"
+      "cover": "./content/books/gromche-chem-tormoza-cover.svg",
+      "path": "./content/books/gromche-chem-tormoza.json"
     }
   ]
 }
