@@ -146,7 +146,8 @@ for (const entry of publishedCatalog.books) {
   assert.equal(book.id, entry.id, `Book ID does not match catalog entry: ${entry.id}`);
   assert.ok(typeof book.title === "string" && book.title.trim(), `Book title is missing: ${entry.id}`);
   if (book.status === "prerelease") {
-    assert.ok(!Array.isArray(book.chapters) || book.chapters.length === 0, `Prerelease book must not expose chapters: ${entry.id}`);
+    assert.ok(!Array.isArray(book.chapters) || book.chapters.every(chapter => typeof chapter === "string" || (chapter && typeof chapter === "object" && typeof chapter.content === "string")), `Prerelease book chapters have an invalid format: ${entry.id}`);
+    if (Array.isArray(book.chapters) && book.chapters.length) assert.ok(Number.isFinite(Date.parse(entry.releaseAt || book.releaseAt || '')), `Prerelease book with chapters requires a valid releaseAt: ${entry.id}`);
   } else {
     assert.ok(Array.isArray(book.chapters) && book.chapters.length > 0, `Book must contain at least one chapter: ${entry.id}`);
     assert.equal(String(book.revision || ""), String(entry.revision || ""), `Published book revision must match its catalog metadata: ${entry.id}`);
