@@ -19,6 +19,9 @@
     "командная работа"
   ],
   "cover": "./content/books/gromche-chem-tormoza-cover.svg",
-  "chapterCount": 0,
-  "length": 20
+  "chapterCount": 12,
+  "length": 160,
+  "wordCount": 30000,
+  "readingTimeMinutes": 160,
+  "targetWordCount": 30000
 }

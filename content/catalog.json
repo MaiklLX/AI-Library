@@ -281,7 +281,7 @@
       "tag": "ЗАКРЫТЫЙ ПРЕРЕЛИЗ",
       "cls": "adventure",
       "symbol": "✦",
-      "length": 20,
+      "length": 160,
       "language": "ru",
       "status": "prerelease",
       "releaseAt": "2026-11-07T18:00:00+03:00",
@@ -294,10 +294,12 @@
         "первая любовь",
         "командная работа"
       ],
-      "chapterCount": 0,
+      "chapterCount": 12,
       "metadataOnly": true,
       "cover": "./content/books/gromche-chem-tormoza-cover.svg",
-      "path": "./content/books/gromche-chem-tormoza.json"
+      "path": "./content/books/gromche-chem-tormoza.json",
+      "wordCount": 30000,
+      "readingTimeMinutes": 160
     }
   ]
 }
