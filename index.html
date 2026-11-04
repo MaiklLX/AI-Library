@@ -3064,8 +3064,9 @@ function getAllBooks() {
 }
 
 function isSeriesVolumeBook(book) {
-  // Тома шеститомной серии показываются только внутри страницы серии, не отдельными карточками каталога.
-  return /^published-ty-v-moih-planah-tom-\d{2}$/.test(String(book?.id || ''));
+  // Тома шеститомной серии доступны только со страницы серии: учитываем и исходный, и нормализованный ID.
+  const id=String(book?.id || '').replace(/^published-/, '');
+  return /^ty-v-moih-planah-tom-\d{2}$/.test(id);
 }
 
 function isBookReleaseLocked(book) {
@@ -3429,7 +3430,7 @@ const canonicalBookId = book => String(book?.id || '').replace(/^published-/, ''
 async function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
-  const upcoming=getAllBooks().filter(book=>book.status==="prerelease" || (book.status==="scheduled" && isBookReleaseLocked(book)));
+  const upcoming=getAllBooks().filter(book=>!isSeriesVolumeBook(book) && (book.status==="prerelease" || (book.status==="scheduled" && isBookReleaseLocked(book)));
   if(!upcoming.length){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
@@ -3510,6 +3511,19 @@ function renderPokaDuologyCard(){
  '<div class="book-back-actions"><a class="btn read" href="./premiere.html?book=poka-nas-ne-naydut">Страница премьеры　→</a></div></div></div></article>';
 }
 
+function renderGromchePrereleaseCard(){
+ const title='Громче, чем тормоза';
+ const description='В Верхневолжске собираются закрыть скейт-парк «Космос». Лада Крылова и Егор Савин — скейтерша и басист группы «Тихий режим» — оказываются по одну сторону истории, когда из ДК «Маяк» исчезает аппаратура, а вместе с ней может пропасть запись публичных слушаний, обещавшая парку будущее. След ведёт через ночные улицы, старое трамвайное депо и архив вокзала. Им предстоит выяснить, кому выгодно стереть эту запись, научиться доверять друг другу и решить, чего стоит место, если за него никто не готов бороться.';
+ return '<article class="book series-collection-card skate-prerelease-card" data-book-card data-skate-prerelease>'+
+ '<div class="book-flip-inner">'+
+ '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о книге: '+title+'" aria-expanded="false">'+
+ '<span class="cover adventure has-cover"><img class="cover-art" src="./content/books/gromche-chem-tormoza-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">ЗАКРЫТЫЙ ПРЕРЕЛИЗ · 12+</span><span class="cover-progress"><span aria-hidden="true">✦</span><span>7 ноября</span></span></span></div>'+
+ '<div class="book-face book-back"><div class="book-back-top"><span class="book-back-label">ПОДРОСТКОВОЕ ПРИКЛЮЧЕНИЕ · 12+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<h3>'+title+'</h3><div class="author">AI LIBRARY · ЭКШЕН И РОМКОМ</div><p class="desc">'+description+'</p>'+
+ '<div class="meta"><span>Скейтбординг · рок-музыка</span><span>7 ноября · 18:00 МСК</span></div>'+
+ '<div class="book-back-actions"><a class="btn read" href="./premiere.html?book=gromche-chem-tormoza">Открыть премьеру　→</a></div></div></div></article>';
+}
+
 function renderBookCard(book){
  const progress=getReadingProgress()[book.id],total=Number(book.chapterCount)|| (Array.isArray(book.chapters)?book.chapters.length:0);
  const read=progress&&Number.isInteger(progress.part)&&total?Math.min(total,Math.max(0,progress.part+1)):0;
@@ -3561,9 +3575,9 @@ if(s==='unread'){
 if(s==='completed'){
   list.sort((a,b)=>readCount(b)-readCount(a));
 }
-document.querySelector("#catalogCount").textContent=String(all.length+2);
+document.querySelector("#catalogCount").textContent=String(all.length+3);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const skateTerms=['громче, чем тормоза','скейт','скейтер','рок','егор','лада','космос','подростковое приключение'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const showSkateCollection=!onlyFav&&(genre==="Все"||genre==="Приключения"||genre==="Романтика")&&(!q||skateTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const skateCard=showSkateCollection?renderGromchePrereleaseCard():'';const collectionCards=seriesCard+duologyCard+skateCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
