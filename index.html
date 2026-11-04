@@ -3430,7 +3430,7 @@ const canonicalBookId = book => String(book?.id || '').replace(/^published-/, ''
 async function renderPrereleaseShowcase(){
   const root=document.querySelector("#prereleaseStage");
   if(!root)return;
-  const upcoming=getAllBooks().filter(book=>!isSeriesVolumeBook(book) && (book.status==="prerelease" || (book.status==="scheduled" && isBookReleaseLocked(book)));
+  const upcoming=getAllBooks().filter(book=>!isSeriesVolumeBook(book) && (book.status==="prerelease" || (book.status==="scheduled" && isBookReleaseLocked(book))));
   if(!upcoming.length){
     root.innerHTML='<div class="premiere-empty"><div class="premiere-empty-icon" aria-hidden="true">✦</div><div><h3>Следующая премьера появится здесь</h3><p>AI Library выпускает книги поэтапно: сначала закрытая презентация, затем официальный релиз и доступ к полному тексту. Возвращайся, чтобы первым увидеть новые истории.</p></div></div>';
     return;
