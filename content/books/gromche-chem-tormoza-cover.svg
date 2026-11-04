@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="t d">
+<title id="t">Громче, чем тормоза</title><desc id="d">Ночной скейт-парк, скейтборд и бас-гитара на фоне города и трамвайных огней.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#102b39"/><stop offset=".55" stop-color="#17232c"/><stop offset="1" stop-color="#111319"/></linearGradient>
+ <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#293a40"/><stop offset="1" stop-color="#090d12"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe1a0"/><stop offset="1" stop-color="#b47b39"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="16"/></filter>
+</defs>
+<rect width="900" height="1200" fill="url(#bg)"/>
+<circle cx="690" cy="350" r="170" fill="#d69b50" opacity=".16" filter="url(#glow)"/>
+<g fill="#0a1118" opacity=".95"><path d="M0 550V340h85v-80h62v180h66V300h95v250h72V390h88v160h68V280h100v270h65V365h90v185h109v-95h70v745H0z"/></g>
+<g stroke="#d7a765" opacity=".42" stroke-width="5"><path d="M0 640H900M0 662H900"/><path d="M90 0L260 1200M820 0L620 1200"/></g>
+<path d="M0 730 Q210 650 420 735 T900 700V1200H0Z" fill="url(#ground)"/>
+<path d="M60 910 Q250 800 430 920 T860 885" fill="none" stroke="#e6b96f" stroke-width="5" opacity=".35"/>
+<g transform="translate(170 730) rotate(-13)">
+ <rect x="0" y="0" width="360" height="42" rx="20" fill="#10151a" stroke="#e8c27f" stroke-width="6"/>
+ <circle cx="65" cy="52" r="22" fill="#080b10" stroke="#d7a765" stroke-width="6"/><circle cx="295" cy="52" r="22" fill="#080b10" stroke="#d7a765" stroke-width="6"/>
+ <path d="M80 20H280" stroke="#dce5e3" stroke-width="3" opacity=".5"/>
+</g>
+<g transform="translate(540 570) rotate(12)">
+ <path d="M115 70 C35 25 5 110 52 180 C-5 270 55 370 145 330 C230 380 290 275 225 190 C275 105 210 25 145 70Z" fill="#12191e" stroke="url(#gold)" stroke-width="10"/>
+ <path d="M140 75V-120L166-155L192-120V85" fill="#11171d" stroke="#d5a55e" stroke-width="8"/>
+ <path d="M162 -140V310" stroke="#f4d7a0" stroke-width="3"/>
+ <circle cx="145" cy="195" r="28" fill="none" stroke="#d5a55e" stroke-width="5"/>
+ <path d="M135 100L155 290M160 100L180 290" stroke="#d5a55e" stroke-width="3" opacity=".65"/>
+</g>
+<g fill="#f5d9a2" opacity=".9"><circle cx="130" cy="470" r="4"/><circle cx="760" cy="580" r="5"/><circle cx="690" cy="670" r="3"/></g>
+<path d="M90 170H810" stroke="#e5bd79" stroke-width="2" opacity=".6"/>
+<text x="72" y="145" fill="#e5bd79" font-family="Arial,sans-serif" font-size="24" letter-spacing="9">AI LIBRARY · ПРЕРЕЛИЗ</text>
+<text x="70" y="270" fill="#f6f0e4" font-family="Georgia,serif" font-size="83" font-weight="bold">ГРОМЧЕ,</text>
+<text x="70" y="360" fill="#f6f0e4" font-family="Georgia,serif" font-size="83" font-weight="bold">ЧЕМ</text>
+<text x="70" y="450" fill="#e8bd76" font-family="Georgia,serif" font-size="83" font-weight="bold">ТОРМОЗА</text>
+<text x="74" y="1080" fill="#e6d5b7" font-family="Arial,sans-serif" font-size="25" letter-spacing="4">ОДНА НОЧЬ · ОДИН ГОРОД · ОДИН ШАНС</text>
+<text x="74" y="1130" fill="#aab6b7" font-family="Arial,sans-serif" font-size="19" letter-spacing="5">ПОДРОСТКОВОЕ ПРИКЛЮЧЕНИЕ / РОМКОМ</text>
+</svg>
