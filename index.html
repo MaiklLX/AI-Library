@@ -3475,7 +3475,7 @@ function updatePremiereCountdowns(){
   const release=Date.parse(book?.releaseAt||'');
   if(!Number.isFinite(release)){node.textContent='Дата релиза уточняется';return;}
   const left=release-Date.now();
-  if(left<=0){node.textContent='РЕЛИЗ СОСТОЯЛСЯ · ЧТЕНИЕ ОТКРЫТО';return;}
+  if(left<=0){node.textContent='РЕЛИЗ СОСТОЯЛСЯ · ЧТЕНИЕ ОТКРЫТО';const card=node.closest('.premiere-card');const seal=card?.querySelector('.premiere-stamp');if(seal){seal.classList.add('premiere-stamp-new');seal.textContent='НОВИНКА';seal.setAttribute('aria-label','Книга уже доступна');}const note=card?.querySelector('.premiere-locked');if(note){note.classList.add('premiere-available');note.textContent='✓ Полный текст открыт для чтения';}return;}
   const days=Math.floor(left/86400000),hours=Math.floor(left%86400000/3600000),minutes=Math.floor(left%3600000/60000),seconds=Math.floor(left%60000/1000);
   node.textContent='До открытия: '+(days?days+' д. ':'')+[hours,minutes,seconds].map(value=>String(value).padStart(2,'0')).join(':');
  });
