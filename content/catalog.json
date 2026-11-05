@@ -25,7 +25,8 @@
       ],
       "cover": "./content/books/sovremennye-skazki-roza-chaynaya-cover.jpg",
       "ageRating": "18+",
-      "wordCount": 7233
+      "wordCount": 7233,
+      "revision": "1.0"
     },
     {
       "id": "avtomaticheskaya-polnoch",
