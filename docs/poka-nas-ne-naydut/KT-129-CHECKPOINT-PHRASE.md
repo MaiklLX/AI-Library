@@ -1,7 +1,7 @@
 КТ-129 — контрольная фраза для продолжения романа «Пока нас не найдут».
 
 Репозиторий: MaiklLX/AI-Library
-Папка: docs/poka-nas-ne-naydут/
+Папка: docs/poka-nas-ne-naydut/
 Ветка: editorial/kt-061-master-causal-evidence-matrix-2026-11-03
 
 Последняя завершённая точка: КТ-129, глава I/33 «Не переписывать память», POV Дамиана.
