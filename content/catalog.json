@@ -2,6 +2,34 @@
   "version": 1,
   "books": [
     {
+      "id": "sovremennye-skazki-roza-chaynaya-ai-library-edition",
+      "path": "./content/books/sovremennye-skazki-roza-chaynaya-ai-library-edition.json",
+      "metadataOnly": true,
+      "chapterCount": 13,
+      "title": "Современные сказки. Сборник эротических рассказов",
+      "subtitle": "Редакционное издание AI Library · первая история",
+      "author": "Роза Чайная",
+      "genre": "Эротическая проза · современные сказки",
+      "description": "Самостоятельное редакционное издание AI Library на основе произведения Розы Чайной. Первая история сборника — «Сказка о Царевне и семи богатырях»: язык, ритм, диалоги и развитие отношений бережно переработаны, чтобы яснее звучали характеры героев, личные границы и собственный выбор Марьи.",
+      "tag": "ПЕРЕВЫПУСК · 18+",
+      "cls": "romance",
+      "symbol": "✦",
+      "length": 35,
+      "language": "ru",
+      "status": "published",
+      "themes": [
+        "современная интерпретация сказок",
+        "эротическая проза",
+        "юмор",
+        "романтические отношения",
+        "взаимность и личные границы"
+      ],
+      "cover": "./content/books/sovremennye-skazki-roza-chaynaya-ai-library-edition-cover.svg",
+      "ageRating": "18+",
+      "wordCount": 7428,
+      "revision": "AI Library Editorial Edition 1.0"
+    },
+    {
       "id": "sovremennye-skazki-roza-chaynaya",
       "path": "./content/books/sovremennye-skazki-roza-chaynaya.json",
       "metadataOnly": true,
