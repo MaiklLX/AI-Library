@@ -1,5 +1,13 @@
-# KT-138 — Book II opening preparation
+# КТ-138 — подготовка начала книги II
 
-Book I is complete: 40 chapters and one epilogue. Book II begins about seven weeks after the epilogue. Mira continues her independent work and prepares her documentary audio series. She maintains distance from Damian and respects Vera's chosen contact channel. Damian keeps the original business packet until II/12; independent verification follows in II/13. Milena's professional consequences are revealed in II/3, without an automatic dismissal. The proposed Book II title remains unapproved; use the neutral heading “Book II”.
+Книга I завершена: 40 глав и эпилог «Открытый канал». Между эпилогом и II/1 проходит 6–8 недель, рабочая точка — около семи недель.
 
-Next: KT-139, Book II, Chapter 1, Mira POV. Establish the seven-week interval, her ongoing work, and an independent lead that opens further checking without settling the question.
+Мира продолжает оплачиваемую работу, завершает конкурсный пакет, согласует права на публичные архивные фрагменты и готовит производственный план «Голосов, которые остаются». Она сохраняет дистанцию с Дамианом и соблюдает выбранный Верой канал связи. Итоговое предложение о производстве сезона не появляется раньше II/38.
+
+Оригинальный деловой пакет Дамиана остаётся у него до II/12; независимая проверка — II/13. Последствия внутренней проверки Милены раскрываются в II/3: временное отстранение от конфиденциальных проектов, потеря ключевого аккаунта и уход одного крупного клиента. Автоматического увольнения нет.
+
+Рабочее название книги II не утверждено; в заголовках используется нейтральное «Книга II». Новый источник в II/1 только открывает дальнейшую проверку регистрационного расхождения. Он не раскрывает личность человека и не связывает Веру с «Аурелией».
+
+STORY_BIBLE.md и план КТ-080 не менялись. Публичный релиз не выполнялся.
+
+Следующий шаг: КТ-139 — глава II/1 «Жизнь продолжается», POV Миры, примерно через семь недель после эпилога. Показать её собственную профессиональную жизнь, сохранённую дистанцию с Дамианом и независимый след, который требует проверки, но не даёт окончательного вывода.
