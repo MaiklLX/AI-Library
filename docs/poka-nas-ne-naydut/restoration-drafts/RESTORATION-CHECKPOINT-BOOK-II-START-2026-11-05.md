@@ -241,3 +241,7 @@
 - Раскрыта отдельная ложь Дамиана Мире: он получил и открыл дискредитирующую редакцию до совещания, но прежде утверждал обратное. Он сам называет это отдельной ложью и не растворяет её в коллективной вине семьи.
 - Мира фиксирует разные уровни участия и не приписывает всем Ветровым одинаковую ответственность. Следующий шаг — II/30: уже переданный пакет применяется в официальном процессе; никаких новых оригиналов и повторной передачи.
 - Оригинал BOOK-II-CHAPTER-29.md сохранён: SHA fcd0bc068e020ed83d5f5c8f5b9a6274567510cd, исходный объём 394 слова.
+
+
+## Chapter 29 final check
+RESTORED and REVIEWED each contain 1,606 words. Both carry the same content SHA: 17a53528730c50e70531ba4022bd44b510e7caec. Original chapter unchanged. Next: Chapter 30, use the existing Chapter 12 package in the official process; no second transfer.
