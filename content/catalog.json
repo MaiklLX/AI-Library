@@ -2,6 +2,32 @@
   "version": 1,
   "books": [
     {
+      "id": "sovremennye-skazki-roza-chaynaya",
+      "path": "./content/books/sovremennye-skazki-roza-chaynaya.json",
+      "metadataOnly": true,
+      "chapterCount": 13,
+      "title": "Современные сказки. Сборник эротических рассказов",
+      "subtitle": "Сборник · первая история",
+      "author": "Роза Чайная",
+      "genre": "Эротическая проза · современные сказки",
+      "description": "Третий авторский сборник мини-произведений, переосмысляющих знакомые сказочные сюжеты в современном мире. В представленном EPUB размещена первая история — «Сказка о Царевне и семи богатырях». Сборник будет пополняться по мере публикации следующих историй.",
+      "tag": "НОВИНКА · 18+",
+      "cls": "romance",
+      "symbol": "✦",
+      "length": 33,
+      "language": "ru",
+      "status": "published",
+      "themes": [
+        "современная интерпретация сказок",
+        "эротическая проза",
+        "юмор",
+        "романтические отношения"
+      ],
+      "cover": "./content/books/sovremennye-skazki-roza-chaynaya-cover.jpg",
+      "ageRating": "18+",
+      "wordCount": 7233
+    },
+    {
       "id": "avtomaticheskaya-polnoch",
       "path": "./content/books/avtomaticheskaya-polnoch.json",
       "metadataOnly": true,
