@@ -1,0 +1,3 @@
+# КТ-215 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT215-BOOK-I-14-I-15-FINAL-PASS`
