@@ -4,7 +4,7 @@
 Созданы отдельные восстановительная и литературно вычитанная версии главы II/35, POV Дамиана. Исходный файл `BOOK-II-CHAPTER-35.md` отсутствует в рабочей ветке, поэтому оригинал не перезаписывался; глава создана по утверждённой архитектуре КТ-080.
 
 - RESTORED: `restoration-drafts/BOOK-II-CHAPTER-35-RESTORED-DRAFT.md`
-  - SHA: `015d7b5a0597c1d91774a89ad9224ff86bd80bbf`
+  - SHA: `d35884af8de7c325b95893ba8747283d9df95cdd`
   - Объём: **1 684 слова**
 - REVIEWED: `restoration-drafts/BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md`
   - SHA: `e91fd0635922e09ca33d72648e158c2fe492fb32`
