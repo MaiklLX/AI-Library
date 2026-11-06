@@ -245,3 +245,10 @@
 
 ## Chapter 29 final check
 RESTORED and REVIEWED each contain 1,606 words. Both carry the same content SHA: 17a53528730c50e70531ba4022bd44b510e7caec. Original chapter unchanged. Next: Chapter 30, use the existing Chapter 12 package in the official process; no second transfer.
+
+
+## II/29 — correction to align the chapter map and source sequence
+- Previous II/29 draft superseded: it prematurely disclosed Damián's admission and shifted the confession out of II/31. The new version restores Mira's POV and the chapter's central action: she verifies metadata, asks when Damián first saw the late version, receives an inconsistent answer, and records the discrepancy without assigning motive prematurely.
+- The late family expansion remains a separate documentary layer: initial incomplete record, later summary, and subsequent family-office expansion are distinguished. Authorship of individual edits and the initiator of the original concealment remain unknown.
+- RESTORED and REVIEWED: 1655 words each; independently updated. Original BOOK-II-CHAPTER-29.md remains untouched.
+- II/30 remains Damián's opportunity to confess: he considers a truthful reply but delays and evades; II/31 is the direct admission and Mira's confrontation; II/32 is the boundary.
