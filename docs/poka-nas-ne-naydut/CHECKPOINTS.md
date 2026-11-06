@@ -1786,7 +1786,7 @@ POV Миры. Через ранее согласованный канал она
 
 Созданы отдельные восстановительная и литературно вычитанная версии главы II/35, POV Дамиана. Исходный файл `BOOK-II-CHAPTER-35.md` отсутствует в рабочей ветке, поэтому оригинал не перезаписывался; глава создана по утверждённой архитектуре КТ-080.
 - `restoration-drafts/BOOK-II-CHAPTER-35-RESTORED-DRAFT.md` — SHA `d35884af8de7c325b95893ba8747283d9df95cdd`, **1 684 слова**.
-- `restoration-drafts/BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md` — SHA `e91fd0635922e09ca33d72648e158c2fe492fb32`, **1 692 слова**.
+- `restoration-drafts/BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md` — SHA `df9cb14e0f78ddcfc44b2a54face1b890c47d8f8`, **1 692 слова**.
 - Отчёт: `KT-173-CHAPTER-II-35-WRITING-AND-LITERARY-EDIT.md`.
 - Контрольная фраза: `KT-173-CHECKPOINT-PHRASE.md`.
 
