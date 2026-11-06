@@ -1,0 +1,3 @@
+# КТ-220 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT220-LIVE-BRANCH-STATUS-2026-11-06`
