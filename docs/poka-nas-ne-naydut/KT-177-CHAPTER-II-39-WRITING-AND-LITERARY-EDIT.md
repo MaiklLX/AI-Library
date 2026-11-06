@@ -4,11 +4,11 @@
 Глава II/39 восстановлена и литературно вычитана отдельно, POV Дамиана. Исходный BOOK-II-CHAPTER-39.md в рабочей ветке отсутствует; оригинал не перезаписывался.
 
 RESTORED: restoration-drafts/BOOK-II-CHAPTER-39-RESTORED-DRAFT.md
-SHA: ожидает повторного fetch после записи.
+SHA: 892aaaa38bc80c3605253d4c0d82f546b74ba5a9
 Объём: 1 681 слово.
 
 REVIEWED: restoration-drafts/BOOK-II-CHAPTER-39-REVIEWED-DRAFT.md
-SHA: ожидает повторного fetch после записи.
+SHA: e90aa1c51174d31df7de3f5051085e42e4884a85
 Объём: 1 677 слов.
 
 ## Сюжет и continuity
