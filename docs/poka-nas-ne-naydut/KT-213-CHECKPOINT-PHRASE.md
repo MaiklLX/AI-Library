@@ -1,0 +1,3 @@
+# КТ-213 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT213-BOOK-I-04-RESTORATION`
