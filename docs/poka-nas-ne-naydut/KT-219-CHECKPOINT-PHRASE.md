@@ -1,0 +1,3 @@
+# КТ-219 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT219-BOOK-I-EPILOGUE-FINAL-SYNC`
