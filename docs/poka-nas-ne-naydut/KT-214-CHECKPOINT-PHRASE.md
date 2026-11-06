@@ -1,0 +1,3 @@
+# КТ-214 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT214-BOOK-I-07-I-13-FINAL-PASS`
