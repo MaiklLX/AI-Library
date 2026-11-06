@@ -252,3 +252,10 @@ RESTORED and REVIEWED each contain 1,606 words. Both carry the same content SHA:
 - The late family expansion remains a separate documentary layer: initial incomplete record, later summary, and subsequent family-office expansion are distinguished. Authorship of individual edits and the initiator of the original concealment remain unknown.
 - RESTORED and REVIEWED: 1655 words each; independently updated. Original BOOK-II-CHAPTER-29.md remains untouched.
 - II/30 remains Damián's opportunity to confess: he considers a truthful reply but delays and evades; II/31 is the direct admission and Mira's confrontation; II/32 is the boundary.
+
+
+## II/30 — «Ещё один день»
+- POV: Дамиан. RESTORED/REVIEWED созданы отдельно; 1617 слов.
+- Дамиан знает точные метаданные: получил позднюю редакцию накануне совещания, открыл до встречи и согласовал заранее. Он готовит правдивый ответ, но не отправляет его; вместо этого повторно просит сверить уже подтверждённые данные и уклоняется от прямого ответа Мире.
+- Он не раскрывает признание раньше II/31. В конце принимает встречу на следующий день, понимая, что больше не может ссылаться на неясность фактов.
+- Оригинал BOOK-II-CHAPTER-30.md сохранён: SHA c801fb03c5aec64259a80144e7290a9cdf28d8c7; исходный текст не заменён. Следующий шаг — II/31, POV Миры: прямое признание Дамиана, её вопросы о личной ответственности и чёткие границы его знания.
