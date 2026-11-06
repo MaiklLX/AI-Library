@@ -7,7 +7,7 @@
   - SHA: `d35884af8de7c325b95893ba8747283d9df95cdd`
   - Объём: **1 684 слова**
 - REVIEWED: `restoration-drafts/BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md`
-  - SHA: `e91fd0635922e09ca33d72648e158c2fe492fb32`
+  - SHA: `df9cb14e0f78ddcfc44b2a54face1b890c47d8f8`
   - Объём: **1 692 слова**
 
 ## Сюжет и канон
