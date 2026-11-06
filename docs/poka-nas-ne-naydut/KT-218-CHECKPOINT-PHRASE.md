@@ -1,0 +1,3 @@
+# КТ-218 — контрольная фраза
+
+`POKA-NAS-NE-NAYDUT-KT218-BOOK-I-16-40-SYNC-AND-NEW-RESERVE`
