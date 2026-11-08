@@ -2957,6 +2957,15 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
 @keyframes ageGateAppear{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.age-gate-dialog{animation:none}}
 </style>
+
+<style id="poka-duology-featured-v2">
+#books .duology-collection-card{position:relative;isolation:isolate}
+#books .duology-collection-card:after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border:1px solid rgba(217,182,109,.52);border-radius:inherit;box-shadow:inset 0 0 22px rgba(217,182,109,.055),0 0 22px rgba(217,182,109,.08)}
+#books .duology-collection-card .duology-back{border-color:#b18c4b;background:radial-gradient(ellipse at 100% 0%,#d9b66d20,transparent 48%),linear-gradient(155deg,#292319,#151515 78%)}
+#books .duology-collection-card .duology-release-stamp{border-color:#d1b16f;color:#e4ca91;box-shadow:inset 0 0 0 3px #d1b16f22,0 0 22px #d9b66d18}
+#books .duology-collection-card .book-back-actions .read{border-color:#d9b66d;background:linear-gradient(135deg,#d9b66d,#b38b47);color:#17130b}
+</style>
+
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3499,7 +3508,7 @@ function renderSeriesCollectionCard(){
 
 function renderPokaDuologyCard(){
  const title='Пока нас не найдут';
- const description='Мира находит голос исчезнувшей сестры. След ведёт к «Аурелии», семье Ветровых и Дамиану, которому трудно доверять.';
+ const description='Мира Соколова восстанавливает старые записи и находит голос исчезнувшей сестры. След ведёт к клинике «Аурелия», семье Ветровых и Дамиану — человеку, которому предстоит доказать, что ему можно доверять.';
  return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card>'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
@@ -3508,7 +3517,7 @@ function renderPokaDuologyCard(){
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
  '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
  '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
- '<div class="book-back-actions"><a class="btn read" href="./premiere.html?book=poka-nas-ne-naydut">Страница премьеры　→</a></div></div></div></article>';
+ '<div class="book-back-actions"><a class="btn read" href="./poka-nas-ne-naydut.html">Открыть дилогию　→</a></div></div></div></article>';
 }
 
 function renderGromchePrereleaseCard(){
