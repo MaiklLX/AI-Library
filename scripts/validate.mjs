@@ -674,6 +674,10 @@ assert.equal(new Date(duologySeriesManifest.volumes[1].releaseAt).getTime() - ne
 assert.match(collectionPage, /Аннотация откроется за 48 часов до релиза\./, "Hidden second-volume annotation must show a clear reveal notice");
 assert.match(collectionPage, /item\.annotationReveal[\s\S]*item\.description\.textContent = item\.annotation/, "Second-volume annotation must appear automatically at its reveal time");
 assert.match(collectionPage, /countdowns\.push\(\{ release: release/, "Each scheduled volume must receive a live countdown");
+assert.match(collectionPage, /volume\.releaseLabel \|\| \("Плановый выпуск/, "Volume-specific release labels must be shown on countdown cards");
+assert.match(collectionPage, /countdown\.setAttribute\("role", "group"\)/, "Countdown must expose an accessible group label");
+assert.match(collectionPage, /countdown-date/, "Countdown release label must have a dedicated visual style");
+assert.ok(duologySeriesManifest.volumes[0].annotation.length > 180 && duologySeriesManifest.volumes[1].annotation.length > 180, "Both duology volumes must have substantive spoiler-safe annotations");
 assert.ok(!JSON.stringify(duologySeriesManifest).includes("publishing-drafts") && !JSON.stringify(duologySeriesManifest).includes('"chapters": ['), "Public duology manifest must contain metadata only, never manuscript chapters");
 assert.equal(publishedCatalog.books.find(entry => entry.id === "poka-nas-ne-naydut").collectionHref, "./collection.html?id=poka-nas-ne-naydut", "Duology shelf card must use the universal collection route");
 assert.equal(sixBookCollection.collectionHref, "./collection.html?id=ty-v-moih-planah", "Six-volume shelf card must use the universal collection route");
