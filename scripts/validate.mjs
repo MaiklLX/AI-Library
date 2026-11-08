@@ -713,4 +713,4 @@ assert.ok(collectionPage.includes(".volume-primary::before"), "Book I must have 
 assert.ok(collectionPage.includes(".volume-continuation{border-color:rgba(216,185,120,.16)"), "Book II must read as a quieter continuation without being hidden");
 assert.ok(collectionPage.includes('card.className = "volume" + (isFirstDuologyVolume ? " volume-primary" : (isSecondDuologyVolume ? " volume-continuation" : ""))'), "Duology volume hierarchy must be assigned by volume number, not by fragile card order");
 assert.ok(collectionPage.includes('card.setAttribute("aria-label", "Книга I — первая часть дилогии")') && collectionPage.includes('card.setAttribute("aria-label", "Книга II — продолжение дилогии")'), "Duology card hierarchy must have descriptive accessible labels");
-assert.ok(collectionPage.includes("@media(max-width:600px){.volumes.duology-grid{grid-template-columns:1fr}"), "Duology cards must return to a single-column layout on phones");
+assert.match(collectionPage, /@media\(max-width:600px\)\{\.volumes\.duology-grid\{grid-template-columns:1fr(?:;gap:[^}]+)?\}\}/, "Duology cards must return to a single-column layout on phones");
