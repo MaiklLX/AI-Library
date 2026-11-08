@@ -706,3 +706,11 @@ assert.ok(collectionPage.includes(".volume-body{min-width:0}"), "Volume card con
 assert.ok(collectionPage.includes("@media(max-width:380px)") && collectionPage.includes("grid-template-columns:96px minmax(0,1fr)"), "Narrow phones must use a compact but stable volume-card layout");
 assert.ok(collectionPage.includes("@media(prefers-reduced-motion:reduce)") && collectionPage.includes(".back,.btn,.action{transition:none}"), "Collection interactions must respect reduced-motion preferences");
 
+assert.ok(collectionPage.includes('if (id === "poka-nas-ne-naydut") byId("volumeList").classList.add("duology-grid")'), "The two-volume collection must use a balanced two-card layout");
+assert.ok(collectionPage.includes("grid-template-columns:repeat(2,minmax(0,1fr))"), "Duology volume cards must use the full desktop width in two columns");
+assert.ok(collectionPage.includes(".volume-primary{border-color:rgba(216,185,120,.52)"), "Book I must receive a restrained primary visual emphasis");
+assert.ok(collectionPage.includes(".volume-primary::before"), "Book I must have a subtle gold top accent");
+assert.ok(collectionPage.includes(".volume-continuation{border-color:rgba(216,185,120,.16)"), "Book II must read as a quieter continuation without being hidden");
+assert.ok(collectionPage.includes('card.className = "volume" + (isFirstDuologyVolume ? " volume-primary" : (isSecondDuologyVolume ? " volume-continuation" : ""))'), "Duology volume hierarchy must be assigned by volume number, not by fragile card order");
+assert.ok(collectionPage.includes('card.setAttribute("aria-label", "Книга I — первая часть дилогии")') && collectionPage.includes('card.setAttribute("aria-label", "Книга II — продолжение дилогии")'), "Duology card hierarchy must have descriptive accessible labels");
+assert.ok(collectionPage.includes("@media(max-width:600px){.volumes.duology-grid{grid-template-columns:1fr}"), "Duology cards must return to a single-column layout on phones");
