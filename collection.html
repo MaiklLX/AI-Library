@@ -126,7 +126,10 @@
     range.textContent = volume.rangeLabel || (volume.chapters ? "ГЛАВЫ " + volume.chapters.from + "—" + volume.chapters.to : "");
     var description = document.createElement("p");
     description.className = "volume-info";
-    description.textContent = volume.description || "Информация о книге будет добавлена отдельно.";
+    var annotation = volume.annotation || volume.description || "Информация о книге будет добавлена отдельно.";
+    var annotationReveal = volume.annotationVisibleAt ? new Date(volume.annotationVisibleAt) : null;
+    var annotationPending = annotationReveal && !Number.isNaN(annotationReveal.getTime()) && Date.now() < annotationReveal.getTime();
+    description.textContent = annotationPending ? "Аннотация откроется за 48 часов до релиза." : annotation;
     var bookId = volume.bookId || volume.id;
     var entry = entries.find(function (item) {
       return item && item.id === bookId && item.metadataOnly === true && Number(item.chapterCount) > 0 &&
@@ -177,7 +180,7 @@
       });
       countdown.append(dateLabel, units);
       body.appendChild(countdown);
-      countdowns.push({ release: release, nodes: nodes, entry: entry, action: action, state: state, status: status, bookId: bookId });
+      countdowns.push({ release: release, nodes: nodes, entry: entry, action: action, state: state, status: status, bookId: bookId, annotation: annotation, annotationReveal: annotationReveal, description: description });
     } else {
       var locked = document.createElement("div");
       locked.className = "locked";
@@ -191,6 +194,9 @@
   function updateCountdowns() {
     var now = Date.now();
     countdowns.forEach(function (item) {
+      if (item.annotationReveal && !Number.isNaN(item.annotationReveal.getTime()) && now >= item.annotationReveal.getTime()) {
+        item.description.textContent = item.annotation;
+      }
       var remaining = item.release.getTime() - now;
       if (remaining <= 0) {
         if (item.entry && (item.entry.status === "published" || item.entry.status === "scheduled") &&
