@@ -676,9 +676,9 @@ assert.ok(collectionPage.includes("new Date(item.entry.releaseAt).getTime() === 
 assert.ok(collectionPage.includes('item.action.textContent = "Читать книгу"'), "An officially scheduled book must become readable after its release instant");
 assert.ok(collectionPage.includes('item.entry.status === "published" || item.entry.status === "scheduled"'), "Countdown must never unlock a book without a published or scheduled catalog entry");
 
-assert.match(collectionPage, /\\.back,\\.btn,\\.action\\{min-height:44px\\}/, "Collection navigation and actions must meet the 44px touch target");
-assert.match(collectionPage, /\\.back:focus-visible,\\.btn:focus-visible,\\.action:focus-visible/, "Collection links and actions must have visible keyboard focus");
-assert.match(collectionPage, /\\.volume-body\\{min-width:0\\}/, "Volume card content must be allowed to shrink without horizontal overflow");
-assert.match(collectionPage, /@media\\(max-width:380px\\)[\\s\\S]*?grid-template-columns:96px minmax\\(0,1fr\\)/, "Narrow phones must use a compact but stable volume-card layout");
-assert.match(collectionPage, /@media\\(prefers-reduced-motion:reduce\\)[\\s\\S]*?\\.back,\\.btn,\\.action\\{transition:none\\}/, "Collection interactions must respect reduced-motion preferences");
+assert.ok(collectionPage.includes(".back,.btn,.action{min-height:44px}"), "Collection navigation and actions must meet the 44px touch target");
+assert.ok(collectionPage.includes(".back:focus-visible,.btn:focus-visible,.action:focus-visible"), "Collection links and actions must have visible keyboard focus");
+assert.ok(collectionPage.includes(".volume-body{min-width:0}"), "Volume card content must be allowed to shrink without horizontal overflow");
+assert.ok(collectionPage.includes("@media(max-width:380px)") && collectionPage.includes("grid-template-columns:96px minmax(0,1fr)"), "Narrow phones must use a compact but stable volume-card layout");
+assert.ok(collectionPage.includes("@media(prefers-reduced-motion:reduce)") && collectionPage.includes(".back,.btn,.action{transition:none}"), "Collection interactions must respect reduced-motion preferences");
 
