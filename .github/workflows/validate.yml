@@ -2,7 +2,7 @@ name: Validate AI Library
 
 on:
   push:
-    branches: ["main", "release/ty-v-moih-planah-six-volume"]
+    branches: ["main", "release/ty-v-moih-planah-six-volume", "editorial/restore-literary-standard-i16-onward"]
   pull_request:
     branches: ["main"]
   workflow_dispatch:
