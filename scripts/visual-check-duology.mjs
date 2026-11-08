@@ -73,7 +73,7 @@ try {
         return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height };
       });
       return {
-        columns: getComputedStyle(list).gridTemplateColumns.trim().split(/\\s+/).length,
+        columns: getComputedStyle(list).gridTemplateColumns.trim().split(" ").length,
         scrollWidth: document.documentElement.scrollWidth,
         viewportWidth: innerWidth,
         boxes,
@@ -113,7 +113,7 @@ try {
   await premiere.close();
 
   assert.deepEqual(pageErrors, [], "Browser console/runtime errors were reported");
-  process.stdout.write("Visual checks passed: desktop, 390px mobile, 360px mobile, annotation reveal, and premiere navigation. Screenshots saved to artifacts/duology-visual/.\\n");
+  process.stdout.write("Visual checks passed: desktop, 390px mobile, 360px mobile, annotation reveal, and premiere navigation. Screenshots saved to artifacts/duology-visual/.");
 } finally {
   await browser.close();
   await new Promise(resolveServer => server.close(resolveServer));
