@@ -113,7 +113,7 @@
         "Детектив"
       ],
       "collectionCta": "Открыть сборник　→",
-      "collectionHref": "./series.html"
+      "collectionHref": "./collection.html?id=ty-v-moih-planah"
     },
     {
       "id": "ty-v-moih-planah-tom-01",
@@ -340,7 +340,7 @@
         "Детектив"
       ],
       "collectionCta": "Страница премьеры　→",
-      "collectionHref": "./premiere.html?book=poka-nas-ne-naydut"
+      "collectionHref": "./collection.html?id=poka-nas-ne-naydut"
     }
   ]
 }
