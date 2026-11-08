@@ -644,8 +644,8 @@ assert.ok(!Array.isArray(duologyBook.chapters) || duologyBook.chapters.length ==
 assert.match(premierePage, /id="duologyDetailsLink"/, "The premiere page must expose the duology details link");
 assert.match(premierePage, /bookId==='poka-nas-ne-naydut'/, "The duology details link must only be revealed for the matching premiere");
 assert.match(premierePage, /href="\.\/poka-nas-ne-naydut\.html"/, "The premiere details link must target the dedicated duology page");
-assert.match(html, /duology-special-label">ОСОБАЯ КНИГА/, "The duology must retain its special-edition shelf badge");
+assert.equal(duologyCatalogEntry.collectionSpecialLabel, "ОСОБАЯ КНИГА", "The duology special-edition badge must remain in catalog metadata");
 assert.match(html, /poka-duology-special-edition-v1/, "The special-edition shelf styling is missing");
-assert.match(html, /innerHTML=duologyCard\+\(list\.length\?/, "The special duology card must remain featured before regular shelf cards");
+assert.match(html, /beforeCollections\+\(list\.length\?/, "Metadata-driven special collections must remain featured before regular shelf cards");
 
 
