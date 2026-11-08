@@ -1,0 +1,48 @@
+{
+  "id": "poka-nas-ne-naydut",
+  "type": "series",
+  "title": "Пока нас не найдут",
+  "subtitle": "Дилогия · 2 книги",
+  "author": "AI Library",
+  "genre": "Современная романтика · психологический детектив · триллер 18+",
+  "ageRating": "18+",
+  "status": "draft",
+  "description": "В Вердене прошлое не исчезает — его покупают, запирают и переписывают. Когда реставратор аудиозаписей Мира Соколова находит голос сестры, которую все давно считают погибшей, расследование приводит её к семье, привыкшей хранить чужие секреты. И к Дамиану Ветрову — человеку, который знает гораздо больше, чем готов признать.",
+  "cover": "./content/books/poka-nas-ne-naydut-cover.svg",
+  "volumes": [
+    {
+      "id": "poka-nas-ne-naydut-tom-01",
+      "number": 1,
+      "title": "Книга I",
+      "bookId": "poka-nas-ne-naydut-tom-01",
+      "chapters": {
+        "from": 1,
+        "to": 40
+      },
+      "epilogue": true,
+      "chapterCount": 41,
+      "wordCount": 68420,
+      "status": "draft",
+      "releaseAt": null,
+      "cover": null
+    },
+    {
+      "id": "poka-nas-ne-naydut-tom-02",
+      "number": 2,
+      "title": "Книга II",
+      "bookId": "poka-nas-ne-naydut-tom-02",
+      "chapters": {
+        "from": 1,
+        "to": 42
+      },
+      "epilogue": true,
+      "chapterCount": 43,
+      "wordCount": 75083,
+      "status": "draft",
+      "releaseAt": null,
+      "cover": null
+    }
+  ],
+  "_draft": true,
+  "_note": "Documentation-only planning manifest. Not consumed by the app; final volume titles, covers, release dates, and series page remain unapproved."
+}
