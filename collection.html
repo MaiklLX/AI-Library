@@ -76,6 +76,7 @@
   var entries = catalog && Array.isArray(catalog.books) ? catalog.books : [];
   var labels = { planned: "Готовится", prerelease: "Премьера закрыта", published: "Новинка", scheduled: "Скоро выпуск" };
   var dateFormat = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Moscow" });
+  var countdowns = [];
   data.volumes.forEach(function (volume) {
     var card = document.createElement("article");
     card.className = "volume";
@@ -134,10 +135,28 @@
     foot.append(state, action);
     body.append(top, title, range, description);
     if (volume.releaseAt && release && !Number.isNaN(release.getTime())) {
-      var date = document.createElement("div");
-      date.className = "countdown";
-      date.textContent = "Плановый выпуск · " + dateFormat.format(release) + " · 18:00 МСК";
-      body.appendChild(date);
+      var countdown = document.createElement("div");
+      countdown.className = "countdown";
+      var dateLabel = document.createElement("div");
+      dateLabel.textContent = "Плановый выпуск · " + dateFormat.format(release) + " · " +
+        new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Europe/Moscow" }).format(release) + " МСК";
+      var units = document.createElement("div");
+      units.className = "countdown-units";
+      var nodes = [];
+      ["дн.", "ч.", "мин.", "сек."].forEach(function (caption) {
+        var unit = document.createElement("div");
+        unit.className = "countdown-unit";
+        var value = document.createElement("strong");
+        value.textContent = "—";
+        var label = document.createElement("span");
+        label.textContent = caption;
+        unit.append(value, label);
+        units.appendChild(unit);
+        nodes.push(value);
+      });
+      countdown.append(dateLabel, units);
+      body.appendChild(countdown);
+      countdowns.push({ release: release, nodes: nodes, entry: entry, action: action, state: state, status: status, bookId: bookId });
     } else {
       var locked = document.createElement("div");
       locked.className = "locked";
@@ -148,6 +167,38 @@
     card.appendChild(body);
     byId("volumeList").appendChild(card);
   });
+  function updateCountdowns() {
+    var now = Date.now();
+    countdowns.forEach(function (item) {
+      var remaining = item.release.getTime() - now;
+      if (remaining <= 0) {
+        if (item.entry && (item.entry.status === "published" || item.entry.status === "scheduled") &&
+            item.entry.releaseAt === item.release.toISOString().replace(".000Z", "+00:00")) {
+          item.nodes.forEach(function (node) { node.textContent = "00"; });
+          item.action.href = "./index.html?book=" + encodeURIComponent("published-" + item.bookId);
+          item.action.textContent = "Читать книгу";
+          item.action.removeAttribute("aria-disabled");
+          item.state.textContent = "ДОСТУПЕН";
+          item.status.textContent = "Новинка";
+        } else {
+          item.nodes.forEach(function (node) { node.textContent = "—"; });
+        }
+        return;
+      }
+      var days = Math.floor(remaining / 86400000);
+      remaining %= 86400000;
+      var hours = Math.floor(remaining / 3600000);
+      remaining %= 3600000;
+      var minutes = Math.floor(remaining / 60000);
+      remaining %= 60000;
+      var seconds = Math.floor(remaining / 1000);
+      [days, hours, minutes, seconds].forEach(function (value, index) {
+        item.nodes[index].textContent = String(value).padStart(2, "0");
+      });
+    });
+  }
+  updateCountdowns();
+  if (countdowns.length) window.setInterval(updateCountdowns, 1000);
   var note = document.createElement("strong");
   note.textContent = "О статусе издания. ";
   byId("note").append(note, document.createTextNode(data.statusNote ||
