@@ -3489,7 +3489,7 @@ function renderCollectionCard(book){
  const meta=Array.isArray(book.collectionMeta)?book.collectionMeta:[];
  const status=book.collectionStatusText?'<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">'+esc(book.collectionStatusText)+'</span>'+facts.map(item=>'<span class="duology-facts">'+esc(item)+'</span>').join('')+'</div>':'';
  const metaMarkup=meta.length?meta:facts;
- const safeHref=typeof book.collectionHref==='string'&&/^\\.\\/[a-z0-9-]+\\.html(?:\\?(?:book|id)=[a-z0-9-]+)?$/i.test(book.collectionHref)?book.collectionHref:'#catalog';
+ const safeHref=typeof book.collectionHref==='string'&&/^\.\/[a-z0-9-]+\.html(?:\?(?:book|id)=[a-z0-9-]+)?$/i.test(book.collectionHref)?book.collectionHref:'#catalog';
  return '<article class="book '+cardClass+'" data-book-card data-series-collection data-collection-id="'+esc(book.id||'')+'"'+(kind==='duology'?' data-duology-card':'')+'>'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о сборнике: '+title+'" aria-expanded="false">'+
