@@ -85,6 +85,7 @@ try {
     assert.ok(layout.scrollWidth <= layout.viewportWidth + 1, viewport.name + ": horizontal page overflow detected");
     assert.equal(layout.artCount, 2, viewport.name + ": both volumes must have distinct visual artwork");
     assert.ok(layout.heroCoverLoaded, viewport.name + ": the collection cover did not load");
+    assert.ok(layout.headerHeights[0] <= 40 && layout.headerHeights[1] <= 16, viewport.name + ": the collection header wraps awkwardly on a narrow screen");
     if (viewport.columns === 2) {
       assert.ok(layout.boxes[0].left < layout.boxes[1].left, "Desktop cards must sit side by side");
       assert.ok(layout.boxes[0].right <= layout.boxes[1].left, "Desktop cards must not overlap");
@@ -102,6 +103,7 @@ try {
     await page.waitForTimeout(1100);
     const secondAnnotationAfterReveal = await page.locator(".volume-continuation .volume-info").textContent();
     assert.ok(secondAnnotationAfterReveal && secondAnnotationAfterReveal !== "Аннотация откроется за 48 часов до релиза.", viewport.name + ": Book II annotation did not reveal at the scheduled instant");
+    if (viewport.name === "mobile-390") await page.screenshot({ path: resolve(output, "collection-mobile-390-annotation-revealed.png"), fullPage: true });
     await page.close();
   }
 
