@@ -535,7 +535,7 @@ for (const scheduledVolume of seriesManifest.volumes) {
   assert.ok(existsSync(resolve(root, scheduledVolume.cover)), `Volume ${scheduledVolume.number} cover asset is missing`);
 }
 assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
-assert.match(html, /Date\.now\(\) < releaseTime/, "Scheduled release guard must compare the current time to releaseAt");
+assert.match(html, /return book\.status === 'prerelease' \|\| book\.status === 'scheduled'/, "A book must remain locked until the catalog explicitly marks it published");
 assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
 assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
 assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh when a release time passes");
@@ -543,15 +543,11 @@ assert.match(seriesPage, /timer\.volume\.status==='planned'&&timeReached&&timer\
 assert.match(seriesPage, /entry\.releaseAt===volume\.releaseAt/, "Scheduled reader entry must match the series release timestamp");
 const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s\S]*?\n\}/);
 assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
-const releaseGuardFactory = new Function("Clock", releaseGuardMatch[0].replace(/\bDate\b/g, "Clock") + "; return isBookReleaseLocked;");
-for (const releaseAt of expectedReleaseSchedule) {
-  const beforeClock = { now: () => Date.parse(releaseAt) - 1000, parse: Date.parse };
-  const releaseClock = { now: () => Date.parse(releaseAt), parse: Date.parse };
-  const afterClock = { now: () => Date.parse(releaseAt) + 1000, parse: Date.parse };
-  assert.equal(releaseGuardFactory(beforeClock)({ status: "scheduled", releaseAt }), true, "Volume must remain locked one second before " + releaseAt);
-  assert.equal(releaseGuardFactory(releaseClock)({ status: "scheduled", releaseAt }), false, "Volume must unlock exactly at " + releaseAt);
-  assert.equal(releaseGuardFactory(afterClock)({ status: "scheduled", releaseAt }), false, "Volume must remain unlocked after " + releaseAt);
-}
+const releaseGuard = new Function(releaseGuardMatch[0] + "; return isBookReleaseLocked;")();
+assert.equal(releaseGuard({ status: "prerelease", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished prerelease");
+assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished scheduled book");
+assert.equal(releaseGuard({ status: "published", releaseAt: "2099-01-01T00:00:00Z" }), false, "An explicitly published book must be readable");
+assert.equal(releaseGuard(null), true, "Missing book records must remain locked");
 
 
 
@@ -570,7 +566,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 const duologyCover = "./content/books/Пока нас не найдут_ тайны и страсть.png";
@@ -585,7 +581,7 @@ assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes(
 assert.ok(duologyPage.includes("Страница не открывает черновые тексты"), "The duology page must not expose unpublished manuscript text");
 assert.ok(html.includes('href="./poka-nas-ne-naydut.html">Открыть дилогию'), "The featured shelf card must open the duology landing page");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The app shell cache must be refreshed for the new duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
   assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
 }
