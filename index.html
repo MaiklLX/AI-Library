@@ -3122,7 +3122,8 @@ function getCatalogMetadataSnapshot(catalog) {
     id:String(book.id||''),title:String(book.title||''),author:String(book.author||''),
     genre:String(book.genre||''),genres:(Array.isArray(book.genres)?book.genres:[]).map(String).sort().join('|'),status:String(book.status||''),revision:String(book.revision||''),
     chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
-    releaseDate:String(book.releaseDate||'')
+    releaseDate:String(book.releaseDate||''),
+    seriesId:String(book.seriesId||''),seriesVolume:Number(book.seriesVolume)||0
   })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
 }
 function checkCatalogMetadataUpdate(catalog) {
