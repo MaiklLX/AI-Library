@@ -3064,7 +3064,11 @@ function getAllBooks() {
 }
 
 function isSeriesVolumeBook(book) {
-  // Тома шеститомной серии показываются только внутри страницы серии, не отдельными карточками каталога.
+  // Универсальная схема: том скрывается с общей полки по явной принадлежности к серии.
+  const seriesId = String(book?.seriesId || '').trim();
+  const seriesVolume = Number(book?.seriesVolume);
+  if (seriesId && Number.isInteger(seriesVolume) && seriesVolume > 0) return true;
+  // Совместимость со старыми локальными записями шеститомника до обновления каталога.
   return /^published-ty-v-moih-planah-tom-\d{2}$/.test(String(book?.id || ''));
 }
 
