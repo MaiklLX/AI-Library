@@ -58,7 +58,7 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
-async function loadCollection(page) {
+async function loadCollection(page, bookTwoAnnotation = "hidden") {
   await page.goto(`${baseUrl}/collection.html?id=poka-nas-ne-naydut`, { waitUntil: "networkidle" });
   await page.locator(".volume-primary").waitFor();
   await page.locator(".volume-continuation").waitFor();
@@ -73,8 +73,11 @@ async function loadCollection(page) {
   const firstAnnotation = (await page.locator(".volume-primary .volume-info").innerText()).trim();
   const secondAnnotation = (await page.locator(".volume-continuation .volume-info").innerText()).trim();
   if (!firstAnnotation.includes("Мира Соколова")) throw new Error("Book I annotation must be visible immediately");
-  if (secondAnnotation !== "Аннотация откроется за 48 часов до релиза.") {
+  if (bookTwoAnnotation === "hidden" && secondAnnotation !== "Аннотация откроется за 48 часов до релиза.") {
     throw new Error("Book II annotation must remain hidden before the 48-hour reveal");
+  }
+  if (bookTwoAnnotation === "visible" && !secondAnnotation.startsWith("Вторая часть дилогии.")) {
+    throw new Error("Book II annotation must be visible after the 48-hour reveal");
   }
   for (const card of await page.locator(".volume").all()) {
     const action = card.locator(".action");
@@ -126,7 +129,7 @@ try {
   await mobile.context.close();
 
   const reveal = await newPage({ width: 1280, height: 900 }, Date.parse("2026-11-18T18:00:00+03:00"));
-  await loadCollection(reveal.page);
+  await loadCollection(reveal.page, "visible");
   const revealedAnnotation = (await reveal.page.locator(".volume-continuation .volume-info").innerText()).trim();
   if (!revealedAnnotation.startsWith("Вторая часть дилогии.")) {
     throw new Error("Book II annotation must appear exactly at the 48-hour reveal");
@@ -134,7 +137,7 @@ try {
   await reveal.context.close();
 
   const afterRelease = await newPage({ width: 1280, height: 900 }, Date.parse("2026-11-20T18:00:00+03:00") + 1000);
-  await loadCollection(afterRelease.page);
+  await loadCollection(afterRelease.page, "visible");
   for (const card of await afterRelease.page.locator(".volume").all()) {
     const action = card.locator(".action");
     if (await action.getAttribute("aria-disabled") !== "true" || await action.getAttribute("href")) {
