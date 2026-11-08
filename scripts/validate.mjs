@@ -357,7 +357,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut"'), "The Poka premiere card must open its own premiere page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The app shell cache must be invalidated after the duology page was added");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v92'"), "The app shell cache must be invalidated after the duology page was added");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
 
@@ -616,7 +616,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The offline app-shell cache must be refreshed for the dedicated duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v92'"), "The offline app-shell cache must be refreshed for the dedicated duology page");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 assert.ok(serviceWorker.includes("'./poka-nas-ne-naydut.html'"), "The dedicated duology page must be available in the offline app shell");
 assert.ok(serviceWorker.includes("'./content/books/poka-nas-ne-naydut-cover.svg'"), "The dedicated duology cover must be available offline");
@@ -669,3 +669,9 @@ assert.ok(duologySeriesManifest.volumes.every(volume => volume.status === "prere
 assert.ok(!JSON.stringify(duologySeriesManifest).includes("publishing-drafts") && !JSON.stringify(duologySeriesManifest).includes('"chapters": ['), "Public duology manifest must contain metadata only, never manuscript chapters");
 assert.equal(publishedCatalog.books.find(entry => entry.id === "poka-nas-ne-naydut").collectionHref, "./collection.html?id=poka-nas-ne-naydut", "Duology shelf card must use the universal collection route");
 assert.equal(sixBookCollection.collectionHref, "./collection.html?id=ty-v-moih-planah", "Six-volume shelf card must use the universal collection route");
+
+assert.ok(collectionPage.includes("function updateCountdowns()"), "Universal collection page must update release countdowns dynamically");
+assert.ok(collectionPage.includes("window.setInterval(updateCountdowns, 1000)"), "Universal collection countdown must refresh once per second");
+assert.ok(collectionPage.includes("new Date(item.entry.releaseAt).getTime() === item.release.getTime()"), "Countdown release transition must compare equivalent instants across timezone offsets");
+assert.ok(collectionPage.includes('item.action.textContent = "Читать книгу"'), "An officially scheduled book must become readable after its release instant");
+assert.ok(collectionPage.includes('item.entry.status === "published" || item.entry.status === "scheduled"'), "Countdown must never unlock a book without a published or scheduled catalog entry");
