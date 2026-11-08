@@ -624,5 +624,12 @@
       "bodyWords": 922,
       "title": "Эпилог. Обычное утро"
     }
-  ]
+  ],
+  "ciValidation": {
+    "workflow": "Validate AI Library",
+    "runId": 42519057776,
+    "commit": "fc4056fa9218b358f7f7fb29457b612532c77af0",
+    "conclusion": "success",
+    "scope": "10 inline scripts, service worker, 106 IDs, manifest and local assets"
+  }
 }
