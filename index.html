@@ -3123,7 +3123,7 @@ function getCatalogMetadataSnapshot(catalog) {
     genre:String(book.genre||''),genres:(Array.isArray(book.genres)?book.genres:[]).map(String).sort().join('|'),status:String(book.status||''),revision:String(book.revision||''),
     chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
     releaseDate:String(book.releaseDate||''),
-    seriesId:String(book.seriesId||''),seriesVolume:Number(book.seriesVolume)||0
+    seriesId:String(book.seriesId||''),seriesVolume:Number(book.seriesVolume)||0,collectionCard:Boolean(book.collectionCard),collectionKind:String(book.collectionKind||''),collectionPriority:Number(book.collectionPriority)||0,collectionPlacement:String(book.collectionPlacement||''),collectionHref:String(book.collectionHref||''),collectionSearchTerms:(Array.isArray(book.collectionSearchTerms)?book.collectionSearchTerms:[]).map(String).sort().join('|'),collectionGenres:(Array.isArray(book.collectionGenres)?book.collectionGenres:[]).map(String).sort().join('|')
   })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
 }
 function checkCatalogMetadataUpdate(catalog) {
@@ -3475,31 +3475,30 @@ async function renderPrereleaseShowcase(){
 }
 
 
-function renderSeriesCollectionCard(){
- const title='Ты в моих планах';
- const description='Один завершённый роман, собранный в шесть последовательных томов. Единая история, сквозная нумерация глав 1–93 и отдельная страница с составом всей серии и графиком выхода.';
- return '<article class="book series-collection-card" data-book-card data-series-collection>'+
+function renderCollectionCard(book){
+ const title=esc(book.title||'Серия');
+ const kind=book.collectionKind==='duology'?'duology':'series';
+ const cardClass=kind==='duology'?'series-collection-card duology-collection-card':'series-collection-card';
+ const cover=typeof book.cover==='string'&&book.cover.startsWith('./content/books/')&&!book.cover.includes('..')?book.cover:'';
+ const badge=esc(book.collectionBadge||'СЕРИЯ');
+ const special=book.collectionSpecialLabel?'<span class="duology-special-label">'+esc(book.collectionSpecialLabel)+'</span>':'';
+ const progress=book.collectionCoverProgress?'<span class="cover-progress"><span aria-hidden="true">✦</span><span>'+esc(book.collectionCoverProgress)+'</span></span>':'';
+ const frontMark=kind==='duology'&&book.collectionSpecialLabel?'<span class="duology-front-mark">✦</span>':'';
+ const backClass=kind==='duology'?'book-face book-back duology-back':'book-face book-back';
+ const facts=Array.isArray(book.collectionFacts)?book.collectionFacts:[];
+ const meta=Array.isArray(book.collectionMeta)?book.collectionMeta:[];
+ const status=book.collectionStatusText?'<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">'+esc(book.collectionStatusText)+'</span>'+facts.map(item=>'<span class="duology-facts">'+esc(item)+'</span>').join('')+'</div>':'';
+ const metaMarkup=meta.length?meta:facts;
+ const safeHref=typeof book.collectionHref==='string'&&/^\.\/[a-z0-9-]+\.html(?:\?book=[a-z0-9-]+)?$/i.test(book.collectionHref)?book.collectionHref:'#catalog';
+ return '<article class="book '+cardClass+'" data-book-card data-series-collection data-collection-id="'+esc(book.id||'')+'"'+(kind==='duology'?' data-duology-card':'')+'>'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о сборнике: '+title+'" aria-expanded="false">'+
- '<span class="cover romance has-cover"><img class="cover-art" src="./content/books/ty-v-moih-planah-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">СБОРНИК · 6 ТОМОВ</span><span class="cover-progress"><span aria-hidden="true">✦</span><span>93 главы</span></span></span></div>'+
- '<div class="book-face book-back"><div class="book-back-top"><span class="book-back-label">ЕДИНОЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
- '<h3>'+title+'</h3><div class="author">AI LIBRARY · РОМАН В ШЕСТИ ТОМАХ</div><p class="desc">'+description+'</p>'+
- '<div class="meta"><span>6 томов · 93 главы</span><span>Романтический детектив · 18+</span></div>'+
- '<div class="book-back-actions"><a class="btn read" href="./series.html">Открыть сборник　→</a></div></div></div></article>';
-}
-
-function renderPokaDuologyCard(){
- const title='Пока нас не найдут';
- const description='Закрытая премьера дилогии: две книги, одна история и тайна, которая связывает прошлое с настоящим. Состав обеих книг уже можно посмотреть на отдельной странице дилогии.';
- return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card>'+
- '<div class="book-flip-inner">'+
- '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
- '<span class="cover detective has-cover duology-muted-cover"><img class="cover-art" src="./content/books/poka-nas-ne-naydut-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-special-label">ОСОБАЯ КНИГА</span><span class="duology-front-mark">✦</span></span></div>'+
- '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">БУДУЩЕЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
- '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
- '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
- '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
- '<div class="book-back-actions"><a class="btn read" href="./premiere.html?book=poka-nas-ne-naydut">Страница премьеры　→</a></div></div></div></article>';
+ '<span class="cover '+(kind==='duology'?'detective has-cover duology-muted-cover':'romance has-cover')+'">'+(cover?'<img class="cover-art" src="'+esc(cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">✦</span>')+'<span class="tag">'+badge+'</span>'+progress+special+frontMark+'</span></div>'+
+ '<div class="'+backClass+'"><div class="book-back-top"><span class="book-back-label">'+esc(book.collectionBackLabel||'СБОРНИК')+'</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<h3>'+title+'</h3><div class="author">'+esc(book.collectionAuthorLine||book.author||'AI LIBRARY')+'</div><p class="desc">'+esc(book.collectionDescription||book.description||book.desc||'')+'</p>'+
+ status+
+ (metaMarkup.length?'<div class="meta">'+metaMarkup.map(item=>'<span>'+esc(item)+'</span>').join('')+'</div>':'')+
+ '<div class="book-back-actions"><a class="btn read" href="'+esc(safeHref)+'">'+esc(book.collectionCta||'Открыть серию　→')+'</a></div></div></div></article>';
 }
 
 function renderBookCard(book){
@@ -3553,9 +3552,9 @@ if(s==='unread'){
 if(s==='completed'){
   list.sort((a,b)=>readCount(b)-readCount(a));
 }
-document.querySelector("#catalogCount").textContent=String(all.length+2);
+document.querySelector("#catalogCount").textContent=String(all.length+visibleCollections.length);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=duologyCard+(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+seriesCard;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const collectionEntries=getAllBooks().filter(book=>book.collectionCard===true&&!isSeriesVolumeBook(book));const canShowCollections=!onlyFav;const visibleCollections=canShowCollections?collectionEntries.filter(book=>{const terms=[book.title,book.collectionDescription,...(Array.isArray(book.collectionSearchTerms)?book.collectionSearchTerms:[])].map(value=>String(value||'').toLocaleLowerCase('ru'));const matchesSearch=!q||terms.some(term=>term.includes(q)||q.includes(term));const genres=Array.isArray(book.collectionGenres)?book.collectionGenres:[];const matchesGenre=genre==="Все"||genres.includes(genre);return matchesSearch&&matchesGenre;}).sort((a,b)=>(Number(a.collectionPriority)||100)-(Number(b.collectionPriority)||100)):[];const beforeCollections=visibleCollections.filter(book=>book.collectionPlacement!=="after").map(renderCollectionCard).join('');const afterCollections=visibleCollections.filter(book=>book.collectionPlacement==="after").map(renderCollectionCard).join('');const collectionCards=beforeCollections+afterCollections;document.querySelector("#books").innerHTML=beforeCollections+(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+afterCollections;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
