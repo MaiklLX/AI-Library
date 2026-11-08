@@ -7,6 +7,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const flipLab = readFileSync(resolve(root, "reader-flip-lab.html"), "utf8");
 const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
+const duologyPage = readFileSync(resolve(root, "poka-nas-ne-naydut.html"), "utf8");
+const duologyManifest = JSON.parse(readFileSync(resolve(root, "content/series/poka-nas-ne-naydut.json"), "utf8"));
 const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
 const premiereSeriesBook = JSON.parse(readFileSync(resolve(root, "content/books/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
@@ -571,4 +573,21 @@ assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine m
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
+const duologyCover = "./content/books/Пока нас не найдут_ тайны и страсть.png";
+assert.ok(existsSync(resolve(root, duologyCover)), "The original user-provided duology cover must remain available");
+assert.equal(duologyManifest.cover, duologyCover, "The duology page must use the original cover without replacement");
+assert.equal(duologyManifest.volumes.length, 2, "The duology must contain exactly two volumes");
+assert.deepEqual(duologyManifest.volumes.map(volume => volume.rangeLabel), ["40 глав · эпилог", "42 главы · эпилог"], "Duology chapter structure changed");
+assert.deepEqual(duologyManifest.volumes.map(volume => volume.title), ["Пока нас не найдут", "Там, где заканчивается ложь"], "Duology volume titles changed");
+assert.ok(duologyPage.includes(duologyCover), "The duology page must display the original cover");
+assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setInterval(tick,1000)"), "Both duology release countdowns must update every second");
+assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
+assert.ok(duologyPage.includes("Страница не открывает черновые тексты"), "The duology page must not expose unpublished manuscript text");
+assert.ok(html.includes('href="./poka-nas-ne-naydut.html">Открыть дилогию'), "The featured shelf card must open the duology landing page");
+assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The app shell cache must be refreshed for the new duology page");
+for (const volume of duologyManifest.volumes) {
+  assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
+}
+assert.equal(Date.parse(duologyManifest.volumes[1].releaseAt) - Date.parse(duologyManifest.volumes[1].annotationVisibleAt), 48 * 60 * 60 * 1000, "Book II annotation must be revealed exactly 48 hours before release");
 
