@@ -658,7 +658,7 @@ assert.match(collectionPage, /new URLSearchParams\(location\.search\)/, "Univers
 assert.match(collectionPage, /content\/series\/'\+encodeURIComponent\(id\)\+'\.json/, "Universal collection page must load the matching public manifest");
 assert.match(collectionPage, /id!==id\|\|data\.type!=='series'\|\|!Array\.isArray\(data\.volumes\)/, "Universal collection page must validate manifest identity and volume structure");
 assert.ok(collectionPage.includes("volume.status==='prerelease'&&volume.premiereBookId"), "Universal collection page must support closed-premiere actions");
-assert.ok(collectionPage.includes("entry.metadataOnly===true") && collectionPage.includes("entry.chapterCount)>0"), "Universal collection page must gate reading on an official readable catalog entry");
+assert.ok(collectionPage.includes("x.metadataOnly===true") && collectionPage.includes("Number(x.chapterCount)>0"), "Universal collection page must gate reading on an official readable catalog entry");
 assert.ok(serviceWorker.includes("'./collection.html'"), "Universal collection page must be cached offline");
 assert.ok(serviceWorker.includes("'./content/series/poka-nas-ne-naydut.json'"), "Duology metadata manifest must be cached offline");
 assert.equal(duologySeriesManifest.id, "poka-nas-ne-naydut", "Duology public manifest ID must match the collection route");
