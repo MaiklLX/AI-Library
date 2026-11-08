@@ -182,7 +182,7 @@ assert.equal(sixBookCollection.collectionHref, "./collection.html?id=ty-v-moih-p
 assert.equal(duologyCollection.collectionKind, "duology", "The Poka duology must be typed as a duology");
 assert.equal(duologyCollection.collectionPlacement, "before", "The special duology card must remain before regular books");
 assert.equal(duologyCollection.collectionSpecialLabel, "ОСОБАЯ КНИГА", "The special shelf badge must be controlled by collection metadata");
-assert.equal(duologyCollection.collectionHref, "./premiere.html?book=poka-nas-ne-naydut", "The duology card must retain its premiere route");
+assert.equal(duologyCollection.collectionHref, "./collection.html?id=poka-nas-ne-naydut", "The duology card must use the universal collection route");
 assert.ok(collectionEntries.every(entry => entry.status === "prerelease" && entry.chapterCount === 0), "Collection cards must not open or advertise unreleased full text");
 const collectionRendererSource = html.match(/function renderCollectionCard\(book\)\s*\{[\s\S]*?\n\}/)?.[0];
 assert.ok(collectionRendererSource, "Metadata-driven collection renderer is missing");
