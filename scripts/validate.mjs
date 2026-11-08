@@ -574,19 +574,19 @@ assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab mus
 assert.ok(existsSync(resolve(root, "poka-nas-ne-naydut.html")), "The dedicated Poka nas ne naydut duology page is missing");
 assert.match(pokaDuologyPage, /<html[^>]+lang=["']ru["']/i, "Duology page language should be Russian");
 assert.match(pokaDuologyPage, /<meta[^>]+name=["']description["']/i, "Duology page SEO description is missing");
-const duologyIds = [...pokaDuologyPage.matchAll(/\\bid=["']([^"']+)["']/g)].map(match => match[1]);
+const duologyIds = [...pokaDuologyPage.matchAll(/\bid=["']([^"']+)["']/g)].map(match => match[1]);
 const duplicateDuologyIds = duologyIds.filter((id, index) => duologyIds.indexOf(id) !== index);
 assert.deepEqual([...new Set(duplicateDuologyIds)], [], "Duplicate static IDs found on the duology page");
-for (const match of pokaDuologyPage.matchAll(/\\b(?:href|src)=["'](\\.\\/[^"'#?]+)["']/gi)) {
+for (const match of pokaDuologyPage.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
   assert.ok(existsSync(resolve(root, match[1])), `Duology page local asset does not exist: ${match[1]}`);
 }
 assert.equal((pokaDuologyPage.match(/class="volume"/g) || []).length, 2, "The duology page must show exactly two volume cards");
 assert.match(pokaDuologyPage, /40 глав · эпилог/, "Book I chapter and epilogue count is missing from the duology page");
 assert.match(pokaDuologyPage, /42 главы · эпилог/, "Book II chapter and epilogue count is missing from the duology page");
 assert.match(pokaDuologyPage, /ПРЕМЬЕРА ЗАКРЫТА/g, "Both volumes must remain visibly closed before release");
-assert.doesNotMatch(pokaDuologyPage, /href=["']\\.\\/content\\/books\\//, "The duology page must not link directly to draft book JSON");
-assert.doesNotMatch(pokaDuologyPage, /2026-\\d{2}-\\d{2}|releaseAt|data-read=/, "The duology page must not invent release dates or expose reader actions");
-assert.match(pokaDuologyPage, /poka-nas-ne-naydut-cover\\.svg/, "The duology page must use the shared series cover");
+assert.doesNotMatch(pokaDuologyPage, /href=["']\.\/content\/books\//, "The duology page must not link directly to draft book JSON");
+assert.doesNotMatch(pokaDuologyPage, /2026-\d{2}-\d{2}|releaseAt|data-read=/, "The duology page must not invent release dates or expose reader actions");
+assert.match(pokaDuologyPage, /poka-nas-ne-naydut-cover\.svg/, "The duology page must use the shared series cover");
 const duologyCatalogEntry = publishedCatalog.books.find(entry => entry.id === "poka-nas-ne-naydut");
 assert.ok(duologyCatalogEntry, "The existing duology premiere card must remain in the catalog");
 assert.equal(duologyCatalogEntry.status, "prerelease", "The duology premiere must remain prerelease until explicit publication approval");
@@ -596,9 +596,9 @@ assert.equal(duologyBook.status, "prerelease", "The duology full-text placeholde
 assert.ok(!Array.isArray(duologyBook.chapters) || duologyBook.chapters.length === 0, "The public duology placeholder must not contain draft chapters");
 assert.match(premierePage, /id="duologyDetailsLink"/, "The premiere page must expose the duology details link");
 assert.match(premierePage, /bookId==='poka-nas-ne-naydut'/, "The duology details link must only be revealed for the matching premiere");
-assert.match(premierePage, /href="\\.\\/poka-nas-ne-naydut\\.html"/, "The premiere details link must target the dedicated duology page");
+assert.match(premierePage, /href="\.\/poka-nas-ne-naydut\.html"/, "The premiere details link must target the dedicated duology page");
 assert.match(html, /duology-special-label">ОСОБАЯ КНИГА/, "The duology must retain its special-edition shelf badge");
 assert.match(html, /poka-duology-special-edition-v1/, "The special-edition shelf styling is missing");
-assert.match(html, /innerHTML=duologyCard\\+\\(list\\.length\\?/, "The special duology card must remain featured before regular shelf cards");
+assert.match(html, /innerHTML=duologyCard\+\(list\.length\?/, "The special duology card must remain featured before regular shelf cards");
 
 
