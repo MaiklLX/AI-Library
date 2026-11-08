@@ -7,6 +7,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const flipLab = readFileSync(resolve(root, "reader-flip-lab.html"), "utf8");
 const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
+const collectionPage = readFileSync(resolve(root, "collection.html"), "utf8");
+const premierePage = readFileSync(resolve(root, "premiere.html"), "utf8");
+const duologySeriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/poka-nas-ne-naydut.json"), "utf8"));
 const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
 const premiereSeriesBook = JSON.parse(readFileSync(resolve(root, "content/books/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
@@ -309,7 +312,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut"'), "The Poka premiere card must open its own premiere page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The app shell cache must be invalidated after the premiere and series fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The app shell cache must be invalidated after the premiere and series fixes");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
 
@@ -571,4 +574,36 @@ assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine m
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
-
+assert.ok(existsSync(resolve(root, "collection.html")), "Universal duology collection page is missing");
+assert.match(collectionPage, /<html[^>]+lang=["']ru["']/i, "Collection page language should be Russian");
+assert.match(collectionPage, /<meta[^>]+name=["']description["']/i, "Collection page SEO description is missing");
+const collectionIds = [...collectionPage.matchAll(/\\bid=["']([^"']+)["']/g)].map(match => match[1]);
+const duplicateCollectionIds = collectionIds.filter((id, index) => collectionIds.indexOf(id) !== index);
+assert.deepEqual([...new Set(duplicateCollectionIds)], [], "Duplicate static IDs found on the collection page");
+assert.ok(collectionPage.includes('fetch("./content/series/" + encodeURIComponent(id) + ".json"'), "Collection page must load the matching public manifest");
+assert.ok(collectionPage.includes('if (id === "poka-nas-ne-naydut") byId("volumeList").classList.add("duology-grid")'), "Duology collection must use its two-card layout");
+assert.ok(collectionPage.includes(".volume-primary::before") && collectionPage.includes(".volume-continuation"), "The two volumes must have a restrained visual hierarchy");
+assert.ok(collectionPage.includes("@media(max-width:600px){.volumes.duology-grid{grid-template-columns:1fr}"), "Duology cards must stack on narrow screens");
+assert.ok(collectionPage.includes("countdown-date") && collectionPage.includes('countdown.setAttribute("role", "group")'), "Release countdowns must be styled and accessible");
+assert.ok(collectionPage.includes("window.setInterval(updateCountdowns, 1000)"), "Collection countdowns must update live");
+assert.ok(collectionPage.includes("annotationVisibleAt") && collectionPage.includes("Аннотация откроется за 48 часов до релиза."), "Second-volume annotation must remain hidden until its reveal time");
+assert.equal(duologySeriesManifest.id, "poka-nas-ne-naydut", "Duology manifest ID must match the collection route");
+assert.equal(duologySeriesManifest.volumes.length, 2, "Duology manifest must contain exactly two volumes");
+assert.deepEqual(duologySeriesManifest.volumes.map(volume => volume.releaseAt), ["2026-11-13T18:00:00+03:00", "2026-11-20T18:00:00+03:00"], "Duology release dates must match the agreed weekly schedule");
+assert.equal(new Date(duologySeriesManifest.volumes[1].releaseAt).getTime() - new Date(duologySeriesManifest.volumes[0].releaseAt).getTime(), 7 * 86400000, "Duology releases must be exactly one week apart");
+assert.equal(duologySeriesManifest.volumes[0].annotationVisibleAt, undefined, "First-volume annotation must be visible immediately");
+assert.equal(duologySeriesManifest.volumes[1].annotationVisibleAt, "2026-11-18T18:00:00+03:00", "Second-volume annotation must reveal 48 hours before release");
+assert.equal(new Date(duologySeriesManifest.volumes[1].releaseAt).getTime() - new Date(duologySeriesManifest.volumes[1].annotationVisibleAt).getTime(), 48 * 3600000, "Second-volume annotation reveal must be exactly 48 hours before release");
+assert.ok(duologySeriesManifest.volumes.every(volume => volume.status === "prerelease" && !volume.bookId && !volume.premiereBookId), "Public volume cards must not expose manuscript reader IDs before release approval");
+assert.ok(!JSON.stringify(duologySeriesManifest).includes("publishing-drafts") && !JSON.stringify(duologySeriesManifest).includes('"chapters": ['), "Public duology manifest must contain metadata only");
+assert.ok(duologySeriesManifest.volumes.every(volume => typeof volume.annotation === "string" && volume.annotation.length > 180), "Both volume annotations must be substantive and spoiler-safe");
+assert.ok(premierePage.includes('id="duologyDetailsLink"') && premierePage.includes('href="./collection.html?id=poka-nas-ne-naydut"'), "Duology premiere must link to its two-volume collection page");
+assert.ok(premierePage.includes("bookId !== 'poka-nas-ne-naydut'"), "Collection link must only appear on the matching duology premiere");
+assert.ok(serviceWorker.includes("'./collection.html'") && serviceWorker.includes("'./content/series/poka-nas-ne-naydut.json'") && serviceWorker.includes("'./content/books/poka-nas-ne-naydut-cover.svg'"), "Collection page, manifest and cover must be available in the offline app shell");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "Offline app-shell cache must be refreshed for the duology collection");
+for (const [label, page] of [["collection", collectionPage], ["premiere", premierePage]]) {
+  const inlineScripts = [...page.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+  inlineScripts.forEach((match, index) => {
+    try { new Function(match[1]); } catch (error) { throw new Error(label + " inline script #" + (index + 1) + " has a syntax error: " + error.message); }
+  });
+}
