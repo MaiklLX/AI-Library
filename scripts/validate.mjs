@@ -665,7 +665,15 @@ assert.equal(duologySeriesManifest.id, "poka-nas-ne-naydut", "Duology public man
 assert.equal(duologySeriesManifest.type, "series", "Duology public manifest must use the common series schema");
 assert.equal(duologySeriesManifest.volumes.length, 2, "Duology manifest must contain exactly two book cards");
 assert.deepEqual(duologySeriesManifest.volumes.map(volume => volume.rangeLabel), ["40 глав · эпилог", "42 главы · эпилог"], "Duology manifest must preserve the agreed book composition");
-assert.ok(duologySeriesManifest.volumes.every(volume => volume.status === "prerelease" && !volume.releaseAt && !volume.bookId && !volume.premiereBookId), "Duology volumes must remain closed and must not expose reader or release actions");
+assert.ok(duologySeriesManifest.volumes.every(volume => volume.status === "prerelease" && volume.releaseAt && !volume.bookId && !volume.premiereBookId), "Duology volumes must remain closed while carrying their public release schedule");
+assert.deepEqual(duologySeriesManifest.volumes.map(volume => volume.releaseAt), ["2026-11-13T18:00:00+03:00", "2026-11-20T18:00:00+03:00"], "Duology releases must be exactly one week apart at 18:00 Moscow time");
+assert.equal(new Date(duologySeriesManifest.volumes[1].releaseAt).getTime() - new Date(duologySeriesManifest.volumes[0].releaseAt).getTime(), 7 * 86400000, "Second duology volume must release exactly seven days after the first");
+assert.equal(duologySeriesManifest.volumes[0].annotationVisibleAt, undefined, "First volume annotation must be visible immediately");
+assert.equal(duologySeriesManifest.volumes[1].annotationVisibleAt, "2026-11-18T18:00:00+03:00", "Second volume annotation must reveal exactly 48 hours before release");
+assert.equal(new Date(duologySeriesManifest.volumes[1].releaseAt).getTime() - new Date(duologySeriesManifest.volumes[1].annotationVisibleAt).getTime(), 48 * 3600000, "Second volume annotation reveal must be 48 hours before release");
+assert.match(collectionPage, /Аннотация откроется за 48 часов до релиза\./, "Hidden second-volume annotation must show a clear reveal notice");
+assert.match(collectionPage, /item\.annotationReveal[\s\S]*item\.description\.textContent = item\.annotation/, "Second-volume annotation must appear automatically at its reveal time");
+assert.match(collectionPage, /countdowns\.push\(\{ release: release/, "Each scheduled volume must receive a live countdown");
 assert.ok(!JSON.stringify(duologySeriesManifest).includes("publishing-drafts") && !JSON.stringify(duologySeriesManifest).includes('"chapters": ['), "Public duology manifest must contain metadata only, never manuscript chapters");
 assert.equal(publishedCatalog.books.find(entry => entry.id === "poka-nas-ne-naydut").collectionHref, "./collection.html?id=poka-nas-ne-naydut", "Duology shelf card must use the universal collection route");
 assert.equal(sixBookCollection.collectionHref, "./collection.html?id=ty-v-moih-planah", "Six-volume shelf card must use the universal collection route");
