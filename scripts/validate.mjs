@@ -168,6 +168,38 @@ assert.equal(sixVolumeEntries.length, 6, "All six existing series volumes must d
 assert.deepEqual(sixVolumeEntries.map(entry => entry.seriesVolume).sort((a,b)=>a-b), [1,2,3,4,5,6], "Existing series volume numbers must remain complete and unique");
 assert.ok(sixVolumeEntries.every(entry => entry.metadataOnly === true && entry.chapterCount > 0), "Series grouping metadata must not alter the existing reader catalog contract");
 assert.ok(!publishedCatalog.books.some(entry => entry.seriesId === "poka-nas-ne-naydut"), "Draft duology volumes must not enter the public catalog before release approval");
+const collectionEntries = publishedCatalog.books.filter(entry => entry.collectionCard === true);
+assert.equal(collectionEntries.length, 2, "Both parent collections must be declared in catalog metadata");
+const collectionById = new Map(collectionEntries.map(entry => [entry.id, entry]));
+const sixBookCollection = collectionById.get("ty-v-moih-planah");
+const duologyCollection = collectionById.get("poka-nas-ne-naydut");
+assert.ok(sixBookCollection && duologyCollection, "The six-volume novel and the duology must both retain their collection cards");
+assert.equal(sixBookCollection.collectionKind, "series", "The six-volume parent must be typed as a series");
+assert.equal(sixBookCollection.collectionPlacement, "after", "The six-volume card must retain its established position after regular books");
+assert.equal(sixBookCollection.collectionHref, "./series.html", "The six-volume card must keep its existing series destination");
+assert.equal(duologyCollection.collectionKind, "duology", "The Poka duology must be typed as a duology");
+assert.equal(duologyCollection.collectionPlacement, "before", "The special duology card must remain before regular books");
+assert.equal(duologyCollection.collectionSpecialLabel, "ОСОБАЯ КНИГА", "The special shelf badge must be controlled by collection metadata");
+assert.equal(duologyCollection.collectionHref, "./premiere.html?book=poka-nas-ne-naydut", "The duology card must retain its premiere route");
+assert.ok(collectionEntries.every(entry => entry.status === "prerelease" && entry.chapterCount === 0), "Collection cards must not open or advertise unreleased full text");
+const collectionRendererSource = html.match(/function renderCollectionCard\(book\)\s*\{[\s\S]*?\n\}/)?.[0];
+assert.ok(collectionRendererSource, "Metadata-driven collection renderer is missing");
+assert.doesNotMatch(html, /function renderSeriesCollectionCard|function renderPokaDuologyCard/, "Separate hard-coded collection card renderers must be removed");
+assert.match(html, /collectionSearchTerms/, "Collection search matching must come from metadata");
+assert.match(html, /collectionGenres/, "Collection genre filtering must come from metadata");
+assert.match(html, /collectionCard===true/, "The homepage must discover collection cards from catalog metadata");
+assert.match(html, /collectionPlacement!==\"after\"/, "Collection placement must be controlled by metadata");
+const escapeHtmlForCollectionTest = value => String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+const renderCollectionCard = new Function("esc", `${collectionRendererSource}; return renderCollectionCard;`)(escapeHtmlForCollectionTest);
+const renderedDuology = renderCollectionCard(duologyCollection);
+assert.match(renderedDuology, /ОСОБАЯ КНИГА/, "The metadata renderer must preserve the duology special badge");
+assert.match(renderedDuology, /duology-muted-cover/, "The metadata renderer must preserve the subdued unreleased duology cover");
+assert.match(renderedDuology, /premiere\.html\?book=poka-nas-ne-naydut/, "The metadata renderer must preserve the duology premiere link");
+const renderedSixBookSeries = renderCollectionCard(sixBookCollection);
+assert.match(renderedSixBookSeries, /СБОРНИК · 6 ТОМОВ/, "The metadata renderer must preserve the six-volume series badge");
+assert.match(renderedSixBookSeries, /93 главы/, "The metadata renderer must preserve the continuous chapter count");
+assert.match(renderedSixBookSeries, /href="\.\/series\.html"/, "The metadata renderer must preserve the six-volume series link");
+
 
 assert.match(html, /const all=getAllBooks\(\)\.filter\(book=>book\.status !== \"prerelease\"&&!isSeriesVolumeBook\(book\)\)/, "Series volumes must not render as standalone cards on the homepage");
 assert.match(html, /getAllBooks\(\)\.filter\(book=>!isSeriesVolumeBook\(book\)&&!isBookReleaseLocked\(book\)\)/, "Series volumes must be excluded from homepage genre and random discovery lists");
