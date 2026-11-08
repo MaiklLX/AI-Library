@@ -670,6 +670,18 @@ assert.ok(!JSON.stringify(duologySeriesManifest).includes("publishing-drafts") &
 assert.equal(publishedCatalog.books.find(entry => entry.id === "poka-nas-ne-naydut").collectionHref, "./collection.html?id=poka-nas-ne-naydut", "Duology shelf card must use the universal collection route");
 assert.equal(sixBookCollection.collectionHref, "./collection.html?id=ty-v-moih-planah", "Six-volume shelf card must use the universal collection route");
 
+
+assert.match(html, /id="book-shelf-card-alignment-v1"/, "Book shelf overlay alignment styles must be present");
+assert.ok(html.includes("#books .book-front-fav{") && html.includes("width:44px;height:44px;min-height:44px"), "Favorite controls must have a consistent 44px touch target");
+assert.ok(html.includes("max-width:calc(100% - 76px)") && html.includes("text-overflow:ellipsis;white-space:nowrap"), "Cover genre labels must not collide with the favorite control or overflow narrow covers");
+assert.ok(html.includes("#books .book-front .cover-progress{") && html.includes("max-width:calc(100% - 20px);min-width:0"), "Reading progress badges must remain within the cover bounds");
+assert.ok(html.includes("#books .book-front .cover-progress>span:last-child"), "Long progress labels must truncate inside their own badge");
+assert.ok(html.includes("touch-action:manipulation"), "Favorite controls must use a responsive touch interaction");
+assert.ok(html.includes("@media(prefers-reduced-motion:reduce)") && html.includes("#books .book-front-fav{transition:none}"), "Favorite controls must respect reduced-motion preferences");
+assert.equal(duologyCatalogEntry.collectionCoverProgress, undefined, "The special duology seal must not compete with a second bottom-left progress badge");
+assert.ok(duologyCatalogEntry.collectionSpecialLabel && duologyCatalogEntry.collectionBadge, "The duology must retain its distinct special label and top genre badge");
+
+
 assert.ok(collectionPage.includes("function updateCountdowns()"), "Universal collection page must update release countdowns dynamically");
 assert.ok(collectionPage.includes("window.setInterval(updateCountdowns, 1000)"), "Universal collection countdown must refresh once per second");
 assert.ok(collectionPage.includes("new Date(item.entry.releaseAt).getTime() === item.release.getTime()"), "Countdown release transition must compare equivalent instants across timezone offsets");
