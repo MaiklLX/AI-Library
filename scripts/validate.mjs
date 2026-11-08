@@ -620,7 +620,7 @@ assert.ok(serviceWorker.includes("'./collection.html'") && serviceWorker.include
 assert.ok(serviceWorker.includes("'./content/books/poka-nas-ne-naydut-cover.svg'"), "Offline app shell must cache the duology cover");
 
 for (const [label, pageSource] of [["collection", collectionPage], ["premiere", premierePage]]) {
-  const inlineScripts = [...pageSource.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+  const inlineScripts = [...pageSource.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.ok(inlineScripts.length > 0, label + " page must contain its application script");
   inlineScripts.forEach((match, index) => {
     try {
@@ -630,7 +630,7 @@ for (const [label, pageSource] of [["collection", collectionPage], ["premiere", 
     }
   });
 }
-for (const match of collectionPage.matchAll(/\\b(?:href|src)=["'](\\.\\/[^"'#?]+)["']/gi)) {
+for (const match of collectionPage.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
   assert.ok(existsSync(resolve(root, match[1])), "Collection page local asset does not exist: " + match[1]);
 }
 
