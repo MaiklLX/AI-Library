@@ -77,13 +77,14 @@ try {
         scrollWidth: document.documentElement.scrollWidth,
         viewportWidth: innerWidth,
         boxes,
-        images: [...list.querySelectorAll("img")].map(image => ({ complete: image.complete, width: image.naturalWidth }))
+        artCount: list.querySelectorAll(".volume-art").length,
+        heroCoverLoaded: document.querySelector("#cover").complete && document.querySelector("#cover").naturalWidth > 0
       };
     });
     assert.equal(layout.columns, viewport.columns, viewport.name + ": incorrect responsive column count");
     assert.ok(layout.scrollWidth <= layout.viewportWidth + 1, viewport.name + ": horizontal page overflow detected");
-    assert.equal(layout.images.length, 2, viewport.name + ": both volume covers must render");
-    assert.ok(layout.images.every(image => image.complete && image.width > 0), viewport.name + ": a volume cover did not load");
+    assert.equal(layout.artCount, 2, viewport.name + ": both volumes must have distinct visual artwork");
+    assert.ok(layout.heroCoverLoaded, viewport.name + ": the collection cover did not load");
     if (viewport.columns === 2) {
       assert.ok(layout.boxes[0].left < layout.boxes[1].left, "Desktop cards must sit side by side");
       assert.ok(layout.boxes[0].right <= layout.boxes[1].left, "Desktop cards must not overlap");
