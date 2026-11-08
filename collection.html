@@ -173,7 +173,7 @@
       var remaining = item.release.getTime() - now;
       if (remaining <= 0) {
         if (item.entry && (item.entry.status === "published" || item.entry.status === "scheduled") &&
-            item.entry.releaseAt === item.release.toISOString().replace(".000Z", "+00:00")) {
+            new Date(item.entry.releaseAt).getTime() === item.release.getTime()) {
           item.nodes.forEach(function (node) { node.textContent = "00"; });
           item.action.href = "./index.html?book=" + encodeURIComponent("published-" + item.bookId);
           item.action.textContent = "Читать книгу";
