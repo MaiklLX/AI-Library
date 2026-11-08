@@ -196,11 +196,11 @@ const renderCollectionCard = new Function("esc", `${collectionRendererSource}; r
 const renderedDuology = renderCollectionCard(duologyCollection);
 assert.match(renderedDuology, /ОСОБАЯ КНИГА/, "The metadata renderer must preserve the duology special badge");
 assert.match(renderedDuology, /duology-muted-cover/, "The metadata renderer must preserve the subdued unreleased duology cover");
-assert.match(renderedDuology, /premiere\.html\?book=poka-nas-ne-naydut/, "The metadata renderer must preserve the duology premiere link");
+assert.match(renderedDuology, /href="\.\/collection\.html\?id=poka-nas-ne-naydut"/, "The metadata renderer must route the duology to the universal collection page");
 const renderedSixBookSeries = renderCollectionCard(sixBookCollection);
 assert.match(renderedSixBookSeries, /СБОРНИК · 6 ТОМОВ/, "The metadata renderer must preserve the six-volume series badge");
 assert.match(renderedSixBookSeries, /93 главы/, "The metadata renderer must preserve the continuous chapter count");
-assert.match(renderedSixBookSeries, /href="\.\/series\.html"/, "The metadata renderer must preserve the six-volume series link");
+assert.match(renderedSixBookSeries, /href="\.\/collection\.html\?id=ty-v-moih-planah"/, "The metadata renderer must route the six-volume series to the universal collection page");
 
 
 assert.match(html, /const all=getAllBooks\(\)\.filter\(book=>book\.status !== \"prerelease\"&&!isSeriesVolumeBook\(book\)\)/, "Series volumes must not render as standalone cards on the homepage");
