@@ -156,6 +156,19 @@ for (const entry of publishedCatalog.books) {
   }
 }
 assert.match(html, /function isSeriesVolumeBook\(book\)/, "Six-volume series books must be recognized as series-only entries");
+const seriesVolumeFunction = html.match(/function isSeriesVolumeBook\(book\)\s*\{[\s\S]*?\n\}/)?.[0];
+assert.ok(seriesVolumeFunction, "Generic series-volume predicate is missing");
+const isSeriesVolumeBook = new Function(`${seriesVolumeFunction}; return isSeriesVolumeBook;`)();
+assert.equal(isSeriesVolumeBook({ id: "published-example-volume-01", seriesId: "example", seriesVolume: 1 }), true, "Explicit series metadata must hide any series volume from the general shelf");
+assert.equal(isSeriesVolumeBook({ id: "published-ty-v-moih-planah-tom-02" }), true, "Legacy six-volume entries must remain hidden during offline cache migration");
+assert.equal(isSeriesVolumeBook({ id: "published-standalone-novel" }), false, "Standalone books must remain visible");
+assert.equal(isSeriesVolumeBook({ id: "published-poka-nas-ne-naydut" }), false, "The duology parent card must not be mistaken for a volume");
+const sixVolumeEntries = publishedCatalog.books.filter(entry => entry.seriesId === "ty-v-moih-planah");
+assert.equal(sixVolumeEntries.length, 6, "All six existing series volumes must declare their series membership");
+assert.deepEqual(sixVolumeEntries.map(entry => entry.seriesVolume).sort((a,b)=>a-b), [1,2,3,4,5,6], "Existing series volume numbers must remain complete and unique");
+assert.ok(sixVolumeEntries.every(entry => entry.metadataOnly === true && entry.chapterCount > 0), "Series grouping metadata must not alter the existing reader catalog contract");
+assert.ok(!publishedCatalog.books.some(entry => entry.seriesId === "poka-nas-ne-naydut"), "Draft duology volumes must not enter the public catalog before release approval");
+
 assert.match(html, /const all=getAllBooks\(\)\.filter\(book=>book\.status !== \"prerelease\"&&!isSeriesVolumeBook\(book\)\)/, "Series volumes must not render as standalone cards on the homepage");
 assert.match(html, /getAllBooks\(\)\.filter\(book=>!isSeriesVolumeBook\(book\)&&!isBookReleaseLocked\(book\)\)/, "Series volumes must be excluded from homepage genre and random discovery lists");
 assert.match(html, /PUBLISHED_CATALOG_URL\s*=\s*['"]\.\/content\/catalog\.json['"]/, "Published catalog loader is missing");
