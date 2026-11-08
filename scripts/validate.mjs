@@ -569,8 +569,10 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The offline app-shell cache must be refreshed for the dedicated duology page");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
+assert.ok(serviceWorker.includes("'./poka-nas-ne-naydut.html'"), "The dedicated duology page must be available in the offline app shell");
+assert.ok(serviceWorker.includes("'./content/books/poka-nas-ne-naydut-cover.svg'"), "The dedicated duology cover must be available offline");
 assert.ok(existsSync(resolve(root, "poka-nas-ne-naydut.html")), "The dedicated Poka nas ne naydut duology page is missing");
 assert.match(pokaDuologyPage, /<html[^>]+lang=["']ru["']/i, "Duology page language should be Russian");
 assert.match(pokaDuologyPage, /<meta[^>]+name=["']description["']/i, "Duology page SEO description is missing");
