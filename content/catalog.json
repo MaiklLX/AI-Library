@@ -110,7 +110,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 1
     },
     {
       "id": "ty-v-moih-planah-tom-02",
@@ -136,7 +138,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 2
     },
     {
       "id": "ty-v-moih-planah-tom-03",
@@ -163,7 +167,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 3
     },
     {
       "id": "ty-v-moih-planah-tom-04",
@@ -190,7 +196,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 4
     },
     {
       "id": "ty-v-moih-planah-tom-05",
@@ -217,7 +225,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 5
     },
     {
       "id": "ty-v-moih-planah-tom-06",
@@ -244,7 +254,9 @@
         "Роман",
         "Детектив"
       ],
-      "ageRating": "18+"
+      "ageRating": "18+",
+      "seriesId": "ty-v-moih-planah",
+      "seriesVolume": 6
     },
     {
       "id": "poka-nas-ne-naydut",
