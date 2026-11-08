@@ -3489,7 +3489,7 @@ function renderPokaDuologyCard(){
  return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card>'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
- '<span class="cover detective has-cover duology-muted-cover"><img class="cover-art" src="./content/books/poka-nas-ne-naydut-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
+ '<span class="cover detective has-cover duology-muted-cover"><img class="cover-art" src="./content/books/poka-nas-ne-naydut-cover.svg" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-special-label">ОСОБАЯ КНИГА</span><span class="duology-front-mark">✦</span></span></div>'+
  '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">БУДУЩЕЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
  '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
@@ -3550,7 +3550,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length+2);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const collectionCards=seriesCard+duologyCard;document.querySelector("#books").innerHTML=duologyCard+(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+seriesCard;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
@@ -4946,3 +4946,45 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
  #books .duology-back .book-back-actions .read{min-height:29px;font-size:8px;padding:5px}
 }
 </style>
+<style id="poka-duology-special-edition-v1">
+/* Особый статус дилогии на общей полке: золотой контур, мягкий свет и отдельная печать. */
+#books .duology-collection-card{
+  border-color:#9e814b;
+  background:linear-gradient(145deg,#241f16,#171614 72%);
+  box-shadow:0 0 0 1px #d9b66d18,0 12px 30px #0006,0 0 26px #d9b66d12;
+}
+#books .duology-collection-card:hover{
+  border-color:#e5c77f;
+  box-shadow:0 0 0 1px #e5c77f35,0 17px 38px #0008,0 0 34px #d9b66d20;
+}
+#books .duology-collection-card .duology-muted-cover .cover-art{
+  filter:grayscale(.58) brightness(.78) contrast(.96);
+  opacity:.9;
+}
+#books .duology-collection-card .duology-muted-cover:after{
+  border-color:#d9b66d99;
+  box-shadow:0 0 38px #d9b66d20,inset 0 0 18px #d9b66d0b;
+}
+#books .duology-special-label{
+  position:absolute;z-index:3;left:12px;bottom:12px;
+  display:inline-flex;align-items:center;gap:6px;
+  max-width:calc(100% - 54px);padding:6px 9px;
+  border:1px solid #c6a565;border-radius:999px;
+  background:#17130ee8;color:#f0d79e;
+  box-shadow:0 4px 14px #0008,inset 0 0 0 1px #d9b66d18;
+  font:800 8px/1.1 system-ui,sans-serif;letter-spacing:.12em;
+  white-space:nowrap;backdrop-filter:blur(8px);
+}
+#books .duology-special-label:before{content:"✦";font-size:10px;color:#f4d58e}
+#books .duology-collection-card .duology-front-mark{
+  color:#f0d18b;text-shadow:0 0 16px #d9b66d88;
+}
+@media(max-width:540px){
+  #books .duology-collection-card{box-shadow:0 0 0 1px #d9b66d18,0 8px 20px #0006,0 0 20px #d9b66d10}
+  #books .duology-special-label{left:8px;bottom:8px;padding:5px 7px;font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){
+  #books .duology-collection-card{transition:none}
+}
+</style>
+
