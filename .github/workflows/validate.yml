@@ -22,3 +22,28 @@ jobs:
           node-version: 22
       - name: Validate HTML scripts, manifest and local assets
         run: node scripts/validate.mjs
+
+  visual:
+    if: github.event_name == 'pull_request' && github.head_ref == 'release/poka-duology-collection-2026-11-08'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: npm install --no-save playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Capture desktop and mobile screenshots and verify layout
+        run: node scripts/visual-check-duology.mjs
+      - name: Upload visual verification screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duology-collection-visual-check
+          path: artifacts/duology-visual/
+          if-no-files-found: warn
