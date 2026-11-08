@@ -583,7 +583,7 @@ assert.deepEqual([...new Set(duplicateCollectionIds)], [], "Duplicate static IDs
 assert.ok(collectionPage.includes('fetch("./content/series/" + encodeURIComponent(id) + ".json"'), "Collection page must load the matching public manifest");
 assert.ok(collectionPage.includes('if (id === "poka-nas-ne-naydut") byId("volumeList").classList.add("duology-grid")'), "Duology collection must use its two-card layout");
 assert.ok(collectionPage.includes(".volume-primary::before") && collectionPage.includes(".volume-continuation"), "The two volumes must have a restrained visual hierarchy");
-assert.ok(collectionPage.includes("@media(max-width:600px){.volumes.duology-grid{grid-template-columns:1fr}"), "Duology cards must stack on narrow screens");
+assert.ok(collectionPage.includes("@media(max-width:600px){.volumes.duology-grid{grid-template-columns:1fr;gap:14px}"), "Duology cards must stack on narrow screens");
 assert.ok(collectionPage.includes("countdown-date") && collectionPage.includes('countdown.setAttribute("role", "group")'), "Release countdowns must be styled and accessible");
 assert.ok(collectionPage.includes("window.setInterval(updateCountdowns, 1000)"), "Collection countdowns must update live");
 assert.ok(collectionPage.includes("annotationVisibleAt") && collectionPage.includes("Аннотация откроется за 48 часов до релиза."), "Second-volume annotation must remain hidden until its reveal time");
