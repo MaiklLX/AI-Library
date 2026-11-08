@@ -78,7 +78,8 @@ try {
         viewportWidth: innerWidth,
         boxes,
         artCount: list.querySelectorAll(".volume-art").length,
-        heroCoverLoaded: document.querySelector("#cover").complete && document.querySelector("#cover").naturalWidth > 0
+        heroCoverLoaded: document.querySelector("#cover").complete && document.querySelector("#cover").naturalWidth > 0,
+        headerHeights: [...document.querySelector(".topbar").children].map(item => item.getBoundingClientRect().height)
       };
     });
     assert.equal(layout.columns, viewport.columns, viewport.name + ": incorrect responsive column count");
