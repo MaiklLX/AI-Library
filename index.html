@@ -2957,6 +2957,38 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
 @keyframes ageGateAppear{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.age-gate-dialog{animation:none}}
 </style>
+
+<style id="book-shelf-card-alignment-v1">
+/* Shelf overlays use separate, predictable zones on every card size. */
+#books .book-front{isolation:isolate;min-width:0}
+#books .book-front .cover{min-width:0}
+#books .book-front .cover .tag{
+  top:12px;left:12px;right:auto;
+  max-width:calc(100% - 76px);
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#books .book-front-fav{
+  top:8px;right:8px;
+  width:44px;height:44px;min-height:44px;
+  display:grid;place-items:center;
+  touch-action:manipulation;
+}
+#books .book-front .cover-progress{
+  left:10px;right:auto;bottom:10px;
+  max-width:calc(100% - 20px);min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#books .book-front .cover-progress>span:last-child{
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+@media(max-width:680px){
+  #books .book-front-fav{top:8px;right:8px;width:44px;height:44px;min-height:44px}
+  #books .book-front .cover-progress{left:8px;bottom:8px;max-width:calc(100% - 16px)}
+}
+@media(prefers-reduced-motion:reduce){
+  #books .book-front-fav{transition:none}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
