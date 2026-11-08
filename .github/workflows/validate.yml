@@ -22,3 +22,7 @@ jobs:
           node-version: 22
       - name: Validate HTML scripts, manifest and local assets
         run: node scripts/validate.mjs
+      - name: Check scheduled release automation
+        run: |
+          node --check scripts/publish-due-books.mjs
+          node scripts/publish-due-books.mjs --dry-run

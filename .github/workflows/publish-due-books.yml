@@ -1,0 +1,40 @@
+name: Publish scheduled AI Library books
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scheduled-book-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Publish due books with complete text
+        run: node scripts/publish-due-books.mjs
+      - name: Commit and push publication
+        run: |
+          if git diff --quiet -- content/catalog.json content/books; then
+            echo "No eligible releases to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/catalog.json content/books
+          git commit -m "chore: publish scheduled AI Library books"
+          git push origin main
