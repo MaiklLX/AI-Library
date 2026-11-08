@@ -571,13 +571,13 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v89'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 assert.ok(existsSync(resolve(root, "collection.html")), "Universal duology collection page is missing");
 assert.match(collectionPage, /<html[^>]+lang=["']ru["']/i, "Collection page language should be Russian");
 assert.match(collectionPage, /<meta[^>]+name=["']description["']/i, "Collection page SEO description is missing");
-const collectionIds = [...collectionPage.matchAll(/\\bid=["']([^"']+)["']/g)].map(match => match[1]);
+const collectionIds = (collectionPage.match(/id="[^"]+"/g) || []).map(value => value.slice(4, -1));
 const duplicateCollectionIds = collectionIds.filter((id, index) => collectionIds.indexOf(id) !== index);
 assert.deepEqual([...new Set(duplicateCollectionIds)], [], "Duplicate static IDs found on the collection page");
 assert.ok(collectionPage.includes('fetch("./content/series/" + encodeURIComponent(id) + ".json"'), "Collection page must load the matching public manifest");
@@ -602,8 +602,9 @@ assert.ok(premierePage.includes("bookId !== 'poka-nas-ne-naydut'"), "Collection 
 assert.ok(serviceWorker.includes("'./collection.html'") && serviceWorker.includes("'./content/series/poka-nas-ne-naydut.json'") && serviceWorker.includes("'./content/books/poka-nas-ne-naydut-cover.svg'"), "Collection page, manifest and cover must be available in the offline app shell");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v90'"), "Offline app-shell cache must be refreshed for the duology collection");
 for (const [label, page] of [["collection", collectionPage], ["premiere", premierePage]]) {
-  const inlineScripts = [...page.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
-  inlineScripts.forEach((match, index) => {
-    try { new Function(match[1]); } catch (error) { throw new Error(label + " inline script #" + (index + 1) + " has a syntax error: " + error.message); }
+  const inlineScripts = page.split("<script").slice(1).map(script => script.slice(script.indexOf(">") + 1).split("</script>")[0]);
+  inlineScripts.forEach((script, index) => {
+    if (!script.trim()) return;
+    try { new Function(script); } catch (error) { throw new Error(label + " inline script #" + (index + 1) + " has a syntax error: " + error.message); }
   });
 }
