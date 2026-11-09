@@ -2,637 +2,693 @@
   "title": "Пока нас не найдут — проверка упаковки двух черновых томов",
   "date": "2026-11-09",
   "branch": "editorial/restore-literary-standard-i16-onward",
-  "sourceFiles": 84,
-  "books": {
-    "I": {
-      "chapters": 41,
-      "sourceWords": 69091,
-      "bodyWords": 68370,
-      "sourceWordCountIncludesMarkdownHeadings": true,
-      "below1600BodyOnly": [
-        "Глава 35. Не знать адреса (1596)",
-        "Глава 36. Голос (1593)",
-        "Глава 40. Оставить свет (1574)"
-      ],
-      "draft": "poka-nas-ne-naydut-tom-01.json",
-      "commit": "d45bbb1a7a159e50cbdc1d2adbed652c203ee8dd"
+  "status": "current full JSON assembly after KT-488",
+  "sourceOfTruth": {
+    "volumeI": {
+      "file": "poka-nas-ne-naydut-tom-01.json",
+      "sha": "9faf00ec86481968498edc8222c3acb3d5000e7f",
+      "elements": 41,
+      "mainChapters": 40,
+      "bodyWords": 68246,
+      "epilogueWords": 360,
+      "wordCount": 68606,
+      "below1600BodyOnly": [],
+      "above2200BodyOnly": []
     },
-    "II": {
-      "chapters": 43,
-      "sourceWords": 75557,
-      "bodyWords": 74966,
-      "sourceWordCountIncludesMarkdownHeadings": true,
-      "below1600BodyOnly": [
-        "Глава 30. Ещё один день (1594)"
-      ],
-      "draft": "poka-nas-ne-naydut-tom-02.json",
-      "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f"
+    "volumeII": {
+      "file": "poka-nas-ne-naydut-tom-02.json",
+      "sha": "73095446a9eba508516b480efd6a251844ffb43e",
+      "elements": 43,
+      "mainChapters": 42,
+      "bodyWords": 76174,
+      "epilogueWords": 1144,
+      "wordCount": 77318,
+      "below1600BodyOnly": [],
+      "above2200BodyOnly": [
+        "Глава 42. Выбор друг друга (2336)"
+      ]
     }
   },
   "total": {
-    "chapters": 84,
-    "sourceWords": 144648,
-    "bodyWords": 143336
+    "mainChapters": 82,
+    "mainBodyWords": 144420,
+    "epilogueWords": 1504,
+    "totalElements": 84,
+    "totalBodyWords": 145924
   },
-  "method": "All 84 current Markdown files in the final editorial release-candidate are represented in the provenance table. Eight files changed after the KT-392 packaging snapshot and were synchronized into the two full JSON volumes and six staging fragments; the other 76 source SHA values were verified unchanged. chapters[].content matches the corresponding Markdown body; body word counts are whitespace-separated tokens from JSON content, while source word counts include Markdown headings and POV labels. Epilogues are separate elements and are not evaluated against the 1,600-word chapter threshold.",
-  "publicationSafety": "Both complete JSON files and all six staging fragments remain under docs/poka-nas-ne-naydut/publishing-drafts/. They are not referenced from content/catalog.json or content/books/. The author-confirmed public schedule is recorded in the documentation manifest, but both volume JSONs remain status=draft; no publication status or reader route was enabled. Main and the public catalog were not modified.",
-  "provenance": [
-    {
-      "source": "BOOK-I-CHAPTER-01-REVIEWED-DRAFT.md",
-      "sha": "1e8151070628a0c875e26564aead9385428b3a34",
-      "sourceWords": 1650,
-      "bodyWords": 1638,
-      "title": "Глава 1. Незакрытая запись"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-02-REVIEWED-DRAFT.md",
-      "sha": "7413f11c1e8dc830363eca1e3d59833058e0eb4e",
-      "sourceWords": 1708,
-      "bodyWords": 1690,
-      "title": "Глава 2. Фамилия как обязательство"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-03-REVIEWED-DRAFT.md",
-      "sha": "6314c9d4bd980584d8f43684b9dafbd39813f0ca",
-      "sourceWords": 1653,
-      "bodyWords": 1634,
-      "title": "Глава 3. След с ограниченным доступом"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-04-REVIEWED-DRAFT.md",
-      "sha": "ff9709c21fab4d29e26a297f3cdd0ca65872610b",
-      "sourceWords": 1725,
-      "bodyWords": 1707,
-      "title": "Глава 4. Рамки чужого решения"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-05-REVIEWED-DRAFT.md",
-      "sha": "96d65905609c6d310da5068f5806cff4d6d95f26",
-      "sourceWords": 1679,
-      "bodyWords": 1662,
-      "title": "Глава 5. Собственный голос"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-06-REVIEWED-DRAFT.md",
-      "sha": "7ea811a02f64210ad7aee1fc5a61f98f973032bb",
-      "sourceWords": 1876,
-      "bodyWords": 1857,
-      "title": "Глава 6. Люди в одном зале"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-07-REVIEWED-DRAFT.md",
-      "sha": "9a40b9efcc97307a47fc7ce3999278e875072fd8",
-      "sourceWords": 1682,
-      "bodyWords": 1665,
-      "title": "Глава 7. Неподходящее время"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-08-REVIEWED-DRAFT.md",
-      "sha": "f0eca20895411f2a1971f81e3c7bc534f9020e63",
-      "sourceWords": 1726,
-      "bodyWords": 1708,
-      "title": "Глава 8. Цена простого решения"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-09-REVIEWED-DRAFT.md",
-      "sha": "641a4278dd306e80f1204e1d1e7055dc94c36e8b",
-      "sourceWords": 1692,
-      "bodyWords": 1674,
-      "title": "Глава 9. Решение без подсказки"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-10-REVIEWED-DRAFT.md",
-      "sha": "f8d7ddd5b7292a07f9418f303062ad102f234832",
-      "sourceWords": 1657,
-      "bodyWords": 1638,
-      "title": "Глава 10. Время, которое она выбрала"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-11-REVIEWED-DRAFT.md",
-      "sha": "7d308ce5630c673f7056f729ed34a6ea4dd71b4f",
-      "sourceWords": 1729,
-      "bodyWords": 1709,
-      "title": "Глава 11. То, что осталось между ними"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-12-REVIEWED-DRAFT.md",
-      "sha": "75429066c7c9cc4b0f1fb33d841ab173d5483598",
-      "sourceWords": 1816,
-      "bodyWords": 1798,
-      "title": "Глава 12. Вопрос без допроса"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-13-REVIEWED-DRAFT.md",
-      "sha": "175cf76ec11f045146ae8ebfad9240889fe32ebb",
-      "sourceWords": 1672,
-      "bodyWords": 1655,
-      "title": "Глава 13. Цена подписи"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-14-REVIEWED-DRAFT.md",
-      "sha": "77b607b0ff63625d0022c0c8cc9f405b3c6813af",
-      "sourceWords": 1796,
-      "bodyWords": 1779,
-      "title": "Глава 14. Граница вопросов"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-15-REVIEWED-DRAFT.md",
-      "sha": "25f7361f13d902dceba42a4ac0b25859366dc444",
-      "sourceWords": 1770,
-      "bodyWords": 1751,
-      "title": "Глава 15. Не для чужих глаз"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-16-REVIEWED-DRAFT.md",
-      "sha": "1f41463d685a174838c22b2362fb6c8dbea100b5",
-      "sourceWords": 2124,
-      "bodyWords": 2107,
-      "title": "Глава 16. Не сравнивать"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-17-REVIEWED-DRAFT.md",
-      "sha": "e18389729b4775258614e274f9141d368c436085",
-      "sourceWords": 1734,
-      "bodyWords": 1717,
-      "title": "Глава 17. Условия семьи"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-18-REVIEWED-DRAFT.md",
-      "sha": "9cff62192319da670d8c1aa0f0688e54a193e594",
-      "sourceWords": 1683,
-      "bodyWords": 1665,
-      "title": "Глава 18. Название в описи"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-19-REVIEWED-DRAFT.md",
-      "sha": "7e5b811229b356840e42b285d111504b667a44ee",
-      "sourceWords": 1784,
-      "bodyWords": 1764,
-      "title": "Глава 19. То, о чём не спросили"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-20-REVIEWED-DRAFT.md",
-      "sha": "9b1dc023bb02f3b031d7f4738be44b4afb33ce5b",
-      "sourceWords": 2010,
-      "bodyWords": 1992,
-      "title": "Глава 20. Песня, которую помнят"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-21-REVIEWED-DRAFT.md",
-      "sha": "fa445bab4b8ec13385e27d24f7953879ce85f319",
-      "sourceWords": 1747,
-      "bodyWords": 1729,
-      "title": "Глава 21. То, что остаётся"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-22-REVIEWED-DRAFT.md",
-      "sha": "2415b3b725e118ef5d019bc61364b3f77ec15fa1",
-      "sourceWords": 1681,
-      "bodyWords": 1662,
-      "title": "Глава 22. След в открытом доступе"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-23-REVIEWED-DRAFT.md",
-      "sha": "7e7734d8903696e6b1fbde03a436ff50abe12be5",
-      "sourceWords": 1646,
-      "bodyWords": 1628,
-      "title": "Глава 23. Подпись под версией"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-24-REVIEWED-DRAFT.md",
-      "sha": "9ceca00730b6a7325e80e1c4bed931915fa62b97",
-      "sourceWords": 1721,
-      "bodyWords": 1704,
-      "title": "Глава 24. Без обещаний"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-25-REVIEWED-DRAFT.md",
-      "sha": "07d377cd8838b9473a387ae56e32dc9ed3a8cb3e",
-      "sourceWords": 1728,
-      "bodyWords": 1708,
-      "title": "Глава 25. До того, как стало известно"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-26-REVIEWED-DRAFT.md",
-      "sha": "04053b4a0004fa9b923fc0a3b45f1f429ada230b",
-      "sourceWords": 1689,
-      "bodyWords": 1672,
-      "title": "Глава 26. Вторая цепочка"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-27-REVIEWED-DRAFT.md",
-      "sha": "21d93c53e629319295cfab7614071d893acc537f",
-      "sourceWords": 1713,
-      "bodyWords": 1694,
-      "title": "Глава 27. То, что изменилось после"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-28-REVIEWED-DRAFT.md",
-      "sha": "59dd604e957b6f0828750c037d2efd73b388bc18",
-      "sourceWords": 1666,
-      "bodyWords": 1649,
-      "title": "Глава 28. Устойчивая картина"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-29-REVIEWED-DRAFT.md",
-      "sha": "9af38f7b679d53c8536386421cdf53499e842597",
-      "sourceWords": 1637,
-      "bodyWords": 1620,
-      "title": "Глава 29. Время получения"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-30-REVIEWED-DRAFT.md",
-      "sha": "da5611743b6cda6b945aba7f1d069448ac946ede",
-      "sourceWords": 1734,
-      "bodyWords": 1716,
-      "title": "Глава 30. Ещё один день"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-31-REVIEWED-DRAFT.md",
-      "sha": "26427bddc8cbc5fe8ec98d0ece98dc95bfe79b27",
-      "sourceWords": 1728,
-      "bodyWords": 1710,
-      "title": "Глава 31. Что ты выбрал"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-32-REVIEWED-DRAFT.md",
-      "sha": "30ab1fec6d5062137bb47874e9462ba7daf734bd",
-      "sourceWords": 1653,
-      "bodyWords": 1635,
-      "title": "Глава 32. Не просить остаться"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-33-REVIEWED-DRAFT.md",
-      "sha": "7c15198f471cb515b96611a39c413829b05b3e99",
-      "sourceWords": 1665,
-      "bodyWords": 1647,
-      "title": "Глава 33. Не переписывать память"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-34-REVIEWED-DRAFT.md",
-      "sha": "1a28ae406bc7aefc02fab706fbb143002bb23dc0",
-      "sourceWords": 1634,
-      "bodyWords": 1616,
-      "title": "Глава 34. Не искать следом"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-35-REVIEWED-DRAFT.md",
-      "sha": "894ae324130f7c4cac37bf05f7fb48f60c8c92d4",
-      "sourceWords": 1614,
-      "bodyWords": 1596,
-      "title": "Глава 35. Не знать адреса"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-36-REVIEWED-DRAFT.md",
-      "sha": "8571ce37e34ccdd40da1237c58beaefd8ac14f21",
-      "sourceWords": 1609,
-      "bodyWords": 1593,
-      "title": "Глава 36. Голос"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-37-REVIEWED-DRAFT.md",
-      "sha": "5702c24b2c191cd767f28a6e2149f3968566d3b4",
-      "sourceWords": 1696,
-      "bodyWords": 1679,
-      "title": "Глава 37. Цена подписи"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-38-REVIEWED-DRAFT.md",
-      "sha": "641d5527e7cb176fd861f6dfc59ce4d2869e8c0d",
-      "sourceWords": 1697,
-      "bodyWords": 1680,
-      "title": "Глава 38. Не обещать"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-39-REVIEWED-DRAFT.md",
-      "sha": "7b7f872183eea0c3e5fef6d39b49befd5162c0f1",
-      "sourceWords": 1705,
-      "bodyWords": 1688,
-      "title": "Глава 39. Без купюр"
-    },
-    {
-      "source": "BOOK-I-CHAPTER-40-REVIEWED-DRAFT.md",
-      "sha": "93a199498146295be60c071444ec4584fb523f8c",
-      "sourceWords": 1591,
-      "bodyWords": 1574,
-      "title": "Глава 40. Оставить свет"
-    },
-    {
-      "source": "BOOK-I-EPILOGUE-REVIEWED-DRAFT.md",
-      "sha": "bcf9f7cb04b5e6b68f3a863e3e7116534edbbcea",
-      "sourceWords": 371,
-      "bodyWords": 360,
-      "title": "Эпилог книги I. Открытый канал"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-01-REVIEWED-DRAFT.md",
-      "sha": "033a7301665f1ccfbc349190f5de0fe02fecef2c",
-      "sourceWords": 1879,
-      "bodyWords": 1866,
-      "title": "Глава 1. Жизнь продолжается"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-02-REVIEWED-DRAFT.md",
-      "sha": "abe6a9b8c3a5af8468e0a98d066c1b5917461b16",
-      "sourceWords": 1741,
-      "bodyWords": 1728,
-      "title": "Глава 2. Не подписывать"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-03-REVIEWED-DRAFT.md",
-      "sha": "ea1dbacd4799b793d419f8b159b9f08e16b0805a",
-      "sourceWords": 1762,
-      "bodyWords": 1749,
-      "title": "Глава 3. Чужая цена"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-04-REVIEWED-DRAFT.md",
-      "sha": "33dfbb65513eccffb194d4ad51a94cc6c70645e7",
-      "sourceWords": 1700,
-      "bodyWords": 1687,
-      "title": "Глава 4. Две линии"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-05-REVIEWED-DRAFT.md",
-      "sha": "ceb8f9d32e154dc2c0c6872bcd454efe5bff23ee",
-      "sourceWords": 1708,
-      "bodyWords": 1694,
-      "title": "Глава 5. Архив собственного молчания"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-06-REVIEWED-DRAFT.md",
-      "sha": "3ded8e78de3ef4759487be98e510d3e07d469f42",
-      "sourceWords": 1683,
-      "bodyWords": 1670,
-      "title": "Глава 6. Поздняя редакция"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-07-REVIEWED-DRAFT.md",
-      "sha": "a244145bb1f37e651438c3bb9ecd6352ff131c7c",
-      "sourceWords": 1781,
-      "bodyWords": 1765,
-      "title": "Глава 7. То, чего он не знал"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-08-REVIEWED-DRAFT.md",
-      "sha": "2efdb0876512e0c974e9311f52997cfe4189c741",
-      "sourceWords": 1651,
-      "bodyWords": 1638,
-      "title": "Глава 8. Совпадение маркеров"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-09-REVIEWED-DRAFT.md",
-      "sha": "4561675753a99a5e9084cd759e882213a76484dd",
-      "sourceWords": 1687,
-      "bodyWords": 1673,
-      "title": "Глава 9. Не между нами"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-10-REVIEWED-DRAFT.md",
-      "sha": "1d72ba1271213ba0738ac34050d450a7564e3298",
-      "sourceWords": 1703,
-      "bodyWords": 1690,
-      "title": "Глава 10. Без условий"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-11-REVIEWED-DRAFT.md",
-      "sha": "9dd0bd43390a9fa4b1cf0bae1c2676e581ddbab7",
-      "sourceWords": 1669,
-      "bodyWords": 1654,
-      "title": "Глава 11. Один человек, две записи"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-12-REVIEWED-DRAFT.md",
-      "sha": "2ac62ccd76d23ce374908b8ca257dca3dd0e3dbb",
-      "sourceWords": 1769,
-      "bodyWords": 1756,
-      "title": "Глава 12. Полный комплект"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-13-REVIEWED-DRAFT.md",
-      "sha": "dc7a6ddf6cb0ddd1696f1c391868ef29e4d74e9f",
-      "sourceWords": 1614,
-      "bodyWords": 1602,
-      "title": "Глава 13. Подлинность"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-14-REVIEWED-DRAFT.md",
-      "sha": "4d9143c72c00dc266350bc267e3a379d325a554e",
-      "sourceWords": 1703,
-      "bodyWords": 1689,
-      "title": "Глава 14. Что ты выбрал"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-15-REVIEWED-DRAFT.md",
-      "sha": "85e615562e34c3b6b968c64e561eb65dd52e1f51",
-      "sourceWords": 1821,
-      "bodyWords": 1806,
-      "title": "Глава 15. То, что нельзя отменить"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-16-REVIEWED-DRAFT.md",
-      "sha": "a8ded36aec5baab5dba2b7d7d95365600d9ddf3c",
-      "sourceWords": 2063,
-      "bodyWords": 2048,
-      "title": "Глава 16. Не соревноваться"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-17-REVIEWED-DRAFT.md",
-      "sha": "c2310419c3d8a2bf2858e3b7f45407f23bb62a20",
-      "sourceWords": 1622,
-      "bodyWords": 1608,
-      "title": "Глава 17. За её спиной"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-18-REVIEWED-DRAFT.md",
-      "sha": "d8cf8e00a65cb4bda1851f2ed048049f4dccbe49",
-      "sourceWords": 1949,
-      "bodyWords": 1935,
-      "title": "Глава 18. Метка на носителе"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-19-REVIEWED-DRAFT.md",
-      "sha": "4a917378ea80cc5725065c58fc069dd4c356585c",
-      "sourceWords": 2051,
-      "bodyWords": 2037,
-      "title": "Глава 19. Свидетель не всеведущ"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-20-REVIEWED-DRAFT.md",
-      "sha": "40214e233d9aab531c00b4e2834b602bf14b9b10",
-      "sourceWords": 1890,
-      "bodyWords": 1873,
-      "title": "Глава 20. Милена как человек, а не оправдание"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-21-REVIEWED-DRAFT.md",
-      "sha": "24055a8a644038c3f36203cb8d5ba72935598782",
-      "sourceWords": 1668,
-      "bodyWords": 1654,
-      "title": "Глава 21. Шаг без обещания"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-22-REVIEWED-DRAFT.md",
-      "sha": "7fc60549aafaa17b65c6b3597933b3a0825ec683",
-      "sourceWords": 1719,
-      "bodyWords": 1706,
-      "title": "Глава 22. Предел помощи"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-23-REVIEWED-DRAFT.md",
-      "sha": "ffd5c126de837f7694ba5a9c4c55a7764bbf3238",
-      "sourceWords": 1769,
-      "bodyWords": 1756,
-      "title": "Глава 23. Последствия давления"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-24-REVIEWED-DRAFT.md",
-      "sha": "b0fe7d8434d94e3f50c7a5d99eaa0563f09ad0e2",
-      "sourceWords": 1756,
-      "bodyWords": 1742,
-      "title": "Глава 24. Милена выбирает помочь"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-25-REVIEWED-DRAFT.md",
-      "sha": "617612e8973ceb7196fe49c6b1783c77fbbb746e",
-      "sourceWords": 1744,
-      "bodyWords": 1729,
-      "title": "Глава 25. Голос Веры внутри границ"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-26-REVIEWED-DRAFT.md",
-      "sha": "452a318a54cf158c9b21550e30ae69651b9dd7d5",
-      "sourceWords": 1829,
-      "bodyWords": 1816,
-      "title": "Глава 26. Не посредник-владелец"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-27-REVIEWED-DRAFT.md",
-      "sha": "5764184443a404ab25f554dd931de329fc503f13",
-      "sourceWords": 1789,
-      "bodyWords": 1774,
-      "title": "Глава 27. Не вся правда сразу"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-28-REVIEWED-DRAFT.md",
-      "sha": "69d77ff2409035a22007a1e99c8e5ebbbb9888af",
-      "sourceWords": 1715,
-      "bodyWords": 1702,
-      "title": "Глава 28. Второй рубеж"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-29-REVIEWED-DRAFT.md",
-      "sha": "92f997d733107aeeeb2bdebf7909dd4e61e76383",
-      "sourceWords": 1748,
-      "bodyWords": 1735,
-      "title": "Глава 29. До совещания"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-30-REVIEWED-DRAFT.md",
-      "sha": "f34e3627f8883807b5fd18c69421f4e3df0c7084",
-      "sourceWords": 1608,
-      "bodyWords": 1594,
-      "title": "Глава 30. Ещё один день"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-31-REVIEWED-DRAFT.md",
-      "sha": "25ecc53b359f5fdda06a5002c3dc3a42b31ebb95",
-      "sourceWords": 1724,
-      "bodyWords": 1710,
-      "title": "Глава 31. Что он знал"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-32-REVIEWED-DRAFT.md",
-      "sha": "a7070a4e867a720f9841129716835be668b32ac4",
-      "sourceWords": 2023,
-      "bodyWords": 2010,
-      "title": "Глава 32. Не удерживать"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-33-REVIEWED-DRAFT.md",
-      "sha": "a8989959a01999ddeb2313e38f84a0ff78ee2dac",
-      "sourceWords": 1737,
-      "bodyWords": 1723,
-      "title": "Глава 33. Без удобной версии"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-34-REVIEWED-DRAFT.md",
-      "sha": "1866d089a88fbe316cb739c400e8a7ac285b8c24",
-      "sourceWords": 1918,
-      "bodyWords": 1905,
-      "title": "Глава 34. Открытый канал"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md",
-      "sha": "82c6f90542f4356ea00091e51242813b2c4de977",
-      "sourceWords": 1765,
-      "bodyWords": 1752,
-      "title": "Глава 35. Мокрый перекрёсток"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-36-REVIEWED-DRAFT.md",
-      "sha": "b50de790f77790222198368fe0f903aa90c64b33",
-      "sourceWords": 1664,
-      "bodyWords": 1650,
-      "title": "Глава 36. Не обязанность утешать"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-37-REVIEWED-DRAFT.md",
-      "sha": "d63cebc76060ad500463e94f9365b157580e4cb6",
-      "sourceWords": 1669,
-      "bodyWords": 1655,
-      "title": "Глава 37. Горе без идеализации"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-38-REVIEWED-DRAFT.md",
-      "sha": "5255c27d2cdd6af6d8b2f788220d38e42888618c",
-      "sourceWords": 1824,
-      "bodyWords": 1811,
-      "title": "Глава 38. Собственное будущее"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-39-REVIEWED-DRAFT.md",
-      "sha": "ce1391526f09d24c6a38ab09e8c8e90e5fa6032e",
-      "sourceWords": 1807,
-      "bodyWords": 1792,
-      "title": "Глава 39. Без права на сокращение"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-40-REVIEWED-DRAFT.md",
-      "sha": "4b95e9e3afaee85af43e9aba5fda890e0f6ee658",
-      "sourceWords": 1815,
-      "bodyWords": 1802,
-      "title": "Глава 40. Проверка настоящим"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-41-REVIEWED-DRAFT.md",
-      "sha": "ef23850aeab9e08f7bf066434d30883085b317c6",
-      "sourceWords": 1698,
-      "bodyWords": 1684,
-      "title": "Глава 41. Будущее без торга"
-    },
-    {
-      "source": "BOOK-II-CHAPTER-42-REVIEWED-DRAFT.md",
-      "sha": "9ced934471f5aaac5daa3bc72773a9d38907d5fe",
-      "sourceWords": 2188,
-      "bodyWords": 2174,
-      "title": "Глава 42. Выбор друг друга"
-    },
-    {
-      "source": "BOOK-II-EPILOGUE-REVIEWED-DRAFT.md",
-      "sha": "ec5abbf6f6f958ee971da3aa2bca3d490f822bba",
-      "sourceWords": 934,
-      "bodyWords": 922,
-      "title": "Эпилог. Обычное утро"
+  "method": "For each chapters[].content in the current full JSON, count content.trim().split(/\\s+/).filter(Boolean).length. The title is stored separately in chapters[].title; POV labels are excluded from content. Epilogues are included in volume wordCount but excluded from the 1,600-word minimum check.",
+  "staging": {
+    "updatedFragments": [
+      {
+        "file": "book-i-part-03.json",
+        "sha": "3e90875843b078ef2ff5832be7fed13b887fa14e",
+        "contains": [
+          "I/36",
+          "I/40"
+        ]
+      },
+      {
+        "file": "book-ii-part-02.json",
+        "sha": "1712c1a3353444c3af12a68aea4f4c0b531318e0",
+        "contains": [
+          "II/30"
+        ]
+      }
+    ],
+    "manifest": {
+      "file": "series-manifest.draft.json",
+      "sha": "61146fd9d270b1b03f6936cdb8f8c8ffcce54081",
+      "wordCounts": [
+        68606,
+        77318
+      ]
     }
-  ],
-  "ciValidation": {
-    "workflow": "Validate AI Library",
-    "status": "success",
-    "conclusion": "success",
-    "runId": 42563561341,
-    "commit": "f6712f8405830ea43b680ad966c714114b0b164c",
-    "htmlUrl": "https://github.com/MaiklLX/AI-Library/actions/runs/42563561341",
-    "scope": "GitHub Actions application validation passed. Draft JSON and six staging fragments were separately checked for chapter counts, non-empty content, unique titles, wordCount parity, and exact slice parity."
-  }
+  },
+  "historicalKT415Snapshot": {
+    "date": "2026-11-09",
+    "sourceFiles": 84,
+    "books": {
+      "I": {
+        "chapters": 41,
+        "sourceWords": 69091,
+        "bodyWords": 68370,
+        "sourceWordCountIncludesMarkdownHeadings": true,
+        "below1600BodyOnly": [
+          "Глава 35. Не знать адреса (1596)",
+          "Глава 36. Голос (1593)",
+          "Глава 40. Оставить свет (1574)"
+        ],
+        "draft": "poka-nas-ne-naydut-tom-01.json",
+        "commit": "d45bbb1a7a159e50cbdc1d2adbed652c203ee8dd"
+      },
+      "II": {
+        "chapters": 43,
+        "sourceWords": 75557,
+        "bodyWords": 74966,
+        "sourceWordCountIncludesMarkdownHeadings": true,
+        "below1600BodyOnly": [
+          "Глава 30. Ещё один день (1594)"
+        ],
+        "draft": "poka-nas-ne-naydut-tom-02.json",
+        "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f"
+      }
+    },
+    "total": {
+      "chapters": 84,
+      "sourceWords": 144648,
+      "bodyWords": 143336
+    },
+    "method": "All 84 current Markdown files in the final editorial release-candidate are represented in the provenance table. Eight files changed after the KT-392 packaging snapshot and were synchronized into the two full JSON volumes and six staging fragments; the other 76 source SHA values were verified unchanged. chapters[].content matches the corresponding Markdown body; body word counts are whitespace-separated tokens from JSON content, while source word counts include Markdown headings and POV labels. Epilogues are separate elements and are not evaluated against the 1,600-word chapter threshold.",
+    "provenance": [
+      {
+        "source": "BOOK-I-CHAPTER-01-REVIEWED-DRAFT.md",
+        "sha": "1e8151070628a0c875e26564aead9385428b3a34",
+        "sourceWords": 1650,
+        "bodyWords": 1638,
+        "title": "Глава 1. Незакрытая запись"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-02-REVIEWED-DRAFT.md",
+        "sha": "7413f11c1e8dc830363eca1e3d59833058e0eb4e",
+        "sourceWords": 1708,
+        "bodyWords": 1690,
+        "title": "Глава 2. Фамилия как обязательство"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-03-REVIEWED-DRAFT.md",
+        "sha": "6314c9d4bd980584d8f43684b9dafbd39813f0ca",
+        "sourceWords": 1653,
+        "bodyWords": 1634,
+        "title": "Глава 3. След с ограниченным доступом"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-04-REVIEWED-DRAFT.md",
+        "sha": "ff9709c21fab4d29e26a297f3cdd0ca65872610b",
+        "sourceWords": 1725,
+        "bodyWords": 1707,
+        "title": "Глава 4. Рамки чужого решения"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-05-REVIEWED-DRAFT.md",
+        "sha": "96d65905609c6d310da5068f5806cff4d6d95f26",
+        "sourceWords": 1679,
+        "bodyWords": 1662,
+        "title": "Глава 5. Собственный голос"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-06-REVIEWED-DRAFT.md",
+        "sha": "7ea811a02f64210ad7aee1fc5a61f98f973032bb",
+        "sourceWords": 1876,
+        "bodyWords": 1857,
+        "title": "Глава 6. Люди в одном зале"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-07-REVIEWED-DRAFT.md",
+        "sha": "9a40b9efcc97307a47fc7ce3999278e875072fd8",
+        "sourceWords": 1682,
+        "bodyWords": 1665,
+        "title": "Глава 7. Неподходящее время"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-08-REVIEWED-DRAFT.md",
+        "sha": "f0eca20895411f2a1971f81e3c7bc534f9020e63",
+        "sourceWords": 1726,
+        "bodyWords": 1708,
+        "title": "Глава 8. Цена простого решения"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-09-REVIEWED-DRAFT.md",
+        "sha": "641a4278dd306e80f1204e1d1e7055dc94c36e8b",
+        "sourceWords": 1692,
+        "bodyWords": 1674,
+        "title": "Глава 9. Решение без подсказки"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-10-REVIEWED-DRAFT.md",
+        "sha": "f8d7ddd5b7292a07f9418f303062ad102f234832",
+        "sourceWords": 1657,
+        "bodyWords": 1638,
+        "title": "Глава 10. Время, которое она выбрала"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-11-REVIEWED-DRAFT.md",
+        "sha": "7d308ce5630c673f7056f729ed34a6ea4dd71b4f",
+        "sourceWords": 1729,
+        "bodyWords": 1709,
+        "title": "Глава 11. То, что осталось между ними"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-12-REVIEWED-DRAFT.md",
+        "sha": "75429066c7c9cc4b0f1fb33d841ab173d5483598",
+        "sourceWords": 1816,
+        "bodyWords": 1798,
+        "title": "Глава 12. Вопрос без допроса"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-13-REVIEWED-DRAFT.md",
+        "sha": "175cf76ec11f045146ae8ebfad9240889fe32ebb",
+        "sourceWords": 1672,
+        "bodyWords": 1655,
+        "title": "Глава 13. Цена подписи"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-14-REVIEWED-DRAFT.md",
+        "sha": "77b607b0ff63625d0022c0c8cc9f405b3c6813af",
+        "sourceWords": 1796,
+        "bodyWords": 1779,
+        "title": "Глава 14. Граница вопросов"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-15-REVIEWED-DRAFT.md",
+        "sha": "25f7361f13d902dceba42a4ac0b25859366dc444",
+        "sourceWords": 1770,
+        "bodyWords": 1751,
+        "title": "Глава 15. Не для чужих глаз"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-16-REVIEWED-DRAFT.md",
+        "sha": "1f41463d685a174838c22b2362fb6c8dbea100b5",
+        "sourceWords": 2124,
+        "bodyWords": 2107,
+        "title": "Глава 16. Не сравнивать"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-17-REVIEWED-DRAFT.md",
+        "sha": "e18389729b4775258614e274f9141d368c436085",
+        "sourceWords": 1734,
+        "bodyWords": 1717,
+        "title": "Глава 17. Условия семьи"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-18-REVIEWED-DRAFT.md",
+        "sha": "9cff62192319da670d8c1aa0f0688e54a193e594",
+        "sourceWords": 1683,
+        "bodyWords": 1665,
+        "title": "Глава 18. Название в описи"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-19-REVIEWED-DRAFT.md",
+        "sha": "7e5b811229b356840e42b285d111504b667a44ee",
+        "sourceWords": 1784,
+        "bodyWords": 1764,
+        "title": "Глава 19. То, о чём не спросили"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-20-REVIEWED-DRAFT.md",
+        "sha": "9b1dc023bb02f3b031d7f4738be44b4afb33ce5b",
+        "sourceWords": 2010,
+        "bodyWords": 1992,
+        "title": "Глава 20. Песня, которую помнят"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-21-REVIEWED-DRAFT.md",
+        "sha": "fa445bab4b8ec13385e27d24f7953879ce85f319",
+        "sourceWords": 1747,
+        "bodyWords": 1729,
+        "title": "Глава 21. То, что остаётся"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-22-REVIEWED-DRAFT.md",
+        "sha": "2415b3b725e118ef5d019bc61364b3f77ec15fa1",
+        "sourceWords": 1681,
+        "bodyWords": 1662,
+        "title": "Глава 22. След в открытом доступе"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-23-REVIEWED-DRAFT.md",
+        "sha": "7e7734d8903696e6b1fbde03a436ff50abe12be5",
+        "sourceWords": 1646,
+        "bodyWords": 1628,
+        "title": "Глава 23. Подпись под версией"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-24-REVIEWED-DRAFT.md",
+        "sha": "9ceca00730b6a7325e80e1c4bed931915fa62b97",
+        "sourceWords": 1721,
+        "bodyWords": 1704,
+        "title": "Глава 24. Без обещаний"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-25-REVIEWED-DRAFT.md",
+        "sha": "07d377cd8838b9473a387ae56e32dc9ed3a8cb3e",
+        "sourceWords": 1728,
+        "bodyWords": 1708,
+        "title": "Глава 25. До того, как стало известно"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-26-REVIEWED-DRAFT.md",
+        "sha": "04053b4a0004fa9b923fc0a3b45f1f429ada230b",
+        "sourceWords": 1689,
+        "bodyWords": 1672,
+        "title": "Глава 26. Вторая цепочка"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-27-REVIEWED-DRAFT.md",
+        "sha": "21d93c53e629319295cfab7614071d893acc537f",
+        "sourceWords": 1713,
+        "bodyWords": 1694,
+        "title": "Глава 27. То, что изменилось после"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-28-REVIEWED-DRAFT.md",
+        "sha": "59dd604e957b6f0828750c037d2efd73b388bc18",
+        "sourceWords": 1666,
+        "bodyWords": 1649,
+        "title": "Глава 28. Устойчивая картина"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-29-REVIEWED-DRAFT.md",
+        "sha": "9af38f7b679d53c8536386421cdf53499e842597",
+        "sourceWords": 1637,
+        "bodyWords": 1620,
+        "title": "Глава 29. Время получения"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-30-REVIEWED-DRAFT.md",
+        "sha": "da5611743b6cda6b945aba7f1d069448ac946ede",
+        "sourceWords": 1734,
+        "bodyWords": 1716,
+        "title": "Глава 30. Ещё один день"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-31-REVIEWED-DRAFT.md",
+        "sha": "26427bddc8cbc5fe8ec98d0ece98dc95bfe79b27",
+        "sourceWords": 1728,
+        "bodyWords": 1710,
+        "title": "Глава 31. Что ты выбрал"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-32-REVIEWED-DRAFT.md",
+        "sha": "30ab1fec6d5062137bb47874e9462ba7daf734bd",
+        "sourceWords": 1653,
+        "bodyWords": 1635,
+        "title": "Глава 32. Не просить остаться"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-33-REVIEWED-DRAFT.md",
+        "sha": "7c15198f471cb515b96611a39c413829b05b3e99",
+        "sourceWords": 1665,
+        "bodyWords": 1647,
+        "title": "Глава 33. Не переписывать память"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-34-REVIEWED-DRAFT.md",
+        "sha": "1a28ae406bc7aefc02fab706fbb143002bb23dc0",
+        "sourceWords": 1634,
+        "bodyWords": 1616,
+        "title": "Глава 34. Не искать следом"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-35-REVIEWED-DRAFT.md",
+        "sha": "894ae324130f7c4cac37bf05f7fb48f60c8c92d4",
+        "sourceWords": 1614,
+        "bodyWords": 1596,
+        "title": "Глава 35. Не знать адреса"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-36-REVIEWED-DRAFT.md",
+        "sha": "8571ce37e34ccdd40da1237c58beaefd8ac14f21",
+        "sourceWords": 1609,
+        "bodyWords": 1593,
+        "title": "Глава 36. Голос"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-37-REVIEWED-DRAFT.md",
+        "sha": "5702c24b2c191cd767f28a6e2149f3968566d3b4",
+        "sourceWords": 1696,
+        "bodyWords": 1679,
+        "title": "Глава 37. Цена подписи"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-38-REVIEWED-DRAFT.md",
+        "sha": "641d5527e7cb176fd861f6dfc59ce4d2869e8c0d",
+        "sourceWords": 1697,
+        "bodyWords": 1680,
+        "title": "Глава 38. Не обещать"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-39-REVIEWED-DRAFT.md",
+        "sha": "7b7f872183eea0c3e5fef6d39b49befd5162c0f1",
+        "sourceWords": 1705,
+        "bodyWords": 1688,
+        "title": "Глава 39. Без купюр"
+      },
+      {
+        "source": "BOOK-I-CHAPTER-40-REVIEWED-DRAFT.md",
+        "sha": "93a199498146295be60c071444ec4584fb523f8c",
+        "sourceWords": 1591,
+        "bodyWords": 1574,
+        "title": "Глава 40. Оставить свет"
+      },
+      {
+        "source": "BOOK-I-EPILOGUE-REVIEWED-DRAFT.md",
+        "sha": "bcf9f7cb04b5e6b68f3a863e3e7116534edbbcea",
+        "sourceWords": 371,
+        "bodyWords": 360,
+        "title": "Эпилог книги I. Открытый канал"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-01-REVIEWED-DRAFT.md",
+        "sha": "033a7301665f1ccfbc349190f5de0fe02fecef2c",
+        "sourceWords": 1879,
+        "bodyWords": 1866,
+        "title": "Глава 1. Жизнь продолжается"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-02-REVIEWED-DRAFT.md",
+        "sha": "abe6a9b8c3a5af8468e0a98d066c1b5917461b16",
+        "sourceWords": 1741,
+        "bodyWords": 1728,
+        "title": "Глава 2. Не подписывать"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-03-REVIEWED-DRAFT.md",
+        "sha": "ea1dbacd4799b793d419f8b159b9f08e16b0805a",
+        "sourceWords": 1762,
+        "bodyWords": 1749,
+        "title": "Глава 3. Чужая цена"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-04-REVIEWED-DRAFT.md",
+        "sha": "33dfbb65513eccffb194d4ad51a94cc6c70645e7",
+        "sourceWords": 1700,
+        "bodyWords": 1687,
+        "title": "Глава 4. Две линии"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-05-REVIEWED-DRAFT.md",
+        "sha": "ceb8f9d32e154dc2c0c6872bcd454efe5bff23ee",
+        "sourceWords": 1708,
+        "bodyWords": 1694,
+        "title": "Глава 5. Архив собственного молчания"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-06-REVIEWED-DRAFT.md",
+        "sha": "3ded8e78de3ef4759487be98e510d3e07d469f42",
+        "sourceWords": 1683,
+        "bodyWords": 1670,
+        "title": "Глава 6. Поздняя редакция"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-07-REVIEWED-DRAFT.md",
+        "sha": "a244145bb1f37e651438c3bb9ecd6352ff131c7c",
+        "sourceWords": 1781,
+        "bodyWords": 1765,
+        "title": "Глава 7. То, чего он не знал"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-08-REVIEWED-DRAFT.md",
+        "sha": "2efdb0876512e0c974e9311f52997cfe4189c741",
+        "sourceWords": 1651,
+        "bodyWords": 1638,
+        "title": "Глава 8. Совпадение маркеров"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-09-REVIEWED-DRAFT.md",
+        "sha": "4561675753a99a5e9084cd759e882213a76484dd",
+        "sourceWords": 1687,
+        "bodyWords": 1673,
+        "title": "Глава 9. Не между нами"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-10-REVIEWED-DRAFT.md",
+        "sha": "1d72ba1271213ba0738ac34050d450a7564e3298",
+        "sourceWords": 1703,
+        "bodyWords": 1690,
+        "title": "Глава 10. Без условий"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-11-REVIEWED-DRAFT.md",
+        "sha": "9dd0bd43390a9fa4b1cf0bae1c2676e581ddbab7",
+        "sourceWords": 1669,
+        "bodyWords": 1654,
+        "title": "Глава 11. Один человек, две записи"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-12-REVIEWED-DRAFT.md",
+        "sha": "2ac62ccd76d23ce374908b8ca257dca3dd0e3dbb",
+        "sourceWords": 1769,
+        "bodyWords": 1756,
+        "title": "Глава 12. Полный комплект"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-13-REVIEWED-DRAFT.md",
+        "sha": "dc7a6ddf6cb0ddd1696f1c391868ef29e4d74e9f",
+        "sourceWords": 1614,
+        "bodyWords": 1602,
+        "title": "Глава 13. Подлинность"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-14-REVIEWED-DRAFT.md",
+        "sha": "4d9143c72c00dc266350bc267e3a379d325a554e",
+        "sourceWords": 1703,
+        "bodyWords": 1689,
+        "title": "Глава 14. Что ты выбрал"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-15-REVIEWED-DRAFT.md",
+        "sha": "85e615562e34c3b6b968c64e561eb65dd52e1f51",
+        "sourceWords": 1821,
+        "bodyWords": 1806,
+        "title": "Глава 15. То, что нельзя отменить"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-16-REVIEWED-DRAFT.md",
+        "sha": "a8ded36aec5baab5dba2b7d7d95365600d9ddf3c",
+        "sourceWords": 2063,
+        "bodyWords": 2048,
+        "title": "Глава 16. Не соревноваться"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-17-REVIEWED-DRAFT.md",
+        "sha": "c2310419c3d8a2bf2858e3b7f45407f23bb62a20",
+        "sourceWords": 1622,
+        "bodyWords": 1608,
+        "title": "Глава 17. За её спиной"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-18-REVIEWED-DRAFT.md",
+        "sha": "d8cf8e00a65cb4bda1851f2ed048049f4dccbe49",
+        "sourceWords": 1949,
+        "bodyWords": 1935,
+        "title": "Глава 18. Метка на носителе"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-19-REVIEWED-DRAFT.md",
+        "sha": "4a917378ea80cc5725065c58fc069dd4c356585c",
+        "sourceWords": 2051,
+        "bodyWords": 2037,
+        "title": "Глава 19. Свидетель не всеведущ"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-20-REVIEWED-DRAFT.md",
+        "sha": "40214e233d9aab531c00b4e2834b602bf14b9b10",
+        "sourceWords": 1890,
+        "bodyWords": 1873,
+        "title": "Глава 20. Милена как человек, а не оправдание"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-21-REVIEWED-DRAFT.md",
+        "sha": "24055a8a644038c3f36203cb8d5ba72935598782",
+        "sourceWords": 1668,
+        "bodyWords": 1654,
+        "title": "Глава 21. Шаг без обещания"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-22-REVIEWED-DRAFT.md",
+        "sha": "7fc60549aafaa17b65c6b3597933b3a0825ec683",
+        "sourceWords": 1719,
+        "bodyWords": 1706,
+        "title": "Глава 22. Предел помощи"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-23-REVIEWED-DRAFT.md",
+        "sha": "ffd5c126de837f7694ba5a9c4c55a7764bbf3238",
+        "sourceWords": 1769,
+        "bodyWords": 1756,
+        "title": "Глава 23. Последствия давления"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-24-REVIEWED-DRAFT.md",
+        "sha": "b0fe7d8434d94e3f50c7a5d99eaa0563f09ad0e2",
+        "sourceWords": 1756,
+        "bodyWords": 1742,
+        "title": "Глава 24. Милена выбирает помочь"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-25-REVIEWED-DRAFT.md",
+        "sha": "617612e8973ceb7196fe49c6b1783c77fbbb746e",
+        "sourceWords": 1744,
+        "bodyWords": 1729,
+        "title": "Глава 25. Голос Веры внутри границ"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-26-REVIEWED-DRAFT.md",
+        "sha": "452a318a54cf158c9b21550e30ae69651b9dd7d5",
+        "sourceWords": 1829,
+        "bodyWords": 1816,
+        "title": "Глава 26. Не посредник-владелец"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-27-REVIEWED-DRAFT.md",
+        "sha": "5764184443a404ab25f554dd931de329fc503f13",
+        "sourceWords": 1789,
+        "bodyWords": 1774,
+        "title": "Глава 27. Не вся правда сразу"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-28-REVIEWED-DRAFT.md",
+        "sha": "69d77ff2409035a22007a1e99c8e5ebbbb9888af",
+        "sourceWords": 1715,
+        "bodyWords": 1702,
+        "title": "Глава 28. Второй рубеж"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-29-REVIEWED-DRAFT.md",
+        "sha": "92f997d733107aeeeb2bdebf7909dd4e61e76383",
+        "sourceWords": 1748,
+        "bodyWords": 1735,
+        "title": "Глава 29. До совещания"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-30-REVIEWED-DRAFT.md",
+        "sha": "f34e3627f8883807b5fd18c69421f4e3df0c7084",
+        "sourceWords": 1608,
+        "bodyWords": 1594,
+        "title": "Глава 30. Ещё один день"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-31-REVIEWED-DRAFT.md",
+        "sha": "25ecc53b359f5fdda06a5002c3dc3a42b31ebb95",
+        "sourceWords": 1724,
+        "bodyWords": 1710,
+        "title": "Глава 31. Что он знал"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-32-REVIEWED-DRAFT.md",
+        "sha": "a7070a4e867a720f9841129716835be668b32ac4",
+        "sourceWords": 2023,
+        "bodyWords": 2010,
+        "title": "Глава 32. Не удерживать"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-33-REVIEWED-DRAFT.md",
+        "sha": "a8989959a01999ddeb2313e38f84a0ff78ee2dac",
+        "sourceWords": 1737,
+        "bodyWords": 1723,
+        "title": "Глава 33. Без удобной версии"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-34-REVIEWED-DRAFT.md",
+        "sha": "1866d089a88fbe316cb739c400e8a7ac285b8c24",
+        "sourceWords": 1918,
+        "bodyWords": 1905,
+        "title": "Глава 34. Открытый канал"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-35-REVIEWED-DRAFT.md",
+        "sha": "82c6f90542f4356ea00091e51242813b2c4de977",
+        "sourceWords": 1765,
+        "bodyWords": 1752,
+        "title": "Глава 35. Мокрый перекрёсток"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-36-REVIEWED-DRAFT.md",
+        "sha": "b50de790f77790222198368fe0f903aa90c64b33",
+        "sourceWords": 1664,
+        "bodyWords": 1650,
+        "title": "Глава 36. Не обязанность утешать"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-37-REVIEWED-DRAFT.md",
+        "sha": "d63cebc76060ad500463e94f9365b157580e4cb6",
+        "sourceWords": 1669,
+        "bodyWords": 1655,
+        "title": "Глава 37. Горе без идеализации"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-38-REVIEWED-DRAFT.md",
+        "sha": "5255c27d2cdd6af6d8b2f788220d38e42888618c",
+        "sourceWords": 1824,
+        "bodyWords": 1811,
+        "title": "Глава 38. Собственное будущее"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-39-REVIEWED-DRAFT.md",
+        "sha": "ce1391526f09d24c6a38ab09e8c8e90e5fa6032e",
+        "sourceWords": 1807,
+        "bodyWords": 1792,
+        "title": "Глава 39. Без права на сокращение"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-40-REVIEWED-DRAFT.md",
+        "sha": "4b95e9e3afaee85af43e9aba5fda890e0f6ee658",
+        "sourceWords": 1815,
+        "bodyWords": 1802,
+        "title": "Глава 40. Проверка настоящим"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-41-REVIEWED-DRAFT.md",
+        "sha": "ef23850aeab9e08f7bf066434d30883085b317c6",
+        "sourceWords": 1698,
+        "bodyWords": 1684,
+        "title": "Глава 41. Будущее без торга"
+      },
+      {
+        "source": "BOOK-II-CHAPTER-42-REVIEWED-DRAFT.md",
+        "sha": "9ced934471f5aaac5daa3bc72773a9d38907d5fe",
+        "sourceWords": 2188,
+        "bodyWords": 2174,
+        "title": "Глава 42. Выбор друг друга"
+      },
+      {
+        "source": "BOOK-II-EPILOGUE-REVIEWED-DRAFT.md",
+        "sha": "ec5abbf6f6f958ee971da3aa2bca3d490f822bba",
+        "sourceWords": 934,
+        "bodyWords": 922,
+        "title": "Эпилог. Обычное утро"
+      }
+    ]
+  },
+  "publicationSafety": "Both full-text volumes and documentation manifest remain status=draft under docs/poka-nas-ne-naydut/publishing-drafts/. No full-text publication, main update, public catalog update, or deploy was performed."
 }
