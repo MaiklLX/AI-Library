@@ -646,7 +646,7 @@ assert.deepEqual(duologyManifest.volumes.map(volume => volume.title), ["Пока
 assert.ok(duologyPage.includes(duologyCover), "The duology page must display the original cover");
 assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setInterval(tick,1000)"), "Both duology release countdowns must update every second");
 assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
-assert.ok(duologyPage.includes("Страница не открывает черновые тексты"), "The duology page must not expose unpublished manuscript text");
+assert.ok(duologyPage.includes("До своей даты релиза каждая книга остаётся закрытой на сайте"), "The duology page must keep each full text closed until its scheduled release");
 assert.ok(html.includes('href="./poka-nas-ne-naydut.html">Открыть дилогию'), "The featured shelf card must open the duology landing page");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The app shell cache must be refreshed for the new duology page");
