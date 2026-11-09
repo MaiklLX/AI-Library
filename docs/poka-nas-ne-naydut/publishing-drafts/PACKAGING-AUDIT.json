@@ -2,7 +2,7 @@
   "title": "Пока нас не найдут — проверка упаковки двух черновых томов",
   "date": "2026-11-09",
   "branch": "editorial/restore-literary-standard-i16-onward",
-  "status": "current full JSON assembly after KT-490",
+  "status": "current full JSON assembly after KT-491",
   "sourceOfTruth": {
     "volumeI": {
       "file": "poka-nas-ne-naydut-tom-01.json",
@@ -17,12 +17,12 @@
     },
     "volumeII": {
       "file": "poka-nas-ne-naydut-tom-02.json",
-      "sha": "afa6940b33482fbfdfeb38a052c86e70ea5f56a9",
+      "sha": "8adb7794040d57b67187e1c834bd742a527eeec0",
       "elements": 43,
       "mainChapters": 42,
-      "bodyWords": 76178,
+      "bodyWords": 76192,
       "epilogueWords": 1144,
-      "wordCount": 77322,
+      "wordCount": 77336,
       "below1600BodyOnly": [],
       "above2200BodyOnly": [
         "Глава 42. Выбор друг друга (2340)"
@@ -31,10 +31,10 @@
   },
   "total": {
     "mainChapters": 82,
-    "mainBodyWords": 144424,
+    "mainBodyWords": 144438,
     "epilogueWords": 1504,
     "totalElements": 84,
-    "totalBodyWords": 145928
+    "totalBodyWords": 145942
   },
   "method": "For each chapters[].content in the current full JSON, count content.trim().split(/\\s+/).filter(Boolean).length. The title is stored separately in chapters[].title; POV labels are excluded from content. Epilogues are included in volume wordCount but excluded from the 1,600-word minimum check.",
   "staging": {
@@ -66,11 +66,11 @@
       },
       {
         "file": "book-ii-part-03.json",
-        "sha": "ea8008e8f30eb3e8c12e6439596a1bf6446f689d",
+        "sha": "fd06d92b42d659d7232630a073eb79bc498c742b",
         "chapterRange": "II/33–II/42 + epilogue"
       }
     ],
-    "validation": "After KT-490, all six staging fragments remain current; Book II part 03 was refreshed from the full JSON and chapter title/content equality was verified for all 11 elements."
+    "validation": "After KT-491, Book II part 03 was refreshed from the full JSON; chapter title/content equality was verified for all 11 elements."
   },
   "historicalKT415Snapshot": {
     "date": "2026-11-09",
@@ -700,10 +700,10 @@
   },
   "publicationSafety": "Both full-text volumes and documentation manifest remain status=draft under docs/poka-nas-ne-naydut/publishing-drafts/. No full-text publication, main update, public catalog update, or deploy was performed.",
   "lastEditorialUpdate": {
-    "checkpoint": "KT-490",
-    "chapter": "II/42",
-    "bodyUnits": 2340,
-    "change": "+4 body units; no chapter below 1,600",
+    "checkpoint": "KT-491",
+    "chapter": "II/41",
+    "bodyUnits": 1851,
+    "change": "+14 body units; all 82 chapters remain >=1,600",
     "stagingFile": "book-ii-part-03.json"
   }
 }
