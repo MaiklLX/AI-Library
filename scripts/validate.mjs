@@ -62,7 +62,7 @@ assert.equal(duologyManifest.volumes[1].status, "scheduled");
 assert.equal(duologyManifest.volumes[0].releaseAt, "2026-11-13T18:00:00+03:00");
 assert.equal(duologyManifest.volumes[1].releaseAt, "2026-11-20T18:00:00+03:00");
 assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
-assert.match(html, /Date\.now\(\) < releaseAt/);
+assert.match(html, /now < releaseAt/);
 assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-01"/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-02"/);
