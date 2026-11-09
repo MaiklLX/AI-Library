@@ -576,18 +576,18 @@ assert.equal(scheduledBookOne.releaseAt, scheduledVolumeOne.releaseAt, "Volume I
 const scheduledVolumeTwo = seriesManifest.volumes.find(volume => Number(volume.number) === 2);
 const scheduledCatalogEntryTwo = publishedCatalog.books.find(entry => entry.id === "ty-v-moih-planah-tom-02");
 assert.ok(scheduledCatalogEntryTwo, "Volume II must be pre-registered in the reader catalog");
-assert.equal(scheduledCatalogEntryTwo.status, "scheduled", "Volume II catalog entry must be scheduled");
+assert.equal(scheduledCatalogEntryTwo.status, "published", "Volume II catalog entry must be published after its release time");
 assert.equal(scheduledCatalogEntryTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II catalog and series release timestamps must match");
 assert.equal(scheduledCatalogEntryTwo.chapterCount, 18, "Volume II must expose all 18 chapters");
 const scheduledBookTwo = JSON.parse(readFileSync(resolve(root, scheduledCatalogEntryTwo.path), "utf8"));
-assert.equal(scheduledBookTwo.status, "scheduled", "Volume II book JSON must be scheduled");
+assert.equal(scheduledBookTwo.status, "published", "Volume II book JSON must be published after its release time");
 assert.equal(scheduledBookTwo.chapters.length, 18, "Volume II JSON must contain all 18 chapters");
 assert.equal(scheduledBookTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume II JSON release timestamp must match series");
 
 for (const scheduledVolume of seriesManifest.volumes) {
   const catalogEntry = publishedCatalog.books.find(entry => entry.id === scheduledVolume.bookId);
   assert.ok(catalogEntry, `Volume ${scheduledVolume.number} must be pre-registered in the reader catalog`);
-  const expectedVolumeStatus = Number(scheduledVolume.number) === 1 ? "published" : "scheduled";
+  const expectedVolumeStatus = Number(scheduledVolume.number) <= 2 ? "published" : "scheduled";
   assert.equal(catalogEntry.status, expectedVolumeStatus, `Volume ${scheduledVolume.number} catalog status must match its release state`);
   assert.equal(catalogEntry.releaseAt, scheduledVolume.releaseAt, `Volume ${scheduledVolume.number} catalog timestamp must match the series schedule`);
   assert.equal(catalogEntry.chapterCount, scheduledVolume.chapters.to - scheduledVolume.chapters.from + 1, `Volume ${scheduledVolume.number} catalog chapter count is incorrect`);
