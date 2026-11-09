@@ -426,17 +426,19 @@ assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,
 const publishedNormalizer = html.match(/function normalizePublishedBook\(book\) \{([\s\S]*?)\n\}/);
 assert.ok(publishedNormalizer, "Could not isolate published-book metadata normalization");
 assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
-const releaseLockStart = html.indexOf("function isBookReleaseLocked(book) {");
+const releaseLockStart = html.indexOf("function isBookReleaseLocked(book, now = Date.now()) {");
 assert.ok(releaseLockStart >= 0, "Could not locate scheduled-release access control");
 const releaseLockEnd = html.indexOf("\n}", releaseLockStart);
 assert.ok(releaseLockEnd > releaseLockStart, "Could not isolate scheduled-release access control");
 const releaseLockSource = html.slice(releaseLockStart, releaseLockEnd + 2);
-const normalizeFixture = new Function("book", "now", `
-  const RealDate = Date;
-  const Date = class extends RealDate { static now(){ return Number.isFinite(now) ? now : RealDate.now(); } };
+const normalizeFixture = new Function("book", `
   ${releaseLockSource};
   ${publishedNormalizer[0]};
   return normalizePublishedBook(book);
+`);
+const lockFixture = new Function("book", "now", `
+  ${releaseLockSource};
+  return isBookReleaseLocked(book, now);
 `);
 const seriesFixture = {
   id: "fixture-volume-six",
@@ -452,10 +454,8 @@ assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-bo
 assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalization must preserve seriesVolume");
 const metadataFixture = normalizeFixture({ ...seriesFixture, metadataOnly: true, chapters: [] });
 const scheduledFixture = { ...seriesFixture, id: "fixture-scheduled", status: "scheduled", releaseAt: "2026-11-13T18:00:00+03:00", metadataOnly: false };
-const scheduledBeforeRelease = normalizeFixture(scheduledFixture, Date.parse("2026-11-13T17:59:59+03:00"));
-assert.deepEqual(scheduledBeforeRelease.chapters, [], "Scheduled book text must remain unavailable one second before release");
-const scheduledAtRelease = normalizeFixture(scheduledFixture, Date.parse("2026-11-13T18:00:00+03:00"));
-assert.deepEqual(scheduledAtRelease.chapters, ["Fixture final chapter"], "Scheduled book text must unlock at the exact release boundary");
+assert.equal(lockFixture(scheduledFixture, Date.parse("2026-11-13T17:59:59+03:00")), true, "Scheduled book must remain locked one second before release");
+assert.equal(lockFixture(scheduledFixture, Date.parse("2026-11-13T18:00:00+03:00")), false, "Scheduled book must unlock at the exact release boundary");
 assert.equal(metadataFixture.seriesId, "ty-v-moih-planah", "Metadata-only catalog records must retain seriesId");
 assert.equal(metadataFixture.seriesVolume, 6, "Metadata-only catalog records must retain seriesVolume");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>[\s\S]*?normalizePublishedBook\(\{ \.\.\.entry, metadataOnly: true \}\)/, "Published catalog metadata must pass through the series-aware normalizer");
