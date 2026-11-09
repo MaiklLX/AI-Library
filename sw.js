@@ -1,12 +1,16 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v91';
+const CACHE_NAME = CACHE_PREFIX + 'v92';
 const APP_SHELL = ['./', './index.html', './reader-flip-lab.html', './book.html', './series.html', './premiere.html', './poka-nas-ne-naydut.html', './book-creator.html', './content/series/ty-v-moih-planah.json', './content/series/poka-nas-ne-naydut.json', './content/books/Пока нас не найдут_ тайны и страсть.png', './content/books/ty-v-moih-planah-tom-01-cover.svg', './content/books/ty-v-moih-planah-tom-02-cover.svg', './content/books/ty-v-moih-planah-tom-03-cover.svg', './content/books/ty-v-moih-planah-tom-04-cover.svg', './content/books/ty-v-moih-planah-tom-05-cover.svg', './content/books/ty-v-moih-planah-tom-06-cover.svg', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js', './src/platform/download-manager.js'];
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     await cache.addAll(APP_SHELL);
+    // Keep the public catalog available on the first offline launch too.
+    // Its failure must not block installation of the rest of the app shell.
+    try { await cache.add('./content/catalog.json'); }
+    catch (error) { console.warn('AI Library: каталог не удалось добавить в начальный офлайн-кэш.', error); }
     await self.skipWaiting();
   })());
 });
