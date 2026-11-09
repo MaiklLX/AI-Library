@@ -5,7 +5,7 @@
 Repository: `MaiklLX/AI-Library`  
 Working branch: `fix/ai-library-shelf-premiere-polish-2026-11-09`  
 Base: `main` at `29a2f396ffaae050e3da7708679dd63bffee0784`  
-Current branch HEAD after this checkpoint: `6eb2989292b26493ae87587885e92bdc7c1a5553`
+Latest UI implementation commit: `64f33722912ba6f37d52ca3f7f0e638ebf4e54c6`
 
 This is an isolated UI correction. No novel manuscript, catalog publication status, release date, or release automation was changed.
 
@@ -30,8 +30,8 @@ This is an isolated UI correction. No novel manuscript, catalog publication stat
 
 ### 3. Duology shelf card — visible special-edition treatment
 
-- Removed the old grayscale/dimmed-cover treatment.
-- Restored the cover's original color and contrast.
+- Removed the old grayscale/dimmed-cover treatment and its obsolete CSS.
+- Applied the new featured-cover class to the card markup and restored the cover's original color and contrast.
 - Added a restrained gold border, glow, gold title badge, and gold edition stamp.
 - The back-face status now reads «ЗАКРЫТАЯ ПРЕМЬЕРА · 18+».
 - Kept the existing card flip behavior and dedicated-page destination.
