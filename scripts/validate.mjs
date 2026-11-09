@@ -62,7 +62,7 @@ assert.equal(duologyManifest.volumes[1].status, "scheduled");
 assert.equal(duologyManifest.volumes[0].releaseAt, "2026-11-13T18:00:00+03:00");
 assert.equal(duologyManifest.volumes[1].releaseAt, "2026-11-20T18:00:00+03:00");
 assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
-assert.match(html, /now < releaseAt/);
+assert.match(html, /Date\.now\(\) < releaseAt/);
 assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-01"/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-02"/);
@@ -426,7 +426,7 @@ assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,
 const publishedNormalizer = html.match(/function normalizePublishedBook\(book\) \{([\s\S]*?)\n\}/);
 assert.ok(publishedNormalizer, "Could not isolate published-book metadata normalization");
 assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
-const releaseLockStart = html.indexOf("function isBookReleaseLocked(book, now = Date.now()) {");
+const releaseLockStart = html.indexOf("function isBookReleaseLocked(book) {");
 assert.ok(releaseLockStart >= 0, "Could not locate scheduled-release access control");
 const releaseLockEnd = html.indexOf("\n}", releaseLockStart);
 assert.ok(releaseLockEnd > releaseLockStart, "Could not isolate scheduled-release access control");
@@ -436,9 +436,10 @@ const normalizeFixture = new Function("book", `
   ${publishedNormalizer[0]};
   return normalizePublishedBook(book);
 `);
+const testableReleaseLockSource = releaseLockSource.replace("Date.now()", "now");
 const lockFixture = new Function("book", "now", `
-  ${releaseLockSource};
-  return isBookReleaseLocked(book, now);
+  ${testableReleaseLockSource};
+  return isBookReleaseLocked(book);
 `);
 const seriesFixture = {
   id: "fixture-volume-six",

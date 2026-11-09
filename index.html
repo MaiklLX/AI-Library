@@ -3238,13 +3238,13 @@ function isSeriesVolumeBook(book) {
   return /^ty-v-moih-planah-tom-\d{2}$/.test(id) || /^poka-nas-ne-naydut-tom-0[12]$/.test(id);
 }
 
-function isBookReleaseLocked(book, now = Date.now()) {
+function isBookReleaseLocked(book) {
   if (!book) return true;
   if (book.status === 'prerelease') return true;
   if (book.status !== 'scheduled') return false;
   const releaseAt = Date.parse(book.releaseAt || book.releaseDate || '');
   // Scheduled books unlock at the exact release boundary; no manual deployment is required.
-  return !Number.isFinite(releaseAt) || now < releaseAt;
+  return !Number.isFinite(releaseAt) || Date.now() < releaseAt;
 }
 
 function normalizePublishedBook(book) {
