@@ -93,6 +93,10 @@ for (const match of html.matchAll(/\b(?:href|src)=["'](\.\/[^"'#?]+)["']/gi)) {
 assert.ok(existsSync(resolve(root, "icon.svg")), "App icon is missing");
 assert.ok(manifest.icons?.some(icon => icon.src === "./icon.svg"), "Manifest icon is missing");
 assert.match(html, /serviceWorker\.register/, "Service worker registration is missing");
+const catalogGuardPosition = html.indexOf("AI Library iOS PWA catalog guard");
+const platformRuntimePosition = html.indexOf('<script src="./src/platform/runtime.js"></script>');
+assert.ok(catalogGuardPosition >= 0 && platformRuntimePosition >= 0 && catalogGuardPosition < platformRuntimePosition,
+  "The iOS catalog fallback must be installed before blocking external platform scripts");
 assert.match(html, /<script src=["']\.\/src\/platform\/runtime\.js["']><\/script>/, "Cross-platform runtime must load before the main application");
 assert.match(serviceWorker, /['"]\.\/src\/platform\/runtime\.js['"]/, "Platform runtime must be included in the offline app shell");
 assert.match(platformRuntime, /const DB_NAME = ['"]ai-library-platform['"]/, "Platform storage database is missing");
