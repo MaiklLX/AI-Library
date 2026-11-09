@@ -12,8 +12,7 @@
       "below1600BodyOnly": [
         "Глава 35. Не знать адреса (1596)",
         "Глава 36. Голос (1593)",
-        "Глава 40. Оставить свет (1574)",
-        "Эпилог книги I. Открытый канал (360)"
+        "Глава 40. Оставить свет (1574)"
       ],
       "draft": "poka-nas-ne-naydut-tom-01.json",
       "commit": "d45bbb1a7a159e50cbdc1d2adbed652c203ee8dd"
@@ -21,10 +20,10 @@
     "II": {
       "chapters": 43,
       "sourceWords": 75557,
-      "bodyWords": 74985,
+      "bodyWords": 74966,
       "sourceWordCountIncludesMarkdownHeadings": true,
       "below1600BodyOnly": [
-        "Эпилог. Обычное утро (922)"
+        "Глава 30. Ещё один день (1594)"
       ],
       "draft": "poka-nas-ne-naydut-tom-02.json",
       "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f"
@@ -33,9 +32,9 @@
   "total": {
     "chapters": 84,
     "sourceWords": 144648,
-    "bodyWords": 143355
+    "bodyWords": 143336
   },
-  "method": "All 84 current Markdown files in the final editorial release-candidate are represented in the provenance table. Eight files changed after the KT-392 packaging snapshot and were synchronized into the two full JSON volumes and six staging fragments; the other 76 source SHA values were verified unchanged. Markdown headings are moved to chapters[].title, POV labels are excluded from content, and body word counts use whitespace-separated tokens. No prose edits were made during packaging.",
+  "method": "All 84 current Markdown files in the final editorial release-candidate are represented in the provenance table. Eight files changed after the KT-392 packaging snapshot and were synchronized into the two full JSON volumes and six staging fragments; the other 76 source SHA values were verified unchanged. chapters[].content matches the corresponding Markdown body; body word counts are whitespace-separated tokens from JSON content, while source word counts include Markdown headings and POV labels. Epilogues are separate elements and are not evaluated against the 1,600-word chapter threshold.",
   "publicationSafety": "Both complete JSON files and all six staging fragments remain under docs/poka-nas-ne-naydut/publishing-drafts/. They are not referenced from content/catalog.json or content/books/. The author-confirmed public schedule is recorded in the documentation manifest, but both volume JSONs remain status=draft; no publication status or reader route was enabled. Main and the public catalog were not modified.",
   "provenance": [
     {
@@ -441,14 +440,14 @@
       "source": "BOOK-II-CHAPTER-17-REVIEWED-DRAFT.md",
       "sha": "c2310419c3d8a2bf2858e3b7f45407f23bb62a20",
       "sourceWords": 1622,
-      "bodyWords": 1656,
+      "bodyWords": 1608,
       "title": "Глава 17. За её спиной"
     },
     {
       "source": "BOOK-II-CHAPTER-18-REVIEWED-DRAFT.md",
       "sha": "d8cf8e00a65cb4bda1851f2ed048049f4dccbe49",
       "sourceWords": 1949,
-      "bodyWords": 1749,
+      "bodyWords": 1935,
       "title": "Глава 18. Метка на носителе"
     },
     {
@@ -462,14 +461,14 @@
       "source": "BOOK-II-CHAPTER-20-REVIEWED-DRAFT.md",
       "sha": "40214e233d9aab531c00b4e2834b602bf14b9b10",
       "sourceWords": 1890,
-      "bodyWords": 1894,
+      "bodyWords": 1873,
       "title": "Глава 20. Милена как человек, а не оправдание"
     },
     {
       "source": "BOOK-II-CHAPTER-21-REVIEWED-DRAFT.md",
       "sha": "24055a8a644038c3f36203cb8d5ba72935598782",
       "sourceWords": 1668,
-      "bodyWords": 1703,
+      "bodyWords": 1654,
       "title": "Глава 21. Шаг без обещания"
     },
     {
@@ -490,28 +489,28 @@
       "source": "BOOK-II-CHAPTER-24-REVIEWED-DRAFT.md",
       "sha": "b0fe7d8434d94e3f50c7a5d99eaa0563f09ad0e2",
       "sourceWords": 1756,
-      "bodyWords": 1749,
+      "bodyWords": 1742,
       "title": "Глава 24. Милена выбирает помочь"
     },
     {
       "source": "BOOK-II-CHAPTER-25-REVIEWED-DRAFT.md",
       "sha": "617612e8973ceb7196fe49c6b1783c77fbbb746e",
       "sourceWords": 1744,
-      "bodyWords": 1796,
+      "bodyWords": 1729,
       "title": "Глава 25. Голос Веры внутри границ"
     },
     {
       "source": "BOOK-II-CHAPTER-26-REVIEWED-DRAFT.md",
       "sha": "452a318a54cf158c9b21550e30ae69651b9dd7d5",
       "sourceWords": 1829,
-      "bodyWords": 1857,
+      "bodyWords": 1816,
       "title": "Глава 26. Не посредник-владелец"
     },
     {
       "source": "BOOK-II-CHAPTER-27-REVIEWED-DRAFT.md",
       "sha": "5764184443a404ab25f554dd931de329fc503f13",
       "sourceWords": 1789,
-      "bodyWords": 1808,
+      "bodyWords": 1774,
       "title": "Глава 27. Не вся правда сразу"
     },
     {
@@ -525,28 +524,28 @@
       "source": "BOOK-II-CHAPTER-29-REVIEWED-DRAFT.md",
       "sha": "92f997d733107aeeeb2bdebf7909dd4e61e76383",
       "sourceWords": 1748,
-      "bodyWords": 1761,
+      "bodyWords": 1735,
       "title": "Глава 29. До совещания"
     },
     {
       "source": "BOOK-II-CHAPTER-30-REVIEWED-DRAFT.md",
       "sha": "f34e3627f8883807b5fd18c69421f4e3df0c7084",
       "sourceWords": 1608,
-      "bodyWords": 1642,
+      "bodyWords": 1594,
       "title": "Глава 30. Ещё один день"
     },
     {
       "source": "BOOK-II-CHAPTER-31-REVIEWED-DRAFT.md",
       "sha": "25ecc53b359f5fdda06a5002c3dc3a42b31ebb95",
       "sourceWords": 1724,
-      "bodyWords": 1753,
+      "bodyWords": 1710,
       "title": "Глава 31. Что он знал"
     },
     {
       "source": "BOOK-II-CHAPTER-32-REVIEWED-DRAFT.md",
       "sha": "a7070a4e867a720f9841129716835be668b32ac4",
       "sourceWords": 2023,
-      "bodyWords": 2090,
+      "bodyWords": 2010,
       "title": "Глава 32. Не удерживать"
     },
     {
@@ -560,7 +559,7 @@
       "source": "BOOK-II-CHAPTER-34-REVIEWED-DRAFT.md",
       "sha": "1866d089a88fbe316cb739c400e8a7ac285b8c24",
       "sourceWords": 1918,
-      "bodyWords": 1691,
+      "bodyWords": 1905,
       "title": "Глава 34. Открытый канал"
     },
     {
@@ -574,7 +573,7 @@
       "source": "BOOK-II-CHAPTER-36-REVIEWED-DRAFT.md",
       "sha": "b50de790f77790222198368fe0f903aa90c64b33",
       "sourceWords": 1664,
-      "bodyWords": 1665,
+      "bodyWords": 1650,
       "title": "Глава 36. Не обязанность утешать"
     },
     {
@@ -595,14 +594,14 @@
       "source": "BOOK-II-CHAPTER-39-REVIEWED-DRAFT.md",
       "sha": "ce1391526f09d24c6a38ab09e8c8e90e5fa6032e",
       "sourceWords": 1807,
-      "bodyWords": 1752,
+      "bodyWords": 1792,
       "title": "Глава 39. Без права на сокращение"
     },
     {
       "source": "BOOK-II-CHAPTER-40-REVIEWED-DRAFT.md",
       "sha": "4b95e9e3afaee85af43e9aba5fda890e0f6ee658",
       "sourceWords": 1815,
-      "bodyWords": 1748,
+      "bodyWords": 1802,
       "title": "Глава 40. Проверка настоящим"
     },
     {
@@ -616,7 +615,7 @@
       "source": "BOOK-II-CHAPTER-42-REVIEWED-DRAFT.md",
       "sha": "9ced934471f5aaac5daa3bc72773a9d38907d5fe",
       "sourceWords": 2188,
-      "bodyWords": 2208,
+      "bodyWords": 2174,
       "title": "Глава 42. Выбор друг друга"
     },
     {
@@ -630,7 +629,7 @@
   "ciValidation": {
     "workflow": "Validate AI Library",
     "status": "pending",
-    "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f",
-    "scope": "Validate scripts, manifests, local assets, and refreshed draft packaging; run after this commit."
+    "commit": "after-KT-415-packaging",
+    "scope": "Validate repository scripts, manifests, local assets, and refreshed draft packaging."
   }
 }
