@@ -6,12 +6,12 @@
   "sourceOfTruth": {
     "volumeI": {
       "file": "poka-nas-ne-naydut-tom-01.json",
-      "sha": "d42b1e4ca378914240594718b25b4d12c130248d",
+      "sha": "ef6e8c7e537b261083e921a51ca606fb00930e9d",
       "elements": 41,
       "mainChapters": 40,
-      "bodyWords": 68368,
+      "bodyWords": 68374,
       "epilogueWords": 360,
-      "wordCount": 68728,
+      "wordCount": 68734,
       "below1600BodyOnly": [],
       "above2200BodyOnly": []
     },
@@ -31,10 +31,10 @@
   },
   "total": {
     "mainChapters": 82,
-    "mainBodyWords": 144560,
+    "mainBodyWords": 144566,
     "epilogueWords": 1504,
     "totalElements": 84,
-    "totalBodyWords": 146064
+    "totalBodyWords": 146070
   },
   "method": "For each chapters[].content in the current full JSON, count content.trim().split(/\\s+/).filter(Boolean).length. The title is stored separately in chapters[].title; POV labels are excluded from content. Epilogues are included in volume wordCount but excluded from the 1,600-word minimum check.",
   "staging": {
@@ -51,7 +51,7 @@
       },
       {
         "file": "book-i-part-03.json",
-        "sha": "10dc2596765f8ac6b3136e1786aa73c0caa2825d",
+        "sha": "03ba9d5a2031b9934e3f6a9c3036b705650d5c72",
         "chapterRange": "I/33–I/40 + epilogue"
       },
       {
@@ -70,7 +70,7 @@
         "chapterRange": "II/33–II/42 + epilogue"
       }
     ],
-    "validation": "KT-510: both full-volume chapters arrays rebuilt from the six current staging fragments. Exact title/content equality verified for all 84 entries; chapter numbering I/1–I/40 and II/1–II/42; both epilogues present; no duplicate titles; all 82 main chapters >=1,600 words."
+    "validation": "KT-510: both full-volume chapters arrays rebuilt from the six current staging fragments. Exact title/content equality verified for all 84 entries; chapter numbering I/1–I/40 and II/1–II/42; both epilogues present; no duplicate titles; all 82 main chapters >=1,600 words. Final-page polish in I/40 is synchronized between part 03 and full Book I JSON."
   },
   "historicalKT415Snapshot": {
     "date": "2026-11-09",
@@ -708,7 +708,7 @@
   },
   "lastPackagingReconciliation": {
     "checkpoint": "KT-510",
-    "change": "Rebuilt both full-volume JSON chapter arrays from current staging fragments; corrected stale Book I chapters and Book II chapter II/16; refreshed counts and hashes.",
+    "change": "Rebuilt both full-volume JSON chapter arrays from current staging fragments; corrected stale Book I chapters and Book II chapter II/16; refreshed counts and hashes. Final-page duplicate in I/40 replaced with a single clear table/book placement.",
     "manuscriptTextChanged": false
   }
 }
