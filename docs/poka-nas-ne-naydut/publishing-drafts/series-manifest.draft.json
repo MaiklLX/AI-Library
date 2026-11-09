@@ -13,7 +13,7 @@
     {
       "id": "poka-nas-ne-naydut-tom-01",
       "number": 1,
-      "title": "Книга I",
+      "title": "Пока нас не найдут",
       "bookId": "poka-nas-ne-naydut-tom-01",
       "chapters": {
         "from": 1,
@@ -21,15 +21,15 @@
       },
       "epilogue": true,
       "chapterCount": 41,
-      "wordCount": 68420,
+      "wordCount": 68370,
       "status": "draft",
-      "releaseAt": null,
+      "releaseAt": "2026-11-13T18:00:00+03:00",
       "cover": null
     },
     {
       "id": "poka-nas-ne-naydut-tom-02",
       "number": 2,
-      "title": "Книга II",
+      "title": "Там, где заканчивается ложь",
       "bookId": "poka-nas-ne-naydut-tom-02",
       "chapters": {
         "from": 1,
@@ -37,12 +37,13 @@
       },
       "epilogue": true,
       "chapterCount": 43,
-      "wordCount": 74931,
+      "wordCount": 74985,
       "status": "draft",
-      "releaseAt": null,
-      "cover": null
+      "releaseAt": "2026-11-20T18:00:00+03:00",
+      "cover": null,
+      "annotationVisibleAt": "2026-11-18T18:00:00+03:00"
     }
   ],
   "_draft": true,
-  "_note": "Documentation-only planning manifest. Not consumed by the app; final volume titles, covers, release dates, and series page remain unapproved."
+  "_note": "Documentation-only planning manifest; not consumed by the app. Volume titles and public schedule were confirmed by the author. Full-text publication remains draft pending final technical checks and separate release approval; individual volume covers are not assigned."
 }

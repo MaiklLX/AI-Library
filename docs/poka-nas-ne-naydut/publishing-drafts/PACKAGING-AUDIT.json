@@ -1,40 +1,42 @@
 {
   "title": "Пока нас не найдут — проверка упаковки двух черновых томов",
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "branch": "editorial/restore-literary-standard-i16-onward",
   "sourceFiles": 84,
   "books": {
     "I": {
       "chapters": 41,
-      "sourceWords": 69141,
-      "bodyWords": 68420,
+      "sourceWords": 69091,
+      "bodyWords": 68370,
       "sourceWordCountIncludesMarkdownHeadings": true,
       "below1600BodyOnly": [
         "Глава 35. Не знать адреса (1596)",
-        "Глава 36. Голос (1593)"
+        "Глава 36. Голос (1593)",
+        "Глава 40. Оставить свет (1574)",
+        "Эпилог книги I. Открытый канал (360)"
       ],
       "draft": "poka-nas-ne-naydut-tom-01.json",
-      "commit": "4d7b49e6451aa805bd8dc5266e6b8664241ebfa0"
+      "commit": "d45bbb1a7a159e50cbdc1d2adbed652c203ee8dd"
     },
     "II": {
       "chapters": 43,
-      "sourceWords": 75520,
-      "bodyWords": 74931,
+      "sourceWords": 75557,
+      "bodyWords": 74985,
       "sourceWordCountIncludesMarkdownHeadings": true,
       "below1600BodyOnly": [
-        "Глава 30. Ещё один день (1594)"
+        "Эпилог. Обычное утро (922)"
       ],
       "draft": "poka-nas-ne-naydut-tom-02.json",
-      "commit": "8d0c4341397fa166dcdfe9fb10eda2191a6c1b2c"
+      "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f"
     }
   },
   "total": {
     "chapters": 84,
-    "sourceWords": 144661,
-    "bodyWords": 143351
+    "sourceWords": 144648,
+    "bodyWords": 143355
   },
-  "method": "Each of the 84 source Markdown files was fetched from the editorial release-candidate branch. Heading lines were moved into chapters[].title; all non-heading text was preserved in chapters[].content. Source/body counts use whitespace-separated tokens. No prose edits were made during packaging.",
-  "publicationSafety": "Both complete JSON files and six staging fragments remain under docs/poka-nas-ne-naydut/publishing-drafts/. They are not referenced from content/catalog.json or content/books/. No releaseAt was assigned. No publication status was enabled. Main was not modified. Chapters II/18 and II/34 include the approved KT-389 payoffs; all files match the current REVIEWED release candidate.",
+  "method": "All 84 current Markdown files in the final editorial release-candidate are represented in the provenance table. Eight files changed after the KT-392 packaging snapshot and were synchronized into the two full JSON volumes and six staging fragments; the other 76 source SHA values were verified unchanged. Markdown headings are moved to chapters[].title, POV labels are excluded from content, and body word counts use whitespace-separated tokens. No prose edits were made during packaging.",
+  "publicationSafety": "Both complete JSON files and all six staging fragments remain under docs/poka-nas-ne-naydut/publishing-drafts/. They are not referenced from content/catalog.json or content/books/. The author-confirmed public schedule is recorded in the documentation manifest, but both volume JSONs remain status=draft; no publication status or reader route was enabled. Main and the public catalog were not modified.",
   "provenance": [
     {
       "source": "BOOK-I-CHAPTER-01-REVIEWED-DRAFT.md",
@@ -94,7 +96,7 @@
     },
     {
       "source": "BOOK-I-CHAPTER-09-REVIEWED-DRAFT.md",
-      "sha": "f3c243bcea1349ff9b1b3ab9f62325f001f65a27",
+      "sha": "641a4278dd306e80f1204e1d1e7055dc94c36e8b",
       "sourceWords": 1692,
       "bodyWords": 1674,
       "title": "Глава 9. Решение без подсказки"
@@ -304,16 +306,16 @@
     },
     {
       "source": "BOOK-I-CHAPTER-39-REVIEWED-DRAFT.md",
-      "sha": "3576bb2738fd3fcc59ccf5335c94da9281c296eb",
-      "sourceWords": 1695,
-      "bodyWords": 1678,
+      "sha": "7b7f872183eea0c3e5fef6d39b49befd5162c0f1",
+      "sourceWords": 1705,
+      "bodyWords": 1688,
       "title": "Глава 39. Без купюр"
     },
     {
       "source": "BOOK-I-CHAPTER-40-REVIEWED-DRAFT.md",
-      "sha": "707c069bd1ab4104344ba1769ed8c7ce0662c0a2",
-      "sourceWords": 1651,
-      "bodyWords": 1634,
+      "sha": "93a199498146295be60c071444ec4584fb523f8c",
+      "sourceWords": 1591,
+      "bodyWords": 1574,
       "title": "Глава 40. Оставить свет"
     },
     {
@@ -332,9 +334,9 @@
     },
     {
       "source": "BOOK-II-CHAPTER-02-REVIEWED-DRAFT.md",
-      "sha": "2a302bd7c397054e7facdeb3c42dfa389a34462a",
-      "sourceWords": 1694,
-      "bodyWords": 1681,
+      "sha": "abe6a9b8c3a5af8468e0a98d066c1b5917461b16",
+      "sourceWords": 1741,
+      "bodyWords": 1728,
       "title": "Глава 2. Не подписывать"
     },
     {
@@ -374,9 +376,9 @@
     },
     {
       "source": "BOOK-II-CHAPTER-08-REVIEWED-DRAFT.md",
-      "sha": "ff03855d6d7315085f78edf1e75ab8ff55cbe917",
-      "sourceWords": 1679,
-      "bodyWords": 1666,
+      "sha": "2efdb0876512e0c974e9311f52997cfe4189c741",
+      "sourceWords": 1651,
+      "bodyWords": 1638,
       "title": "Глава 8. Совпадение маркеров"
     },
     {
@@ -402,9 +404,9 @@
     },
     {
       "source": "BOOK-II-CHAPTER-12-REVIEWED-DRAFT.md",
-      "sha": "b4e0953633ad2db20bac0f2131e94a71fa4ddabc",
-      "sourceWords": 1768,
-      "bodyWords": 1755,
+      "sha": "2ac62ccd76d23ce374908b8ca257dca3dd0e3dbb",
+      "sourceWords": 1769,
+      "bodyWords": 1756,
       "title": "Глава 12. Полный комплект"
     },
     {
@@ -430,9 +432,9 @@
     },
     {
       "source": "BOOK-II-CHAPTER-16-REVIEWED-DRAFT.md",
-      "sha": "2e900de7652d4ee11e9c03369557990e1ffeee85",
-      "sourceWords": 2050,
-      "bodyWords": 2126,
+      "sha": "a8ded36aec5baab5dba2b7d7d95365600d9ddf3c",
+      "sourceWords": 2063,
+      "bodyWords": 2048,
       "title": "Глава 16. Не соревноваться"
     },
     {
@@ -514,9 +516,9 @@
     },
     {
       "source": "BOOK-II-CHAPTER-28-REVIEWED-DRAFT.md",
-      "sha": "adc4e07c939d7d9e536fd353f06bf1964ab41cad",
-      "sourceWords": 1711,
-      "bodyWords": 1742,
+      "sha": "69d77ff2409035a22007a1e99c8e5ebbbb9888af",
+      "sourceWords": 1715,
+      "bodyWords": 1702,
       "title": "Глава 28. Второй рубеж"
     },
     {
@@ -627,9 +629,8 @@
   ],
   "ciValidation": {
     "workflow": "Validate AI Library",
-    "runId": 42519057776,
-    "commit": "fc4056fa9218b358f7f7fb29457b612532c77af0",
-    "conclusion": "success",
-    "scope": "10 inline scripts, service worker, 106 IDs, manifest and local assets"
+    "status": "pending",
+    "commit": "47bf4ececb723ae40d1277a91ee31d222a16376f",
+    "scope": "Validate scripts, manifests, local assets, and refreshed draft packaging; run after this commit."
   }
 }
