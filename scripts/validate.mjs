@@ -9,6 +9,9 @@ const flipLab = readFileSync(resolve(root, "reader-flip-lab.html"), "utf8");
 const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
 const duologyPage = readFileSync(resolve(root, "poka-nas-ne-naydut.html"), "utf8");
 const duologyManifest = JSON.parse(readFileSync(resolve(root, "content/series/poka-nas-ne-naydut.json"), "utf8"));
+const duologyCatalog = JSON.parse(readFileSync(resolve(root, "content/catalog.json"), "utf8"));
+const duologyVolumeOne = JSON.parse(readFileSync(resolve(root, "content/books/poka-nas-ne-naydut-tom-01.json"), "utf8"));
+const duologyVolumeTwo = JSON.parse(readFileSync(resolve(root, "content/books/poka-nas-ne-naydut-tom-02.json"), "utf8"));
 const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
 const premiereSeriesBook = JSON.parse(readFileSync(resolve(root, "content/books/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
@@ -35,6 +38,37 @@ assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated bann
 
 
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
+
+const duologyReleaseSpecs = [
+  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 68734, book: duologyVolumeOne },
+  { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
+];
+for (const spec of duologyReleaseSpecs) {
+  const entry = duologyCatalog.books.find(book => book.id === spec.id);
+  assert.ok(entry, `Scheduled duology volume is missing from catalog: ${spec.id}`);
+  assert.equal(entry.status, "scheduled");
+  assert.equal(entry.releaseAt, spec.releaseAt);
+  assert.equal(entry.chapterCount, spec.count);
+  assert.equal(entry.wordCount, spec.wordCount);
+  assert.equal(entry.revision, spec.book.revision);
+  assert.equal(spec.book.status, "scheduled");
+  assert.equal(spec.book.releaseAt, spec.releaseAt);
+  assert.equal(spec.book.chapters.length, spec.count);
+  assert.ok(spec.book.chapters.every(chapter => typeof chapter.content === "string" && chapter.content.trim()));
+  assert.equal(spec.book.seriesId, "poka-nas-ne-naydut");
+}
+assert.equal(duologyManifest.volumes[0].status, "scheduled");
+assert.equal(duologyManifest.volumes[1].status, "scheduled");
+assert.equal(duologyManifest.volumes[0].releaseAt, "2026-11-13T18:00:00+03:00");
+assert.equal(duologyManifest.volumes[1].releaseAt, "2026-11-20T18:00:00+03:00");
+assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
+assert.match(html, /Date\.now\(\) < releaseAt/);
+assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
+assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-01"/);
+assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-02"/);
+assert.match(duologyPage, /now>=at/);
+
+
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
 
 const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
