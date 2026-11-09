@@ -38,31 +38,39 @@
   },
   "method": "For each chapters[].content in the current full JSON, count content.trim().split(/\\s+/).filter(Boolean).length. The title is stored separately in chapters[].title; POV labels are excluded from content. Epilogues are included in volume wordCount but excluded from the 1,600-word minimum check.",
   "staging": {
-    "updatedFragments": [
+    "fragments": [
+      {
+        "file": "book-i-part-01.json",
+        "sha": "1c2904fe6a96ff0f1c864e5304b8f41266dd284b",
+        "chapterRange": "I/1–I/16"
+      },
+      {
+        "file": "book-i-part-02.json",
+        "sha": "12253f1f083b32991eb5b950de6911aa3e358e9b",
+        "chapterRange": "I/17–I/32"
+      },
       {
         "file": "book-i-part-03.json",
-        "sha": "3e90875843b078ef2ff5832be7fed13b887fa14e",
-        "contains": [
-          "I/36",
-          "I/40"
-        ]
+        "sha": "10dc2596765f8ac6b3136e1786aa73c0caa2825d",
+        "chapterRange": "I/33–I/40 + epilogue"
+      },
+      {
+        "file": "book-ii-part-01.json",
+        "sha": "0601d2d82d8fff8b8c2c3df79ff80844dfa0bdfb",
+        "chapterRange": "II/1–II/16"
       },
       {
         "file": "book-ii-part-02.json",
-        "sha": "1712c1a3353444c3af12a68aea4f4c0b531318e0",
-        "contains": [
-          "II/30"
-        ]
+        "sha": "0cc6972130a5fc8cb837940249d54ed33d68e4cd",
+        "chapterRange": "II/17–II/32"
+      },
+      {
+        "file": "book-ii-part-03.json",
+        "sha": "e7714bb8169eb4a692b9fdea6a4446f81924314e",
+        "chapterRange": "II/33–II/42 + epilogue"
       }
     ],
-    "manifest": {
-      "file": "series-manifest.draft.json",
-      "sha": "61146fd9d270b1b03f6936cdb8f8c8ffcce54081",
-      "wordCounts": [
-        68606,
-        77318
-      ]
-    }
+    "validation": "All six staging fragments were rebuilt from the current full JSON chapters and verified title/content equality for every element."
   },
   "historicalKT415Snapshot": {
     "date": "2026-11-09",
