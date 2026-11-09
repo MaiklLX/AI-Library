@@ -22,7 +22,7 @@ assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is mi
 assert.match(html, /class="hero-spotlight"/, "Editorial flagship spotlight is missing from the homepage");
 assert.match(html, /id="heroSpotlightTitle"/, "Editorial spotlight title must have an accessible heading");
 assert.match(html, /href="\.\/poka-nas-ne-naydut\.html"[^>]*aria-label="Открыть дилогию/, "Editorial spotlight cover must open the dedicated duology page");
-assert.match(html, /class="spotlight-cta"[^>]*href="\.\/poka-nas-ne-naydut\.html"/, "Editorial spotlight CTA must open the dedicated duology page");
+assert.match(html, /class="[^"]*\\bspotlight-cta\\b[^"]*"[^>]*href="\.\/poka-nas-ne-naydut\.html"/, "Editorial spotlight CTA must open the dedicated duology page");
 assert.match(html, /id="ai-library-editorial-spotlight-v1"/, "Responsive editorial spotlight styles are missing");
 assert.match(html, /class="hero-signature"/, "The library signature should sit directly below the homepage headline");
 assert.match(html, /class="spotlight-brand-mark"/, "The featured banner must reveal the library's signature mark");
