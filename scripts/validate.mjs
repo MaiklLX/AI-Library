@@ -22,8 +22,17 @@ assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is mi
 assert.match(html, /class="hero-spotlight"/, "Editorial flagship spotlight is missing from the homepage");
 assert.match(html, /id="heroSpotlightTitle"/, "Editorial spotlight title must have an accessible heading");
 assert.match(html, /href="\.\/poka-nas-ne-naydut\.html"[^>]*aria-label="Открыть дилогию/, "Editorial spotlight cover must open the dedicated duology page");
-assert.match(html, /class="spotlight-cta"[^>]*href="\.\/poka-nas-ne-naydut\.html"/, "Editorial spotlight CTA must open the dedicated duology page");
+assert.match(html, /class="[^"]*\bspotlight-cta\b[^"]*"[^>]*href="\.\/poka-nas-ne-naydut\.html"/, "Editorial spotlight CTA must open the dedicated duology page");
 assert.match(html, /id="ai-library-editorial-spotlight-v1"/, "Responsive editorial spotlight styles are missing");
+assert.match(html, /class="hero-signature"/, "The library signature should sit directly below the homepage headline");
+assert.match(html, /class="spotlight-brand-mark"/, "The featured banner must reveal the library's signature mark");
+assert.match(html, /class="spotlight-flash"/, "The featured banner needs its gold reveal flash");
+assert.match(html, /id="ai-library-editorial-flash-banner-v1"/, "Logo-to-cover animation styles are missing");
+assert.match(html, /id="ai-library-editorial-featured-rotation-v1"/, "Featured book rotation controller is missing");
+assert.match(html, /new MutationObserver\(sync\)/, "Featured banner must observe highlighted shelf cards");
+assert.match(html, /data-editorial-featured data-editorial-age="18\+"/, "The current highlighted duology must be registered in the editorial feature list");
+assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated banner must respect reduced-motion preferences");
+
 
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
