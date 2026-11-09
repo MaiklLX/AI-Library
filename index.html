@@ -3212,26 +3212,95 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
   </section>
 </div>
 <script>
-/* AI Library iOS PWA catalog guard: never leave a silent empty shelf. */
+/* AI Library iOS PWA catalog guard: recover real book cards, not just any shelf child. */
 (() => {
-  let failureShown = false;
-  const showCatalogFailure = (reason) => {
+  let recoveryStarted = false;
+  const hasBookCards = root => Boolean(root && root.querySelector('.book[data-book-id]'));
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+  const isSeriesVolume = id =>
+    /^ty-v-moih-planah-tom-\d{2}$/.test(id) ||
+    /^poka-nas-ne-naydut-tom-0[12]$/.test(id);
+  const filtersAreActive = () => {
+    const search = document.getElementById('search');
+    const favorites = document.getElementById('favoritesToggle');
+    const activeGenre = document.querySelector('#genres [data-genre].active');
+    return Boolean((search && search.value.trim()) ||
+      (favorites && favorites.classList.contains('active')) ||
+      (activeGenre && activeGenre.dataset.genre !== 'Все'));
+  };
+  const readCatalog = async () => {
+    try {
+      const response = await fetch('./content/catalog.json', { cache: 'no-cache' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const catalog = await response.json();
+      if (catalog && catalog.version === 1 && Array.isArray(catalog.books)) return catalog.books;
+      throw new Error('Неверный формат каталога');
+    } catch (networkError) {
+      try {
+        const cached = JSON.parse(localStorage.getItem('ai-library-published-books-cache') || '[]');
+        if (Array.isArray(cached) && cached.length) return cached;
+      } catch {}
+      throw networkError;
+    }
+  };
+  const installRecoveryStyles = () => {
+    if (document.getElementById('catalog-recovery-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'catalog-recovery-styles';
+    style.textContent = `
+      #books .catalog-recovery-card{display:block;min-width:0;overflow:hidden;border:1px solid #8e713b88;border-radius:14px;background:linear-gradient(155deg,#24221e,#151515);box-shadow:0 10px 28px #0005}
+      #books .catalog-recovery-card a{display:flex;height:100%;flex-direction:column;color:inherit;text-decoration:none}
+      #books .catalog-recovery-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:#24221e}
+      #books .catalog-recovery-copy{padding:14px;display:flex;flex:1;flex-direction:column;gap:7px}
+      #books .catalog-recovery-copy h3{margin:0;color:#f4f0e7;font:500 19px/1.25 Georgia,serif}
+      #books .catalog-recovery-copy p{margin:0;color:#bcb7ac;font-size:12px;line-height:1.55}
+      #books .catalog-recovery-copy span{margin-top:auto;color:#d9b66d;font-size:10px;font-weight:700;letter-spacing:.08em}
+      #books .catalog-recovery-note{grid-column:1/-1;color:#aaa59a;font-size:11px;text-align:center;padding:8px}
+    `;
+    document.head.appendChild(style);
+  };
+  const recoverShelf = async reason => {
     const root = document.getElementById('books');
-    if (!root || root.children.length || failureShown) return;
-    failureShown = true;
-    if (reason) console.error('AI Library: ошибка запуска книжной полки.', reason);
-    root.innerHTML = '<div class="empty" role="alert"><p>Не удалось отобразить книжную полку. Проверь подключение и попробуй обновить библиотеку.</p><button type="button" class="btn" data-retry-catalog>Обновить библиотеку</button></div>';
+    if (!root || hasBookCards(root) || filtersAreActive() || recoveryStarted) return;
+    recoveryStarted = true;
+    if (reason) console.error('AI Library: штатная отрисовка книжной полки не завершилась.', reason);
+    try {
+      const entries = await readCatalog();
+      const books = entries.filter(book => {
+        const id = String(book?.id || '').replace(/^published-/, '');
+        return book && book.status === 'published' && !isSeriesVolume(id) &&
+          typeof book.title === 'string' && book.title.trim();
+      });
+      if (!books.length) throw new Error('В каталоге нет самостоятельных опубликованных книг.');
+      if (hasBookCards(root)) return;
+      installRecoveryStyles();
+      root.innerHTML = books.map(book => {
+        const id = String(book.id).replace(/^published-/, '');
+        const cover = typeof book.cover === 'string' &&
+          book.cover.startsWith('./content/books/') &&
+          /\.(svg|png|jpe?g|webp)$/i.test(book.cover) && !book.cover.includes('..')
+          ? '<img src="' + escapeHtml(book.cover) + '" alt="" loading="lazy" decoding="async">'
+          : '<div aria-hidden="true" style="aspect-ratio:3/4;display:grid;place-items:center;color:#d9b66d;font:64px Georgia,serif">✦</div>';
+        return '<article class="catalog-recovery-card"><a href="./book.html?book=published-' +
+          encodeURIComponent(id) + '">' + cover + '<div class="catalog-recovery-copy"><h3>' +
+          escapeHtml(book.title) + '</h3><p>' + escapeHtml(book.description || book.desc || '') +
+          '</p><span>' + escapeHtml(book.genre || 'AI LIBRARY') + '</span></div></a></article>';
+      }).join('') + '<div class="catalog-recovery-note" role="status">Включён резервный режим отображения каталога. Чтение книг остаётся доступным.</div>';
+    } catch (error) {
+      root.innerHTML = '<div class="empty" role="alert"><p>Не удалось загрузить книжную полку. Проверь подключение и попробуй обновить библиотеку.</p><button type="button" class="btn" data-retry-catalog>Обновить библиотеку</button></div>';
+      console.error('AI Library: резервное восстановление каталога не удалось.', error);
+    }
   };
   window.addEventListener('error', event => {
-    if (event && (event.error || event.message)) {
-      window.setTimeout(() => showCatalogFailure(event.error || event.message), 0);
-    }
+    if (event && (event.error || event.message)) window.setTimeout(() => recoverShelf(event.error || event.message), 0);
   }, true);
   window.addEventListener('unhandledrejection', event => {
-    window.setTimeout(() => showCatalogFailure(event.reason || 'Необработанная ошибка'), 0);
+    window.setTimeout(() => recoverShelf(event.reason || 'Необработанная ошибка'), 0);
   });
   document.addEventListener('DOMContentLoaded', () => {
-    window.setTimeout(() => showCatalogFailure('Книжная полка не была отрисована за отведённое время'), 5000);
+    window.setTimeout(() => recoverShelf('За отведённое время не появились реальные карточки книг'), 6500);
   }, { once: true });
   document.addEventListener('click', event => {
     if (event.target.closest('[data-retry-catalog]')) window.location.reload();
