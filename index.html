@@ -1878,17 +1878,6 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 
 </style>
 
-<style id="poka-duology-shelf-v1">
-/* Дилогия на полке: приглушённая будущая обложка и отдельная печать на обороте. */
-.duology-muted-cover .cover-art{filter:grayscale(1) brightness(.62) contrast(.88);opacity:.78}
-.duology-muted-cover:after{border-color:#c6c6c655;box-shadow:0 0 34px #d0d0d010}
-.duology-muted-cover .tag{color:#d4d0c8;border-color:#77736b;background:#181818e8}
-.duology-front-mark{position:absolute;z-index:2;right:14px;bottom:13px;color:#dedbd2;font:22px Georgia,serif;text-shadow:0 0 14px #fff5}
-.duology-release-stamp{align-self:center;display:flex;flex-direction:column;align-items:center;justify-content:center;width:76px;height:76px;margin:5px auto 9px;border:2px solid #aaa69c;border-radius:50%;color:#c9c5bb;transform:rotate(-11deg);box-shadow:inset 0 0 0 3px #aaa69c22,0 0 18px #d4d0c810;text-align:center;letter-spacing:.1em;line-height:1.05}
-.duology-release-stamp span{font-size:9px;font-weight:800}
-.duology-release-stamp strong{font:700 13px Georgia,serif}
-@media(max-width:540px){.duology-release-stamp{width:65px;height:65px;margin:2px auto 6px}.duology-release-stamp strong{font-size:11px}}
-</style>
 <style id="prerelease-mobile-compact-v27">
 
 /* v27: mobile prerelease is a compact editorial strip, not a hero panel */
@@ -2966,6 +2955,18 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
 #books .duology-collection-card .book-back-actions .read{border-color:#d9b66d;background:linear-gradient(135deg,#d9b66d,#b38b47);color:#17130b}
 </style>
 
+
+<style id="poka-duology-shelf-highlight-v2">
+/* Особая карточка дилогии: исходные цвета обложки и спокойный золотой акцент. */
+#books .duology-collection-card{position:relative;border:1px solid #c7a45e;box-shadow:0 0 0 1px #d9b66d35,0 18px 42px #0007,0 0 30px #d9b66d20}
+#books .duology-featured-cover .cover-art{filter:none!important;opacity:1!important}
+#books .duology-featured-cover:after{border-color:#e0bd70cc;box-shadow:inset 0 0 22px #d9b66d14,0 0 36px #d9b66d28}
+#books .duology-featured-cover .tag{color:#21190c;border-color:#d9b66d;background:linear-gradient(135deg,#f0d99e,#b98d42);font-weight:900;text-shadow:none}
+#books .duology-front-mark{color:#f1d89c;font-size:25px;text-shadow:0 0 18px #e5c779aa}
+#books .duology-back{border-color:#b89450}
+#books .duology-release-stamp{border-color:#c6a15c;color:#e1c27e;box-shadow:inset 0 0 0 3px #d9b66d25,0 0 20px #d9b66d20}
+@media(prefers-reduced-motion:reduce){#books .duology-collection-card{transition:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3470,7 +3471,7 @@ async function renderPrereleaseShowcase(){
     const cta=isSeriesReleased?"Открыть серию · читать том I":"Открыть роман · 6 томов";
     return `<article class="premiere-card">
       <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${isMainSeries?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
-      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut":canonicalId==="ty-v-moih-planah"?"./series.html":"./book.html?book=published-"+encodeURIComponent(canonicalId)}">${canonicalId==="poka-nas-ne-naydut"?"Открыть премьеру":isMainSeries?cta:"Открыть книгу"}　↗</a></div>
+      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html":canonicalId==="ty-v-moih-planah"?"./series.html":"./book.html?book=published-"+encodeURIComponent(canonicalId)}">${canonicalId==="poka-nas-ne-naydut"?"Открыть дилогию · 2 книги":isMainSeries?cta:"Открыть книгу"}　↗</a></div>
     </article>`;
   }).join('');
 }
@@ -3521,8 +3522,8 @@ function renderPokaDuologyCard(){
  return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card>'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
- '<span class="cover detective has-cover duology-muted-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
- '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">БУДУЩЕЕ ИЗДАНИЕ · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
+ '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">ЗАКРЫТАЯ ПРЕМЬЕРА · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
  '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
  '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
@@ -3595,7 +3596,7 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length+3);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const skateTerms=['громче, чем тормоза','скейт','скейтер','рок','егор','лада','космос','подростковое приключение'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const showSkateCollection=!onlyFav&&(genre==="Все"||genre==="Приключения"||genre==="Романтика")&&(!q||skateTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const skateCard=showSkateCollection?renderGromchePrereleaseCard():'';const collectionCards=seriesCard+duologyCard+skateCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const skateTerms=['громче, чем тормоза','скейт','скейтер','рок','егор','лада','космос','подростковое приключение'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const publishedSkateBook=getAllBooks().some(book=>canonicalBookId(book)==="gromche-chem-tormoza"&&book.status==="published");const showSkateCollection=!publishedSkateBook&&!onlyFav&&(genre==="Все"||genre==="Приключения"||genre==="Романтика")&&(!q||skateTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const skateCard=showSkateCollection?renderGromchePrereleaseCard():'';const collectionCards=seriesCard+duologyCard+skateCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):(collectionCards?'':'<div class="empty"><p>Ничего не найдено. Попробуй изменить запрос или фильтры.</p><button type="button" class="btn" data-reset-catalog>Сбросить поиск и фильтры</button></div>'))+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};

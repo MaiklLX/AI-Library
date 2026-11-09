@@ -309,7 +309,7 @@ assert.match(seriesPage, /ТОМ УЖЕ ВЫШЕЛ/, "Released volume badge must
 assert.doesNotMatch(html, /class="release-pair"/, "The compact duplicate release banners must be removed from the home page");
 assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards must remain on the home page");
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
-assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./premiere.html?book=poka-nas-ne-naydut"'), "The Poka premiere card must open its own premiere page");
+assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html"'), "The Poka premiere card must open the dedicated duology page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The app shell cache must be invalidated after the premiere and series fixes");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
