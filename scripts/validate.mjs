@@ -426,12 +426,15 @@ assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,
 const publishedNormalizer = html.match(/function normalizePublishedBook\(book\) \{([\s\S]*?)\n\}/);
 assert.ok(publishedNormalizer, "Could not isolate published-book metadata normalization");
 assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
-const releaseLockFunction = html.match(/function isBookReleaseLocked\\(book\\) \\{([\\s\\S]*?)\\n\\}/);
-assert.ok(releaseLockFunction, "Could not isolate scheduled-release access control");
+const releaseLockStart = html.indexOf("function isBookReleaseLocked(book) {");
+assert.ok(releaseLockStart >= 0, "Could not locate scheduled-release access control");
+const releaseLockEnd = html.indexOf("\\n}", releaseLockStart);
+assert.ok(releaseLockEnd > releaseLockStart, "Could not isolate scheduled-release access control");
+const releaseLockSource = html.slice(releaseLockStart, releaseLockEnd + 2);
 const normalizeFixture = new Function("book", "now", `
   const RealDate = Date;
   const Date = class extends RealDate { static now(){ return Number.isFinite(now) ? now : RealDate.now(); } };
-  ${releaseLockFunction[0]};
+  ${releaseLockSource};
   ${publishedNormalizer[0]};
   return normalizePublishedBook(book);
 `);
