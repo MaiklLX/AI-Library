@@ -601,7 +601,7 @@ for (const scheduledVolume of seriesManifest.volumes) {
   assert.ok(existsSync(resolve(root, scheduledVolume.cover)), `Volume ${scheduledVolume.number} cover asset is missing`);
 }
 assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
-assert.match(html, /return book\.status === 'prerelease' \|\| book\.status === 'scheduled'/, "A book must remain locked until the catalog explicitly marks it published");
+assert.match(html, /return !Number\.isFinite\(releaseAt\) \|\| Date\.now\(\) < releaseAt/, "Scheduled books must unlock automatically at their releaseAt boundary");
 assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
 assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
 assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh when a release time passes");
