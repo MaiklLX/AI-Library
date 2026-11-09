@@ -3057,6 +3057,57 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
  .hero-spotlight:hover .spotlight-cover img{transform:none}
 }
 </style>
+<style id="ai-library-editorial-flash-banner-v1">
+/* A reusable editorial beacon: the library's signature star reveals selected book covers. */
+.hero{grid-template-columns:minmax(260px,.78fr) minmax(0,1.22fr);gap:clamp(24px,3.2vw,44px)}
+.hero h1{font-size:clamp(34px,3.9vw,51px);line-height:1.08;letter-spacing:-.025em;margin:14px 0 8px}
+.hero .eyebrow{font-size:9px;letter-spacing:.17em}
+.hero-signature{display:flex;align-items:center;gap:10px;margin:0 0 15px;color:#d8bd82;font:800 9px/1 system-ui,sans-serif;letter-spacing:.27em}
+.hero-signature-star{display:grid;place-items:center;width:30px;height:30px;border:1px solid #d9b66d88;border-radius:9px;color:#f2d99e;font-size:20px;text-shadow:0 0 12px #f2d99eaa;box-shadow:inset 0 0 14px #d9b66d20,0 0 18px #d9b66d16;animation:heroSignatureGlow 5.8s ease-in-out infinite}
+.hero-signature i{display:block;width:clamp(24px,4vw,58px);height:1px;background:linear-gradient(90deg,#d9b66d88,transparent)}
+@keyframes heroSignatureGlow{0%,100%{transform:scale(.96);box-shadow:inset 0 0 12px #d9b66d18,0 0 12px #d9b66d12}50%{transform:scale(1.04);box-shadow:inset 0 0 18px #f2d99e35,0 0 25px #d9b66d35}}
+.hero-spotlight{grid-template-columns:minmax(190px,.9fr) minmax(0,1.1fr);min-height:410px}
+.spotlight-cover{isolation:isolate;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 48%,#4a3820 0,#211b16 50%,#111 100%)}
+.spotlight-feature-image{z-index:1;opacity:0;transform:scale(1.055);animation:spotlightCoverReveal 8.8s ease-in-out infinite;will-change:opacity,transform}
+.spotlight-brand-mark{position:absolute;z-index:2;left:50%;top:50%;display:grid;place-items:center;width:clamp(88px,11vw,142px);aspect-ratio:1;transform:translate(-50%,-50%);border:1px solid #e6c9829c;border-radius:30%;color:#f5dfa7;font:400 clamp(58px,8vw,96px)/1 Georgia,serif;text-shadow:0 0 15px #fff0c4,0 0 42px #e5bd65,0 0 85px #d9b66d;box-shadow:inset 0 0 32px #f0d18d20,0 0 35px #d9b66d45,0 0 90px #d9b66d1c;animation:spotlightMarkReveal 8.8s ease-in-out infinite}
+.spotlight-brand-mark:before,.spotlight-brand-mark:after{content:"";position:absolute;inset:-15%;border:1px solid #e8ca8750;border-radius:50%;transform:rotate(-24deg) scaleX(1.2);box-shadow:0 0 22px #d9b66d18;animation:spotlightOrbit 12s linear infinite}
+.spotlight-brand-mark:after{inset:-28%;border-color:#f4dfa42c;transform:rotate(28deg) scaleX(.76);animation-duration:17s;animation-direction:reverse}
+.spotlight-flash{position:absolute;z-index:3;inset:-25% -65%;pointer-events:none;opacity:0;background:linear-gradient(105deg,transparent 39%,#fff0 44%,#fff4d5c9 49%,#f2d18b 50%,#fff8e6d9 52%,#e4b85d66 56%,transparent 62%);filter:blur(5px);transform:translateX(-75%) skewX(-12deg);animation:spotlightFlashSweep 8.8s ease-in-out infinite}
+.spotlight-cover-shade{z-index:4}
+.spotlight-cover-seal{z-index:5}
+@keyframes spotlightMarkReveal{0%,31%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:brightness(1)}37%{opacity:1;transform:translate(-50%,-50%) scale(1.13);filter:brightness(1.6)}45%,100%{opacity:0;transform:translate(-50%,-50%) scale(.78);filter:brightness(1.8)}}
+@keyframes spotlightCoverReveal{0%,36%{opacity:0;transform:scale(1.055)}48%,88%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.985)}}
+@keyframes spotlightFlashSweep{0%,34%{opacity:0;transform:translateX(-75%) skewX(-12deg)}39%{opacity:1}48%{opacity:0;transform:translateX(75%) skewX(-12deg)}100%{opacity:0}}
+@keyframes spotlightOrbit{from{rotate:0deg}to{rotate:360deg}}
+.spotlight-copy h2{font-size:clamp(29px,3vw,42px)}
+@media(max-width:980px){
+ .hero{grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr)}
+ .hero-spotlight{grid-template-columns:minmax(150px,.78fr) minmax(0,1.22fr);min-height:370px}
+ .hero h1{font-size:clamp(32px,4.2vw,43px)}
+}
+@media(max-width:700px){
+ .hero{grid-template-columns:minmax(0,1fr);gap:21px;padding-top:32px;padding-bottom:34px}
+ .hero>div:first-child{max-width:600px}
+ .hero h1{font-size:clamp(33px,8vw,45px);margin:10px 0 7px}
+ .hero-signature{margin-bottom:12px}
+ .hero-signature-star{width:27px;height:27px;font-size:18px}
+ .hero .eyebrow{font-size:8px;letter-spacing:.14em}
+ .hero-spotlight{grid-template-columns:minmax(112px,.72fr) minmax(0,1.28fr);min-height:300px}
+ .spotlight-brand-mark{width:76px;font-size:55px;border-radius:24%}
+ .spotlight-copy{padding:16px 14px}
+}
+@media(max-width:390px){
+ .hero h1{font-size:32px}
+ .hero-spotlight{grid-template-columns:104px minmax(0,1fr);min-height:292px}
+ .spotlight-brand-mark{width:66px;font-size:48px}
+ .spotlight-copy{padding:13px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-signature-star,.spotlight-brand-mark,.spotlight-brand-mark:before,.spotlight-brand-mark:after,.spotlight-feature-image,.spotlight-flash{animation:none!important;will-change:auto}
+ .spotlight-brand-mark,.spotlight-flash{display:none}
+ .spotlight-feature-image{opacity:1!important;transform:none!important}
+}
+</style>
 </head>
 <body>
 <header><div class="wrap"><nav><div class="brand"><div class="logo">✦</div><div>AI LIBRARY<small>БИБЛИОТЕКА НОВЫХ МИРОВ</small></div></div><div class="site-nav-actions" aria-label="Основная навигация">
@@ -3071,7 +3122,7 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
   <button id="dismissCatalogUpdate" type="button" aria-label="Закрыть уведомление">×</button>
 </div>
 <main class="wrap">
-<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions">
+<section class="hero"><div><div class="eyebrow">✦ Истории, которых ещё не было</div><h1>Открой дверь<br>в <em>новые миры.</em></h1><div class="hero-signature" aria-label="AI Library"><span class="hero-signature-star" aria-hidden="true">✦</span><span>AI LIBRARY</span><i aria-hidden="true"></i></div><p>Виртуальная библиотека историй, созданных воображением и искусственным интеллектом. Выбирай жанр, находи свою книгу и погружайся в чтение.</p><div class="actions">
 <button class="btn primary hero-action" type="button" onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7"/></svg><span>Исследовать библиотеку</span></button>
 <button class="btn hero-action" id="randomBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg><span>Удиви меня</span></button>
 </div>
@@ -3081,13 +3132,15 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
 <div><strong>0 ₽</strong><span>доступ к чтению</span></div>
 </div></div><article class="hero-spotlight" aria-labelledby="heroSpotlightTitle">
   <a class="spotlight-cover" href="./poka-nas-ne-naydut.html" aria-label="Открыть дилогию «Пока нас не найдут»">
-    <img src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="Обложка романа «Пока нас не найдут»" fetchpriority="high" decoding="async">
+    <img class="spotlight-feature-image" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="Обложка романа «Пока нас не найдут»" fetchpriority="high" decoding="async">
+    <span class="spotlight-brand-mark" aria-hidden="true">✦</span>
+    <span class="spotlight-flash" aria-hidden="true"></span>
     <span class="spotlight-cover-shade" aria-hidden="true"></span>
     <span class="spotlight-cover-seal">AI LIBRARY<br><strong>ORIGINAL</strong></span>
   </a>
   <div class="spotlight-copy">
     <div class="spotlight-overline"><span class="spotlight-live-dot"></span> В ЦЕНТРЕ ВНИМАНИЯ · ВЫБОР РЕДАКЦИИ</div>
-    <div class="spotlight-format"><span>ГЛАВНАЯ ПРЕМЬЕРА</span><span>18+</span><span>2 КНИГИ</span></div>
+    <div class="spotlight-format"><span data-spotlight-kind>ГЛАВНАЯ ПРЕМЬЕРА</span><span data-spotlight-age>18+</span><span data-spotlight-format>2 КНИГИ</span></div>
     <h2 id="heroSpotlightTitle">Пока нас<br><em>не найдут</em></h2>
     <p class="spotlight-hook">Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть.</p>
     <p class="spotlight-description">Мира восстанавливает старые записи и находит голос исчезнувшей сестры. След ведёт к клинике «Аурелия», семье Ветровых и человеку, которому предстоит доказать, что ему можно доверять.</p>
@@ -3625,7 +3678,7 @@ function renderSeriesCollectionCard(){
 function renderPokaDuologyCard(){
  const title='Пока нас не найдут';
  const description='Мира Соколова восстанавливает старые записи и находит голос исчезнувшей сестры. След ведёт к клинике «Аурелия», семье Ветровых и Дамиану — человеку, которому предстоит доказать, что ему можно доверять.';
- return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card>'+
+ return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть.">'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
  '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
@@ -4921,6 +4974,72 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
 }
 </style>
 
+<script id="ai-library-editorial-featured-rotation-v1">
+(function(){
+  const banner=document.querySelector('.hero-spotlight');
+  const shelf=document.querySelector('#books');
+  if(!banner||!shelf||banner.dataset.rotationReady==='true') return;
+  banner.dataset.rotationReady='true';
+  const image=banner.querySelector('.spotlight-feature-image');
+  const coverLink=banner.querySelector('.spotlight-cover');
+  const title=banner.querySelector('#heroSpotlightTitle');
+  const hook=banner.querySelector('.spotlight-hook');
+  const description=banner.querySelector('.spotlight-description');
+  const genre=banner.querySelector('.spotlight-genre');
+  const cta=banner.querySelector('.spotlight-cta');
+  const kind=banner.querySelector('[data-spotlight-kind]');
+  const age=banner.querySelector('[data-spotlight-age]');
+  const format=banner.querySelector('[data-spotlight-format]');
+  let cards=[];
+  let active=0;
+  let timer=null;
+  let signature='';
+  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function apply(card){
+    if(!card) return;
+    const cover=card.querySelector('.book-front .cover-art');
+    const name=card.querySelector('.book-back h3');
+    const target=card.querySelector('.book-back-actions a[href]');
+    const summary=card.querySelector('.book-back .desc');
+    const hookText=card.getAttribute('data-editorial-hook')||'';
+    const meta=card.querySelector('.book-back .meta');
+    const coverSrc=cover&&(cover.getAttribute('src')||cover.currentSrc||cover.src);
+    const bookName=name&&name.textContent.trim();
+    if(coverSrc){image.src=coverSrc;image.alt=bookName?'Обложка книги «'+bookName+'»':'Обложка избранной книги';}
+    if(bookName){title.textContent=bookName;coverLink.setAttribute('aria-label','Открыть книгу «'+bookName+'»');}
+    if(target){coverLink.href=target.getAttribute('href');cta.href=target.getAttribute('href');}
+    if(summary) description.textContent=summary.textContent.trim();
+    hook.textContent=hookText;
+    hook.hidden=!hookText;
+    if(meta){const genres=Array.from(meta.querySelectorAll('span')).map(node=>node.textContent.trim()).filter(Boolean);genre.textContent=genres.join(' · ').toUpperCase();}
+    const ageText=card.getAttribute('data-editorial-age')||'';
+    const formatText=card.getAttribute('data-editorial-format')||'';
+    age.textContent=ageText;age.hidden=!ageText;
+    format.textContent=formatText;format.hidden=!formatText;
+    banner.setAttribute('aria-label','Избранная история: '+(bookName||'AI Library'));
+  }
+  function sync(){
+    const next=Array.from(shelf.querySelectorAll('[data-editorial-featured]'));
+    const nextSignature=next.map(card=>{
+      const img=card.querySelector('.book-front .cover-art');
+      const h=card.querySelector('.book-back h3');
+      const a=card.querySelector('.book-back-actions a[href]');
+      return [img&&img.getAttribute('src'),h&&h.textContent.trim(),a&&a.getAttribute('href')].join('~');
+    }).join('|');
+    if(!next.length||nextSignature===signature) return;
+    signature=nextSignature;
+    cards=next;
+    active=0;
+    apply(cards[active]);
+    if(timer){window.clearInterval(timer);timer=null;}
+    if(cards.length>1&&!reduced){
+      timer=window.setInterval(function(){active=(active+1)%cards.length;apply(cards[active]);},8800);
+    }
+  }
+  sync();
+  new MutationObserver(sync).observe(shelf,{childList:true,subtree:true,attributes:true,attributeFilter:['data-editorial-featured']});
+})();
+</script>
 </body></html>
 
 
