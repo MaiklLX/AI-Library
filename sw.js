@@ -1,6 +1,6 @@
 /* AI Library service worker — offline app shell, network-first pages */
 const CACHE_PREFIX = 'ai-library-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'v92';
+const CACHE_NAME = CACHE_PREFIX + 'v93';
 const APP_SHELL = ['./', './index.html', './reader-flip-lab.html', './book.html', './series.html', './premiere.html', './poka-nas-ne-naydut.html', './book-creator.html', './content/series/ty-v-moih-planah.json', './content/series/poka-nas-ne-naydut.json', './content/books/Пока нас не найдут_ тайны и страсть.png', './content/books/ty-v-moih-planah-tom-01-cover.svg', './content/books/ty-v-moih-planah-tom-02-cover.svg', './content/books/ty-v-moih-planah-tom-03-cover.svg', './content/books/ty-v-moih-planah-tom-04-cover.svg', './content/books/ty-v-moih-planah-tom-05-cover.svg', './content/books/ty-v-moih-planah-tom-06-cover.svg', './manifest.webmanifest', './icon.svg', './src/platform/runtime.js', './src/platform/library-store.js', './src/platform/download-manager.js'];
 
 self.addEventListener('install', event => {
@@ -60,10 +60,28 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Catalog, series manifests and book files use network-first so new commits appear promptly.
-  if (url.pathname.endsWith('/content/catalog.json') ||
-      url.pathname.includes('/content/books/') ||
-      url.pathname.includes('/content/series/')) {
+  // The small catalog is shell data: serve its cached copy immediately, then refresh it.
+  // Book texts and series manifests remain network-first so published updates are not stale.
+  if (url.pathname.endsWith('/content/catalog.json')) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(request);
+      const refresh = fetch(request, { cache: 'no-cache' }).then(response => {
+        if (response && response.ok && response.type === 'basic') {
+          return cache.put(request, response.clone()).then(() => response);
+        }
+        return response;
+      }).catch(() => null);
+      if (cached) {
+        event.waitUntil(refresh);
+        return cached;
+      }
+      return (await refresh) || new Response('', { status: 503, statusText: 'Offline' });
+    })());
+    return;
+  }
+
+  if (url.pathname.includes('/content/books/') || url.pathname.includes('/content/series/')) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       try {
