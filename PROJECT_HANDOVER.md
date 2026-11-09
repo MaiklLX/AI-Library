@@ -343,6 +343,7 @@ Last maintained: 2026-10-30.
 ## UI checkpoint — shelf and premiere polish (2026-11-09)
 
 - Working branch: `fix/ai-library-shelf-premiere-polish-2026-11-09`, based on `main` at `29a2f396ffaae050e3da7708679dd63bffee0784`.
+- Latest UI implementation commit: `64f33722912ba6f37d52ca3f7f0e638ebf4e54c6`.
 - Removed the duplicate «Громче, чем тормоза» shelf card: its manual pre-release collection card is suppressed once the canonical book is published; the normal published book card remains.
 - Corrected «Пока нас не найдут» premiere routing to the dedicated `poka-nas-ne-naydut.html` page. Legacy `premiere.html?book=poka-nas-ne-naydut` URLs redirect there as well.
 - The dedicated page continues to show two volume cards and separate countdowns: 13 Nov 2026 18:00 MSK and 20 Nov 2026 18:00 MSK. Desktop remains two columns; mobile stacks to one.
