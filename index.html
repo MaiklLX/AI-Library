@@ -3434,6 +3434,27 @@ function showCatalogUpdateNotice(change) {
 }
 
 async function loadPublishedBooks() {
+  // Paint the last verified catalog immediately; refresh it from the network in the background.
+  // This avoids an empty shelf while iOS Safari / the PWA waits for the network-first service worker.
+  try {
+    const cached = JSON.parse(localStorage.getItem(PUBLISHED_BOOKS_KEY) || '[]');
+    if (Array.isArray(cached) && cached.length) {
+      publishedBooks = cached.filter(book =>
+        book && typeof book.id === 'string' && book.id.startsWith('published-') &&
+        typeof book.title === 'string'
+      ).map(book => ({
+        ...book,
+        metadataOnly: true,
+        chapters: []
+      }));
+      syncGenreFilters();
+      render();
+      updateContinueReadingButton();
+    }
+  } catch (cacheError) {
+    console.warn('Не удалось быстро показать сохранённый каталог:', cacheError);
+  }
+
   try {
     const response = await fetch(PUBLISHED_CATALOG_URL, { cache: 'no-cache' });
     if (!response.ok) throw new Error('Не удалось загрузить каталог опубликованных книг');
