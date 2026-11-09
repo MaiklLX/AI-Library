@@ -4065,5 +4065,5 @@ SHA/объёмы: II/41 — `ef23850aeab9e08f7bf066434d30883085b317c6`, 1 698 с
 - Обнаружено расхождение release-candidate Markdown и publishing JSON/staging для II/34, II/41, II/42 и эпилога II. Автоматический перенос запрещён до отдельного diff и решения автора.
 - Готовность остаётся 46/100, изменение 0 п.п. Художественные файлы не менялись.
 - Отчёт: `KT-513-DUOLOGY-PROMISE-MATRIX-CALENDAR-AND-SOURCE-AUDIT.md`; контрольная фраза: `KT-513-CHECKPOINT-PHRASE.md`.
-- Старый резерв `backup/poka-nas-ne-naydut-mirror-2026-11-06` diverged (60 ahead / 42 behind); не синхронизировать и не переписывать историю. Точное зеркало КТ-510 существует отдельно.
+- Старый резерв `backup/poka-nas-ne-naydut-mirror-2026-11-06` diverged (66 ahead / 42 behind); не синхронизировать и не переписывать историю. Точное зеркало КТ-510 fast-forward обновлено до итогового HEAD `e6bcc073cf847fa3033e3e9b65d177ff669b842b`; compare — identical.
 - `main` этим запуском не изменялась; текущий SHA и ранее выполненная интеграция PR #115 зафиксированы в отчёте КТ-513.
