@@ -97,7 +97,7 @@ const catalogGuardPosition = html.indexOf("AI Library iOS PWA catalog guard");
 const platformRuntimePosition = html.indexOf('<script src="./src/platform/runtime.js"></script>');
 assert.ok(catalogGuardPosition >= 0 && platformRuntimePosition >= 0 && catalogGuardPosition < platformRuntimePosition,
   "The iOS catalog fallback must be installed before blocking external platform scripts");
-assert.match(html, /root\.querySelector\('\.book\\\[data-book-id\\\]'\)/, "Catalog recovery must distinguish real book cards from collection cards");
+assert.match(html, /root\.querySelector\('\.book\[data-book-id\]'\)/, "Catalog recovery must distinguish real book cards from collection cards");
 assert.match(html, /async \(\) => \{[\s\S]*?fetch\('\.\/content\/catalog\.json'/, "Catalog recovery must be able to load the published catalog independently");
 assert.match(html, /catalog-recovery-card/, "Catalog recovery must render a visible fallback card layout");
 assert.match(html, /status === 'published' && !isSeriesVolume\(id\)/, "Catalog recovery must exclude prereleases and standalone series volumes");
