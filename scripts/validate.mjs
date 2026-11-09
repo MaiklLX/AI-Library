@@ -428,7 +428,7 @@ assert.ok(publishedNormalizer, "Could not isolate published-book metadata normal
 assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
 const releaseLockStart = html.indexOf("function isBookReleaseLocked(book) {");
 assert.ok(releaseLockStart >= 0, "Could not locate scheduled-release access control");
-const releaseLockEnd = html.indexOf("\\n}", releaseLockStart);
+const releaseLockEnd = html.indexOf("\n}", releaseLockStart);
 assert.ok(releaseLockEnd > releaseLockStart, "Could not isolate scheduled-release access control");
 const releaseLockSource = html.slice(releaseLockStart, releaseLockEnd + 2);
 const normalizeFixture = new Function("book", "now", `
