@@ -2,22 +2,22 @@
   "title": "Пока нас не найдут — проверка упаковки двух черновых томов",
   "date": "2026-11-09",
   "branch": "editorial/restore-literary-standard-i16-onward",
-  "status": "current full JSON assembly after KT-491",
+  "status": "KT-510 reconciled full-volume JSON assembly; synchronized with all six current staging fragments",
   "sourceOfTruth": {
     "volumeI": {
       "file": "poka-nas-ne-naydut-tom-01.json",
-      "sha": "9faf00ec86481968498edc8222c3acb3d5000e7f",
+      "sha": "d42b1e4ca378914240594718b25b4d12c130248d",
       "elements": 41,
       "mainChapters": 40,
-      "bodyWords": 68246,
+      "bodyWords": 68368,
       "epilogueWords": 360,
-      "wordCount": 68606,
+      "wordCount": 68728,
       "below1600BodyOnly": [],
       "above2200BodyOnly": []
     },
     "volumeII": {
       "file": "poka-nas-ne-naydut-tom-02.json",
-      "sha": "8adb7794040d57b67187e1c834bd742a527eeec0",
+      "sha": "967968a3a06ba2c83c4ee28375a827e97ba7d899",
       "elements": 43,
       "mainChapters": 42,
       "bodyWords": 76192,
@@ -31,22 +31,22 @@
   },
   "total": {
     "mainChapters": 82,
-    "mainBodyWords": 144438,
+    "mainBodyWords": 144560,
     "epilogueWords": 1504,
     "totalElements": 84,
-    "totalBodyWords": 145942
+    "totalBodyWords": 146064
   },
   "method": "For each chapters[].content in the current full JSON, count content.trim().split(/\\s+/).filter(Boolean).length. The title is stored separately in chapters[].title; POV labels are excluded from content. Epilogues are included in volume wordCount but excluded from the 1,600-word minimum check.",
   "staging": {
     "fragments": [
       {
         "file": "book-i-part-01.json",
-        "sha": "1c2904fe6a96ff0f1c864e5304b8f41266dd284b",
+        "sha": "d4bf47fb01a3c00efbfcda08874508c3d821acbd",
         "chapterRange": "I/1–I/16"
       },
       {
         "file": "book-i-part-02.json",
-        "sha": "12253f1f083b32991eb5b950de6911aa3e358e9b",
+        "sha": "e5777fad1b40c7af29c7adea5ad7419d20be0581",
         "chapterRange": "I/17–I/32"
       },
       {
@@ -56,7 +56,7 @@
       },
       {
         "file": "book-ii-part-01.json",
-        "sha": "0601d2d82d8fff8b8c2c3df79ff80844dfa0bdfb",
+        "sha": "1cbbc7815ad45465f8ab782689bd19445217ea7b",
         "chapterRange": "II/1–II/16"
       },
       {
@@ -70,7 +70,7 @@
         "chapterRange": "II/33–II/42 + epilogue"
       }
     ],
-    "validation": "After KT-491, Book II part 03 was refreshed from the full JSON; chapter title/content equality was verified for all 11 elements."
+    "validation": "KT-510: both full-volume chapters arrays rebuilt from the six current staging fragments. Exact title/content equality verified for all 84 entries; chapter numbering I/1–I/40 and II/1–II/42; both epilogues present; no duplicate titles; all 82 main chapters >=1,600 words."
   },
   "historicalKT415Snapshot": {
     "date": "2026-11-09",
@@ -705,5 +705,10 @@
     "bodyUnits": 1851,
     "change": "+14 body units; all 82 chapters remain >=1,600",
     "stagingFile": "book-ii-part-03.json"
+  },
+  "lastPackagingReconciliation": {
+    "checkpoint": "KT-510",
+    "change": "Rebuilt both full-volume JSON chapter arrays from current staging fragments; corrected stale Book I chapters and Book II chapter II/16; refreshed counts and hashes.",
+    "manuscriptTextChanged": false
   }
 }
