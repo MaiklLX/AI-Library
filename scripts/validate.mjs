@@ -19,6 +19,12 @@ const downloadManager = readFileSync(resolve(root, "src/platform/download-manage
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
+assert.match(html, /class="hero-spotlight"/, "Editorial flagship spotlight is missing from the homepage");
+assert.match(html, /id="heroSpotlightTitle"/, "Editorial spotlight title must have an accessible heading");
+assert.match(html, /href="\.\/poka-nas-ne-naydut\.html"[^>]*aria-label="Открыть дилогию/, "Editorial spotlight cover must open the dedicated duology page");
+assert.match(html, /class="spotlight-cta"[^>]*href="\.\/poka-nas-ne-naydut\.html"/, "Editorial spotlight CTA must open the dedicated duology page");
+assert.match(html, /id="ai-library-editorial-spotlight-v1"/, "Responsive editorial spotlight styles are missing");
+
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
 
