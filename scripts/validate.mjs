@@ -611,7 +611,9 @@ const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s
 assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
 const releaseGuard = new Function(releaseGuardMatch[0] + "; return isBookReleaseLocked;")();
 assert.equal(releaseGuard({ status: "prerelease", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished prerelease");
-assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished scheduled book");
+assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2000-01-01T00:00:00Z" }), false, "A scheduled book must unlock after its releaseAt boundary");
+assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2099-01-01T00:00:00Z" }), true, "A scheduled book must remain locked before its releaseAt boundary");
+assert.equal(releaseGuard({ status: "scheduled" }), true, "A scheduled book without a releaseAt must remain locked");
 assert.equal(releaseGuard({ status: "published", releaseAt: "2099-01-01T00:00:00Z" }), false, "An explicitly published book must be readable");
 assert.equal(releaseGuard(null), true, "Missing book records must remain locked");
 
