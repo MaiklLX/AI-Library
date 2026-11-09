@@ -63,20 +63,22 @@ self.addEventListener('fetch', event => {
   // The small catalog is shell data: serve its cached copy immediately, then refresh it.
   // Book texts and series manifests remain network-first so published updates are not stale.
   if (url.pathname.endsWith('/content/catalog.json')) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(request);
-      const refresh = fetch(request, { cache: 'no-cache' }).then(response => {
+    const cachePromise = caches.open(CACHE_NAME);
+    const refreshPromise = cachePromise.then(cache =>
+      fetch(request, { cache: 'no-cache' }).then(response => {
         if (response && response.ok && response.type === 'basic') {
           return cache.put(request, response.clone()).then(() => response);
         }
         return response;
-      }).catch(() => null);
-      if (cached) {
-        event.waitUntil(refresh);
-        return cached;
-      }
-      return (await refresh) || new Response('', { status: 503, statusText: 'Offline' });
+      })
+    ).catch(() => null);
+    // Extend the fetch event before any asynchronous work begins.
+    event.waitUntil(refreshPromise);
+    event.respondWith((async () => {
+      const cache = await cachePromise;
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      return (await refreshPromise) || new Response('', { status: 503, statusText: 'Offline' });
     })());
     return;
   }
