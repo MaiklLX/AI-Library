@@ -27,6 +27,7 @@ h1{max-width:720px;margin:18px 0 13px;font:500 clamp(42px,6vw,72px)/1.02 Georgia
 .volumes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.volume{position:relative;display:flex;flex-direction:column;min-height:380px;padding:25px;border:1px solid #5b4b31;border-radius:15px;overflow:hidden;background:linear-gradient(145deg,#22201b,#171717 72%);box-shadow:0 12px 32px #0003}.volume:before{content:"";position:absolute;inset:0 auto 0 0;width:2px;background:linear-gradient(180deg,transparent,var(--gold),transparent)}
 .volume-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.volume-number{color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.status{padding:6px 9px;border:1px solid #6b5b3e;border-radius:999px;color:#e0c994;background:#d9b66d0d;font-size:9px;font-weight:800;letter-spacing:.09em}
 .volume h3{margin:22px 0 7px;font:500 29px/1.1 Georgia,serif}.range{color:#aaa397;font-size:12px}.annotation{margin:18px 0 20px;color:#c2bcb1;font:14px/1.75 Georgia,serif}.timer{margin-top:auto;padding:15px 0 0;border-top:1px solid #ffffff16}.timer-label{display:block;margin-bottom:7px;color:#b5a47e;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.timer-value{display:block;color:#f0d9a4;font:500 clamp(18px,2.5vw,25px)/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}.timer-date{display:block;margin-top:6px;color:#aaa397;font-size:11px}
+.volume-access{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}.volume-access .btn{min-height:42px}.volume-read[hidden]{display:none!important}.volume-locked{color:#b7aa8b;font-size:11px;line-height:1.5}.status-open{border-color:#a88b53;background:#d9b66d20;color:#f0d9a4}
 .annotation-locked{padding:14px;border:1px dashed #78623d80;border-radius:10px;background:#0f0f0e55;color:#c6b995;font-size:12px;line-height:1.6}.annotation-locked strong{display:block;margin-bottom:5px;color:#e0c994;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
 .note{margin:25px 0 60px;padding:20px 22px;border:1px solid #ffffff1a;border-radius:12px;background:#171717a8;color:#aaa59a;font-size:12px;line-height:1.7}.note strong{color:#e3d2ad}footer{padding:22px 0 30px;border-top:1px solid #ffffff16;color:#77736d;font-size:11px}footer a{color:#cbb27d;text-decoration:none}
 @media(max-width:760px){.wrap{width:calc(100% - 32px)}.topbar{min-height:64px}.hero{grid-template-columns:1fr;gap:18px;padding:38px 0 36px}.hero-copy{order:0}.cover-stage{order:1;min-height:260px}.cover{width:170px}.cover-stage:before{width:250px}.cover-stage:after{width:205px}.seal{right:calc(50% - 125px);bottom:5%;width:72px;height:72px;font-size:7px}.seal strong{font-size:18px}.section-head{display:block}.section-head p{margin-top:8px;text-align:left}.volumes{gap:11px}.volume{min-height:330px;padding:17px}.volume h3{font-size:24px;margin-top:17px}}
@@ -56,6 +57,7 @@ h1{max-width:720px;margin:18px 0 13px;font:500 clamp(42px,6vw,72px)/1.02 Georgia
 <h3>Пока нас не найдут</h3><div class="range">40 глав · эпилог</div>
 <p class="annotation">Мира Соколова умеет возвращать прошлому голос — пока однажды не слышит в старой записи голос сестры, которую давно считают погибшей. След аудиофайла ведёт к закрытой клинике «Аурелия» и семье Ветровых. Дамиан Ветров предлагает помощь, но чем ближе Мира к ответу, тем яснее понимает: некоторые тайны он не просто охраняет — он сам стал их частью.</p>
 <div class="timer"><span class="timer-label">До выхода первой книги</span><strong class="timer-value" data-countdown="2026-11-13T18:00:00+03:00" aria-live="off">Загружаем таймер…</strong><span class="timer-date">13 ноября 2026 · 18:00 по Москве</span></div>
+<div class="volume-access"><a class="btn primary volume-read" data-volume-read="poka-nas-ne-naydut-tom-01" data-release-at="2026-11-13T18:00:00+03:00" href="./index.html?book=published-poka-nas-ne-naydut-tom-01" hidden>Читать книгу →</a><span class="volume-locked" data-volume-locked>Текст откроется автоматически после окончания таймера.</span></div>
 </article>
 <article class="volume" id="volume-2">
 <div class="volume-top"><span class="volume-number">Книга II</span><span class="status">СЛЕДУЮЩАЯ ЧАСТЬ</span></div>
@@ -63,9 +65,10 @@ h1{max-width:720px;margin:18px 0 13px;font:500 clamp(42px,6vw,72px)/1.02 Georgia
 <div class="annotation-locked" data-annotation-gate="2026-11-18T18:00:00+03:00"><strong>Аннотация второй книги скоро откроется</strong>Полная аннотация появится 18 ноября — за 48 часов до выхода второй части.</div>
 <p class="annotation" data-annotation hidden>Когда первые ответы перестают складываться в удобную версию прошлого, Мире и Дамиану приходится проверить не только чужие свидетельства, но и собственные решения. Голос, который однажды вернулся из тишины, меняет смысл новых находок. А правда оказывается опаснее, когда её уже нельзя оставить только между двумя людьми.</p>
 <div class="timer"><span class="timer-label">До выхода второй книги</span><strong class="timer-value" data-countdown="2026-11-20T18:00:00+03:00" aria-live="off">Загружаем таймер…</strong><span class="timer-date">20 ноября 2026 · 18:00 по Москве</span></div>
+<div class="volume-access"><a class="btn primary volume-read" data-volume-read="poka-nas-ne-naydut-tom-02" data-release-at="2026-11-20T18:00:00+03:00" href="./index.html?book=published-poka-nas-ne-naydut-tom-02" hidden>Читать книгу →</a><span class="volume-locked" data-volume-locked>Текст откроется автоматически после окончания таймера.</span></div>
 </article>
 </div>
-<aside class="note"><strong>О статусе издания.</strong> Сейчас обе книги представлены как закрытые позиции. Страница не открывает черновые тексты и не обещает автоматическое появление кнопки чтения по таймеру: доступ будет включён только после отдельной проверки готового издания и официальной публикации.</aside>
+<aside class="note"><strong>О статусе издания.</strong> Полные тексты обеих книг подключены к читалке. До своей даты релиза каждая книга остаётся закрытой на сайте; после наступления времени таймера кнопка «Читать книгу» появится автоматически. Книги открываются независимо друг от друга.</aside>
 </section>
 </main>
 <footer>✦ <a href="./index.html">AI Library</a> — каждая книга открывает новый мир.</footer>
@@ -73,7 +76,7 @@ h1{max-width:720px;margin:18px 0 13px;font:500 clamp(42px,6vw,72px)/1.02 Georgia
 <script>
 (function(){
  const format=function(ms){
-  if(ms<=0)return "Время выхода наступило";
+  if(ms<=0)return "Релиз состоялся · книга доступна";
   const total=Math.floor(ms/1000),days=Math.floor(total/86400),hours=Math.floor(total%86400/3600),minutes=Math.floor(total%3600/60),seconds=total%60;
   const pad=function(n){return String(n).padStart(2,"0")};
   return (days?days+" д. ":"")+pad(hours)+":"+pad(minutes)+":"+pad(seconds);
@@ -83,6 +86,15 @@ h1{max-width:720px;margin:18px 0 13px;font:500 clamp(42px,6vw,72px)/1.02 Georgia
   document.querySelectorAll("[data-countdown]").forEach(function(node){
    const at=Date.parse(node.getAttribute("data-countdown"));
    if(Number.isFinite(at))node.textContent=format(at-now);
+  });
+  document.querySelectorAll("[data-volume-read]").forEach(function(link){
+   const at=Date.parse(link.getAttribute("data-release-at"));
+   const opened=Number.isFinite(at)&&now>=at;
+   link.hidden=!opened;
+   const lock=link.parentElement.querySelector("[data-volume-locked]");
+   if(lock)lock.hidden=opened;
+   const status=link.closest(".volume")?.querySelector(".status");
+   if(status&&opened){status.textContent="ДОСТУПНА · ЧИТАТЬ";status.classList.add("status-open");}
   });
   document.querySelectorAll("[data-annotation-gate]").forEach(function(gate){
    const at=Date.parse(gate.getAttribute("data-annotation-gate"));

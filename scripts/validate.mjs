@@ -9,6 +9,9 @@ const flipLab = readFileSync(resolve(root, "reader-flip-lab.html"), "utf8");
 const seriesPage = readFileSync(resolve(root, "series.html"), "utf8");
 const duologyPage = readFileSync(resolve(root, "poka-nas-ne-naydut.html"), "utf8");
 const duologyManifest = JSON.parse(readFileSync(resolve(root, "content/series/poka-nas-ne-naydut.json"), "utf8"));
+const duologyCatalog = JSON.parse(readFileSync(resolve(root, "content/catalog.json"), "utf8"));
+const duologyVolumeOne = JSON.parse(readFileSync(resolve(root, "content/books/poka-nas-ne-naydut-tom-01.json"), "utf8"));
+const duologyVolumeTwo = JSON.parse(readFileSync(resolve(root, "content/books/poka-nas-ne-naydut-tom-02.json"), "utf8"));
 const seriesManifest = JSON.parse(readFileSync(resolve(root, "content/series/ty-v-moih-planah.json"), "utf8"));
 const premiereSeriesBook = JSON.parse(readFileSync(resolve(root, "content/books/ty-v-moih-planah.json"), "utf8"));
 const manifest = JSON.parse(readFileSync(resolve(root, "manifest.webmanifest"), "utf8"));
@@ -35,6 +38,37 @@ assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated bann
 
 
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
+
+const duologyReleaseSpecs = [
+  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 68734, book: duologyVolumeOne },
+  { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
+];
+for (const spec of duologyReleaseSpecs) {
+  const entry = duologyCatalog.books.find(book => book.id === spec.id);
+  assert.ok(entry, `Scheduled duology volume is missing from catalog: ${spec.id}`);
+  assert.equal(entry.status, "scheduled");
+  assert.equal(entry.releaseAt, spec.releaseAt);
+  assert.equal(entry.chapterCount, spec.count);
+  assert.equal(entry.wordCount, spec.wordCount);
+  assert.equal(entry.revision, spec.book.revision);
+  assert.equal(spec.book.status, "scheduled");
+  assert.equal(spec.book.releaseAt, spec.releaseAt);
+  assert.equal(spec.book.chapters.length, spec.count);
+  assert.ok(spec.book.chapters.every(chapter => typeof chapter.content === "string" && chapter.content.trim()));
+  assert.equal(spec.book.seriesId, "poka-nas-ne-naydut");
+}
+assert.equal(duologyManifest.volumes[0].status, "scheduled");
+assert.equal(duologyManifest.volumes[1].status, "scheduled");
+assert.equal(duologyManifest.volumes[0].releaseAt, "2026-11-13T18:00:00+03:00");
+assert.equal(duologyManifest.volumes[1].releaseAt, "2026-11-20T18:00:00+03:00");
+assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
+assert.match(html, /Date\.now\(\) < releaseAt/);
+assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
+assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-01"/);
+assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-02"/);
+assert.match(duologyPage, /now>=at/);
+
+
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
 
 const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
@@ -392,7 +426,21 @@ assert.match(html, /const opened = await openBookById\(requestedBook\);[\s\S]{0,
 const publishedNormalizer = html.match(/function normalizePublishedBook\(book\) \{([\s\S]*?)\n\}/);
 assert.ok(publishedNormalizer, "Could not isolate published-book metadata normalization");
 assert.match(publishedNormalizer[1], /\.\.\.book/, "Published-book normalization must preserve source metadata");
-const normalizeFixture = new Function("book", `${publishedNormalizer[0]}; return normalizePublishedBook(book);`);
+const releaseLockStart = html.indexOf("function isBookReleaseLocked(book) {");
+assert.ok(releaseLockStart >= 0, "Could not locate scheduled-release access control");
+const releaseLockEnd = html.indexOf("\n}", releaseLockStart);
+assert.ok(releaseLockEnd > releaseLockStart, "Could not isolate scheduled-release access control");
+const releaseLockSource = html.slice(releaseLockStart, releaseLockEnd + 2);
+const normalizeFixture = new Function("book", `
+  ${releaseLockSource};
+  ${publishedNormalizer[0]};
+  return normalizePublishedBook(book);
+`);
+const testableReleaseLockSource = releaseLockSource.replace("Date.now()", "now");
+const lockFixture = new Function("book", "now", `
+  ${testableReleaseLockSource};
+  return isBookReleaseLocked(book);
+`);
 const seriesFixture = {
   id: "fixture-volume-six",
   title: "Fixture volume six",
@@ -406,6 +454,9 @@ const normalizedSeriesFixture = normalizeFixture(seriesFixture);
 assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-book normalization must preserve seriesId");
 assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalization must preserve seriesVolume");
 const metadataFixture = normalizeFixture({ ...seriesFixture, metadataOnly: true, chapters: [] });
+const scheduledFixture = { ...seriesFixture, id: "fixture-scheduled", status: "scheduled", releaseAt: "2026-11-13T18:00:00+03:00", metadataOnly: false };
+assert.equal(lockFixture(scheduledFixture, Date.parse("2026-11-13T17:59:59+03:00")), true, "Scheduled book must remain locked one second before release");
+assert.equal(lockFixture(scheduledFixture, Date.parse("2026-11-13T18:00:00+03:00")), false, "Scheduled book must unlock at the exact release boundary");
 assert.equal(metadataFixture.seriesId, "ty-v-moih-planah", "Metadata-only catalog records must retain seriesId");
 assert.equal(metadataFixture.seriesVolume, 6, "Metadata-only catalog records must retain seriesVolume");
 assert.match(html, /const loaded = catalog\.books\.map\(entry =>[\s\S]*?normalizePublishedBook\(\{ \.\.\.entry, metadataOnly: true \}\)/, "Published catalog metadata must pass through the series-aware normalizer");
@@ -550,7 +601,7 @@ for (const scheduledVolume of seriesManifest.volumes) {
   assert.ok(existsSync(resolve(root, scheduledVolume.cover)), `Volume ${scheduledVolume.number} cover asset is missing`);
 }
 assert.match(html, /function isBookReleaseLocked\(book\)/, "Reader must have a central scheduled-release access guard");
-assert.match(html, /return book\.status === 'prerelease' \|\| book\.status === 'scheduled'/, "A book must remain locked until the catalog explicitly marks it published");
+assert.match(html, /return !Number\.isFinite\(releaseAt\) \|\| Date\.now\(\) < releaseAt/, "Scheduled books must unlock automatically at their releaseAt boundary");
 assert.match(html, /if \(isBookReleaseLocked\(book\)\)/, "Book-opening workflow must enforce scheduled-release lock");
 assert.match(html, /if \(isBookReleaseLocked\(current\)\)/, "Reader modal must independently enforce scheduled-release lock");
 assert.match(html, /refreshScheduledReleaseVisibility/, "An already-open catalog must refresh when a release time passes");
@@ -560,7 +611,9 @@ const releaseGuardMatch = html.match(/function isBookReleaseLocked\(book\) \{[\s
 assert.ok(releaseGuardMatch, "Scheduled reader lock helper must be present");
 const releaseGuard = new Function(releaseGuardMatch[0] + "; return isBookReleaseLocked;")();
 assert.equal(releaseGuard({ status: "prerelease", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished prerelease");
-assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2000-01-01T00:00:00Z" }), true, "An expired countdown must not unlock an unpublished scheduled book");
+assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2000-01-01T00:00:00Z" }), false, "A scheduled book must unlock after its releaseAt boundary");
+assert.equal(releaseGuard({ status: "scheduled", releaseAt: "2099-01-01T00:00:00Z" }), true, "A scheduled book must remain locked before its releaseAt boundary");
+assert.equal(releaseGuard({ status: "scheduled" }), true, "A scheduled book without a releaseAt must remain locked");
 assert.equal(releaseGuard({ status: "published", releaseAt: "2099-01-01T00:00:00Z" }), false, "An explicitly published book must be readable");
 assert.equal(releaseGuard(null), true, "Missing book records must remain locked");
 
@@ -593,7 +646,7 @@ assert.deepEqual(duologyManifest.volumes.map(volume => volume.title), ["Пока
 assert.ok(duologyPage.includes(duologyCover), "The duology page must display the original cover");
 assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setInterval(tick,1000)"), "Both duology release countdowns must update every second");
 assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
-assert.ok(duologyPage.includes("Страница не открывает черновые тексты"), "The duology page must not expose unpublished manuscript text");
+assert.ok(duologyPage.includes("До своей даты релиза каждая книга остаётся закрытой на сайте"), "The duology page must keep each full text closed until its scheduled release");
 assert.ok(html.includes('href="./poka-nas-ne-naydut.html">Открыть дилогию'), "The featured shelf card must open the duology landing page");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v91'"), "The app shell cache must be refreshed for the new duology page");

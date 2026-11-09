@@ -3233,15 +3233,18 @@ function getAllBooks() {
 }
 
 function isSeriesVolumeBook(book) {
-  // Тома шеститомной серии доступны только со страницы серии: учитываем и исходный, и нормализованный ID.
+  // Серийные тома доступны только со своих страниц серий, а не отдельными карточками каталога.
   const id=String(book?.id || '').replace(/^published-/, '');
-  return /^ty-v-moih-planah-tom-\d{2}$/.test(id);
+  return /^ty-v-moih-planah-tom-\d{2}$/.test(id) || /^poka-nas-ne-naydut-tom-0[12]$/.test(id);
 }
 
 function isBookReleaseLocked(book) {
   if (!book) return true;
-  // A countdown is not a publication. Only the catalog's published status unlocks a book.
-  return book.status === 'prerelease' || book.status === 'scheduled';
+  if (book.status === 'prerelease') return true;
+  if (book.status !== 'scheduled') return false;
+  const releaseAt = Date.parse(book.releaseAt || book.releaseDate || '');
+  // Scheduled books unlock at the exact release boundary; no manual deployment is required.
+  return !Number.isFinite(releaseAt) || Date.now() < releaseAt;
 }
 
 function normalizePublishedBook(book) {
@@ -3273,7 +3276,7 @@ function normalizePublishedBook(book) {
     chapterCount: Number.isInteger(Number(book.chapterCount)) && Number(book.chapterCount) >= 0 ? Number(book.chapterCount) : chapters.length,
     contentPath: typeof book.path === 'string' && book.path.startsWith('./content/books/') && book.path.endsWith('.json') && !book.path.includes('..') ? book.path : (typeof book.contentPath === 'string' && book.contentPath.startsWith('./content/books/') && book.contentPath.endsWith('.json') && !book.contentPath.includes('..') ? book.contentPath : ''),
     metadataOnly: isMetadataOnly,
-    chapters: isPrerelease && isBookReleaseLocked(book) ? [] : chapters
+    chapters: isBookReleaseLocked(book) ? [] : chapters
   };
 }
 
@@ -3284,7 +3287,7 @@ function getCatalogMetadataSnapshot(catalog) {
     id:String(book.id||''),title:String(book.title||''),author:String(book.author||''),
     genre:String(book.genre||''),genres:(Array.isArray(book.genres)?book.genres:[]).map(String).sort().join('|'),status:String(book.status||''),revision:String(book.revision||''),
     chapterCount:Number(book.chapterCount)||0,description:String(book.description||book.desc||''),
-    releaseDate:String(book.releaseDate||'')
+    releaseDate:String(book.releaseDate||''),releaseAt:String(book.releaseAt||'')
   })).filter(book=>book.id).sort((a,b)=>a.id.localeCompare(b.id));
 }
 function checkCatalogMetadataUpdate(catalog) {
@@ -3643,8 +3646,8 @@ function updatePremiereCountdowns(){
   if(!Number.isFinite(release)){node.textContent='Дата релиза уточняется';return;}
   const left=release-Date.now();
   if(left<=0){
-    if(book?.status!=='published'){
-     node.textContent='Время выхода наступило · ожидается публикация';
+    if(isBookReleaseLocked(book)){
+     node.textContent='Время выхода наступило · проверяем доступ';
      return;
     }
     node.textContent='РЕЛИЗ СОСТОЯЛСЯ · ЧТЕНИЕ ОТКРЫТО';
