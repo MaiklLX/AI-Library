@@ -3215,6 +3215,33 @@ html.reader-launch-pending body>#ageGate{visibility:visible!important}
 <script src="./src/platform/library-store.js"></script>
 <script src="./src/platform/download-manager.js"></script>
 <script>
+/* AI Library iOS PWA catalog guard: never leave a silent empty shelf. */
+(() => {
+  let failureShown = false;
+  const showCatalogFailure = (reason) => {
+    const root = document.getElementById('books');
+    if (!root || root.children.length || failureShown) return;
+    failureShown = true;
+    if (reason) console.error('AI Library: ошибка запуска книжной полки.', reason);
+    root.innerHTML = '<div class="empty" role="alert"><p>Не удалось отобразить книжную полку. Проверь подключение и попробуй обновить библиотеку.</p><button type="button" class="btn" data-retry-catalog>Обновить библиотеку</button></div>';
+  };
+  window.addEventListener('error', event => {
+    if (event && (event.error || event.message)) {
+      window.setTimeout(() => showCatalogFailure(event.error || event.message), 0);
+    }
+  }, true);
+  window.addEventListener('unhandledrejection', event => {
+    window.setTimeout(() => showCatalogFailure(event.reason || 'Необработанная ошибка'), 0);
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    window.setTimeout(() => showCatalogFailure('Книжная полка не была отрисована за отведённое время'), 5000);
+  }, { once: true });
+  document.addEventListener('click', event => {
+    if (event.target.closest('[data-retry-catalog]')) window.location.reload();
+  });
+})();
+</script>
+<script>
 const books = []; // В публичной библиотеке показываются только опубликованные книги из каталога.
 
 const PERSONAL_BOOKS_KEY = 'ai-library-personal-books';
