@@ -80,9 +80,9 @@ assert.match(html, /НОВИНКА · КНИГА I/, "Duology card must announce
 
 
 
-assert.match(releasePublisher, /seriesVolume\\.status = "published"/, "Scheduled publication must update the matching series volume status");
-assert.match(releaseWorkflow, /git diff --quiet -- content\\/catalog\\.json content\\/books content\\/series/, "Release workflow must detect series manifest changes");
-assert.match(releaseWorkflow, /git add content\\/catalog\\.json content\\/books content\\/series/, "Release workflow must commit updated series manifests");
+assert.match(releasePublisher, /seriesVolume\.status = "published"/, "Scheduled publication must update the matching series volume status");
+assert.match(releaseWorkflow, /git diff --quiet -- content\/catalog\.json content\/books content\/series/, "Release workflow must detect series manifest changes");
+assert.match(releaseWorkflow, /git add content\/catalog\.json content\/books content\/series/, "Release workflow must commit updated series manifests");
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
 
 const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
