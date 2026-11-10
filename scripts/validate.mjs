@@ -49,12 +49,12 @@ assert.equal(duologyManifest.volumes.length, 2, "Duology manifest must contain e
 for (const [index, spec] of duologyReleaseSpecs.entries()) {
   const entry = duologyCatalog.books.find(book => book.id === spec.id);
   const manifestVolume = duologyManifest.volumes[index];
-  assert.ok(entry, \`Scheduled duology volume is missing from catalog: \${spec.id}\`);
-  assert.ok(["scheduled", "published"].includes(entry.status), \`Unexpected release state for \${spec.id}\`);
-  assert.equal(spec.book.status, entry.status, \`Catalog and full-text release states differ for \${spec.id}\`);
-  assert.equal(manifestVolume.status, entry.status, \`Series manifest and catalog release states differ for \${spec.id}\`);
+  assert.ok(entry, `Scheduled duology volume is missing from catalog: \${spec.id}`);
+  assert.ok(["scheduled", "published"].includes(entry.status), `Unexpected release state for \${spec.id}`);
+  assert.equal(spec.book.status, entry.status, `Catalog and full-text release states differ for \${spec.id}`);
+  assert.equal(manifestVolume.status, entry.status, `Series manifest and catalog release states differ for \${spec.id}`);
   if (entry.status === "published") {
-    assert.ok(Date.now() >= Date.parse(spec.releaseAt), \`Volume was marked published before its release time: \${spec.id}\`);
+    assert.ok(Date.now() >= Date.parse(spec.releaseAt), `Volume was marked published before its release time: \${spec.id}`);
   }
   assert.equal(entry.releaseAt, spec.releaseAt);
   assert.equal(entry.chapterCount, spec.count);
