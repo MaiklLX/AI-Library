@@ -86,6 +86,7 @@ assert.match(html, /НОВИНКА · КНИГА I/, "Duology card must announce
 
 
 assert.match(releasePublisher, /seriesVolume\.status = "published"/, "Scheduled publication must update the matching series volume status");
+assert.match(releasePublisher, /const seriesId = entry\.seriesId \|\| book\.seriesId \|\| null/, "Publisher must resolve series metadata from the full book when catalog metadata omits seriesId");
 assert.match(releaseWorkflow, /git diff --quiet -- content\/catalog\.json content\/books content\/series/, "Release workflow must detect series manifest changes");
 assert.match(releaseWorkflow, /git add content\/catalog\.json content\/books content\/series/, "Release workflow must commit updated series manifests");
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
