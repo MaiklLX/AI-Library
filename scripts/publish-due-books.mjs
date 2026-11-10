@@ -85,7 +85,13 @@ if (updates.length) {
   if (!dryRun) {
     writeFileSync(catalogPath, JSON.stringify(catalog, null, 2) + "\n");
     for (const seriesPath of changedSeriesPaths) {
-      writeFileSync(seriesPath, JSON.stringify(seriesManifests.get(seriesPath), null, 2) + "\n");
+      const seriesManifest = seriesManifests.get(seriesPath);
+      if (Array.isArray(seriesManifest.volumes)) {
+        seriesManifest.accessMode = seriesManifest.volumes.every(volume => volume.status === "published")
+          ? "published"
+          : "scheduled";
+      }
+      writeFileSync(seriesPath, JSON.stringify(seriesManifest, null, 2) + "\n");
     }
   } else if (changedSeriesPaths.size) {
     console.log(`DRY RUN: would update ${changedSeriesPaths.size} series manifest(s).`);
