@@ -67,6 +67,11 @@ for (const [index, spec] of duologyReleaseSpecs.entries()) {
   assert.equal(manifestVolume.bookId, spec.id);
   assert.equal(manifestVolume.releaseAt, spec.releaseAt);
 }
+assert.equal(
+  duologyManifest.accessMode,
+  duologyManifest.volumes.every(volume => volume.status === "published") ? "published" : "scheduled",
+  "Duology access mode must follow the actual publication state of its volumes"
+);
 assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
 assert.match(html, /Date\.now\(\) < releaseAt/);
 assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
