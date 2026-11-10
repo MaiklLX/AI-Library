@@ -3749,25 +3749,35 @@ async function renderPrereleaseShowcase(){
       }
     }catch(error){console.warn("Не удалось проверить статус первого тома:",error);}
   }
-  if(!root.isConnected)return;
+  const duologyVolumeOne=getAllBooks().find(book=>canonicalBookId(book)==="poka-nas-ne-naydut-tom-01");
+  const duologyFirstVolumePublished=duologyVolumeOne?.status==="published";
   const stamp=firstVolumePublished
     ? '<div class="premiere-stamp premiere-stamp-new" aria-label="Новинка · первый том вышел">НОВИНКА</div>'
     : '<div class="premiere-stamp" aria-label="Закрытый пререлиз">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>';
   root.innerHTML=upcoming.map(book=>{
     const canonicalId=canonicalBookId(book);
     const isMainSeries=canonicalId==="ty-v-moih-planah";
+    const isDuology=canonicalId==="poka-nas-ne-naydut";
     const isSeriesReleased=isMainSeries&&firstVolumePublished;
-    const kicker=isSeriesReleased?"РОМАН В ШЕСТИ ТОМАХ · ТОМ I УЖЕ ВЫШЕЛ":"Эксклюзивная презентация";
+    const isDuologyReleased=isDuology&&duologyFirstVolumePublished;
+    const cardStamp=isMainSeries?stamp:isDuology?(isDuologyReleased?'<div class="premiere-stamp premiere-stamp-new" aria-label="Новинка · книга I вышла">НОВИНКА</div>':'<div class="premiere-stamp" aria-label="Закрытый пререлиз">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'):'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>';
+    const kicker=isSeriesReleased?"РОМАН В ШЕСТИ ТОМАХ · ТОМ I УЖЕ ВЫШЕЛ":isDuologyReleased?"ДИЛОГИЯ В ДВУХ КНИГАХ · КНИГА I УЖЕ ВЫШЛА":"Эксклюзивная презентация";
     const meta=isSeriesReleased
       ? '<span>🔞 18+</span><span>✦ Том I · уже вышел</span><span>Тома II–VI · по графику</span>'
+      : isDuologyReleased
+      ? '<span>🔞 18+</span><span>✦ Книга I · уже вышла</span><span>Книга II · 20 ноября</span>'
+      : isDuology
+      ? '<span>🔞 18+</span><span>ДИЛОГИЯ · 2 КНИГИ</span><span data-premiere-countdown="poka-nas-ne-naydut-tom-01">Текст пока закрыт</span>'
       : '<span>'+(book.ageRating?'🔞 '+esc(book.ageRating):'✦ Ранний показ')+'</span><span>◷ '+(Number(book.length)||'—')+' мин чтения</span>'+(book.releaseAt?'<span>Выход: '+esc(new Date(book.releaseAt).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}))+'</span>':'')+'<span data-premiere-countdown="'+esc(canonicalId)+'">Текст пока закрыт</span>';
     const accessNote=isSeriesReleased
       ? '<div class="premiere-locked premiere-available"><span class="lock" aria-hidden="true">✓</span><span>Первый том уже доступен. Следующие части выходят по графику серии.</span></div>'
+      : isDuologyReleased
+      ? '<div class="premiere-locked premiere-available"><span class="lock" aria-hidden="true">✓</span><span>Книга I уже доступна. Книга II откроется 20 ноября по расписанию.</span></div>'
       : '<div class="premiere-locked"><span class="lock" aria-hidden="true">⌑</span><span>Полный текст откроется после официального релиза</span></div>';
-    const cta=isSeriesReleased?"Открыть серию · читать том I":"Открыть роман · 6 томов";
+    const cta=isSeriesReleased?"Открыть серию · читать том I":isDuologyReleased?"Открыть дилогию · читать книгу I":"Открыть роман · 6 томов";
     return `<article class="premiere-card">
-      <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${isMainSeries?stamp:'<div class="premiere-stamp">ЗАКРЫТЫЙ<br>ПРЕРЕЛИЗ</div>'}</div>
-      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html":canonicalId==="ty-v-moih-planah"?"./series.html":"./book.html?book=published-"+encodeURIComponent(canonicalId)}">${canonicalId==="poka-nas-ne-naydut"?"Открыть дилогию · 2 книги":isMainSeries?cta:"Открыть книгу"}　↗</a></div>
+      <div class="premiere-art"><div class="premiere-orbit" aria-hidden="true"></div><div class="premiere-book-cover">${book.cover?'<img src="'+esc(book.cover)+'" alt="" loading="lazy" decoding="async">':'<span class="symbol">'+esc(book.symbol||'✦')+'</span>'}</div>${cardStamp}</div>
+      <div class="premiere-copy"><div class="premiere-kicker">${kicker}</div><h3>${esc(book.title)}</h3>${book.tagline?`<p class="premiere-tagline">${esc(book.tagline)}</p>`:''}<div class="premiere-byline">${esc(book.author||'AI Library')} · ${esc(book.genre||'Новая история')}</div><p class="premiere-description">${esc(book.desc||'Новая книга готовится к официальному выходу в AI Library.')}</p><div class="premiere-meta">${meta}</div>${book.editorialNote?`<blockquote class="premiere-editor-note">«${esc(book.editorialNote)}»<span>Заметка редакции</span></blockquote>`:''}${accessNote}<a class="btn primary premiere-open" href="${canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html":canonicalId==="ty-v-moih-planah"?"./series.html":"./book.html?book=published-"+encodeURIComponent(canonicalId)}">${isDuology?(isDuologyReleased?"Открыть дилогию · читать книгу I":"Открыть дилогию · 2 книги"):isMainSeries?cta:"Открыть книгу"}　↗</a></div>
     </article>`;
   }).join('');
 }
@@ -3815,13 +3825,17 @@ function renderSeriesCollectionCard(){
 function renderPokaDuologyCard(){
  const title='Пока нас не найдут';
  const description='Мира Соколова восстанавливает старые записи и находит голос исчезнувшей сестры. След ведёт к клинике «Аурелия», семье Ветровых и Дамиану — человеку, которому предстоит доказать, что ему можно доверять.';
- return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть.">'+
+ const firstVolumePublished=getAllBooks().some(book=>canonicalBookId(book)==="poka-nas-ne-naydut-tom-01"&&book.status==="published");
+ const frontTag=firstVolumePublished?"НОВИНКА · КНИГА I":"ДИЛОГИЯ · 2 КНИГИ";
+ const backLabel=firstVolumePublished?"КНИГА I УЖЕ ВЫШЛА · 18+":"ЗАКРЫТАЯ ПРЕМЬЕРА · 18+";
+ const releaseStamp=firstVolumePublished?"✓　КНИГА I УЖЕ ВЫШЛА":"✦　СКОРО РЕЛИЗ";
+ return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть."'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
- '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">ДИЛОГИЯ · 2 КНИГИ</span><span class="duology-front-mark">✦</span></span></div>'+
- '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">ЗАКРЫТАЯ ПРЕМЬЕРА · 18+</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
+ '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">'+frontTag+'</span><span class="duology-front-mark">✦</span></span></div>'+
+ '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">'+backLabel+'</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
- '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="Скоро релиз">✦　СКОРО РЕЛИЗ</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
+ '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="'+(firstVolumePublished?"Книга I уже вышла":"Скоро релиз")+'">'+releaseStamp+'</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
  '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
  '<div class="book-back-actions"><a class="btn read" href="./poka-nas-ne-naydut.html">Открыть дилогию　→</a></div></div></div></article>';
 }
