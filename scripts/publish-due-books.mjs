@@ -36,14 +36,15 @@ for (const entry of catalog.books) {
     continue;
   }
 
+  const seriesId = entry.seriesId || book.seriesId || null;
   let seriesPath = null;
   let seriesVolume = null;
-  if (entry.seriesId) {
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(entry.seriesId)) {
-      console.warn(`SKIP ${entry.id}: invalid series ID ${entry.seriesId}.`);
+  if (seriesId) {
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(seriesId)) {
+      console.warn(`SKIP ${entry.id}: invalid series ID ${seriesId}.`);
       continue;
     }
-    seriesPath = resolve(root, "content", "series", `${entry.seriesId}.json`);
+    seriesPath = resolve(root, "content", "series", `${seriesId}.json`);
     if (!seriesManifests.has(seriesPath)) {
       try {
         seriesManifests.set(seriesPath, JSON.parse(readFileSync(seriesPath, "utf8")));
@@ -57,7 +58,7 @@ for (const entry of catalog.books) {
       ? seriesManifest.volumes.find(volume => volume.bookId === entry.id || volume.id === entry.id)
       : null;
     if (!seriesVolume) {
-      console.warn(`SKIP ${entry.id}: volume is missing from series manifest ${entry.seriesId}.`);
+      console.warn(`SKIP ${entry.id}: volume is missing from series manifest ${seriesId}.`);
       continue;
     }
   }
@@ -75,7 +76,7 @@ for (const entry of catalog.books) {
     seriesVolume.status = "published";
     changedSeriesPaths.add(seriesPath);
   }
-  updates.push({ id: entry.id, path: entry.path, revision, chapterCount: chapters.length, seriesId: entry.seriesId || null });
+  updates.push({ id: entry.id, path: entry.path, revision, chapterCount: chapters.length, seriesId });
   if (!dryRun) writeFileSync(bookPath, JSON.stringify(book, null, 2) + "\n");
 }
 
