@@ -29,12 +29,12 @@ jobs:
         run: node scripts/publish-due-books.mjs
       - name: Commit and push publication
         run: |
-          if git diff --quiet -- content/catalog.json content/books; then
+          if git diff --quiet -- content/catalog.json content/books content/series; then
             echo "No eligible releases to publish."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/catalog.json content/books
+          git add content/catalog.json content/books content/series
           git commit -m "chore: publish scheduled AI Library books"
           git push origin main

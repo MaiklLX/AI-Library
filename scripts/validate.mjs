@@ -19,6 +19,8 @@ const serviceWorker = readFileSync(resolve(root, "sw.js"), "utf8");
 const platformRuntime = readFileSync(resolve(root, "src/platform/runtime.js"), "utf8");
 const libraryStore = readFileSync(resolve(root, "src/platform/library-store.js"), "utf8");
 const downloadManager = readFileSync(resolve(root, "src/platform/download-manager.js"), "utf8");
+const releasePublisher = readFileSync(resolve(root, "scripts/publish-due-books.mjs"), "utf8");
+const releaseWorkflow = readFileSync(resolve(root, ".github/workflows/publish-due-books.yml"), "utf8");
 
 assert.match(html, /<html[^>]+lang=["']ru["']/i, "Document language should be Russian");
 assert.match(html, /<meta[^>]+name=["']description["']/i, "SEO description is missing");
@@ -43,32 +45,50 @@ const duologyReleaseSpecs = [
   { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 68734, book: duologyVolumeOne },
   { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
 ];
-for (const spec of duologyReleaseSpecs) {
+assert.equal(duologyManifest.volumes.length, 2, "Duology manifest must contain exactly two volumes");
+for (const [index, spec] of duologyReleaseSpecs.entries()) {
   const entry = duologyCatalog.books.find(book => book.id === spec.id);
-  assert.ok(entry, `Scheduled duology volume is missing from catalog: ${spec.id}`);
-  assert.equal(entry.status, "scheduled");
+  const manifestVolume = duologyManifest.volumes[index];
+  assert.ok(entry, `Scheduled duology volume is missing from catalog: \${spec.id}`);
+  assert.ok(["scheduled", "published"].includes(entry.status), `Unexpected release state for \${spec.id}`);
+  assert.equal(spec.book.status, entry.status, `Catalog and full-text release states differ for \${spec.id}`);
+  assert.equal(manifestVolume.status, entry.status, `Series manifest and catalog release states differ for \${spec.id}`);
+  if (entry.status === "published") {
+    assert.ok(Date.now() >= Date.parse(spec.releaseAt), `Volume was marked published before its release time: \${spec.id}`);
+  }
   assert.equal(entry.releaseAt, spec.releaseAt);
   assert.equal(entry.chapterCount, spec.count);
   assert.equal(entry.wordCount, spec.wordCount);
   assert.equal(entry.revision, spec.book.revision);
-  assert.equal(spec.book.status, "scheduled");
   assert.equal(spec.book.releaseAt, spec.releaseAt);
   assert.equal(spec.book.chapters.length, spec.count);
   assert.ok(spec.book.chapters.every(chapter => typeof chapter.content === "string" && chapter.content.trim()));
   assert.equal(spec.book.seriesId, "poka-nas-ne-naydut");
+  assert.equal(manifestVolume.bookId, spec.id);
+  assert.equal(manifestVolume.releaseAt, spec.releaseAt);
 }
-assert.equal(duologyManifest.volumes[0].status, "scheduled");
-assert.equal(duologyManifest.volumes[1].status, "scheduled");
-assert.equal(duologyManifest.volumes[0].releaseAt, "2026-11-13T18:00:00+03:00");
-assert.equal(duologyManifest.volumes[1].releaseAt, "2026-11-20T18:00:00+03:00");
+assert.equal(
+  duologyManifest.accessMode,
+  duologyManifest.volumes.every(volume => volume.status === "published") ? "published" : "scheduled",
+  "Duology access mode must follow the actual publication state of its volumes"
+);
 assert.match(html, /const releaseAt = Date\.parse\(book\.releaseAt \|\| book\.releaseDate \|\| ''\)/);
 assert.match(html, /Date\.now\(\) < releaseAt/);
 assert.match(html, /poka-nas-ne-naydut-tom-0\[12\]/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-01"/);
 assert.match(duologyPage, /data-volume-read="poka-nas-ne-naydut-tom-02"/);
 assert.match(duologyPage, /now>=at/);
+assert.match(html, /const firstVolumePublished=getAllBooks\(\)\.some\(book=>canonicalBookId\(book\)==="poka-nas-ne-naydut-tom-01"&&book\.status==="published"\)/, "Duology collection card must switch to the new-release state after volume I publishes");
+assert.match(html, /const duologyVolumeOne=getAllBooks\(\)\.find\(book=>canonicalBookId\(book\)==="poka-nas-ne-naydut-tom-01"\)/, "Duology premiere card must read the actual first-volume publication state");
+assert.match(html, /data-premiere-countdown="poka-nas-ne-naydut-tom-01"/, "Duology premiere countdown must use volume I's real release timestamp");
+assert.match(html, /НОВИНКА · КНИГА I/, "Duology card must announce the first volume as a new release");
 
 
+
+assert.match(releasePublisher, /seriesVolume\.status = "published"/, "Scheduled publication must update the matching series volume status");
+assert.match(releasePublisher, /const seriesId = entry\.seriesId \|\| book\.seriesId \|\| null/, "Publisher must resolve series metadata from the full book when catalog metadata omits seriesId");
+assert.match(releaseWorkflow, /git diff --quiet -- content\/catalog\.json content\/books content\/series/, "Release workflow must detect series manifest changes");
+assert.match(releaseWorkflow, /git add content\/catalog\.json content\/books content\/series/, "Release workflow must commit updated series manifests");
 assert.ok(manifest.name && manifest.start_url && manifest.scope, "Manifest metadata is incomplete");
 
 const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
