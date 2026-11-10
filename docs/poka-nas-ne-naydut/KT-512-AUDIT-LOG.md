@@ -2086,3 +2086,12 @@
 
 
 **Дополнительная проверка КТ-516:** у томов III–VI серии «Ты в моих планах» поле `seriesId` отсутствует в каталоге, но присутствует в полном JSON книги. Publisher дополнен fallback на `book.seriesId`. Проверены все шесть scheduled томов обеих серий: каждый разрешается в существующий манифест и конкретную запись тома. После этого PR #122 повторно прошёл GitHub Actions validate — success (run #42766501256); Node syntax-check publisher и dry-run также success.
+
+
+### КТ-516 — разрешённый merge и публикация сайта
+
+По явному разрешению автора PR #122 смержен методом squash. Новый публичный main: `4b9c753ef285310592f1fad9a82e665a9c445dff`. PR validation и push validation прошли успешно; GitHub Pages deploy завершился success. Повторный fetch подтвердил исправленную реплику эпилога книги I, неизменность JSON книги II, прежние даты релиза и scheduled-статусы обоих томов. Проверка релиза 13 ноября по просьбе автора не планируется; ручная публикация не запускалась.
+
+Merge: https://github.com/MaiklLX/AI-Library/pull/122  
+Deploy: https://github.com/MaiklLX/AI-Library/actions/runs/42768805212  
+Обновлённый отчёт КТ-516 содержит результаты после merge.
