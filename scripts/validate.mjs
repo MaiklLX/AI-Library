@@ -622,7 +622,7 @@ assert.equal(scheduledBookTwo.releaseAt, scheduledVolumeTwo.releaseAt, "Volume I
 for (const scheduledVolume of seriesManifest.volumes) {
   const catalogEntry = publishedCatalog.books.find(entry => entry.id === scheduledVolume.bookId);
   assert.ok(catalogEntry, `Volume ${scheduledVolume.number} must be pre-registered in the reader catalog`);
-  const expectedVolumeStatus = Number(scheduledVolume.number) <= 2 ? "published" : "scheduled";
+  const expectedVolumeStatus = Date.now() >= Date.parse(scheduledVolume.releaseAt) ? "published" : "scheduled";
   assert.equal(catalogEntry.status, expectedVolumeStatus, `Volume ${scheduledVolume.number} catalog status must match its release state`);
   assert.equal(catalogEntry.releaseAt, scheduledVolume.releaseAt, `Volume ${scheduledVolume.number} catalog timestamp must match the series schedule`);
   assert.equal(catalogEntry.chapterCount, scheduledVolume.chapters.to - scheduledVolume.chapters.from + 1, `Volume ${scheduledVolume.number} catalog chapter count is incorrect`);
