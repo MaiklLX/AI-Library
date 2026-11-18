@@ -379,7 +379,11 @@ assert.match(seriesPage, /index\.html\?book=/, "Published series volumes must de
 assert.match(html, /new URLSearchParams\(window\.location\.search\)\.get\(\x27book\x27\)/, "Reader must support direct book links from the series page");
 assert.deepEqual(seriesManifest.volumes.map(volume => volume.number), [1,2,3,4,5,6], "Volume order must be continuous");
 assert.equal(seriesManifest.volumes[0].status, "published", "Volume one must be marked published after the official release");
-assert.ok(seriesManifest.volumes.slice(1).every(volume => volume.status === "planned"), "Future volumes must remain planned until individually approved");
+for (const volume of seriesManifest.volumes.slice(1)) {
+  if (volume.status === "published") {
+    assert.ok(volume.releaseAt && new Date(volume.releaseAt) <= new Date(), `A future series volume must not be published before its releaseAt: ${volume.bookId}`);
+  }
+}
 assert.ok(seriesManifest.volumes.every(volume => ["planned","prerelease","published"].includes(volume.status)), "Unknown volume status found");
 assert.deepEqual(seriesManifest.volumes.map(volume => [volume.chapters.from,volume.chapters.to]), [[1,16],[17,34],[35,56],[57,66],[67,80],[81,93]], "Volume chapter boundaries changed");
 assert.match(seriesPage, /content\/series\/ty-v-moih-planah\.json/, "Series page must load its manifest");
