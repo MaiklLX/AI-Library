@@ -42,7 +42,7 @@ assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated bann
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
 
 const duologyReleaseSpecs = [
-  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 70008, book: duologyVolumeOne },
+  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 70277, book: duologyVolumeOne },
   { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
 ];
 assert.equal(duologyManifest.volumes.length, 2, "Duology manifest must contain exactly two volumes");
