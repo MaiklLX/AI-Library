@@ -402,7 +402,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html"'), "The Poka premiere card must open the dedicated duology page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v97'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v98'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
 assert.match(serviceWorker, /const cached = await cache\.match\(request\);[\s\S]*?if \(cached\) return cached;/, "The public catalog must be served from cache before its background refresh");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
@@ -687,7 +687,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v97'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v98'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 const duologyCover = "./content/books/Пока нас не найдут_ тайны и страсть.png";
@@ -709,9 +709,12 @@ assert.ok(html.includes('editorialHoldReturnState={part,pageIndex:readingPageInd
 assert.ok(html.includes('readingPages=saved.pages;') && html.includes('readingPageIndex=saved.pageIndex;') && html.includes('requestAnimationFrame(()=>{'), "Returning from the editorial hold must restore the exact saved page after the original layout returns");
 assert.ok(html.includes('pendingShelfAnchorScroll=location.hash===\'#book-poka-nas-ne-naydut\''), "The bookshelf return anchor must be queued until the dynamic shelf card has rendered");
 assert.ok(html.includes('shelfCard.scrollIntoView({behavior:"auto",block:"center"})'), "The bookshelf return must scroll to the actual duology card");
-assert.ok(html.includes("duology-card-tap-fallback-v1"), "The featured duology card must use the touch-safe crossfade instead of 3D face hit-testing");
-assert.ok(html.includes("card.matches('[data-duology-card]')||!hasHover"), "The featured duology card must toggle on explicit taps even on hybrid pointer devices");
-assert.ok(html.includes("#books .duology-collection-card.is-flipped .book-back"), "The featured duology back face must become visible after a tap");
+assert.ok(html.includes("#books .book-flip-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.2,.72,.2,1)}"), "All bookshelf cards, including the duology, must use the shared 3D flip animation");
+assert.ok(html.includes("#books .book.is-flipped .book-flip-inner{transform:rotateY(180deg)}"), "The duology must use the shared flipped-state transform");
+assert.ok(!html.includes("duology-card-tap-fallback-v1"), "The duology must not override the shared book flip animation");
+
+
+
 
 assert.ok(html.includes('editorialHoldActive=true;') && html.includes('editorialHoldActive=false;'), "The editorial hold must have an explicit navigation state");
 assert.ok(duologyPage.includes('href="./index.html#book-poka-nas-ne-naydut">← На книжную полку'), "Duology back navigation must return to its exact bookshelf card");
@@ -721,7 +724,7 @@ assert.ok(html.includes('function showEditorialHold(){') && html.includes('edito
 assert.ok(html.includes('Перелистните назад, чтобы вернуться к последней доступной главе'), "Editorial hold must explain how to return to the available chapters");
 assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v97'"), "The app shell cache must be refreshed for the new duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v98'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
   assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
 }
