@@ -42,7 +42,7 @@ assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated bann
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
 
 const duologyReleaseSpecs = [
-  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 69992, book: duologyVolumeOne },
+  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 70008, book: duologyVolumeOne },
   { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
 ];
 assert.equal(duologyManifest.volumes.length, 2, "Duology manifest must contain exactly two volumes");
@@ -64,8 +64,8 @@ for (const [index, spec] of duologyReleaseSpecs.entries()) {
   assert.equal(spec.book.chapters.length, spec.count);
   assert.ok(spec.book.chapters.every(chapter => typeof chapter.content === "string" && chapter.content.trim()));
   if (spec.id === "poka-nas-ne-naydut-tom-01") {
-    assert.equal(entry.readerVisibleChapterCount, 11, "Only the edited opening chapters may be visible to readers");
-    assert.equal(spec.book.readerVisibleChapterCount, 11, "Full text must carry the editorial visibility boundary");
+    assert.equal(entry.readerVisibleChapterCount, 12, "Only the edited opening chapters may be visible to readers");
+    assert.equal(spec.book.readerVisibleChapterCount, 12, "Full text must carry the editorial visibility boundary");
     assert.match(html, /const EDITORIAL_READER_LIMITS = Object\.freeze/);
     assert.match(html, /chapters\.slice\(0, readerVisibleChapterCount\)/);
     assert.match(html, /function showEditorialHold\(\)/);
@@ -501,7 +501,7 @@ const normalizedEditorialFixture = normalizeFixture({
   chapters: Array.from({ length: 41 }, (_, index) => "Глава " + (index + 1))
 });
 assert.equal(normalizedEditorialFixture.chapterCount, 41, "Editorial gating must preserve the full book chapter count");
-assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 11, "Editorial gating must expose only the reviewed chapters");
+assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 12, "Editorial gating must expose only the reviewed chapters");
 assert.equal(normalizedEditorialFixture.chapters.length, 11, "Editorial gating must remove unreviewed chapters from the reader model");
 assert.equal(normalizedEditorialFixture.editorialHold, true, "The reader must know that more chapters are awaiting editorial review");
 assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-book normalization must preserve seriesId");
