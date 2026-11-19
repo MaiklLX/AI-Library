@@ -502,7 +502,7 @@ const normalizedEditorialFixture = normalizeFixture({
 });
 assert.equal(normalizedEditorialFixture.chapterCount, 41, "Editorial gating must preserve the full book chapter count");
 assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 12, "Editorial gating must expose only the reviewed chapters");
-assert.equal(normalizedEditorialFixture.chapters.length, 11, "Editorial gating must remove unreviewed chapters from the reader model");
+assert.equal(normalizedEditorialFixture.chapters.length, 12, "Editorial gating must remove unreviewed chapters from the reader model");
 assert.equal(normalizedEditorialFixture.editorialHold, true, "The reader must know that more chapters are awaiting editorial review");
 assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-book normalization must preserve seriesId");
 assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalization must preserve seriesVolume");
