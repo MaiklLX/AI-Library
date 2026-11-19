@@ -724,7 +724,7 @@ assert.ok(html.includes('function showEditorialHold(){') && html.includes('edito
 assert.ok(html.includes('Перелистните назад, чтобы вернуться к последней доступной главе'), "Editorial hold must explain how to return to the available chapters");
 assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v99'"), "The app shell cache must be refreshed for the new duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v100'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
   assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
 }
