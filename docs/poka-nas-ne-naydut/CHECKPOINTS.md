@@ -627,3 +627,14 @@
 - Deploy AI Library to GitHub Pages прошёл успешно: `44601454285`.
 - Reader limit — 25; главы 1–25 опубликованы, глава 26 и последующие остаются закрытыми.
 - PWA cache — v107; пауза перед actions/deploy-pages в workflow стабилизировала получение Pages artifact.
+
+
+## КТ-553 — кандидат публикации главы 26 — 19.11.2026
+
+- Глава 26 «Вторая цепочка» прошла литературную редактуру КТ-552; POV Мира; объём 1 815 слов.
+- Общий объём книги I: 70 559 слов; revision `poka-duology-editorial-kt552-2026-11-19-v1`.
+- Reader limit подготовлен к 26: после объединения PR глава 26 станет доступна читателям.
+- Синхронизированы wordCount/revision книги, каталога и серии; readerVisibleChapterCount в книге и каталоге — 26.
+- Обновлён index reader override и scripts/validate.mjs: новая граница чтения, объём книги и fixture из 26 глав.
+- PWA cache обновлён с v107 до v108.
+- Выпуск подготовлен в ветке `release/kt552-chapter26-2026-11-19`; до прохождения PR Validate и main Deploy глава не считается опубликованной.
