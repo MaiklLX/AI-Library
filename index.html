@@ -1557,14 +1557,10 @@ body.reader-open .reader-bottombar .reader-next-chapter:disabled { opacity:.45; 
 </style>
 
 
-<style id="duology-card-navigation-v1">
-.duology-card-link{display:block;color:inherit;text-decoration:none;cursor:pointer}
-.duology-card-link:focus-visible{outline:3px solid #d9b66d;outline-offset:-5px}
-.duology-card-link .cover{width:100%}
-</style>
 <style id="catalog-premiere-polish-v25">
 /* A consistent editorial rhythm for catalog, filters and premiere cards. */
 #catalog { scroll-margin-top: 100px; }
+#book-poka-nas-ne-naydut { scroll-margin-top: 104px; }
 #catalog .sectionhead { margin-bottom: 24px; }
 #catalog .sectionhead .eyebrow { display:flex; align-items:center; gap:10px; }
 #catalog .sectionhead .eyebrow:after { content:""; width:42px; height:1px; background:#d9b66d55; }
@@ -3766,6 +3762,7 @@ async function openBookById(id) {
 
 
 let genre='Все',onlyFav=false,current=null,part=0,editorialHoldActive=false;
+let pendingShelfAnchorScroll=location.hash==='#book-poka-nas-ne-naydut';
 const favs=()=>{try{const value=JSON.parse(localStorage.getItem('ai-library-favs')||'[]');return Array.isArray(value)?value:[]}catch{return[]}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const safeClass=value=>String(value||'').split(/\s+/).filter(token=>/^[a-zA-Z0-9_-]{1,40}$/.test(token)).slice(0,3).join(' ');
@@ -3884,8 +3881,8 @@ function renderPokaDuologyCard(){
  const releaseStamp=firstVolumePublished?"✓　КНИГА I УЖЕ ВЫШЛА":"✦　СКОРО РЕЛИЗ";
  return '<article class="book series-collection-card duology-collection-card" id="book-poka-nas-ne-naydut" data-book-card data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть."'+
  '<div class="book-flip-inner">'+
- '<a class="book-face book-front duology-card-link" href="./poka-nas-ne-naydut.html" aria-label="Открыть страницу дилогии «Пока нас не найдут»">'+
- '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">'+frontTag+'</span><span class="duology-front-mark">✦</span></span></a>'+
+ '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
+ '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">'+frontTag+'</span><span class="duology-front-mark">✦</span></span></div>'+
  '<div class="book-face book-back duology-back"><div class="book-back-top"><span class="book-back-label">'+backLabel+'</span><button class="book-flip-back" type="button" data-flip-back aria-label="Вернуть обложку">↻</button></div>'+
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
  '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="'+(firstVolumePublished?"Книга I уже вышла":"Скоро релиз")+'">'+releaseStamp+'</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
@@ -3976,7 +3973,15 @@ if(s==='completed'){
 }
 document.querySelector("#catalogCount").textContent=String(all.length+3);
 document.querySelector("#catalogSummary").textContent=q||genre!=="Все"||onlyFav?`Найдено книг: ${list.length}`:"Выбери книгу — и пусть реальность подождёт.";
-const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const skateTerms=['громче, чем тормоза','скейт','скейтер','рок','егор','лада','космос','подростковое приключение'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const publishedSkateBook=getAllBooks().some(book=>canonicalBookId(book)==="gromche-chem-tormoza"&&book.status==="published");const showSkateCollection=!publishedSkateBook&&!onlyFav&&(genre==="Все"||genre==="Приключения"||genre==="Романтика")&&(!q||skateTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const skateCard=showSkateCollection?renderGromchePrereleaseCard():'';const collectionCards=seriesCard+duologyCard+skateCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>По этому фильтру книг пока нет. Остальные истории остаются в библиотеке.</p><button type="button" class="btn" data-reset-catalog>Показать все книги</button></div>')+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary()}
+const seriesTerms=['ты в моих планах','сборник','том','6 томов','93 главы','романтический детектив'];const duologyTerms=['пока нас не найдут','дилогия','2 книги','скоро релиз','психологический детектив'];const skateTerms=['громче, чем тормоза','скейт','скейтер','рок','егор','лада','космос','подростковое приключение'];const canShowCollections=!onlyFav&&(genre==="Все"||genre==="Романтика"||genre==="Роман"||genre==="18+"||genre==="Детектив");const showSeriesCollection=canShowCollections&&(!q||seriesTerms.some(term=>term.includes(q)||q.includes(term)));const showDuologyCollection=canShowCollections&&(!q||duologyTerms.some(term=>term.includes(q)||q.includes(term)));const publishedSkateBook=getAllBooks().some(book=>canonicalBookId(book)==="gromche-chem-tormoza"&&book.status==="published");const showSkateCollection=!publishedSkateBook&&!onlyFav&&(genre==="Все"||genre==="Приключения"||genre==="Романтика")&&(!q||skateTerms.some(term=>term.includes(q)||q.includes(term)));const seriesCard=showSeriesCollection?renderSeriesCollectionCard():'';const duologyCard=showDuologyCollection?renderPokaDuologyCard():'';const skateCard=showSkateCollection?renderGromchePrereleaseCard():'';const collectionCards=seriesCard+duologyCard+skateCard;document.querySelector("#books").innerHTML=(list.length?list.map(renderBookCard).join(''):'<div class="empty"><p>По этому фильтру книг пока нет. Остальные истории остаются в библиотеке.</p><button type="button" class="btn" data-reset-catalog>Показать все книги</button></div>')+collectionCards;document.querySelector("#favoritesToggle").classList.toggle("active",onlyFav);renderPrereleaseShowcase();renderMyLibrary();
+if(pendingShelfAnchorScroll){
+ const shelfCard=document.getElementById("book-poka-nas-ne-naydut");
+ if(shelfCard){
+  pendingShelfAnchorScroll=false;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>shelfCard.scrollIntoView({behavior:"auto",block:"center"})));
+ }
+}
+}
 document.querySelector('#genres').addEventListener('click',e=>{let b=e.target.closest('[data-genre]');if(!b)return;genre=b.dataset.genre;document.querySelectorAll('.genre').forEach(x=>x.classList.toggle('active',x===b));render()});
 document.querySelector('#search').addEventListener('input',render);document.querySelector('#sort').addEventListener('change',render);
 document.querySelector('#favoritesToggle').onclick=()=>{onlyFav=!onlyFav;render();document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})};
@@ -4092,6 +4097,7 @@ function openBook(id) {
 
 let readingPages = [];
 let readingPageIndex = 0;
+let editorialHoldReturnState=null;
 let readerScrollRestore = 0;
 
 // Возвращает позиции начала страниц в исходном тексте главы.
@@ -4490,14 +4496,29 @@ function turnReadingPage(direction) {
   if(editorialHoldActive){
     if(direction>0)return true;
     animateBookPageTurn(-1,()=>{
+      const saved=editorialHoldReturnState;
       editorialHoldActive=false;
       document.querySelector("#bookSpread")?.classList.remove("editorial-hold-spread");
       document.querySelector("#bookPage")?.classList.remove("editorial-hold-page");
-      showPart();
-      readingPageIndex=isDesktopReaderSpread()
-        ?Math.floor(Math.max(0,readingPages.length-1)/2)*2
-        :Math.max(0,readingPages.length-1);
-      renderReadingPage(false);
+      requestAnimationFrame(()=>{
+        if(!current||!saved)return;
+        part=saved.part;
+        readingPages=saved.pages;
+        readingPageIndex=saved.pageIndex;
+        document.querySelector("#chapterLabel").textContent=`Часть ${part+1} из ${current.chapterCount||current.chapters.length}`;
+        document.querySelector("#prevChapter").disabled=part===0;
+        const next=document.querySelector("#nextChapter");
+        const last=part===current.chapters.length-1;
+        next.innerHTML=last
+          ?(current.seriesId==="ty-v-moih-planah"?(Number(current.seriesVolume)===6?"Завершить роман":"К следующему тому"):(current.editorialHold?"Продолжение готовится <span aria-hidden="true">✦</span>":'Закрыть чтение <span aria-hidden="true">×</span>'))
+          :'Следующая часть <span aria-hidden="true">→</span>';
+        next.setAttribute("aria-label",last?(current.seriesId==="ty-v-moih-planah"?(Number(current.seriesVolume)===6?"Завершить роман":"К следующему тому"):(current.editorialHold?"Продолжение готовится":"Закрыть чтение")):"Следующая часть");
+        next.disabled=false;
+        window.__aiLibraryTurnDirection="forward";
+        document.querySelector("#bookPage")?.classList.remove("turn-forward","turn-back");
+        editorialHoldReturnState=null;
+        renderReadingPage(false);
+      });
     });
     return true;
   }
@@ -4539,6 +4560,7 @@ function turnReadingPage(direction) {
 
 function showPart() {
   if (!current) return;
+  editorialHoldReturnState=null;
   editorialHoldActive=false;
   document.querySelector("#bookSpread")?.classList.remove("editorial-hold-spread");
   document.querySelector("#bookPage")?.classList.remove("editorial-hold-page");
@@ -4752,6 +4774,7 @@ document.querySelector('#myLibrary')?.addEventListener('click',event=>{const upd
 
 function showEditorialHold(){
   if(!current?.editorialHold)return;
+  editorialHoldReturnState={part,pageIndex:readingPageIndex,pages:readingPages.slice()};
   editorialHoldActive=true;
   const spread=document.querySelector("#bookSpread");
   const page=document.querySelector("#bookPage");
