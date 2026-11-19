@@ -494,6 +494,16 @@ const seriesFixture = {
   chapters: ["Fixture final chapter"]
 };
 const normalizedSeriesFixture = normalizeFixture(seriesFixture);
+const normalizedEditorialFixture = normalizeFixture({
+  ...seriesFixture,
+  id: "poka-nas-ne-naydut-tom-01",
+  chapterCount: 41,
+  chapters: Array.from({ length: 41 }, (_, index) => "Глава " + (index + 1))
+});
+assert.equal(normalizedEditorialFixture.chapterCount, 41, "Editorial gating must preserve the full book chapter count");
+assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 11, "Editorial gating must expose only the reviewed chapters");
+assert.equal(normalizedEditorialFixture.chapters.length, 11, "Editorial gating must remove unreviewed chapters from the reader model");
+assert.equal(normalizedEditorialFixture.editorialHold, true, "The reader must know that more chapters are awaiting editorial review");
 assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-book normalization must preserve seriesId");
 assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalization must preserve seriesVolume");
 const metadataFixture = normalizeFixture({ ...seriesFixture, metadataOnly: true, chapters: [] });
