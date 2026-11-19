@@ -3378,11 +3378,10 @@ function isBookReleaseLocked(book) {
   return !Number.isFinite(releaseAt) || Date.now() < releaseAt;
 }
 
-const EDITORIAL_READER_LIMITS = Object.freeze({
-  'poka-nas-ne-naydut-tom-01': 11
-});
-
 function normalizePublishedBook(book) {
+  const EDITORIAL_READER_LIMITS = Object.freeze({
+    'poka-nas-ne-naydut-tom-01': 11
+  });
   if (!book || typeof book !== 'object' || typeof book.id !== 'string' ||
       !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(book.id) ||
       typeof book.title !== 'string' || !book.title.trim()) return null;
