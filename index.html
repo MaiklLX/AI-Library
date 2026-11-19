@@ -3998,7 +3998,7 @@ document.querySelector("#books").addEventListener("click",e=>{
     const flipButton=e.target.closest('[data-flip],[data-flip-back]');
     if(flipButton){
       const hasHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      if(!hasHover){const card=flipButton.closest('[data-book-card]');if(card){const flipped=card.classList.toggle('is-flipped');const front=card.querySelector('[data-flip]');if(front)front.setAttribute('aria-expanded',String(flipped));}}
+      {const card=flipButton.closest('[data-book-card]');if(card&&(card.matches('[data-duology-card]')||!hasHover)){const flipped=card.classList.toggle('is-flipped');const front=card.querySelector('[data-flip]');if(front)front.setAttribute('aria-expanded',String(flipped));}}
       return;
     }
   }
@@ -5329,6 +5329,35 @@ document.getElementById('dismissCatalogUpdate')?.addEventListener('click',()=>{
   new MutationObserver(sync).observe(shelf,{childList:true,subtree:true,attributes:true,attributeFilter:['data-editorial-featured']});
 })();
 </script>
+
+<style id="duology-card-tap-fallback-v1">
+/* The featured duology uses a two-face crossfade on every device. This avoids
+   fragile 3D hit-testing on touchscreens while keeping the same tap-to-flip UX. */
+#books .duology-collection-card .book-flip-inner,
+#books .duology-collection-card:hover .book-flip-inner,
+#books .duology-collection-card.is-flipped .book-flip-inner {
+  position:relative!important;inset:auto!important;width:100%!important;height:100%!important;
+  min-height:100%!important;transform:none!important;-webkit-transform:none!important;
+  transform-style:flat!important;-webkit-transform-style:flat!important;transition:none!important;
+}
+#books .duology-collection-card .book-face {
+  position:absolute!important;inset:0!important;transform:none!important;-webkit-transform:none!important;
+  backface-visibility:visible!important;-webkit-backface-visibility:visible!important;
+  transition:opacity .18s ease,visibility .18s ease!important;
+}
+#books .duology-collection-card .book-front {
+  z-index:2!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+}
+#books .duology-collection-card .book-back {
+  z-index:1!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+}
+#books .duology-collection-card.is-flipped .book-front {
+  opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+}
+#books .duology-collection-card.is-flipped .book-back {
+  opacity:1!important;visibility:visible!important;pointer-events:auto!important;
+}
+</style>
 </body></html>
 
 
