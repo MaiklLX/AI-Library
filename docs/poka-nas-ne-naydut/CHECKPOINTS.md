@@ -531,3 +531,13 @@
 - Мира запрашивает историю версий; не связывает документ с Дамианом без подтверждения.
 - Reader limit в релизной ветке — 21; глава откроется после PR Validate/Deploy.
 - Синхронизированы wordCount/revision в книге, каталоге и серии; readerVisibleChapterCount, index override и validator обновлены до 21; PWA cache v103.
+
+
+### КТ-542 — перенос в main
+
+- PR #130 объединён в main, merge commit `3e60359911af46baa17d4532d8d1e0572f716f4f`.
+- PR Validate прошёл успешно: `44598417994`.
+- Main Validate прошёл успешно: `44598474497`.
+- Reader limit в main — 21; главы 1–21 подготовлены к чтению, главы 22+ остаются за заглушкой.
+- PWA cache — v103.
+- Первый Deploy прошёл Validate, Configure Pages и Upload artifact, но шаг Deploy не смог получить artifact metadata (при этом артефакт существует). Запускается новый push-triggered Deploy, чтобы избежать повторного использования артефакта старой попытки.
