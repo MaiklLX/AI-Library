@@ -402,7 +402,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html"'), "The Poka premiere card must open the dedicated duology page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v93'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v94'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
 assert.match(serviceWorker, /const cached = await cache\.match\(request\);[\s\S]*?if \(cached\) return cached;/, "The public catalog must be served from cache before its background refresh");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
@@ -687,7 +687,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v93'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v94'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 const duologyCover = "./content/books/Пока нас не найдут_ тайны и страсть.png";
@@ -701,15 +701,15 @@ assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setIn
 assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
 assert.ok(duologyPage.includes("До своей даты релиза каждая книга остаётся закрытой на сайте"), "The duology page must keep each full text closed until its scheduled release");
 assert.ok(html.includes('id="book-poka-nas-ne-naydut"'), "The duology collection card must have a stable bookshelf anchor");
-assert.ok(html.includes('href="./index.html?book=published-poka-nas-ne-naydut-tom-01">Читать книгу I'), "The duology bookshelf card must launch volume I directly");
+assert.ok(html.includes('href="./index.html?book=published-poka-nas-ne-naydut-tom-01#book-poka-nas-ne-naydut">Читать книгу I'), "The duology bookshelf card must launch volume I directly");
 assert.ok(duologyPage.includes('href="./index.html#book-poka-nas-ne-naydut">← На книжную полку'), "Duology back navigation must return to its exact bookshelf card");
 assert.ok(duologyPage.includes('href="#volumes">Перейти к книгам дилогии'), "The obsolete premiere self-link must be replaced with an in-page volumes link");
-assert.doesNotMatch(duologyPage, /premiere\\.html\\?book=poka-nas-ne-naydut/, "Duology page must not link back to its own premiere redirect");
+assert.doesNotMatch(duologyPage, /premiere\.html\\?book=poka-nas-ne-naydut/, "Duology page must not link back to its own premiere redirect");
 assert.ok(html.includes('function showEditorialHold(){') && html.includes('editorial-hold-spread'), "Editorial hold must render as an in-reader book page");
 assert.ok(html.includes('Перелистните назад, чтобы вернуться к последней доступной главе'), "Editorial hold must explain how to return to the available chapters");
-assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
+assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v93'"), "The app shell cache must be refreshed for the new duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v94'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
   assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
 }
