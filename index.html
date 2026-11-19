@@ -2745,6 +2745,24 @@ body.reader-open #bookPageRight[data-theme="dark"] .book-page-number {
 <style id="series-reader-completion-v1">
 .series-completion-panel{margin:10px 0 4px;padding:16px;border:1px solid rgba(216,185,120,.48);border-radius:12px;background:linear-gradient(145deg,#24211b,#17171b);color:#eee7d8;text-align:center}.series-completion-panel[hidden]{display:none}.series-completion-panel h2{font:500 23px/1.15 Georgia,serif;margin:0 0 8px;color:#e3c98f}.series-completion-panel p{max-width:560px;margin:0 auto 14px;color:#c4bcae;font-size:13px}.series-completion-link,.series-completion-close{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin:4px;padding:0 15px;border:1px solid #d8b978;border-radius:8px;background:transparent;color:#e2c88f;text-decoration:none;font:inherit;font-size:13px;cursor:pointer}.series-completion-close{border-color:rgba(216,185,120,.28);color:#c4bcae}@media(max-width:540px){.series-completion-panel{padding:12px}.series-completion-panel h2{font-size:20px}}
 </style>
+<style id="editorial-reader-hold-v1">
+.editorial-hold-panel{position:relative;isolation:isolate;overflow:hidden;margin:12px 0 5px;padding:clamp(22px,4vw,34px);border:1px solid rgba(217,182,109,.5);border-radius:16px;background:radial-gradient(ellipse at 50% -20%,rgba(217,182,109,.17),transparent 62%),linear-gradient(145deg,#25221c 0%,#19191b 58%,#141517 100%);color:#eee7d8;text-align:center;box-shadow:0 18px 48px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.045)}
+.editorial-hold-panel[hidden]{display:none}
+.editorial-hold-panel:before,.editorial-hold-panel:after{content:"";position:absolute;z-index:-1;left:50%;top:24px;width:88px;height:88px;border:1px solid rgba(217,182,109,.22);border-radius:50%;transform:translateX(-50%)}
+.editorial-hold-panel:after{width:68px;height:68px;top:34px;border-style:dashed;border-color:rgba(217,182,109,.24)}
+.editorial-hold-mark{display:grid;place-items:center;width:54px;height:54px;margin:0 auto 18px;border:1px solid rgba(217,182,109,.65);border-radius:50%;background:#171612;color:#e8cb8b;font:27px/1 Georgia,serif;box-shadow:0 0 32px rgba(217,182,109,.13)}
+.editorial-hold-eyebrow{margin:0 0 8px;color:#c8aa70;font-size:9px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.editorial-hold-panel h2{margin:0 0 10px;color:#f0d9a5;font:500 clamp(25px,4vw,34px)/1.12 Georgia,serif}
+.editorial-hold-panel p{max-width:540px;margin:0 auto 20px;color:#c9c1b2;font-size:13px;line-height:1.7}
+.editorial-hold-track{width:min(320px,88%);height:3px;margin:0 auto 9px;overflow:hidden;border-radius:99px;background:#ffffff18}
+.editorial-hold-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8e6c36,#e8cb8b);box-shadow:0 0 12px #d9b66d66;transition:width .35s ease}
+.editorial-hold-count{display:block;margin-bottom:18px;color:#a9a193;font-size:10px;letter-spacing:.08em}
+.editorial-hold-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.editorial-hold-actions a,.editorial-hold-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border:1px solid rgba(217,182,109,.55);border-radius:9px;background:rgba(217,182,109,.08);color:#e8d3a6;text-decoration:none;font:650 12px system-ui;cursor:pointer}
+.editorial-hold-actions button{border-color:#ffffff25;background:transparent;color:#c7c0b4}
+@media(max-width:540px){.editorial-hold-panel{padding:22px 15px}.editorial-hold-panel p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.editorial-hold-track span{transition:none}}
+</style>
 <style id="series-collection-card-v1">
 #books .series-collection-card .cover-progress{left:10px;right:auto;bottom:10px;display:inline-flex;align-items:center;gap:6px;min-height:29px;padding:5px 9px;border:1px solid #e5c77988;border-radius:999px;background:#111d;color:#f5dfaa;font:700 10px/1 system-ui,sans-serif;box-shadow:0 4px 14px #0006;backdrop-filter:blur(8px)}
 #books .series-collection-card .book-back{border-color:#b18c4b;background:radial-gradient(ellipse at 100% 0%,#d9b66d1b,transparent 48%),linear-gradient(155deg,#292319,#151515 78%)}
@@ -3360,6 +3378,10 @@ function isBookReleaseLocked(book) {
   return !Number.isFinite(releaseAt) || Date.now() < releaseAt;
 }
 
+const EDITORIAL_READER_LIMITS = Object.freeze({
+  'poka-nas-ne-naydut-tom-01': 11
+});
+
 function normalizePublishedBook(book) {
   if (!book || typeof book !== 'object' || typeof book.id !== 'string' ||
       !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(book.id) ||
@@ -3374,6 +3396,15 @@ function normalizePublishedBook(book) {
     return '';
   }).filter(chapter => chapter.trim()) : [];
   if (!isPrerelease && !chapters.length && !isMetadataOnly) return null;
+  const chapterCount = Number.isInteger(Number(book.chapterCount)) && Number(book.chapterCount) >= 0
+    ? Number(book.chapterCount) : chapters.length;
+  const configuredLimit = EDITORIAL_READER_LIMITS[book.id];
+  const declaredLimit = Number.isInteger(Number(book.readerVisibleChapterCount))
+    ? Number(book.readerVisibleChapterCount) : chapters.length;
+  const readerVisibleChapterCount = Math.max(0, Math.min(
+    Number.isInteger(Number(configuredLimit)) ? Number(configuredLimit) : declaredLimit,
+    chapterCount
+  ));
   return {
     ...book,
     id: 'published-' + book.id,
@@ -3386,10 +3417,12 @@ function normalizePublishedBook(book) {
     symbol: typeof book.symbol === 'string' ? book.symbol : '✦',
     cover: typeof book.cover === 'string' && book.cover.startsWith('./content/books/') && /\.(?:svg|png|jpe?g|webp)$/i.test(book.cover) && !book.cover.includes('..') ? book.cover : '',
     length: Number.isFinite(Number(book.length)) && Number(book.length) > 0 ? Number(book.length) : chapters.length,
-    chapterCount: Number.isInteger(Number(book.chapterCount)) && Number(book.chapterCount) >= 0 ? Number(book.chapterCount) : chapters.length,
+    chapterCount,
+    readerVisibleChapterCount,
+    editorialHold: !isPrerelease && readerVisibleChapterCount < chapterCount,
     contentPath: typeof book.path === 'string' && book.path.startsWith('./content/books/') && book.path.endsWith('.json') && !book.path.includes('..') ? book.path : (typeof book.contentPath === 'string' && book.contentPath.startsWith('./content/books/') && book.contentPath.endsWith('.json') && !book.contentPath.includes('..') ? book.contentPath : ''),
     metadataOnly: isMetadataOnly,
-    chapters: isBookReleaseLocked(book) ? [] : chapters
+    chapters: isBookReleaseLocked(book) ? [] : chapters.slice(0, readerVisibleChapterCount)
   };
 }
 
@@ -4440,6 +4473,11 @@ function turnReadingPage(direction) {
     });
     return true;
   }
+  // На границе редакционной публикации вместо пустого перелистывания показываем карточку продолжения.
+  if (direction > 0 && current?.editorialHold && part >= (current?.chapters?.length || 0) - 1) {
+    showEditorialHold();
+    return true;
+  }
   // На последней странице главы переход вперёд перелистывает к следующей части.
   if (direction > 0 && part < (current?.chapters?.length || 0) - 1) {
     animateBookPageTurn(direction, () => {
@@ -4467,6 +4505,8 @@ function showPart() {
   if (!current) return;
   const completionPanel=document.getElementById("seriesCompletionPanel");
   if(completionPanel) completionPanel.hidden=true;
+  const editorialPanel=document.getElementById("editorialHoldPanel");
+  if(editorialPanel) editorialPanel.hidden=true;
 
   document.querySelector('#modalGenre').textContent =
     current.genre;
@@ -4486,16 +4526,16 @@ function showPart() {
   window.__aiLibraryTurnDirection = 'forward';
 
   document.querySelector('#chapterLabel').textContent =
-    `Часть ${part + 1} из ${current.chapters.length}`;
+    `Часть ${part + 1} из ${current.chapterCount || current.chapters.length}`;
 
   document.querySelector('#prevChapter').disabled =
     part === 0;
 
   document.querySelector('#nextChapter').innerHTML =
     part === current.chapters.length - 1
-      ? (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : 'Закрыть чтение <span aria-hidden="true">×</span>')
+      ? (current.editorialHold ? 'Продолжение готовится <span aria-hidden="true">✦</span>' : (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : 'Закрыть чтение <span aria-hidden="true">×</span>'))
       : 'Следующая часть <span aria-hidden="true">→</span>';
-  document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : "Закрыть чтение") : "Следующая часть");
+  document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? (current.editorialHold ? "Продолжение готовится" : (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : "Закрыть чтение")) : "Следующая часть");
 
   saveReadingProgress();
 }
@@ -4672,6 +4712,39 @@ function renderMyLibrary(){
 document.querySelector('#myLibraryToggle')?.addEventListener('click',()=>document.querySelector('#myLibrary')?.scrollIntoView({behavior:'smooth'}));
 document.querySelector('#myLibrary')?.addEventListener('click',event=>{const update=event.target.closest('[data-library-check-update]');if(update){handleOfflineUpdateCheck(update);return;}const remove=event.target.closest('[data-library-remove-download]');if(remove){removeOfflineDownload(remove.dataset.libraryRemoveDownload);return;}const button=event.target.closest('[data-library-read]');if(button)openBookById(button.dataset.libraryRead);});
 
+function showEditorialHold(){
+  if(!current?.editorialHold)return;
+  const dialog=document.querySelector("#modal .dialog");
+  if(!dialog)return;
+  let panel=document.getElementById("editorialHoldPanel");
+  if(!panel){
+    panel=document.createElement("section");
+    panel.id="editorialHoldPanel";
+    panel.className="editorial-hold-panel";
+    panel.setAttribute("role","status");
+    panel.setAttribute("aria-live","polite");
+    const mark=document.createElement("div");mark.className="editorial-hold-mark";mark.setAttribute("aria-hidden","true");mark.textContent="✦";
+    const eyebrow=document.createElement("div");eyebrow.className="editorial-hold-eyebrow";eyebrow.textContent="AI LIBRARY · РЕДАКЦИОННАЯ ПАУЗА";
+    const heading=document.createElement("h2");heading.id="editorialHoldTitle";
+    const copy=document.createElement("p");copy.id="editorialHoldCopy";
+    const track=document.createElement("div");track.className="editorial-hold-track";track.setAttribute("aria-hidden","true");
+    const fill=document.createElement("span");track.appendChild(fill);
+    const count=document.createElement("small");count.className="editorial-hold-count";count.id="editorialHoldCount";
+    const actions=document.createElement("div");actions.className="editorial-hold-actions";
+    const link=document.createElement("a");link.href="./poka-nas-ne-naydut.html";link.textContent="Страница дилогии";
+    const close=document.createElement("button");close.type="button";close.textContent="Вернуться к библиотеке";close.addEventListener("click",closeReadingSpace);
+    actions.append(link,close);panel.append(mark,eyebrow,heading,copy,track,count,actions);dialog.appendChild(panel);
+  }
+  const visible=Array.isArray(current.chapters)?current.chapters.length:0;
+  const total=Math.max(visible,Number(current.chapterCount)||visible);
+  panel.querySelector("#editorialHoldTitle").textContent="Продолжение готовится";
+  panel.querySelector("#editorialHoldCopy").textContent="Следующие главы проходят редакторскую подготовку. Мы постепенно открываем продолжение только после проверки текста — чтобы история оставалась цельной, а чтение приносило удовольствие.";
+  panel.querySelector(".editorial-hold-track span").style.width=(total?Math.round(visible/total*100):0)+"%";
+  panel.querySelector("#editorialHoldCount").textContent="ПРОВЕРЕНО И ОТКРЫТО · "+visible+" ИЗ "+total+" ГЛАВ";
+  panel.hidden=false;
+  panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+}
+
 function showSeriesCompletion(){
   const volume=Number(current?.seriesVolume)||0;
   const dialog=document.querySelector("#modal .dialog");
@@ -4684,7 +4757,7 @@ function showSeriesCompletion(){
   const link=panel.querySelector("#seriesCompletionLink");link.href="./series.html#volume-"+String(finalVolume?6:volume+1).padStart(2,"0");link.textContent=finalVolume?"Вернуться к серии":"Посмотреть следующий том";
   panel.hidden=false;panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 }
-document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});
+document.querySelector("#prevChapter").onclick=()=>{if(part>0){window.__aiLibraryTurnDirection="back";part--;showPart()}};document.querySelector("#nextChapter").onclick=()=>{if(part<current.chapters.length-1){window.__aiLibraryTurnDirection="forward";part++;showPart()}else if(current?.editorialHold){showEditorialHold()}else if(current?.seriesId==="ty-v-moih-planah"){showSeriesCompletion()}else closeReadingSpace()};document.querySelector("#closeModal").onclick=closeReadingSpace;document.querySelector("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeReadingSpace()});
 function getReaderFocusableElements(){
   const modal=document.querySelector("#modal");
   if(!modal)return [];
