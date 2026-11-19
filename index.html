@@ -2757,11 +2757,27 @@ body.reader-open #bookPageRight[data-theme="dark"] .book-page-number {
 .editorial-hold-track{width:min(320px,88%);height:3px;margin:0 auto 9px;overflow:hidden;border-radius:99px;background:#ffffff18}
 .editorial-hold-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8e6c36,#e8cb8b);box-shadow:0 0 12px #d9b66d66;transition:width .35s ease}
 .editorial-hold-count{display:block;margin-bottom:18px;color:#a9a193;font-size:10px;letter-spacing:.08em}
-.editorial-hold-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
-.editorial-hold-actions a,.editorial-hold-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border:1px solid rgba(217,182,109,.55);border-radius:9px;background:rgba(217,182,109,.08);color:#e8d3a6;text-decoration:none;font:650 12px system-ui;cursor:pointer}
-.editorial-hold-actions button{border-color:#ffffff25;background:transparent;color:#c7c0b4}
-@media(max-width:540px){.editorial-hold-panel{padding:22px 15px}.editorial-hold-panel p{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.editorial-hold-track span{transition:none}}
+.editorial-hold-actions{display:none}
+#bookSpread.editorial-hold-spread .book-page-right{display:none!important}
+#bookSpread.editorial-hold-spread #bookPage{flex:1 1 100%!important;width:100%!important;max-width:none!important;border-radius:6px!important}
+#bookPage.editorial-hold-page{display:flex!important;align-items:stretch;justify-content:center;overflow:hidden!important;padding:clamp(18px,4vw,54px)!important;background:radial-gradient(ellipse at 50% 42%,#3b3020 0%,#211d17 44%,#171719 100%)!important;color:#f0e4c7!important}
+#bookPage.editorial-hold-page .book-running-head{display:none!important}
+#bookPage.editorial-hold-page #reader{display:grid!important;place-items:center;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;color:inherit!important}
+.editorial-hold-panel{display:grid;place-items:center;align-content:center;position:relative;isolation:isolate;overflow:hidden;width:min(100%,700px);min-height:min(100%,520px);margin:auto;padding:clamp(22px,5vw,58px);border:1px solid #d9b66d55;border-radius:8px;background:linear-gradient(145deg,#292319dd,#181819f2 68%);text-align:center;box-shadow:0 24px 70px #0008,inset 0 0 0 5px #ffffff08}
+.editorial-hold-panel:before{content:"";position:absolute;z-index:-1;width:min(360px,80vw);aspect-ratio:1;border:1px solid #d9b66d33;border-radius:50%;animation:editorialOrbit 36s linear infinite}
+.editorial-hold-panel:after{content:"";position:absolute;z-index:-1;width:min(270px,62vw);aspect-ratio:1;border:1px dashed #d9b66d2b;border-radius:50%;animation:editorialOrbit 26s linear infinite reverse}
+.editorial-hold-mark{width:66px;height:66px;margin:0 auto 25px;border:1px solid #d9b66d88;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#d9b66d24,#151411);color:#f0d9a5;font:34px/1 Georgia,serif;box-shadow:0 0 42px #d9b66d2a;animation:editorialMark 4s ease-in-out infinite}
+.editorial-hold-eyebrow{margin:0 0 15px;color:#d1b477;font-size:9px;font-weight:800;letter-spacing:.25em;text-transform:uppercase}
+.editorial-hold-panel h2{margin:0 0 15px;color:#f5dfac;font:500 clamp(30px,5vw,48px)/1.08 Georgia,serif;letter-spacing:-.025em}
+.editorial-hold-panel p{max-width:520px;margin:0 auto 24px;color:#d0c6b3;font:clamp(14px,1.7vw,17px)/1.8 Georgia,serif}
+.editorial-hold-track{width:min(300px,75%);height:2px;margin:0 auto 12px;overflow:hidden;background:#ffffff20}
+.editorial-hold-track span{display:block;height:100%;background:linear-gradient(90deg,#8e6c36,#f0d9a5);box-shadow:0 0 14px #d9b66d99;transition:width .5s ease}
+.editorial-hold-count{color:#b7a98e;font-size:9px;letter-spacing:.15em}
+.editorial-hold-backhint{margin-top:30px;color:#a99d87;font:italic 12px Georgia,serif}
+@keyframes editorialOrbit{to{transform:rotate(360deg)}}
+@keyframes editorialMark{0%,100%{transform:scale(1);box-shadow:0 0 24px #d9b66d20}50%{transform:scale(1.06);box-shadow:0 0 48px #d9b66d44}}
+@media(max-width:540px){#bookPage.editorial-hold-page{padding:14px!important}.editorial-hold-panel{min-height:100%;padding:24px 15px}.editorial-hold-panel p{font-size:13px}.editorial-hold-mark{width:58px;height:58px}}
+@media(prefers-reduced-motion:reduce){.editorial-hold-panel:before,.editorial-hold-panel:after,.editorial-hold-mark{animation:none!important}.editorial-hold-track span{transition:none}}
 </style>
 <style id="series-collection-card-v1">
 #books .series-collection-card .cover-progress{left:10px;right:auto;bottom:10px;display:inline-flex;align-items:center;gap:6px;min-height:29px;padding:5px 9px;border:1px solid #e5c77988;border-radius:999px;background:#111d;color:#f5dfaa;font:700 10px/1 system-ui,sans-serif;box-shadow:0 4px 14px #0006;backdrop-filter:blur(8px)}
@@ -3861,7 +3877,7 @@ function renderPokaDuologyCard(){
  const frontTag=firstVolumePublished?"НОВИНКА · КНИГА I":"ДИЛОГИЯ · 2 КНИГИ";
  const backLabel=firstVolumePublished?"КНИГА I УЖЕ ВЫШЛА · 18+":"ЗАКРЫТАЯ ПРЕМЬЕРА · 18+";
  const releaseStamp=firstVolumePublished?"✓　КНИГА I УЖЕ ВЫШЛА":"✦　СКОРО РЕЛИЗ";
- return '<article class="book series-collection-card duology-collection-card" data-book-card data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть."'+
+ return '<article class="book series-collection-card duology-collection-card" id="book-poka-nas-ne-naydut" data-book-card data-book-id="poka-nas-ne-naydut" data-series-collection data-duology-card data-editorial-featured data-editorial-age="18+" data-editorial-format="ДИЛОГИЯ · 2 КНИГИ" data-editorial-hook="Некоторые тайны не хотят быть раскрытыми. Некоторые голоса невозможно забыть."'+
  '<div class="book-flip-inner">'+
  '<div class="book-face book-front" role="button" tabindex="0" data-flip aria-label="Показать сведения о дилогии: '+title+'" aria-expanded="false">'+
  '<span class="cover detective has-cover duology-featured-cover"><img class="cover-art" src="./content/books/Пока нас не найдут_ тайны и страсть.png" alt="" loading="lazy" decoding="async"><span class="tag">'+frontTag+'</span><span class="duology-front-mark">✦</span></span></div>'+
@@ -3869,7 +3885,7 @@ function renderPokaDuologyCard(){
  '<h3>'+title+'</h3><div class="author">AI LIBRARY <span>·</span> ДИЛОГИЯ В ДВУХ КНИГАХ</div><p class="desc">'+description+'</p>'+
  '<div class="duology-back-details"><span class="duology-release-stamp" aria-label="'+(firstVolumePublished?"Книга I уже вышла":"Скоро релиз")+'">'+releaseStamp+'</span><span class="duology-facts">2 КНИГИ <i>·</i> 18+</span></div>'+
  '<div class="meta"><span>Современная романтика</span><span>Психологический детектив</span></div>'+
- '<div class="book-back-actions"><a class="btn read" href="./poka-nas-ne-naydut.html">Открыть дилогию　→</a></div></div></div></article>';
+ '<div class="book-back-actions"><a class="btn read" href="./index.html?book=published-poka-nas-ne-naydut-tom-01">Читать книгу I　→</a><a class="btn" href="./poka-nas-ne-naydut.html">О дилогии</a></div></div></div></article>';
 }
 
 function renderGromchePrereleaseCard(){
@@ -4502,10 +4518,10 @@ function turnReadingPage(direction) {
 
 function showPart() {
   if (!current) return;
+  document.querySelector("#bookSpread")?.classList.remove("editorial-hold-spread");
+  document.querySelector("#bookPage")?.classList.remove("editorial-hold-page");
   const completionPanel=document.getElementById("seriesCompletionPanel");
   if(completionPanel) completionPanel.hidden=true;
-  const editorialPanel=document.getElementById("editorialHoldPanel");
-  if(editorialPanel) editorialPanel.hidden=true;
 
   document.querySelector('#modalGenre').textContent =
     current.genre;
@@ -4535,6 +4551,7 @@ function showPart() {
       ? (current.editorialHold ? 'Продолжение готовится <span aria-hidden="true">✦</span>' : (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : 'Закрыть чтение <span aria-hidden="true">×</span>'))
       : 'Следующая часть <span aria-hidden="true">→</span>';
   document.querySelector('#nextChapter').setAttribute('aria-label',part === current.chapters.length - 1 ? (current.editorialHold ? "Продолжение готовится" : (current.seriesId === "ty-v-moih-planah" ? (Number(current.seriesVolume) === 6 ? "Завершить роман" : "К следующему тому") : "Закрыть чтение")) : "Следующая часть");
+  document.querySelector('#nextChapter').disabled=false;
 
   saveReadingProgress();
 }
@@ -4713,35 +4730,24 @@ document.querySelector('#myLibrary')?.addEventListener('click',event=>{const upd
 
 function showEditorialHold(){
   if(!current?.editorialHold)return;
-  const dialog=document.querySelector("#modal .dialog");
-  if(!dialog)return;
-  let panel=document.getElementById("editorialHoldPanel");
-  if(!panel){
-    panel=document.createElement("section");
-    panel.id="editorialHoldPanel";
-    panel.className="editorial-hold-panel";
-    panel.setAttribute("role","status");
-    panel.setAttribute("aria-live","polite");
-    const mark=document.createElement("div");mark.className="editorial-hold-mark";mark.setAttribute("aria-hidden","true");mark.textContent="✦";
-    const eyebrow=document.createElement("div");eyebrow.className="editorial-hold-eyebrow";eyebrow.textContent="AI LIBRARY · РЕДАКЦИОННАЯ ПАУЗА";
-    const heading=document.createElement("h2");heading.id="editorialHoldTitle";
-    const copy=document.createElement("p");copy.id="editorialHoldCopy";
-    const track=document.createElement("div");track.className="editorial-hold-track";track.setAttribute("aria-hidden","true");
-    const fill=document.createElement("span");track.appendChild(fill);
-    const count=document.createElement("small");count.className="editorial-hold-count";count.id="editorialHoldCount";
-    const actions=document.createElement("div");actions.className="editorial-hold-actions";
-    const link=document.createElement("a");link.href="./poka-nas-ne-naydut.html";link.textContent="Страница дилогии";
-    const close=document.createElement("button");close.type="button";close.textContent="Вернуться к библиотеке";close.addEventListener("click",closeReadingSpace);
-    actions.append(link,close);panel.append(mark,eyebrow,heading,copy,track,count,actions);dialog.appendChild(panel);
-  }
+  const spread=document.querySelector("#bookSpread");
+  const page=document.querySelector("#bookPage");
+  const reader=document.querySelector("#reader");
+  if(!spread||!page||!reader)return;
   const visible=Array.isArray(current.chapters)?current.chapters.length:0;
   const total=Math.max(visible,Number(current.chapterCount)||visible);
-  panel.querySelector("#editorialHoldTitle").textContent="Продолжение готовится";
-  panel.querySelector("#editorialHoldCopy").textContent="Следующие главы проходят редакторскую подготовку. Мы постепенно открываем продолжение только после проверки текста — чтобы история оставалась цельной, а чтение приносило удовольствие.";
-  panel.querySelector(".editorial-hold-track span").style.width=(total?Math.round(visible/total*100):0)+"%";
-  panel.querySelector("#editorialHoldCount").textContent="ПРОВЕРЕНО И ОТКРЫТО · "+visible+" ИЗ "+total+" ГЛАВ";
-  panel.hidden=false;
-  panel.scrollIntoView({block:"nearest",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  const percent=total?Math.round(visible/total*100):0;
+  spread.classList.add("editorial-hold-spread");
+  page.classList.add("editorial-hold-page");
+  page.classList.remove("turn-forward","turn-back");
+  document.querySelector("#bookPageLabel").textContent="AI LIBRARY · РЕДАКЦИОННАЯ ПАУЗА";
+  document.querySelector("#chapterLabel").textContent="Продолжение готовится";
+  reader.innerHTML='<section class="editorial-hold-panel" id="editorialHoldPanel" role="status" aria-live="polite"><div class="editorial-hold-mark" aria-hidden="true">✦</div><div class="editorial-hold-eyebrow">AI LIBRARY · РЕДАКЦИОННАЯ ПАУЗА</div><h2>Продолжение готовится</h2><p>Следующие главы проходят внимательную редакторскую подготовку. Мы открываем продолжение постепенно — только тогда, когда каждая глава готова к встрече с читателем.</p><div class="editorial-hold-track" aria-hidden="true"><span style="width:'+percent+'%"></span></div><small class="editorial-hold-count">ПРОВЕРЕНО И ОТКРЫТО · '+visible+' ИЗ '+total+' ГЛАВ</small><div class="editorial-hold-backhint">Перелистните назад, чтобы вернуться к последней доступной главе</div></section>';
+  document.querySelector("#readerPageStatus").textContent="РЕДАКЦИОННАЯ ПАУЗА";
+  const next=document.querySelector("#nextChapter");
+  next.innerHTML='Продолжение готовится <span aria-hidden="true">✦</span>';
+  next.setAttribute("aria-label","Продолжение готовится");
+  next.disabled=true;
 }
 
 function showSeriesCompletion(){
