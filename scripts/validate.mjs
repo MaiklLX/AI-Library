@@ -42,7 +42,7 @@ assert.match(html, /@media\(prefers-reduced-motion:reduce\)/, "The animated bann
 assert.equal(manifest.lang, "ru", "Manifest language should be Russian");
 
 const duologyReleaseSpecs = [
-  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 70488, book: duologyVolumeOne },
+  { id: "poka-nas-ne-naydut-tom-01", releaseAt: "2026-11-13T18:00:00+03:00", count: 41, wordCount: 70416, book: duologyVolumeOne },
   { id: "poka-nas-ne-naydut-tom-02", releaseAt: "2026-11-20T18:00:00+03:00", count: 43, wordCount: 77336, book: duologyVolumeTwo }
 ];
 assert.equal(duologyManifest.volumes.length, 2, "Duology manifest must contain exactly two volumes");
@@ -64,8 +64,8 @@ for (const [index, spec] of duologyReleaseSpecs.entries()) {
   assert.equal(spec.book.chapters.length, spec.count);
   assert.ok(spec.book.chapters.every(chapter => typeof chapter.content === "string" && chapter.content.trim()));
   if (spec.id === "poka-nas-ne-naydut-tom-01") {
-    assert.equal(entry.readerVisibleChapterCount, 24, "Only the edited chapters may be visible to readers");
-    assert.equal(spec.book.readerVisibleChapterCount, 24, "Full text must carry the editorial visibility boundary");
+    assert.equal(entry.readerVisibleChapterCount, 25, "Only the edited chapters may be visible to readers");
+    assert.equal(spec.book.readerVisibleChapterCount, 25, "Full text must carry the editorial visibility boundary");
     assert.match(html, /const EDITORIAL_READER_LIMITS = Object\.freeze/);
     assert.match(html, /chapters\.slice\(0, readerVisibleChapterCount\)/);
     assert.match(html, /function showEditorialHold\(\)/);
@@ -402,7 +402,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html"'), "The Poka premiere card must open the dedicated duology page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v106'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v107'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
 assert.match(serviceWorker, /const cached = await cache\.match\(request\);[\s\S]*?if \(cached\) return cached;/, "The public catalog must be served from cache before its background refresh");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
@@ -501,8 +501,8 @@ const normalizedEditorialFixture = normalizeFixture({
   chapters: Array.from({ length: 41 }, (_, index) => "Глава " + (index + 1))
 });
 assert.equal(normalizedEditorialFixture.chapterCount, 41, "Editorial gating must preserve the full book chapter count");
-assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 24, "Editorial gating must expose only the reviewed chapters");
-assert.equal(normalizedEditorialFixture.chapters.length, 24, "Editorial gating must remove unreviewed chapters from the reader model");
+assert.equal(normalizedEditorialFixture.readerVisibleChapterCount, 25, "Editorial gating must expose only the reviewed chapters");
+assert.equal(normalizedEditorialFixture.chapters.length, 25, "Editorial gating must remove unreviewed chapters from the reader model");
 assert.equal(normalizedEditorialFixture.editorialHold, true, "The reader must know that more chapters are awaiting editorial review");
 assert.equal(normalizedSeriesFixture.seriesId, "ty-v-moih-planah", "Published-book normalization must preserve seriesId");
 assert.equal(normalizedSeriesFixture.seriesVolume, 6, "Published-book normalization must preserve seriesVolume");
@@ -687,7 +687,7 @@ assert.ok(flipLab.indexOf("pageFlip.on('init'") < flipLab.indexOf("pageFlip.load
 assert.ok(flipLab.includes("ResizeObserver") && flipLab.includes("visualViewport"), "The lab must recalculate the book after viewport and container resizing");
 assert.ok(flipLab.includes("pageFlip.turnToPage(current)"), "Responsive resizing must preserve the current page");
 assert.ok(flipLab.includes("unpkg.com/page-flip@2.0.7"), "The page-flip engine must have a secondary CDN fallback");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v106'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v107'"), "The unified native gesture lab must remain in the refreshed offline app-shell cache");
 assert.ok(serviceWorker.includes("reader-flip-lab.html"), "Reader motion lab must be included in the offline app shell");
 
 const duologyCover = "./content/books/Пока нас не найдут_ тайны и страсть.png";
@@ -724,7 +724,7 @@ assert.ok(html.includes('function showEditorialHold(){') && html.includes('edito
 assert.ok(html.includes('Перелистните назад, чтобы вернуться к последней доступной главе'), "Editorial hold must explain how to return to the available chapters");
 assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v106'"), "The app shell cache must be refreshed for the new duology page");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v107'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
   assert.ok(duologyPage.includes('data-countdown="' + volume.releaseAt + '"'), "Countdown must match volume " + volume.number + " releaseAt");
 }
