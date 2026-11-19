@@ -402,7 +402,7 @@ assert.match(html, /id="prereleaseStage"/, "The large editorial premiere cards m
 assert.ok(html.includes("const canonicalBookId = book => String(book?.id || '').replace(/^published-/, '')"), "Premiere routing must compare canonical catalog IDs, not normalized published-* IDs");
 assert.ok(html.includes('canonicalId==="poka-nas-ne-naydut"?"./poka-nas-ne-naydut.html"'), "The Poka premiere card must open the dedicated duology page");
 assert.ok(seriesPage.includes("const release=volume.releaseAt?new Date(volume.releaseAt):null"), "Every volume card must parse its own releaseAt before countdown and publication checks");
-assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v94'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
+assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v95'"), "The app shell cache must be invalidated after the catalog loading and genre filter fixes");
 assert.match(serviceWorker, /const cached = await cache\.match\(request\);[\s\S]*?if \(cached\) return cached;/, "The public catalog must be served from cache before its background refresh");
 assert.match(html, /Первый том уже доступен\./, "The large series card must announce that volume I is available");
 assert.match(seriesPage, /if\(location\.hash\)\{const target=document\.getElementById\(decodeURIComponent\(location\.hash\.slice\(1\)\)\);if\(target\)requestAnimationFrame\(\(\)=>target\.scrollIntoView\(\{block:[\x27"]start[\x27"]\}\)\);\}/, "Series hash navigation must scroll after async cards are rendered");
@@ -701,7 +701,11 @@ assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setIn
 assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
 assert.ok(duologyPage.includes("До своей даты релиза каждая книга остаётся закрытой на сайте"), "The duology page must keep each full text closed until its scheduled release");
 assert.ok(html.includes('id="book-poka-nas-ne-naydut"'), "The duology collection card must have a stable bookshelf anchor");
-assert.ok(html.includes('href="./index.html?book=published-poka-nas-ne-naydut-tom-01#book-poka-nas-ne-naydut">Читать книгу I'), "The duology bookshelf card must launch volume I directly");
+assert.ok(html.includes('href="./poka-nas-ne-naydut.html" aria-label="Открыть страницу дилогии «Пока нас не найдут»"'), "The duology bookshelf cover must open its dedicated information page before reading");
+assert.ok(html.includes('href="./poka-nas-ne-naydut.html#volume-1">Страница книги I'), "The duology card back must lead to volume details rather than launching the reader");
+assert.ok(html.includes('Подробнее о дилогии'), "The featured CTA must clearly promise an information page, not immediate reading");
+assert.ok(html.includes('if(editorialHoldActive){') && html.includes('readingPageIndex=isDesktopReaderSpread()'), "Returning from the editorial hold must restore the final available manuscript page");
+assert.ok(html.includes('editorialHoldActive=true;') && html.includes('editorialHoldActive=false;'), "The editorial hold must have an explicit navigation state");
 assert.ok(duologyPage.includes('href="./index.html#book-poka-nas-ne-naydut">← На книжную полку'), "Duology back navigation must return to its exact bookshelf card");
 assert.ok(duologyPage.includes('href="#volumes">Перейти к книгам дилогии'), "The obsolete premiere self-link must be replaced with an in-page volumes link");
 assert.doesNotMatch(duologyPage, /premiere\.html\\?book=poka-nas-ne-naydut/, "Duology page must not link back to its own premiere redirect");
