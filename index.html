@@ -3397,7 +3397,7 @@ function isBookReleaseLocked(book) {
 
 function normalizePublishedBook(book) {
   const EDITORIAL_READER_LIMITS = Object.freeze({
-    'poka-nas-ne-naydut-tom-01': 22
+    'poka-nas-ne-naydut-tom-01': 23
   });
   if (!book || typeof book !== 'object' || typeof book.id !== 'string' ||
       !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(book.id) ||
