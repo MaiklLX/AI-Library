@@ -4508,12 +4508,9 @@ function turnReadingPage(direction) {
         document.querySelector("#chapterLabel").textContent=`Часть ${part+1} из ${current.chapterCount||current.chapters.length}`;
         document.querySelector("#prevChapter").disabled=part===0;
         const next=document.querySelector("#nextChapter");
-        const last=part===current.chapters.length-1;
-        next.innerHTML=last
-          ?(current.seriesId==="ty-v-moih-planah"?(Number(current.seriesVolume)===6?"Завершить роман":"К следующему тому"):(current.editorialHold?"Продолжение готовится <span aria-hidden="true">✦</span>":'Закрыть чтение <span aria-hidden="true">×</span>'))
-          :'Следующая часть <span aria-hidden="true">→</span>';
-        next.setAttribute("aria-label",last?(current.seriesId==="ty-v-moih-planah"?(Number(current.seriesVolume)===6?"Завершить роман":"К следующему тому"):(current.editorialHold?"Продолжение готовится":"Закрыть чтение")):"Следующая часть");
-        next.disabled=false;
+        next.innerHTML='Продолжение готовится <span aria-hidden="true">✦</span>';
+        next.setAttribute("aria-label","Продолжение готовится");
+        next.disabled=true;
         window.__aiLibraryTurnDirection="forward";
         document.querySelector("#bookPage")?.classList.remove("turn-forward","turn-back");
         editorialHoldReturnState=null;
