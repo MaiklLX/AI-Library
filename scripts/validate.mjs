@@ -700,7 +700,14 @@ assert.ok(duologyPage.includes(duologyCover), "The duology page must display the
 assert.ok(duologyPage.includes("data-countdown=") && duologyPage.includes("setInterval(tick,1000)"), "Both duology release countdowns must update every second");
 assert.ok(duologyPage.includes("data-annotation-gate=") && duologyPage.includes("data-annotation]"), "Book II annotation must remain gated until its reveal time");
 assert.ok(duologyPage.includes("До своей даты релиза каждая книга остаётся закрытой на сайте"), "The duology page must keep each full text closed until its scheduled release");
-assert.ok(html.includes('href="./poka-nas-ne-naydut.html">Открыть дилогию'), "The featured shelf card must open the duology landing page");
+assert.ok(html.includes('id="book-poka-nas-ne-naydut"'), "The duology collection card must have a stable bookshelf anchor");
+assert.ok(html.includes('href="./index.html?book=published-poka-nas-ne-naydut-tom-01">Читать книгу I'), "The duology bookshelf card must launch volume I directly");
+assert.ok(duologyPage.includes('href="./index.html#book-poka-nas-ne-naydut">← На книжную полку'), "Duology back navigation must return to its exact bookshelf card");
+assert.ok(duologyPage.includes('href="#volumes">Перейти к книгам дилогии'), "The obsolete premiere self-link must be replaced with an in-page volumes link");
+assert.doesNotMatch(duologyPage, /premiere\\.html\\?book=poka-nas-ne-naydut/, "Duology page must not link back to its own premiere redirect");
+assert.ok(html.includes('function showEditorialHold(){') && html.includes('editorial-hold-spread'), "Editorial hold must render as an in-reader book page");
+assert.ok(html.includes('Перелистните назад, чтобы вернуться к последней доступной главе'), "Editorial hold must explain how to return to the available chapters");
+assert.doesNotMatch(html.slice(html.indexOf('function showEditorialHold(){'),html.indexOf('function showSeriesCompletion(){')), /closeReadingSpace|poka-nas-ne-naydut\\.html|Вернуться к библиотеке/, "Editorial hold must not send readers out of the book");
 assert.ok(serviceWorker.includes("./poka-nas-ne-naydut.html") && serviceWorker.includes("./content/series/poka-nas-ne-naydut.json"), "The duology landing page and manifest must be in the offline app shell");
 assert.ok(serviceWorker.includes("CACHE_PREFIX + 'v93'"), "The app shell cache must be refreshed for the new duology page");
 for (const volume of duologyManifest.volumes) {
