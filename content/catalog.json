@@ -357,12 +357,12 @@
       ],
       "cover": "./content/books/poka-nas-ne-naydut-cover.svg",
       "ageRating": "18+",
-      "wordCount": 70577,
-      "revision": "poka-duology-editorial-kt552-2026-11-19-v1",
+      "wordCount": 70499,
+      "revision": "poka-duology-editorial-kt553-2026-11-20-v1",
       "seriesId": "poka-nas-ne-naydut",
       "seriesVolume": 1,
       "seriesPage": "./poka-nas-ne-naydut.html",
-      "readerVisibleChapterCount": 26
+      "readerVisibleChapterCount": 27
     },
     {
       "id": "poka-nas-ne-naydut-tom-02",
